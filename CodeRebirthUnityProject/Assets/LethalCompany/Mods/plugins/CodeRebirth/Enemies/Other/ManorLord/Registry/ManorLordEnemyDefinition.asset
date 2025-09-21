@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: ManorLordEnemyDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
+  _tags: []
   <Key>k__BackingField:
     _namespace: code_rebirth
     _key: lord_of_the_manor
@@ -23,3 +24,11 @@ MonoBehaviour:
     type: 2}
   <TerminalKeyword>k__BackingField: {fileID: 11400000, guid: 95a07c0a3d661b24e844b07769c3f962,
     type: 2}
+  <MoonSpawnWeights>k__BackingField: Vanilla:+10,Custom:+10,Valley:+10,Canyon:+5,Tundra:+30,Marsh:+3,Military:+5,Rocky:+5,Amythest:+5,Experimentation:+1,Assurance:+3,Vow:+30,Offense:+3,March:+3,Adamance:+7,Rend:+50,Dine:+20,Titan:+4,Artifice:+40,Embrion:+0,Oxyde:+5
+  <InteriorSpawnWeights>k__BackingField: 
+  <WeatherSpawnWeights>k__BackingField: None:*1,DustClouds:*1,Rainy:*1,Stormy:*1,Foggy:*1.25,Flooded:*1.25,Eclipsed:*1,Meteor
+    Shower:*0.75,Tornado:*1.25,Night Shift:*100,Snowfall:*1.4,Blizzard:*1.4,Heatwave:*0.75,Solar
+    Flare:*0.75,Toxic Smog:*1,Cloudy:*1.25,Blackout:*1.5
+  <GenerateSpawnWeightsConfig>k__BackingField: 1
+  <PowerLevel>k__BackingField: 0
+  <MaxSpawnCount>k__BackingField: 0

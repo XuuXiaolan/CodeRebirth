@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: CrashingShipMapObjectDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
+  _tags: []
   <Key>k__BackingField:
     _namespace: code_rebirth
     _key: oxyde_crashed_ship
@@ -28,3 +29,13 @@ MonoBehaviour:
     disallowSpawningNearEntrances: 0
   <OutsideMapObjectSettings>k__BackingField:
     AlignWithTerrain: 0
+  <IsInsideHazard>k__BackingField: 0
+  <CreateInsideHazardConfig>k__BackingField: 0
+  <DefaultInsideCurveSpawnWeights>k__BackingField: 
+  <CreateInsideCurveSpawnWeightsConfig>k__BackingField: 0
+  <IsOutsideHazard>k__BackingField: 1
+  <CreateOutsideHazardConfig>k__BackingField: 0
+  <DefaultOutsideCurveSpawnWeights>k__BackingField: All - 0.00,0.00 ; 0.11,0.02 ;
+    0.22,0.04 ; 0.33,0.06 ; 0.44,0.13 ; 0.56,0.16 ; 0.67,0.40 ; 0.78,0.60 ; 0.89,0.60
+    ; 1.00,1.00
+  <CreateOutsideCurveSpawnWeightsConfig>k__BackingField: 1

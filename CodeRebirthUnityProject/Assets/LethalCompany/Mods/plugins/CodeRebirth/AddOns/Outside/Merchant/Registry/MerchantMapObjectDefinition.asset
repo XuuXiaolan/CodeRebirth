@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: MerchantMapObjectDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
+  _tags: []
   <Key>k__BackingField:
     _namespace: code_rebirth
     _key: merchant
@@ -28,3 +29,11 @@ MonoBehaviour:
     disallowSpawningNearEntrances: 0
   <OutsideMapObjectSettings>k__BackingField:
     AlignWithTerrain: 0
+  <IsInsideHazard>k__BackingField: 0
+  <CreateInsideHazardConfig>k__BackingField: 0
+  <DefaultInsideCurveSpawnWeights>k__BackingField: 
+  <CreateInsideCurveSpawnWeightsConfig>k__BackingField: 0
+  <IsOutsideHazard>k__BackingField: 1
+  <CreateOutsideHazardConfig>k__BackingField: 0
+  <DefaultOutsideCurveSpawnWeights>k__BackingField: 
+  <CreateOutsideCurveSpawnWeightsConfig>k__BackingField: 0

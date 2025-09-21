@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: CarnivorousPlantEnemyDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
+  _tags: []
   <Key>k__BackingField:
     _namespace: code_rebirth
     _key: carnivorous_plant
@@ -23,3 +24,11 @@ MonoBehaviour:
     type: 2}
   <TerminalKeyword>k__BackingField: {fileID: 11400000, guid: 33f9f708a10f88f49bb1f8609023eb36,
     type: 2}
+  <MoonSpawnWeights>k__BackingField: Vanilla:10,Custom:10,Valley:35,Canyon:0,Tundra:*0,Marsh:15,Military:0,Rocky:*0,Amythest:*0,Experimentation:0,Assurance:*0,Vow:40,Offense:*0,March:25,Adamance:25,Rend:*0,Dine:*0,Titan:*0,Artifice:0,Embrion:*0,Oxyde:*0
+  <InteriorSpawnWeights>k__BackingField: 
+  <WeatherSpawnWeights>k__BackingField: None:*1,DustClouds:*1.25,Rainy:*1.4,Stormy:*1.4,Foggy:*1.25,Flooded:*0.3,Eclipsed:*0.3,Meteor
+    Shower:*0,Tornado:*0.6,Night Shift:*0,Snowfall:*0,Blizzard:*0,Heatwave:*1.3,Solar
+    Flare:*1.3,Toxic Smog:*0,Cloudy:*1.25,Blackout:*0
+  <GenerateSpawnWeightsConfig>k__BackingField: 1
+  <PowerLevel>k__BackingField: 0
+  <MaxSpawnCount>k__BackingField: 0

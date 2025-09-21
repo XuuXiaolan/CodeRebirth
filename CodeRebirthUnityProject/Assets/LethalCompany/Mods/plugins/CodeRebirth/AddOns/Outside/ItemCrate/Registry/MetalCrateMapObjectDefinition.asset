@@ -95,6 +95,7 @@ MonoBehaviour:
       m_RotationOrder: 0
     Description: Whether Metal Safe's blacklist config is a blacklist (ticked) or
       whitelist (unticked).
+  _tags: []
   <Key>k__BackingField:
     _namespace: code_rebirth
     _key: normal_metal_crate
@@ -110,3 +111,15 @@ MonoBehaviour:
     disallowSpawningNearEntrances: 0
   <OutsideMapObjectSettings>k__BackingField:
     AlignWithTerrain: 0
+  <IsInsideHazard>k__BackingField: 0
+  <CreateInsideHazardConfig>k__BackingField: 0
+  <DefaultInsideCurveSpawnWeights>k__BackingField: 
+  <CreateInsideCurveSpawnWeightsConfig>k__BackingField: 0
+  <IsOutsideHazard>k__BackingField: 1
+  <CreateOutsideHazardConfig>k__BackingField: 0
+  <DefaultOutsideCurveSpawnWeights>k__BackingField: Vanilla - 0.00,0.00 ; 0.11,0.54
+    ; 0.22,1.08 ; 0.33,1.55 ; 0.44,1.82 ; 0.56,1.92 ; 0.67,2.01 ; 0.78,2.05 ; 0.89,2.56
+    ; 1.00,3.80 | Custom - 0.00,0.00 ; 0.11,0.54 ; 0.22,1.08 ; 0.33,1.55 ; 0.44,1.82
+    ; 0.56,1.92 ; 0.67,2.01 ; 0.78,2.05 ; 0.89,2.56 ; 1.00,3.80 | Oxyde - 0.00,0.00
+    ; 1.00,0.00
+  <CreateOutsideCurveSpawnWeightsConfig>k__BackingField: 1

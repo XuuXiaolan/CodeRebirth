@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1849078634, guid: b94764f2e5aaab74ba0cabab6f7ef84e, type: 3}
+  m_Name: BlubEnemyReplacementDefinition
+  m_EditorClassIdentifier: 
+  _configEntries: []
+  _tags: []
+  _typedKey:
+    _namespace: code_rebirth
+    _key: fish_bracken_or_something
+  <EntityToReplaceKey>k__BackingField:
+    _namespace: lethal_company
+    _key: flowerman
+  <SkinnedMeshReplacements>k__BackingField:
+  - <PathToRenderer>k__BackingField: FlowermanModel/LOD1
+    <ReplacementMaterials>k__BackingField:
+    - <Material>k__BackingField: {fileID: 2100000, guid: b611280fbc17dab459575a5982b3c48c,
+        type: 2}
+      <Index>k__BackingField: 0
+    <ReplacementRenderer>k__BackingField: {fileID: 4448572480701486369, guid: 67a5816e20ecb2b4d82ca44a9d78f61b,
+      type: 3}
+  <MeshReplacements>k__BackingField: []
+  <HitBodySFX>k__BackingField: {fileID: 0}
+  <HitEnemyVoiceSFX>k__BackingField: {fileID: 0}
+  <DeathSFX>k__BackingField: {fileID: 0}
+  <StunSFX>k__BackingField: {fileID: 0}
+  <AnimVoiceClips>k__BackingField: []
+  <AudioClips>k__BackingField: []
+  crackNeckSFX: {fileID: 0}
+  dieSFX: {fileID: 0}

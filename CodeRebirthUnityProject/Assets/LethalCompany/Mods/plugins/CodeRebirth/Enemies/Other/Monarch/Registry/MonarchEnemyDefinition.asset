@@ -31,6 +31,7 @@ MonoBehaviour:
     Description: Turn on some really cool wings, unfortunately I also found literally
       one person who's pc is so bad they couldn't run this, so disabled by default,
       can be changed on runtime.
+  _tags: []
   <Key>k__BackingField:
     _namespace: code_rebirth
     _key: monarch
@@ -41,3 +42,11 @@ MonoBehaviour:
     type: 2}
   <TerminalKeyword>k__BackingField: {fileID: 11400000, guid: f6cd14fae2d88b249b5fdc0a004a953a,
     type: 2}
+  <MoonSpawnWeights>k__BackingField: Vanilla:+0,Custom:+0,Valley:+1,Canyon:+1,Tundra:+0,Marsh:+1,Military:+0,Rocky:+0,Amythest:+0,Experimentation:+0,Assurance:+0,Vow:+0,Offense:+0,March:+0,Adamance:+1,Rend:+0,Dine:+0,Titan:+0,Artifice:+0,Embrion:+0,Oxyde:+0
+  <InteriorSpawnWeights>k__BackingField: 
+  <WeatherSpawnWeights>k__BackingField: None:*1,DustClouds:*1,Rainy:*0,Stormy:*0,Foggy:*0,Flooded:*0,Eclipsed:*1.5,Meteor
+    Shower:*0,Tornado:*0,Night Shift:*0,Snowfall:*0,Blizzard:*0,Heatwave:*2,Solar
+    Flare:*0,Toxic Smog:*0,Cloudy:*0,Blackout:*0
+  <GenerateSpawnWeightsConfig>k__BackingField: 1
+  <PowerLevel>k__BackingField: 0
+  <MaxSpawnCount>k__BackingField: 0

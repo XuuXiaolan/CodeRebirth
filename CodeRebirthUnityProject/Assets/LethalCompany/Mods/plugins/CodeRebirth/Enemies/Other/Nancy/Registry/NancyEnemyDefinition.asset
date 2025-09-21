@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: NancyEnemyDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
+  _tags: []
   <Key>k__BackingField:
     _namespace: code_rebirth
     _key: nancy
@@ -21,3 +22,11 @@ MonoBehaviour:
   <SpawnTable>k__BackingField: 1
   <TerminalNode>k__BackingField: {fileID: 0}
   <TerminalKeyword>k__BackingField: {fileID: 0}
+  <MoonSpawnWeights>k__BackingField: Vanilla:+10,Custom:+10,Valley:+15,Canyon:+15,Tundra:+10,Marsh:+5,Military:+20,Rocky:+10,Amythest:+3,Experimentation:+1,Assurance:+20,Vow:+20,Offense:+10,March:+10,Adamance:+25,Rend:+6,Dine:+3,Titan:+30,Artifice:+25,Embrion:+1,Oxyde:+3
+  <InteriorSpawnWeights>k__BackingField: 
+  <WeatherSpawnWeights>k__BackingField: None:*1,DustClouds:*0.9,Rainy:*0.75,Stormy:*0.75,Foggy:*0.9,Flooded:*0.25,Eclipsed:*1,Meteor
+    Shower:*1,Tornado:*1,Night Shift:*1.25,Snowfall:*0.5,Blizzard:*0.5,Heatwave:*0.75,Solar
+    Flare:*0.75,Toxic Smog:*1,Cloudy:*0.9,Blackout:*1.25
+  <GenerateSpawnWeightsConfig>k__BackingField: 1
+  <PowerLevel>k__BackingField: 0
+  <MaxSpawnCount>k__BackingField: 0

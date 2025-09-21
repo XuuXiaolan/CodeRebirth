@@ -8,10 +8,10 @@ using System.Diagnostics;
 using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Maps;
-using LethalLevelLoader;
 using Dawn;
 using System.Linq;
 using UnityEngine.InputSystem.Utilities;
+using LethalLevelLoader;
 
 namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(StartOfRound))]
@@ -68,7 +68,6 @@ static class StartOfRoundPatch
             var objs = GameObject.FindObjectsByType<GameObject>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
             int FoundObject = 0;
             LayerMask foliageLayer = 10;
-            if (LethalLevelLoader.DungeonManager.CurrentExtendedDungeonFlow != null) Plugin.ExtendedLogging("Current Interior: " + LethalLevelLoader.DungeonManager.CurrentExtendedDungeonFlow.name);
             foreach (var item in objs)
             {
                 if (item.layer == foliageLayer)
@@ -110,6 +109,7 @@ static class StartOfRoundPatch
     [HarmonyPatch(nameof(StartOfRound.SetShipReadyToLand)), HarmonyPostfix]
     static void ForceChangeWeathersForOxyde()
     {
+        // todo: get this with moon keys
         LevelManager.TryGetExtendedLevel(StartOfRound.Instance.levels.Where(x => x.sceneName == "Oxyde").FirstOrDefault(), out ExtendedLevel? extendedLevel);
         Plugin.ExtendedLogging($"Extended level: {extendedLevel?.SelectableLevel}");
         if (extendedLevel == null)

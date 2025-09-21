@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: BugZapperMapObjectDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
+  _tags: []
   <Key>k__BackingField:
     _namespace: code_rebirth
     _key: bug_zapper
@@ -28,3 +29,14 @@ MonoBehaviour:
     disallowSpawningNearEntrances: 0
   <OutsideMapObjectSettings>k__BackingField:
     AlignWithTerrain: 0
+  <IsInsideHazard>k__BackingField: 1
+  <CreateInsideHazardConfig>k__BackingField: 0
+  <DefaultInsideCurveSpawnWeights>k__BackingField: Vanilla - 0.00,0.00 ; 0.11,0.14
+    ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55 ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16
+    ; 1.00,8.00 | Custom - 0.00,0.00 ; 0.11,0.14 ; 0.22,0.29 ; 0.33,0.43 ; 0.44,0.55
+    ; 0.56,0.63 ; 0.67,0.71 ; 0.78,0.87 ; 0.89,1.16 ; 1.00,8.00
+  <CreateInsideCurveSpawnWeightsConfig>k__BackingField: 1
+  <IsOutsideHazard>k__BackingField: 0
+  <CreateOutsideHazardConfig>k__BackingField: 0
+  <DefaultOutsideCurveSpawnWeights>k__BackingField: 
+  <CreateOutsideCurveSpawnWeightsConfig>k__BackingField: 0

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: JanitorEnemyDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
+  _tags: []
   <Key>k__BackingField:
     _namespace: code_rebirth
     _key: janitor
@@ -23,3 +24,11 @@ MonoBehaviour:
     type: 2}
   <TerminalKeyword>k__BackingField: {fileID: 11400000, guid: 8e6f9294c3234314a9e8d6ae6b36aba6,
     type: 2}
+  <MoonSpawnWeights>k__BackingField: Vanilla:+10,Custom:+10,Valley:+20,Canyon:+20,Tundra:+10,Marsh:+10,Military:+40,Rocky:+20,Amythest:+25,Experimentation:+5,Assurance:+10,Vow:+20,Offense:+15,March:+25,Adamance:+30,Rend:+5,Dine:+2,Titan:+20,Artifice:+15,Embrion:+2,Oxyde:+50
+  <InteriorSpawnWeights>k__BackingField: 
+  <WeatherSpawnWeights>k__BackingField: None:*1,DustClouds:*1,Rainy:*0.75,Stormy:*0.75,Foggy:*1,Flooded:*0.5,Eclipsed:*1,Meteor
+    Shower:*0.8,Tornado:*1,Night Shift:*2,Snowfall:*1,Blizzard:*1,Heatwave:*0.75,Solar
+    Flare:*0.75,Toxic Smog:*1,Cloudy:*1,Blackout:*2
+  <GenerateSpawnWeightsConfig>k__BackingField: 0
+  <PowerLevel>k__BackingField: 0
+  <MaxSpawnCount>k__BackingField: 0

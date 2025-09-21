@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: GunslingerGregMapObjectDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
+  _tags: []
   <Key>k__BackingField:
     _namespace: code_rebirth
     _key: gunslinger_greg
@@ -28,3 +29,15 @@ MonoBehaviour:
     disallowSpawningNearEntrances: 0
   <OutsideMapObjectSettings>k__BackingField:
     AlignWithTerrain: 0
+  <IsInsideHazard>k__BackingField: 0
+  <CreateInsideHazardConfig>k__BackingField: 0
+  <DefaultInsideCurveSpawnWeights>k__BackingField: 
+  <CreateInsideCurveSpawnWeightsConfig>k__BackingField: 0
+  <IsOutsideHazard>k__BackingField: 1
+  <CreateOutsideHazardConfig>k__BackingField: 0
+  <DefaultOutsideCurveSpawnWeights>k__BackingField: Vanilla - 0.00,0.00 ; 0.11,0.05
+    ; 0.22,0.08 ; 0.33,0.09 ; 0.44,0.12 ; 0.56,0.18 ; 0.67,0.28 ; 0.78,0.46 ; 0.89,0.77
+    ; 1.00,1.20 | Custom - 0.00,0.00 ; 0.11,0.05 ; 0.22,0.08 ; 0.33,0.09 ; 0.44,0.12
+    ; 0.56,0.18 ; 0.67,0.28 ; 0.78,0.46 ; 0.89,0.77 ; 1.00,1.20 | Oxyde - 0.00,0.00
+    ; 1.00,0.00
+  <CreateOutsideCurveSpawnWeightsConfig>k__BackingField: 1

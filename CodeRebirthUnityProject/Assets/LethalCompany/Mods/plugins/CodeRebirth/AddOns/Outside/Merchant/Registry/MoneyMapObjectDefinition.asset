@@ -33,6 +33,7 @@ MonoBehaviour:
       m_RotationOrder: 4
     Description: EnemyName:DropRate for the chance of an enemy dropping a coin on
       death via player damage.
+  _tags: []
   <Key>k__BackingField:
     _namespace: code_rebirth
     _key: money
@@ -48,3 +49,14 @@ MonoBehaviour:
     disallowSpawningNearEntrances: 0
   <OutsideMapObjectSettings>k__BackingField:
     AlignWithTerrain: 0
+  <IsInsideHazard>k__BackingField: 1
+  <CreateInsideHazardConfig>k__BackingField: 0
+  <DefaultInsideCurveSpawnWeights>k__BackingField: Vanilla - 0.00,3.00 ; 0.11,3.72
+    ; 0.22,4.44 ; 0.33,4.96 ; 0.44,5.10 ; 0.56,5.08 ; 0.67,5.23 ; 0.78,7.14 ; 0.89,7.82
+    ; 1.00,8.00 | Custom - 0.00,3.00 ; 0.11,3.72 ; 0.22,4.44 ; 0.33,4.96 ; 0.44,5.10
+    ; 0.56,5.08 ; 0.67,5.23 ; 0.78,7.14 ; 0.89,7.82 ; 1.00,8.00
+  <CreateInsideCurveSpawnWeightsConfig>k__BackingField: 1
+  <IsOutsideHazard>k__BackingField: 0
+  <CreateOutsideHazardConfig>k__BackingField: 0
+  <DefaultOutsideCurveSpawnWeights>k__BackingField: 
+  <CreateOutsideCurveSpawnWeightsConfig>k__BackingField: 0

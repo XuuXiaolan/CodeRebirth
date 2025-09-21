@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: FlashTurretMapObjectDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
+  _tags: []
   <Key>k__BackingField:
     _namespace: code_rebirth
     _key: flash_turret
@@ -28,3 +29,14 @@ MonoBehaviour:
     disallowSpawningNearEntrances: 0
   <OutsideMapObjectSettings>k__BackingField:
     AlignWithTerrain: 0
+  <IsInsideHazard>k__BackingField: 1
+  <CreateInsideHazardConfig>k__BackingField: 0
+  <DefaultInsideCurveSpawnWeights>k__BackingField: Vanilla - 0.00,0.00 ; 0.11,0.13
+    ; 0.22,0.17 ; 0.33,0.20 ; 0.44,0.32 ; 0.56,0.60 ; 0.67,1.15 ; 0.78,2.14 ; 0.89,3.56
+    ; 1.00,5.00 | Custom - 0.00,0.00 ; 0.11,0.13 ; 0.22,0.17 ; 0.33,0.20 ; 0.44,0.32
+    ; 0.56,0.60 ; 0.67,1.15 ; 0.78,2.14 ; 0.89,3.56 ; 1.00,5.00
+  <CreateInsideCurveSpawnWeightsConfig>k__BackingField: 1
+  <IsOutsideHazard>k__BackingField: 0
+  <CreateOutsideHazardConfig>k__BackingField: 0
+  <DefaultOutsideCurveSpawnWeights>k__BackingField: 
+  <CreateOutsideCurveSpawnWeightsConfig>k__BackingField: 0

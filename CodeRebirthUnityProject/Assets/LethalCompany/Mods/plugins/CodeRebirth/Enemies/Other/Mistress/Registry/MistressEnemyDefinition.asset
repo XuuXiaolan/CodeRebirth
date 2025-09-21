@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: MistressEnemyDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
+  _tags: []
   <Key>k__BackingField:
     _namespace: code_rebirth
     _key: mistress
@@ -21,3 +22,11 @@ MonoBehaviour:
   <SpawnTable>k__BackingField: 1
   <TerminalNode>k__BackingField: {fileID: 0}
   <TerminalKeyword>k__BackingField: {fileID: 0}
+  <MoonSpawnWeights>k__BackingField: Vanilla:+2,Custom:+2,Valley:+1,Canyon:+2,Tundra:+5,Marsh:+1,Military:+0,Rocky:+0,Amythest:+0,Experimentation:+0,Assurance:+0,Vow:+10,Offense:+0,March:+1,Adamance:+3,Rend:+20,Dine:+5,Titan:+0,Artifice:+10,Embrion:+0,Oxyde:+1
+  <InteriorSpawnWeights>k__BackingField: 
+  <WeatherSpawnWeights>k__BackingField: None:*1,DustClouds:*1.2,Rainy:*1.4,Stormy:*1.4,Foggy:*1.2,Flooded:*0.5,Eclipsed:*0.5,Meteor
+    Shower:*0.5,Tornado:*0.5,Night Shift:*100,Snowfall:*1.4,Blizzard:*1.4,Heatwave:*1.2,Solar
+    Flare:*1,Toxic Smog:*1,Cloudy:*1.25,Blackout:*1.5
+  <GenerateSpawnWeightsConfig>k__BackingField: 1
+  <PowerLevel>k__BackingField: 0
+  <MaxSpawnCount>k__BackingField: 0

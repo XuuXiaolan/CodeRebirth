@@ -21,6 +21,7 @@ public class OxydeCrashingShip : FallingObjectBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+        // have an LLL soft dependency
         LevelManager.TryGetExtendedLevel(StartOfRound.Instance.levels.Where(x => x.sceneName == "Oxyde").FirstOrDefault(), out ExtendedLevel? extendedLevel);
         if (extendedLevel == null || (!extendedLevel.IsRouteHidden && !extendedLevel.IsRouteLocked))
         {

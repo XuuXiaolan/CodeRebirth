@@ -194,6 +194,9 @@ public class ItemCrate : CRHittable
                         List<SpawnableItemWithRarity> acceptableItems = new();
                         foreach (SpawnableItemWithRarity spawnableItemWithRarity in RoundManager.Instance.currentLevel.spawnableScrap)
                         {
+                            if (spawnableItemWithRarity.rarity <= 0)
+                                continue;
+
                             Plugin.ExtendedLogging("Moon's item pool: " + spawnableItemWithRarity.spawnableItem.itemName);
                             if (actuallyABlacklist && !blacklistedOrWhitelistedScrap.Contains(spawnableItemWithRarity.spawnableItem.itemName.ToLowerInvariant()))
                             {

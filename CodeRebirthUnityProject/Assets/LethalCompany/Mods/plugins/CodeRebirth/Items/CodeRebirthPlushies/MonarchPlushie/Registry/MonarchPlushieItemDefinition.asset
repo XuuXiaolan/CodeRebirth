@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: MonarchPlushieItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
+  _tags: []
   <Key>k__BackingField:
     _namespace: code_rebirth
     _key: monarch_plushie
@@ -22,4 +23,18 @@ MonoBehaviour:
     <OrderRequestNode>k__BackingField: {fileID: 0}
     <OrderReceiptNode>k__BackingField: {fileID: 0}
     <ItemInfoNode>k__BackingField: {fileID: 0}
-  <ProgressiveObject>k__BackingField: {fileID: 0}
+  <TerminalPredicate>k__BackingField: {fileID: 0}
+  <PricingStrategy>k__BackingField: {fileID: 0}
+  <MoonSpawnWeights>k__BackingField: Vanilla:+0,Custom:+0,Valley:+0,Canyon:+0,Tundra:+0,Marsh:+0,Military:+0,Rocky:+0,Amythest:+0,Experimentation:+0,Assurance:+0,Vow:+0,Offense:+0,March:+0,Adamance:+0,Rend:+0,Dine:+0,Titan:+0,Artifice:+0,Embrion:+0,Oxyde:+0
+  <InteriorSpawnWeights>k__BackingField: 
+  <WeatherSpawnWeights>k__BackingField: None:*1,DustClouds:*1,Rainy:*1,Stormy:*1,Foggy:*1,Flooded:*1,Eclipsed:*1,Meteor
+    Shower:*1,Tornado:*1,Night Shift:*1,Snowfall:*1,Blizzard:*1,Heatwave:*1,Solar
+    Flare:*1,Toxic Smog:*1,Cloudy:*1,Blackout:*1
+  <GenerateSpawnWeightsConfig>k__BackingField: 1
+  <IsScrap>k__BackingField: 1
+  <GenerateScrapConfig>k__BackingField: 0
+  <IsShopItem>k__BackingField: 0
+  <GenerateShopItemConfig>k__BackingField: 0
+  <Cost>k__BackingField: 0
+  <GenerateDisableUnlockConfig>k__BackingField: 0
+  <GenerateDisablePricingStrategyConfig>k__BackingField: 0

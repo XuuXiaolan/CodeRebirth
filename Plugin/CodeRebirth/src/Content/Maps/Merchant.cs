@@ -360,13 +360,13 @@ public class Merchant : NetworkBehaviour
     public static Item GetRandomVanillaItem(bool excludeShopItems, System.Random? storeSeededRandom = null)
     {
         storeSeededRandom ??= new System.Random(UnityEngine.Random.Range(0, 1000000));
-        var vanillaItems = LethalLevelLoader.OriginalContent.Items;
+        var vanillaItems = LethalContent.Items.Values.Where(x => x.Key.IsVanilla()).ToList();
         if (excludeShopItems)
         {
-            vanillaItems = vanillaItems.Where(x => x.isScrap).ToList();
+            vanillaItems = vanillaItems.Where(x => x.ScrapInfo != null).ToList();
         }
         int randomIndex = storeSeededRandom.Next(0, vanillaItems.Count);
-        return vanillaItems[randomIndex];
+        return vanillaItems[randomIndex].Item;
     }
 
     [ServerRpc(RequireOwnership = false)]

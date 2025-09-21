@@ -13,8 +13,18 @@ MonoBehaviour:
   m_Name: TornadoWeatherDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
+  _tags: []
   <Key>k__BackingField:
     _namespace: code_rebirth
     _key: tornado
-  <Weather>k__BackingField: {fileID: 11400000, guid: d3defe13b57d2194d95c2cd4902bbf52,
-    type: 2}
+  <WeatherName>k__BackingField: 
+  <TemporaryEffectObject>k__BackingField: {fileID: 0}
+  <PermanentEffectObject>k__BackingField: {fileID: 0}
+  <SunAnimatorBool>k__BackingField: 
+  <TerminalColour>k__BackingField: {r: 0, g: 0, b: 0, a: 0}
+  <SpawnWeight>k__BackingField: 10
+  <ScrapValueMultiplier>k__BackingField: 0.85
+  <ScrapAmountMultiplier>k__BackingField: 1.2
+  <IsExclude>k__BackingField: 1
+  <CreateExcludeConfig>k__BackingField: 1
+  <ExcludeOrIncludeList>k__BackingField: galetry;gordion

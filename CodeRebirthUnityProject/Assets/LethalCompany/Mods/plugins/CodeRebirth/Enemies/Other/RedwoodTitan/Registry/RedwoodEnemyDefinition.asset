@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: RedwoodEnemyDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
+  _tags: []
   <Key>k__BackingField:
     _namespace: code_rebirth
     _key: redwood_titan
@@ -23,3 +24,11 @@ MonoBehaviour:
     type: 2}
   <TerminalKeyword>k__BackingField: {fileID: 11400000, guid: 544c4c92b4aad7a4dad2c0e9f8c25840,
     type: 2}
+  <MoonSpawnWeights>k__BackingField: Vanilla:+15,Custom:+15,Valley:+20,Canyon:+1,Tundra:+1,Marsh:+10,Military:+10,Rocky:+0,Amythest:+0,Experimentation:+1,Assurance:+1,Vow:+20,Offense:+1,March:+30,Adamance:+10,Rend:+0,Dine:+0,Titan:+0,Artifice:+20,Embrion:+30,Oxyde:+25
+  <InteriorSpawnWeights>k__BackingField: 
+  <WeatherSpawnWeights>k__BackingField: None:*1,DustClouds:*0.75,Rainy:*1.25,Stormy:*0.75,Foggy:*0.75,Flooded:*0.25,Eclipsed:*1.2,Meteor
+    Shower:*0.25,Tornado:*0.651415926535,Night Shift:*0.3,Snowfall:*0.1,Blizzard:*0.1,Heatwave:*1.2,Solar
+    Flare:*1.2,Toxic Smog:*1,Cloudy:*0.8,Blackout:*0.3
+  <GenerateSpawnWeightsConfig>k__BackingField: 1
+  <PowerLevel>k__BackingField: 0
+  <MaxSpawnCount>k__BackingField: 0

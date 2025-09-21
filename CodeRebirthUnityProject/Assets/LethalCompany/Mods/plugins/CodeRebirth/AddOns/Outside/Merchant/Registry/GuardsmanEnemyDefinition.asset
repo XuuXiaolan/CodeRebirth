@@ -31,6 +31,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     Description: Enemy Name blacklist for what the Guardsman will not attack.
+  _tags: []
   <Key>k__BackingField:
     _namespace: code_rebirth
     _key: guardsman
@@ -39,3 +40,11 @@ MonoBehaviour:
   <SpawnTable>k__BackingField: 2
   <TerminalNode>k__BackingField: {fileID: 0}
   <TerminalKeyword>k__BackingField: {fileID: 0}
+  <MoonSpawnWeights>k__BackingField: Vanilla:+0,Custom:+0,Valley:+0,Canyon:+0,Tundra:+0,Marsh:+0,Military:+1,Rocky:+0,Amythest:+1,Experimentation:+1,Assurance:+0,Vow:+0,Offense:+0,March:+0,Adamance:+0,Rend:+0,Dine:+0,Titan:+1,Artifice:+1,Embrion:+1,Oxyde:+1
+  <InteriorSpawnWeights>k__BackingField: 
+  <WeatherSpawnWeights>k__BackingField: None:*1,DustClouds:*1,Rainy:*1,Stormy:*1,Foggy:*1,Flooded:*1,Eclipsed:*1,Meteor
+    Shower:*0.5,Tornado:*0,Night Shift:*0,Snowfall:*1,Blizzard:*1,Heatwave:*1,Solar
+    Flare:*1,Toxic Smog:*1,Cloudy:*1,Blackout:*1
+  <GenerateSpawnWeightsConfig>k__BackingField: 1
+  <PowerLevel>k__BackingField: 0
+  <MaxSpawnCount>k__BackingField: 0
