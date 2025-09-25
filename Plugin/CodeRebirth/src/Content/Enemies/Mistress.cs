@@ -1,16 +1,11 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Util;
-using Dawn;
 using Dusk;
 using Dawn.Internal;
 using Dawn.Utils;
-
-
-
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -57,6 +52,18 @@ public class Mistress : CodeRebirthEnemyAI
         {
             if (targetPlayer == null)
             {
+                return;
+            }
+            else if (StartOfRound.Instance.shipIsLeaving)
+            {
+                if (!targetPlayer.IsLocalPlayer())
+                {
+                    targetPlayer = null;
+                    return;
+                }
+
+                ResetMistressStalkingServerRpc(targetPlayer);
+                targetPlayer = null;
                 return;
             }
 
