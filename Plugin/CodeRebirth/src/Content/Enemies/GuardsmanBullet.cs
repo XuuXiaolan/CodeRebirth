@@ -1,10 +1,9 @@
 using CodeRebirth.src.MiscScripts;
-using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;
 
-public class GuardsmanBullet : NetworkBehaviour
+public class GuardsmanBullet : MonoBehaviour
 {
     internal GuardsmanTurret GuardsmanTurret = null!;
 
@@ -32,8 +31,7 @@ public class GuardsmanBullet : NetworkBehaviour
             return;
 
         _endTimer -= Time.fixedDeltaTime;
-        if (IsServer)
-            this.transform.position = this.transform.position + _movingDirection * 50 * Time.fixedDeltaTime;
+        this.transform.position = this.transform.position + _movingDirection * 50 * Time.fixedDeltaTime;
 
         if (!Physics.CheckSphere(this.transform.position, 2f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore) && _endTimer > 0f)
             return;
@@ -44,11 +42,9 @@ public class GuardsmanBullet : NetworkBehaviour
 
     private void ResetBullet()
     {
-        if (IsServer)
-            this.transform.localPosition = Vector3.zero;
+        this.transform.localPosition = Vector3.zero;
         _movingDirection = Vector3.zero;
-        if (IsServer)
-            GuardsmanTurret.bulletsPool.Add(this);
+        GuardsmanTurret.bulletsPool.Add(this);
         this.gameObject.SetActive(false);
     }
 }

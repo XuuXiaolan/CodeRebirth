@@ -5,9 +5,6 @@ using System.Linq;
 using CodeRebirth.src.Content.Maps;
 using Dawn;
 using Dawn.Utils;
-
-
-
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
@@ -111,25 +108,18 @@ public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
     public override void Start()
     {
         base.Start();
-        var enemyBlacklistArray = MapObjectHandler.Instance.Merchant.GetConfig<string>("Guardsman | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
-        foreach (var nameEntry in enemyBlacklistArray.ToList())
+        List<string> enemyBlacklistArray = MapObjectHandler.Instance.Merchant.GetConfig<string>("Guardsman | Enemy Blacklist").Value.Split(',').Select(s => s.Trim()).ToList();
+        foreach (string nameEntry in enemyBlacklistArray)
         {
             _internalEnemyBlacklist.UnionWith(LethalContent.Enemies.Values.Where(et => et.EnemyType.enemyName.Equals(nameEntry, StringComparison.OrdinalIgnoreCase)).Select(et => et.EnemyType.enemyName));
         }
 
-        foreach (var nameEntry in _internalEnemyBlacklist)
+        foreach (string nameEntry in _internalEnemyBlacklist)
         {
             Plugin.ExtendedLogging($"Adding {nameEntry} to Guardsman's internal blacklist.");
         }
         StartCoroutine(StartDelay());
         StartCoroutine(ProjectorUnparentDelay());
-        /*foreach (var enemyType in Resources.FindObjectsOfTypeAll<EnemyType>())
-        {
-            if (enemyType.enemyPrefab == null || enemyType.enemyPrefab.GetComponent<EnemyAI>() == null)
-                continue;
-
-            Plugin.ExtendedLogging($"{enemyType.enemyName} has Size: {CalculateEnemySize(enemyType.enemyPrefab.GetComponent<EnemyAI>())}");
-        }*/
     }
 
     public override void Update()

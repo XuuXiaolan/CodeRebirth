@@ -18624,22 +18624,16 @@ MonoBehaviour:
   m_Script: {fileID: 1066262130, guid: b821795baeb020545a00803c13a7b7c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cantMove: 0
   OnUseEntranceTeleport:
     m_PersistentCalls:
       m_Calls: []
   OnEnableOrDisableAgent:
     m_PersistentCalls:
       m_Calls: []
-  OnEnterOrExitElevator:
-    m_PersistentCalls:
-      m_Calls: []
   lastUsedEntranceTeleport: {fileID: 0}
   agent: {fileID: 0}
-  isOutside: 1
-  exitPoints: []
-  mainEntrance: {fileID: 0}
-  _nodeRemovalPrecision: 5
+  _nodeRemovalPrecision: 15
+  _allowedLinks: 0
 --- !u!114 &2349619241804805547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18807,9 +18801,6 @@ MonoBehaviour:
   gotFarthestNodeAsync: 0
   creatureNetworkAnimator: {fileID: 2349619241804805547}
   smartAgentNavigator: {fileID: 2426049210476254518}
-  _hasVariants: 0
-  _usesTemperature: 0
-  _specialRenderer: {fileID: 0}
   _idleAudioClips:
     audioClips:
     - {fileID: 8300000, guid: f3ccf0485bbde024a8a3edfc1afbbfb9, type: 3}
@@ -18822,7 +18813,6 @@ MonoBehaviour:
     maxTime: 15
   _hitBodySounds: []
   spawnSound: {fileID: 8300000, guid: b174819cbda63e543ae19de345dc8d8e, type: 3}
-  _idleTimer: 1
   _slamAudioClip: {fileID: 8300000, guid: be9baa5bea1540d49aad45c2717c9781, type: 3}
   _ripApartAudioClip: {fileID: 8300000, guid: aa446bc60d040114c9e193b2a0c3a586, type: 3}
   _enemySpottedAudioClips:

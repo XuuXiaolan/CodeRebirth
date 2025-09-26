@@ -1,5 +1,4 @@
 using CodeRebirth.src.MiscScripts;
-using CodeRebirth.src.Util;
 using Dawn.Utils;
 using UnityEngine;
 
@@ -80,7 +79,7 @@ public class GunslingerMissile : MonoBehaviour
                     if (radMechAI.IsOwner)
                         radMechAI.KillEnemyOnOwnerClient(overrideDestroy: true);
 
-                    var gameobject = GameObject.Instantiate(MapObjectHandler.Instance.GunslingerGreg!.OldBirdExplosionPrefab, this.transform.position, Quaternion.identity);
+                    GameObject gameobject = GameObject.Instantiate(MapObjectHandler.Instance.GunslingerGreg!.OldBirdExplosionPrefab, this.transform.position, Quaternion.identity);
                     Destroy(gameobject, 15f);
                 }
             }

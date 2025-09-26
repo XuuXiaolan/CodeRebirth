@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.Content.Maps;
-using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;
@@ -23,17 +22,13 @@ public class GuardsmanTurret : MonoBehaviour
 
     private IEnumerator Start()
     {
-        if (!NetworkManager.Singleton.IsServer)
-            yield break;
-
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 10; i++)
         {
             yield return null;
 
-            var bullet = Instantiate(MapObjectHandler.Instance.Merchant!.ProjectilePrefab, transform.position, Quaternion.identity);
+            GameObject bullet = Instantiate(MapObjectHandler.Instance.Merchant!.ProjectilePrefab, transform.position, Quaternion.identity, this.transform);
             GuardsmanBullet GSbullet = bullet.GetComponent<GuardsmanBullet>();
             GSbullet.GuardsmanTurret = this;
-            GSbullet.NetworkObject.Spawn();
         }
     }
 
@@ -51,7 +46,7 @@ public class GuardsmanTurret : MonoBehaviour
             return;
         }
 
-        if (targetEnemy.isEnemyDead)
+        if (targetEnemy.isEnemyDead || (targetEnemy.isOutside && !GuardsmanOwner.isOutside || !targetEnemy.isOutside && GuardsmanOwner.isOutside))
         {
             targetEnemy = null;
             return;
@@ -79,13 +74,13 @@ public class GuardsmanTurret : MonoBehaviour
         Vector3 startingPosition = this.transform.position + (this.transform.forward * 2f);
         Vector3 directionOfTravel = this.transform.forward;
         _audioSource.transform.position = startingPosition;
-        _audioSource.PlayOneShot(_shootSounds[Random.Range(0, _shootSounds.Length)]); // play this on OnNetworkSpawn
+        _audioSource.PlayOneShot(_shootSounds[Random.Range(0, _shootSounds.Length)]);
         bulletsPool[0].SetMovingDirection(startingPosition, directionOfTravel, 30f);
     }
 
     private void HandleFindingTargetEnemy()
     {
-        foreach (var enemy in RoundManager.Instance.SpawnedEnemies)
+        foreach (EnemyAI enemy in RoundManager.Instance.SpawnedEnemies)
         {
             if (enemy is Guardsman)
                 continue;
@@ -106,17 +101,6 @@ public class GuardsmanTurret : MonoBehaviour
 
             targetEnemy = enemy;
             break;
-        }
-    }
-
-    public void OnDestroy()
-    {
-        if (!NetworkManager.Singleton.IsServer)
-            return;
-
-        foreach (var bullet in bulletsPool.ToArray())
-        {
-            bullet.NetworkObject.Despawn(true);
         }
     }
 }

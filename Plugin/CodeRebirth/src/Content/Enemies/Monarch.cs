@@ -1,13 +1,9 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using BepInEx.Configuration;
 using CodeRebirth.src.Util;
 using Dawn;
 using Dawn.Utils;
-
-
-
 using GameNetcodeStuff;
 using UnityEngine;
 
@@ -33,7 +29,6 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
         Death,
     }
 
-    private GameObject vfxObject = null!;
     private bool canAttack = true;
     private bool isAttacking = false;
     private RaycastHit[] _cachedHits = new RaycastHit[16];
@@ -190,7 +185,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
 
     private void DoIdleUpdate()
     {
-        foreach (var player in StartOfRound.Instance.allPlayerScripts)
+        foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
         {
             if (player.isPlayerDead || !player.isPlayerControlled || player.IsPseudoDead())
                 continue;
@@ -217,7 +212,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
             SwitchToBehaviourServerRpc((int)MonarchState.Idle);
             return;
         }
-        else if (distanceToClosestPlayer > 15 && !isAttacking)
+        else if (distanceToClosestPlayer > 10 && !isAttacking && closestPlayer.isInHangarShipRoom)
         {
             agent.speed = 10f;
             creatureAnimator.SetBool(IsFlyingAnimation, true);
@@ -225,12 +220,18 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
             SwitchToBehaviourServerRpc((int)MonarchState.AttackingAir);
             return;
         }
-        if (isAttacking) closestPlayer = targetPlayer;
+
+        if (isAttacking)
+        {
+            closestPlayer = targetPlayer;
+        }
+
         if (closestPlayer == null)
         {
             Plugin.Logger.LogWarning($"closestPlayer is null, distanceToClosestPlayer: {distanceToClosestPlayer}, isAttacking: {isAttacking}, targetPlayer: {targetPlayer}");
             return;
         }
+
         smartAgentNavigator.DoPathingToDestination(closestPlayer.transform.position);
         if (canAttack && distanceToClosestPlayer <= 1.5f + agent.stoppingDistance)
         {
@@ -244,14 +245,14 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
     private void DoAttackingAirUpdate()
     {
         PlayerControllerB? closestPlayer = GetClosestPlayerToMonarch(out float distanceToClosestPlayer);
-        if (closestPlayer == null && isAttacking)
+        if (closestPlayer == null && !isAttacking)
         {
             smartAgentNavigator.StartSearchRoutine(50);
             agent.stoppingDistance = 1f;
             SwitchToBehaviourServerRpc((int)MonarchState.Idle);
             return;
         }
-        else if (distanceToClosestPlayer <= 10 && isAttacking)
+        else if (!isAttacking && (distanceToClosestPlayer <= 15 || closestPlayer.isInHangarShipRoom))
         {
             agent.speed = 5f;
             creatureAnimator.SetBool(IsFlyingAnimation, false);
@@ -261,13 +262,16 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
         }
 
         if (isAttacking)
+        {
             closestPlayer = targetPlayer;
+        }
 
         if (closestPlayer == null)
         {
             Plugin.Logger.LogWarning($"closestPlayer is null, distanceToClosestPlayer: {distanceToClosestPlayer}, isAttacking: {isAttacking}, targetPlayer: {targetPlayer}");
             return;
         }
+
         smartAgentNavigator.DoPathingToDestination(closestPlayer.transform.position);
         if (canAttack && distanceToClosestPlayer <= 5f + agent.stoppingDistance)
         {
@@ -474,10 +478,13 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
         int numHits = Physics.SphereCastNonAlloc(MouthTransform.position, 2.5f, this.transform.up, _cachedHits, 1f, StartOfRound.Instance.playersMask, QueryTriggerInteraction.Ignore);
         for (int i = 0; i < numHits; i++)
         {
-            if (!_cachedHits[i].collider.TryGetComponent(out PlayerControllerB player))
+            if (!_cachedHits[i].collider.TryGetComponent(out PlayerControllerB player) || !player.IsOwner)
                 continue;
 
-            player.DamagePlayer(33, true, false, CauseOfDeath.Snipped, 7, true, default);
+            if (player.isJumping)
+                continue;
+
+            player.DamagePlayer(33, true, true, CauseOfDeath.Snipped, 7, true, default);
         }
         creatureSFX.PlayOneShot(_biteSounds[enemyRandom.Next(0, _biteSounds.Length)]);
         targetPlayer = null;
