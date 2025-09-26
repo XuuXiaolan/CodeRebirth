@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
-using CodeRebirth.src.Util;
 using Dawn.Utils;
+using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem.Controls;
@@ -30,16 +30,20 @@ public class Oxidizer : GrabbableObject
     private RaycastHit[] _cachedRaycastHits = new RaycastHit[24];
     private List<IHittable> _iHittableList = new();
     private List<EnemyAI> _enemyAIList = new();
+    private List<PlayerControllerB> _playerControllerBList = new();
 
     private void DoHitStuff(int damageToDeal)
     {
         _iHittableList.Clear();
         _enemyAIList.Clear();
+        _playerControllerBList.Clear();
 
         int numHits = Physics.SphereCastNonAlloc(capsuleTransform.position, 2f, flameStreamParticleSystems[0].transform.forward, _cachedRaycastHits, 6, MoreLayerMasks.PlayersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
-            if (_cachedRaycastHits[i].transform == playerHeldBy.transform) continue;
+            if (_cachedRaycastHits[i].transform == playerHeldBy.transform)
+                continue;
+
             if (_cachedRaycastHits[i].collider.gameObject.TryGetComponent(out IHittable iHittable))
             {
                 if (iHittable is EnemyAICollisionDetect enemyAICollisionDetect)
@@ -49,14 +53,38 @@ public class Oxidizer : GrabbableObject
                         continue;
                     }
                     _enemyAIList.Add(enemyAICollisionDetect.mainScript);
+                    continue;
+                }
+
+                if (iHittable is PlayerControllerB player)
+                {
+                    if (_playerControllerBList.Contains(player))
+                    {
+                        continue;
+                    }
+                    _playerControllerBList.Add(player);
+                    continue;
                 }
                 _iHittableList.Add(iHittable);
             }
         }
-        foreach (var iHittable in _iHittableList)
+
+        foreach (IHittable iHittable in _iHittableList)
         {
             if (IsOwner)
+            {
                 iHittable.Hit(damageToDeal, flameStreamParticleSystems[0].transform.position, playerHeldBy, true, -1);
+            }
+        }
+
+        foreach (EnemyAI enemyAI in _enemyAIList)
+        {
+            enemyAI.HitEnemy(damageToDeal, playerHeldBy, true, -1);
+        }
+
+        foreach (PlayerControllerB playerControllerB in _playerControllerBList)
+        {
+            playerControllerB.DamagePlayer(damageToDeal * 10, true, true, CauseOfDeath.Burning, 6, false, default);
         }
     }
 
