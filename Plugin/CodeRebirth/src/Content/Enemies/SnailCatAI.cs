@@ -62,12 +62,12 @@ public class SnailCatAI : CodeRebirthEnemyAI
         if (!wasFake)
         {
             List<string> randomizedNames = new();
-            var enemyKey = NamespacedKey<DawnEnemyInfo>.From("code_rebirth", "snailcat");
-
             randomizedNames = EnemyHandler.Instance.SnailCat.GetConfig<string>("SnailCat | Possible SnailCat Names").Value.Split(';').Select(s => s.Trim()).ToList();
 
             if (randomizedNames.Count == 0)
+            {
                 randomizedNames.Add("Mu");
+            }
 
             string randomName = randomizedNames[enemyRandom.Next(randomizedNames.Count)];
             float randomScale = enemyRandom.NextFloat(0.75f, 1.25f);

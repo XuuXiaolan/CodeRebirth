@@ -12,13 +12,15 @@ namespace CodeRebirth.src.Patches;
 static class RoundManagerPatch
 {
     internal static List<SpawnableFlora> spawnableFlora = [];
-    internal static int plushiesCollectedToday = 0;
+    internal static List<GrabbableObject> plushiesCollectedToday = new();
 
     [HarmonyPatch(nameof(RoundManager.SpawnOutsideHazards)), HarmonyPrefix]
     private static void SpawnOutsideMapObjects()
     {
         if (Plugin.ModConfig.ConfigFloraEnabled.Value)
+        {
             SpawnFlora();
+        }
     }
 
     private static void SpawnFlora()
@@ -28,7 +30,9 @@ static class RoundManagerPatch
         int spawnCount = 0;
         GameObject staticBatchedParent = new("Flora Parent");
         if (RoundManager.Instance.mapPropsContainer != null)
+        {
             staticBatchedParent.transform.SetParent(RoundManager.Instance.mapPropsContainer.transform);
+        }
 
         foreach (SpawnableFlora flora in spawnableFlora)
         {
@@ -114,7 +118,7 @@ static class RoundManagerPatch
     [HarmonyPatch(nameof(RoundManager.UnloadSceneObjectsEarly)), HarmonyPostfix]
     private static void ReturnToOrbitMiscPatch()
     {
-        plushiesCollectedToday = 0;
+        plushiesCollectedToday.Clear();
         PiggyBank.Instance?.RepairOrBreakPiggyBankServerRpc(false);
         foreach (GalAI gal in GalAI.Instances)
         {

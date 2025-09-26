@@ -109,23 +109,33 @@ static class PlayerControllerBPatch
         orig(self, droppedInElevator, droppedInElevator, gObject);
         if (gObject is WrittenDocument)
         {
-            DuskModContent.Achievements.TryDiscoverMoreProgressAchievement(NamespacedKey<DuskAchievementDefinition>.From("code_rebirth", "mu_miaolan"), gObject.itemProperties.itemName);
+            DuskModContent.Achievements.TryDiscoverMoreProgressAchievement(CodeRebirthAchievementKeys.MuMiaolan, gObject.itemProperties.itemName);
             return;
         }
 
         if (gObject is PlushieItem || gObject is Xui || gObject is GoldRigo)
         {
+            DuskModContent.Achievements.TryDiscoverMoreProgressAchievement(CodeRebirthAchievementKeys.CompanyCertified, gObject.itemProperties.itemName);
+            DuskModContent.Achievements.TryDiscoverMoreProgressAchievement(CodeRebirthAchievementKeys.SomeAssemblyRequired, gObject.itemProperties.itemName);
             DuskModContent.Achievements.TryDiscoverMoreProgressAchievement(CodeRebirthAchievementKeys.HappyFamily, gObject.itemProperties.itemName);
             DuskModContent.Achievements.TryDiscoverMoreProgressAchievement(CodeRebirthAchievementKeys.TheUprooted, gObject.itemProperties.itemName);
             DuskModContent.Achievements.TryDiscoverMoreProgressAchievement(CodeRebirthAchievementKeys.HoardingBug, gObject.itemProperties.itemName);
-
-            RoundManagerPatch.plushiesCollectedToday++;
-            if (RoundManagerPatch.plushiesCollectedToday >= 3)
+            if (DuskModContent.Achievements[CodeRebirthAchievementKeys.Scalper].Completed)
             {
-                RoundManagerPatch.plushiesCollectedToday = 0;
-                DuskModContent.Achievements.TryTriggerAchievement(NamespacedKey<DuskAchievementDefinition>.From("code_rebirth", "scalper"));
+                return;
             }
-            return;
+
+            if (RoundManagerPatch.plushiesCollectedToday.Contains(gObject))
+            {
+                return;
+            }
+
+            RoundManagerPatch.plushiesCollectedToday.Add(gObject);
+            if (RoundManagerPatch.plushiesCollectedToday.Count >= 3)
+            {
+                RoundManagerPatch.plushiesCollectedToday.Clear();
+                DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.Scalper);
+            }
         }
     }
 

@@ -8,9 +8,6 @@ using CodeRebirth.src.MiscScripts.DissolveEffect;
 using CodeRebirth.src.Util;
 using Dawn;
 using Dawn.Utils;
-
-
-
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -446,7 +443,7 @@ public class Puppeteer : CodeRebirthEnemyAI
             }
         }
         playerPuppetMap.Clear();
-        CodeRebirthUtils.Instance.SpawnScrapServerRpc(NamespacedKey<DawnItemInfo>.From("code_rebirth", "puppeteers_needle"), transform.position);
+        CodeRebirthUtils.Instance.SpawnScrapServerRpc(CodeRebirthItemKeys.PuppeteersNeedle, transform.position);
     }
 
     private PlayerControllerB? GetNearestPlayerWithinRange(float range)

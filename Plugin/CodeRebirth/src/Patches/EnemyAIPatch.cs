@@ -58,6 +58,10 @@ static class EnemyAIPatch
             {
                 DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.WildWest);
             }
+            else if (self is Monarch)
+            {
+                DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.PestControl);
+            }
         }
 
         if (CodeRebirthUtils.Instance.enemyCoinDropRate.TryGetValue(self.enemyType, out float coinDropChance))
