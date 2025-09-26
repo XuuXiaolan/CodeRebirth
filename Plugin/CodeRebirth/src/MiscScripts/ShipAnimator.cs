@@ -2,7 +2,9 @@
 using System.Collections;
 using CodeRebirth.src.Util;
 using Dawn;
+using Dawn.Utils;
 using Dusk;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
@@ -51,12 +53,26 @@ public class ShipAnimator : MonoBehaviour // Some of this code is from Kite, so 
             yield return new WaitUntil(() => StartOfRound.Instance.shipIsLeaving);
             StartOfRound.Instance.shipAnimator.enabled = true;
             int playersDead = StartOfRound.Instance.connectedPlayersAmount + 1 - StartOfRound.Instance.livingPlayers;
-            if (playersDead == 0)
+            if (playersDead == 0 && TimeOfDay.Instance.profitQuota - TimeOfDay.Instance.quotaFulfilled <= 0f)
             {
                 DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.GreatestAsset);
             }
+            bool switchOffOxyde = false;
+            if (StartOfRound.Instance.livingPlayers == 0)
+            {
+                switchOffOxyde = true;
+            }
+
             // re-enable animator
             yield return new WaitUntil(() => RoundManager.Instance.currentLevel.sceneName != "Oxyde" || StartOfRound.Instance.inShipPhase);
+            if (switchOffOxyde)
+            {
+                HUDManager.Instance.DisplayTip(new HUDDisplayTip("Warning", "All players found dead, rerouting back to company for a rest.", HUDDisplayTip.AlertType.Warning));
+                if (NetworkManager.Singleton.IsServer)
+                {
+                    LethalContent.Moons[MoonKeys.Gordion].RouteTo();
+                }
+            }
             StartCoroutine(UnReplaceAnimationClip());
         }
     }
@@ -85,6 +101,7 @@ public class ShipAnimator : MonoBehaviour // Some of this code is from Kite, so 
         {
             if (!player.isPlayerControlled || player.isPlayerDead)
                 continue;
+
             CRUtilities.CreateExplosion(player.transform.position, true, 999, 0, 5, 50, null, null, 100f);
         }
         CRUtilities.CreateExplosion(StartOfRound.Instance.shipAnimatorObject.transform.position + Vector3.forward * 3f + Vector3.left * 3f, true, 0, 0, 10, 0, null, null, 0);
