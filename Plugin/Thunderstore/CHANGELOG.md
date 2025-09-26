@@ -5,8 +5,27 @@
 - Added Achievements.
 - Fixed some ACUnit and Gunslinger Greg targetting issues.
 - Rewrote how some stuff targets entities so driftwood etc shouldnt see any more false positives because of other mods being stupid.
-- Added Jacobian's terrible horrifying death monitor into the cabin.
 - Fixed crane not killing clients sometimes.
+- Fixed Mistress visual issues on dying to something else while she's locking you in place.
+- Added MoreCounterplay Compatibility when seamine gal kills the coilhead.
+- Added LethalMoonUnlocks Compatibility to Oxyde.
+- Fixed MarrowSplitter recharging from hitting non enemy and/or non player.
+- Made the crate drops more randomised on a moon.
+- Fixed issues with fans pulling through walls.
+- Oxyde crane drops ship more slowly to try and mitigate player fall damage.
+- Greg and ACUnit should target the players less maybe.
+- Greg shouldn't target players on the ship edges on Oxyde anymore.
+- Added Configs for cacti toughness against non-scrap and a volume config for terminal gal's special song.
+- Made crane deactivate timer a configurable range timer between two numbers.
+- Fixed guardsman projectiles not despawning + performance increase with that stuff.
+- Monarch ground attack can now be dodged by dodging midair.
+- Monarch won't go for air attacks while the target player is inside the ship.
+- Fixed a bunch of enemies being able to enter and leave the interior when they're not supposed to.
+- Tornado met bruce and got a slight visual revamp.
+- Auto routing to company on a full party wipe of oxyde.
+- Fixed Incompatibility with GI's door stuff with keys.
+- Fixed RadMech destroy sound not being playable from Greg.
+- Fixed issue with brrreaker leaving player stuck if they die while stuck on a wall.
 
 ## v1.1.11
 

@@ -51,6 +51,12 @@ public class Mountaineer : CRWeapon
         iceMaterial.color = new Color(iceMaterial.color.r, iceMaterial.color.g, iceMaterial.color.b, heldOverHeadTimer.Value);
         if (stuckPlayer != null && stuckToWall && !stuckPlayer.isGrabbingObjectAnimation) // this wont be sync'd, which is okay!
         {
+            if (stuckPlayer.isPlayerDead)
+            {
+                stuckPlayer.activatingItem = false;
+                stuckPlayer.disableMoveInput = false;
+                return;
+            }
             stuckPlayer.transform.position = stuckPosition;
             stuckPlayer.ResetFallGravity();
             stuckPlayer.disableMoveInput = true;
