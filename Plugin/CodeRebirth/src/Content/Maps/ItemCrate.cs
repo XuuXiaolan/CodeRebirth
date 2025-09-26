@@ -10,7 +10,6 @@ using UnityEngine;
 using System;
 using System.Collections;
 using CodeRebirth.src.Content.Enemies;
-using Dawn;
 using Dusk;
 
 namespace CodeRebirth.src.Content.Maps;
@@ -64,7 +63,7 @@ public class ItemCrate : CRHittable
     {
         if (grabAndPullPlayerScript != null) grabAndPullPlayerScript.enabled = false;
         if (grabAndLaunchPlayerScript != null) grabAndLaunchPlayerScript.enabled = false;
-        crateRandom = new System.Random(StartOfRound.Instance.randomMapSeed);
+        crateRandom = new System.Random(StartOfRound.Instance.randomMapSeed + CodeRebirthUtils.Instance.CRRandom.Next(100000));
         digProgress = crateRandom.NextFloat(0.01f, 0.1f);
         transform.position = transform.position + transform.up * -0.6f;
         originalPosition = transform.position;
