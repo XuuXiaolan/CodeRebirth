@@ -1,4 +1,6 @@
-﻿using CodeRebirth.src.Content.Items;
+﻿using System;
+using System.Linq;
+using CodeRebirth.src.Content.Items;
 using HarmonyLib;
 using UnityEngine;
 
@@ -19,7 +21,10 @@ static class KeyItemPatch
             if (raycastHit.transform.TryGetComponent(out Pickable pickable) && pickable.enabled && pickable.IsLocked)
             {
                 pickable.UnlockStuffServerRpc();
-                if (__instance.IsSpawned && __instance.playerHeldBy.currentlyHeldObjectServer == __instance) __instance.playerHeldBy.DespawnHeldObject();
+                if (__instance.IsSpawned)
+                {
+                    __instance.playerHeldBy.DestroyItemInSlotAndSync(Array.IndexOf(__instance.playerHeldBy.ItemSlots, __instance));
+                }
             }
         }
     }
