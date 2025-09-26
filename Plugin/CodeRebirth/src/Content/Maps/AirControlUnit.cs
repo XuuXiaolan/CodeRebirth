@@ -77,12 +77,7 @@ public class AirControlUnit : CodeRebirthHazard
         if (playerControllerB.isClimbingLadder)
             return true;
 
-        Ray ray = new Ray(playerControllerB.gameplayCamera.transform.position, -Vector3.up);
-        if (Physics.Raycast(ray, out _, 20f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
-        {
-            return true;
-        }
-        return false;
+        return playerControllerB.IsPlayerNearGround();
     }
 
     private void FindAndAimAtTarget()

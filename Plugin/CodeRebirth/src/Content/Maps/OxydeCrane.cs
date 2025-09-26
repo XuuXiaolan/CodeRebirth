@@ -1,5 +1,5 @@
 using System.Collections;
-using System.Linq;
+using System.Collections.Generic;
 using CodeRebirth.src.Util;
 using Dawn.Utils;
 using GameNetcodeStuff;
@@ -56,7 +56,6 @@ public class OxydeCrane : NetworkBehaviour
     {
         if (!player.IsLocalPlayer() || alreadyDropped) return;
         TryDropShipFromCraneServerRpc();
-        StartCoroutine(TryDropShipFromCrane());
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -73,27 +72,21 @@ public class OxydeCrane : NetworkBehaviour
 
     public IEnumerator TryDropShipFromCrane()
     {
-        if (alreadyDropped)
-        {
-            yield break;
-        }
         dropButton.interactable = false;
         CodeRebirthUtils.Instance.startMatchLever.triggerScript.disabledHoverTip = previousDisabledTriggerMessage;
         CodeRebirthUtils.Instance.startMatchLever.triggerScript.interactable = true;
         leverAnimator.SetTrigger(PullLeverAnimation);
-        alreadyDropped = true;
         float timeElapsed = 0f;
-        GameObject[] objectsToDrop = [shipNavColliders, StartOfRound.Instance.shipAnimatorObject.gameObject];
-        Plugin.ExtendedLogging($"Dropping the following objects from the crane: {string.Join(", ", objectsToDrop.Select(x => x.name))}");
-        while (timeElapsed <= 0.5f)
+        List<(GameObject gameObject, Vector3 startPos, Quaternion startRot)> objectsToDrop = [(shipNavColliders, shipNavColliders.transform.position, shipNavColliders.transform.rotation), (StartOfRound.Instance.shipAnimatorObject.gameObject, StartOfRound.Instance.shipAnimatorObject.transform.position, StartOfRound.Instance.shipAnimatorObject.transform.rotation)];
+        while (timeElapsed <= 2f)
         {
             yield return null;
             timeElapsed += Time.deltaTime;
-            foreach (GameObject obj in objectsToDrop)
+            foreach (var tuple in objectsToDrop)
             {
-                Vector3 vector = Vector3.Lerp(obj.transform.position, endPosition, timeElapsed * 2f);
-                Quaternion quaternion = Quaternion.Lerp(obj.transform.rotation, endRotation, timeElapsed * 2f);
-                obj.transform.SetPositionAndRotation(vector, quaternion);
+                Vector3 vector = Vector3.Lerp(tuple.startPos, endPosition, timeElapsed);
+                Quaternion quaternion = Quaternion.Lerp(tuple.startRot, endRotation, timeElapsed);
+                tuple.gameObject.transform.SetPositionAndRotation(vector, quaternion);
             }
         }
 

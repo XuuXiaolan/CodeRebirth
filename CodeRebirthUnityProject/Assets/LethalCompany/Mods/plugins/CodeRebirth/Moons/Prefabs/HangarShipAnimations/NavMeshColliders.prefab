@@ -2909,6 +2909,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8332592834132441395}
   - component: {fileID: 5365519390325923289}
+  - component: {fileID: 4005868799267978531}
   m_Layer: 0
   m_Name: NavMeshColliders
   m_TagString: Untagged
@@ -2965,6 +2966,22 @@ MonoBehaviour:
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: 49753a9ed4007394fa09d4ff56674c1a, type: 2}
   m_BuildHeightMesh: 0
+--- !u!114 &4005868799267978531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5452790117066995786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1381420669, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boundColor: {r: 0, g: 0, b: 1, a: 1}
+  bounds:
+    m_Center: {x: 20.2, y: -4.34, z: 2.97}
+    m_Extent: {x: 14.17, y: 7.77, z: 11.58}
 --- !u!1 &6356564224886991916
 GameObject:
   m_ObjectHideFlags: 0

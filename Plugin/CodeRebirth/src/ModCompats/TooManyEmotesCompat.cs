@@ -18,6 +18,6 @@ internal class TooManyEmotesCompat
     [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     private static void AddToEmoteCredits(int profit)
     {
-        TooManyEmotes.Patches.TerminalPatcher.OnGainGroupCredits(profit, 0, null); // TODO test
+        TooManyEmotes.Patches.TerminalPatcher.OnGainGroupCredits(profit, 0, null);
     }
 }

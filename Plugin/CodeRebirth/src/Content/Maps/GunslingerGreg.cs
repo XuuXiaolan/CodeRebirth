@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
+using Dawn.Utils;
 using GameNetcodeStuff;
 using UnityEngine;
 
@@ -104,8 +105,8 @@ public class GunslingerGreg : CodeRebirthHazard
 
     private bool IsTransformNearGround(Transform toKillTransform)
     {
-        Ray ray = new(toKillTransform.position, -Vector3.up);
-        if (Physics.Raycast(ray, 20f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+        Ray ray = new(toKillTransform.position, Vector3.down);
+        if (Physics.Raycast(ray, 20f, StartOfRound.Instance.allPlayersCollideWithMask, QueryTriggerInteraction.Ignore))
         {
             return true;
         }
@@ -185,7 +186,9 @@ public class GunslingerGreg : CodeRebirthHazard
             {
                 lockedOntoATransform = true;
                 if (lastTransformTargetted == null)
+                {
                     GregSource.PlayOneShot(GregLockOnSound);
+                }
 
                 lastTransformTargetted = toKilltransform;
                 DetectPlayerAudioSound.volume = 1f;

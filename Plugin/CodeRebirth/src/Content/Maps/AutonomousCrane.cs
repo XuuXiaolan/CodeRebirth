@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Util;
 using Dawn;
-using Dusk;
 using Dawn.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;

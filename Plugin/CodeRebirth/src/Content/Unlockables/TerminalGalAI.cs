@@ -5,7 +5,6 @@ using System.Linq;
 using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.MiscScripts.CustomPasses;
-using CodeRebirth.src.Util;
 using Dawn.Utils;
 
 using GameNetcodeStuff;
@@ -359,6 +358,7 @@ public class TerminalGalAI : GalAI
         }
         if (galRandom.Next(500000) <= 3)
         {
+            specialSource.volume = UnlockableHandler.Instance.TerminalBot.GetConfig<float>("Terminal Gal | Special Song Volume").Value;
             specialSource.Stop();
             specialSource.Play();
         }
