@@ -12,7 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 608100558, guid: cd73415377293454abda168a425682f7, type: 3}
   m_Name: AutonomousMapObjectDefinition
   m_EditorClassIdentifier: 
-  _configEntries: []
+  _configEntries:
+  - settingName: Autonomous Crane | Deactivation Length
+    DynamicConfigType: 4
+    defaultString: 
+    defaultInt: 0
+    defaultFloat: 30
+    defaultBool: 0
+    defaultBoundedRange:
+      <Min>k__BackingField: 20
+      <Max>k__BackingField: 40
+    defaultAnimationCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    Description: How long the crane stays deactivated after pulling the lever
   _tags: []
   <Key>k__BackingField:
     _namespace: code_rebirth

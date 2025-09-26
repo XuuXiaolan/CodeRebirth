@@ -428,7 +428,8 @@ public class AutonomousCrane : NetworkBehaviour
         _audioSource.Stop();
         _craneIsActive = false;
         _onDeactivateCrane.Invoke();
-        yield return new WaitForSeconds(30f);
+        
+        yield return new WaitForSeconds(MapObjectHandler.Instance.AutonomousCrane.GetConfig<BoundedRange>("Autonomous Crane | Deactivation Length").Value.GetRandomInRange(CodeRebirthUtils.Instance.CRRandom));
         _craneIsActive = true;
         _onActivateCrane.Invoke();
         if (wasPlaying && _audioSource.clip != null)
