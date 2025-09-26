@@ -6,12 +6,8 @@ using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.MiscScripts.CustomPasses;
 using CodeRebirth.src.ModCompats;
-using CodeRebirth.src.Util;
 using Dawn;
 using Dawn.Utils;
-
-
-
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -590,6 +586,14 @@ public class SeamineGalAI : GalAI
             }
             else
             {
+                if (enemy is SpringManAI && MoreCounterplayCompat.MoreCounterplayExists && MoreCounterplayCompat.CoilheadCounterplayEnabled())
+                {
+                    for (int i = 0; i < 10; i++)
+                    {
+                        enemy.HitEnemyOnLocalClient(999, this.transform.position, ownerPlayer, false, 5);
+                    }
+                    continue;
+                }
                 enemy.KillEnemyOnOwnerClient(true);
             }
         }

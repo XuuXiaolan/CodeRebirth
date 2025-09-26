@@ -19,7 +19,7 @@ internal static class MoreCompanySoftCompat
         }
     }
 
-    [MethodImpl(MethodImplOptions.NoInlining)]
+    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     private static void DisableOrEnableCosmetics(PlayerControllerB targetPlayer, bool disable)
     {
         CosmeticApplication cosmeticApplication = targetPlayer.transform.Find("ScavengerModel").Find("metarig").gameObject.GetComponent<CosmeticApplication>();
