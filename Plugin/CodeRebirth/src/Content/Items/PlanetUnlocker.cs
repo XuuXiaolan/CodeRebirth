@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Linq;
+using CodeRebirth.src.ModCompats;
 using Dawn.Utils;
 using LethalLevelLoader;
 using UnityEngine;
@@ -20,6 +21,11 @@ public class PlanetUnlocker : GrabbableObject
         if (extendedLevel != null)
         {
             HUDManager.Instance.DisplayTip("Success", $"Coordinates to {moonSceneName} found.\n{extraText}", false);
+            if (LethalMoonUnlocksCompat.LethalMoonUnlocksExists)
+            {
+                LethalMoonUnlocksCompat.ReleaseOxydeStoryLock(extendedLevel);
+            }
+
             extendedLevel.IsRouteHidden = false;
             extendedLevel.IsRouteLocked = false;
         }
