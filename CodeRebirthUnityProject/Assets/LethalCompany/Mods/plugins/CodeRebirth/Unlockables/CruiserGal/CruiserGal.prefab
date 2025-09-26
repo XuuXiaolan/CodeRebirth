@@ -1015,22 +1015,16 @@ MonoBehaviour:
   m_Script: {fileID: 1066262130, guid: b821795baeb020545a00803c13a7b7c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cantMove: 0
-  lastUsedEntranceTeleport: {fileID: 0}
-  agent: {fileID: 0}
-  isOutside: 1
-  exitPoints: []
-  mainEntrance: {fileID: 0}
-  OnEnableOrDisableAgent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEnterOrExitElevator:
-    m_PersistentCalls:
-      m_Calls: []
   OnUseEntranceTeleport:
     m_PersistentCalls:
       m_Calls: []
+  OnEnableOrDisableAgent:
+    m_PersistentCalls:
+      m_Calls: []
+  lastUsedEntranceTeleport: {fileID: 0}
+  agent: {fileID: 0}
   _nodeRemovalPrecision: 5
+  _allowedLinks: 15
 --- !u!114 &1196867079622778871
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1075,20 +1069,6 @@ MonoBehaviour:
   renderersToHideIn:
   - {fileID: 1332120908553784758}
   smartAgentNavigator: {fileID: 8205759437972258467}
-  boomboxPlaying: 0
-  staringTimer: 0
-  targetEnemy: {fileID: 0}
-  ownerPlayer: {fileID: 0}
-  chargeCount: 10
-  maxChargeCount: 0
-  currentlyAttacking: 0
-  boomboxTimer: 0
-  physicsEnabled: 1
-  idleNeededTimer: 10
-  idleTimer: 0
-  isInHangarShipRoom: 1
-  inActive: 1
-  doneOnce: 0
   ChestCollisionToggleTrigger: {fileID: 8337172600835232956}
   RadioTrigger: {fileID: 4558554645093636250}
   WheelDumpScrapTrigger: {fileID: 2962982205651135161}
@@ -1235,9 +1215,9 @@ MonoBehaviour:
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
   PositionThreshold: 0.001
   RotAngleThreshold: 0.01
   ScaleThreshold: 0.01

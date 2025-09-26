@@ -478,7 +478,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 1738a016b4e2aeb41aa6fe43bb3f84a0, type: 3}
   - {fileID: 8300000, guid: 417b6623a695fc24fb61e099eaa24d66, type: 3}
   spawnSound: {fileID: 0}
-  _variantMaterials: []
   propScript: {fileID: 4180001964916081428}
   scanNodeProperties: {fileID: 2181669798328249144}
   enemyDetectSound: {fileID: 8300000, guid: be67c13828194f144918ffc5744be20d, type: 3}
@@ -647,14 +646,10 @@ MonoBehaviour:
   m_Script: {fileID: 1066262130, guid: b821795baeb020545a00803c13a7b7c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cantMove: 0
   OnUseEntranceTeleport:
     m_PersistentCalls:
       m_Calls: []
   OnEnableOrDisableAgent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEnterOrExitElevator:
     m_PersistentCalls:
       m_Calls: []
   lastUsedEntranceTeleport: {fileID: 0}

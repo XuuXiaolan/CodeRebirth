@@ -7268,7 +7268,6 @@ MonoBehaviour:
     maxTime: 15
   _hitBodySounds: []
   spawnSound: {fileID: 8300000, guid: a00f33af26d31814ba6dbc7ebda35732, type: 3}
-  _variantMaterials: []
   _gunStartTransform: {fileID: 6310224351839325153}
   _gunEndTransform: {fileID: 5888558220192546133}
   _walkingSpeed: 2
@@ -7321,20 +7320,16 @@ MonoBehaviour:
   m_Script: {fileID: 1066262130, guid: b821795baeb020545a00803c13a7b7c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cantMove: 0
   OnUseEntranceTeleport:
     m_PersistentCalls:
       m_Calls: []
   OnEnableOrDisableAgent:
     m_PersistentCalls:
       m_Calls: []
-  OnEnterOrExitElevator:
-    m_PersistentCalls:
-      m_Calls: []
   lastUsedEntranceTeleport: {fileID: 0}
   agent: {fileID: 0}
   _nodeRemovalPrecision: 5
-  _allowedLinks: 7
+  _allowedLinks: 3
 --- !u!1 &6761455667277072204
 GameObject:
   m_ObjectHideFlags: 0
