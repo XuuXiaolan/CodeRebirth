@@ -9,7 +9,6 @@ public class IndustrialFanBackCollider : NetworkBehaviour
     private void OnTriggerStay(Collider collider)
     {
         if (industrialFan.IsObstructed(collider.transform.position)) return;
-        // Calculate the new position by interpolating between the collider's current position and the fan's position
         Vector3 targetPosition = industrialFan.fanTransform.position;
         Vector3 direction = (targetPosition - collider.transform.position).normalized;
         float step = industrialFan.suctionForce * Time.fixedDeltaTime;

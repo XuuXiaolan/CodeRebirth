@@ -38,7 +38,7 @@ public class IndustrialFan : CodeRebirthHazard
 
     public bool IsObstructed(Vector3 targetPosition)
     {
-        return Physics.Linecast(fanTransform.position, targetPosition, out _, MoreLayerMasks.CollidersAndRoomAndRailingAndInteractableMask, QueryTriggerInteraction.Ignore);
+        return Physics.Linecast(targetPosition, fanTransform.position, MoreLayerMasks.CollidersAndRoomAndRailingAndInteractableMask, QueryTriggerInteraction.Ignore);
     }
 
     private void PlayRedMist()
