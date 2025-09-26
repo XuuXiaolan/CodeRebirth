@@ -188,6 +188,7 @@ public class MarrowSplitter : GrabbableObject
         _iHittableList.Clear();
         _enemyAIList.Clear();
         bool hitSomething = false;
+        bool canRaiseBlood = false;
 
         int numHits = Physics.OverlapSphereNonAlloc(_endTransform.position, 1f, _cachedColliders, MoreLayerMasks.PlayersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
@@ -202,11 +203,13 @@ public class MarrowSplitter : GrabbableObject
                     continue;
 
                 hitSomething = true;
+                canRaiseBlood = true;
                 player.DamagePlayer(damageToDeal, true, true, CauseOfDeath.Fan, 0, false, default);
             }
             else if (hittable is EnemyAICollisionDetect enemy)
             {
                 hitSomething = true;
+                canRaiseBlood = true;
                 if (_enemyAIList.Contains(enemy.mainScript))
                     continue;
 
@@ -231,15 +234,18 @@ public class MarrowSplitter : GrabbableObject
             _bloodParticles.Play(true);
             _idleSource.PlayOneShot(_hitEnemySounds[UnityEngine.Random.Range(0, _hitEnemySounds.Length)]);
             _hitTimer = 0.4f;
-            insertedBattery.charge -= 0.05f;
-            float currentAmount = _skinnedMeshRenderer.GetBlendShapeWeight(0);
-            float newAmount = Mathf.Clamp(currentAmount + _increaseAmount, 0, 100);
-            if (newAmount > currentAmount)
+            if (canRaiseBlood)
             {
-                _idleSource.PlayOneShot(_fillUpSounds[UnityEngine.Random.Range(0, _fillUpSounds.Length)]);
+                insertedBattery.charge -= 0.05f;
+                float currentAmount = _skinnedMeshRenderer.GetBlendShapeWeight(0);
+                float newAmount = Mathf.Clamp(currentAmount + _increaseAmount, 0, 100);
+                if (newAmount > currentAmount && canRaiseBlood)
+                {
+                    _idleSource.PlayOneShot(_fillUpSounds[UnityEngine.Random.Range(0, _fillUpSounds.Length)]);
+                }
+                Plugin.ExtendedLogging($"Increasing blendshape weight to {newAmount}");
+                _skinnedMeshRenderer.SetBlendShapeWeight(0, newAmount);
             }
-            Plugin.ExtendedLogging($"Increasing blendshape weight to {newAmount}");
-            _skinnedMeshRenderer.SetBlendShapeWeight(0, newAmount);
         }
         else
         {
