@@ -1,4 +1,5 @@
 using System.Collections;
+using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.MiscScripts;
 using Dawn.Utils;
 using GameNetcodeStuff;
@@ -31,6 +32,13 @@ public class DestructibleObject : NetworkBehaviour, IHittable
 
     public bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
+        if (playerWhoHit && EnemyHandler.Instance.CactusBudling.GetConfig<bool>("Cactus Budling | Cacti Toughness").Value)
+        {
+            if (playerWhoHit.currentlyHeldObjectServer == null || !playerWhoHit.currentlyHeldObjectServer.itemProperties.isDefensiveWeapon)
+            {
+                return false;
+            }
+        }
         DestroyDestructibleObjectServerRpc();
         return true;
     }
