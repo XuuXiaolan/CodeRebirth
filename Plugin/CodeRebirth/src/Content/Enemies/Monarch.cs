@@ -400,24 +400,17 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
         Transform start = BeamController._startBeamTransform;
         Transform dir = BeamController._raycastDirectionBeamTransform;
 
-        bool didHit = Physics.Raycast(
-            start.position,
-            dir.forward,
-            out RaycastHit hit,
-            maxRange,
-            StartOfRound.Instance.collidersRoomMaskDefaultAndPlayers,
-            QueryTriggerInteraction.Ignore
-        );
+        bool didHit = Physics.Raycast(start.position, dir.forward, out RaycastHit hit, maxRange, MoreLayerMasks.CollidersAndRoomAndRailingAndTerrainAndHazardAndVehicleAndDefaultMask, QueryTriggerInteraction.Ignore);
 
-        Vector3 rawEnd = didHit
-            ? hit.point
-            : start.position + dir.forward * maxRange;
+        Vector3 rawEnd = didHit ? hit.point : start.position + dir.forward * maxRange;
 
         if (didHit && targetPlayer != null)
         {
             float distToPlayer = Vector3.Distance(hit.point, targetPlayer.transform.position);
             if (distToPlayer <= followRadius)
+            {
                 return targetPlayer.transform.position;
+            }
         }
 
         return rawEnd;
