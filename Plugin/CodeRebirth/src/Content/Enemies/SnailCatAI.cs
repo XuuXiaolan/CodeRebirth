@@ -51,10 +51,23 @@ public class SnailCatAI : CodeRebirthEnemyAI
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+        smartAgentNavigator.OnUseEntranceTeleport.AddListener(OnUseEntranceTeleport);
         if (!IsServer)
             return;
 
         DelayForBit();
+    }
+
+    public void OnUseEntranceTeleport(bool setOutside)
+    {
+        propScript.isInFactory = setOutside;
+        StartCoroutine(SetItemPhysics(propScript));
+    }
+
+    private IEnumerator SetItemPhysics(GrabbableObject grabbableObject)
+    {
+        yield return new WaitForSeconds(0.1f);
+        grabbableObject.EnablePhysics(false);
     }
 
     private void DelayForBit()
@@ -390,14 +403,20 @@ public class SnailCatAI : CodeRebirthEnemyAI
         base.OnNetworkDespawn();
         detectLightInSurroundings?.OnLightValueChange.RemoveListener(OnLightValueChange);
 
-        if (!IsServer)
-            return;
-
         if (!StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(this.transform.position))
             return;
 
-        NetworkObjectReference netObjRef = CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[CodeRebirthItemKeys.FakeSnailCat].Item, this.transform.position, false, true, 0);
+        Vector3 oldPosition = this.transform.position;
+        PlayerControllerB? playerHeldBy = propScript.playerHeldBy;
+
+        playerHeldBy?.SetObjectAsNoLongerHeld(false, false, Vector3.zero, propScript, -1);
+
+        if (!IsServer)
+            return;
+
+        NetworkObjectReference netObjRef = CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[CodeRebirthItemKeys.FakeSnailCat].Item, oldPosition, false, true, 0);
         FakeSnailCat fakeSnailCat = ((NetworkObject)netObjRef).GetComponent<FakeSnailCat>();
+        fakeSnailCat.lastOwner = playerHeldBy;
         fakeSnailCat.localScale = propScript.originalScale;
         fakeSnailCat.snailCatName = currentName;
         fakeSnailCat.shiftHash = _specialRenderer!.materials[0].GetFloat(ShiftHash);

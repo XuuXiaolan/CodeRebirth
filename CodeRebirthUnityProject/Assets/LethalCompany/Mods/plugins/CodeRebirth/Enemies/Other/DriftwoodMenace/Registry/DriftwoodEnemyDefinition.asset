@@ -39,11 +39,16 @@ MonoBehaviour:
   <SpawnTable>k__BackingField: 2
   <TerminalNode>k__BackingField: {fileID: 0}
   <TerminalKeyword>k__BackingField: {fileID: 0}
-  <MoonSpawnWeights>k__BackingField: Vanilla:+10,Custom:+10,Valley:+30,Canyon:+5,Tundra:-999,Marsh:+40,Military:-20,Rocky:-50,Amythest:-90,Experimentation:+1,Assurance:+5,Vow:+45,Offense:+3,March:+35,Adamance:+40,Rend:-999,Dine:-999,Titan:-999,Artifice:+10,Embrion:-100,Oxyde:+40
+  <MoonSpawnWeights>k__BackingField: Vanilla=+10, Custom=+10, Valley=+30, Canyon=+5,
+    Tundra=-999, Marsh=+40, Military=-20, Rocky=-50, Amythest=-90, Experimentation=+1,
+    Assurance=+5, Vow=+45, Offense=+3, March=+35, Adamance=+40, Rend=-999, Dine=-999,
+    Titan=-999, Artifice=+10, Embrion=-100, Code Rebirth:Oxyde=+40
   <InteriorSpawnWeights>k__BackingField: 
-  <WeatherSpawnWeights>k__BackingField: None:*1,DustClouds:*1,Rainy:*1.4,Stormy:*1.4,Foggy:*1,Flooded:*0.75,Eclipsed:*1,Meteor
-    Shower:*0.5,Tornado:*0.7,Night Shift:*0.7,Snowfall:*0,Blizzard:*0,Heatwave:*0.5,Solar
-    Flare:*0.5,Toxic Smog:*1,Cloudy:*1,Blackout:*0.5
+  <WeatherSpawnWeights>k__BackingField: None=*1, DustClouds=*1, Rainy=*1.4, Stormy=*1.4,
+    Foggy=*1, Flooded=*0.75, Eclipsed=*1, Code Rebirth:Meteor Shower=*0.5, Code Rebirth:Tornado=*0.7,
+    Code Rebirth:Night Shift=*0.7, Weather Registry:Snowfall=*0, Weather Registry:Blizzard=*0,
+    Weather Registry:Heatwave=*0.5, Weather Registry:Solar Flare=*0.5, Weather Registry:Toxic
+    Smog=*1, Weather Registry:Cloudy=*1, Weather Registry:Blackout=*0.5
   <GenerateSpawnWeightsConfig>k__BackingField: 1
   <PowerLevel>k__BackingField: 0
   <MaxSpawnCount>k__BackingField: 0

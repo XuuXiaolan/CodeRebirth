@@ -1,5 +1,6 @@
 # v1.2.0
 
+- Other than bug fixes, this is one of the final content updates this mod will likely receive, I hope you've enjoyed the CodeRebirth experience provided to you by the main developers, Rodrigo and Xu Xiaolan.
 - Fixed SnailCat names being desynced apparently, host now controls all the names.
 - Added all the plushies.
 - Added Achievements.
@@ -26,6 +27,7 @@
 - Fixed Incompatibility with GI's door stuff with keys.
 - Fixed RadMech destroy sound not being playable from Greg.
 - Fixed issue with brrreaker leaving player stuck if they die while stuck on a wall.
+- Regenerated all configs for new config system :p
 
 ## v1.1.11
 

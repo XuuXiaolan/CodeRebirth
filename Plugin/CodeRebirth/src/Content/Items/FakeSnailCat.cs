@@ -54,7 +54,9 @@ public class FakeSnailCat : GrabbableObject
         GameNetworkManager.Instance.localPlayerController.SetItemInElevator(true, true, this);
 
         if (lastOwner.IsLocalPlayer())
+        {
             CRUtilities.MakePlayerGrabObject(lastOwner, this);
+        }
 
         this.transform.localScale = scale;
         originalScale = scale;
@@ -86,12 +88,14 @@ public class FakeSnailCat : GrabbableObject
         if (StartOfRound.Instance.inShipPhase || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.shipIsLeaving)
             return;
 
-        var enemyType = LethalContent.Enemies[CodeRebirthEnemyKeys.RealEnemySnailCat].EnemyType;
+        EnemyType enemyType = LethalContent.Enemies[CodeRebirthEnemyKeys.RealEnemySnailCat].EnemyType;
         NetworkObjectReference netObjRef = RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, enemyType);
         SnailCatAI snailCatAI = ((NetworkObject)netObjRef).GetComponent<SnailCatAI>();
         snailCatAI.wasFake = true;
         if (isHeld && playerHeldBy != null)
+        {
             snailCatAI.playerHolding = playerHeldBy;
+        }
 
         snailCatAI.fakeLocalScale = this.transform.localScale;
         snailCatAI.currentName = snailCatName;
