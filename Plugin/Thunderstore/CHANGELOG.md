@@ -28,6 +28,7 @@
 - Fixed RadMech destroy sound not being playable from Greg.
 - Fixed issue with brrreaker leaving player stuck if they die while stuck on a wall.
 - Regenerated all configs for new config system :p
+- Made SnailCats non-conductive.
 
 ## v1.1.11
 
