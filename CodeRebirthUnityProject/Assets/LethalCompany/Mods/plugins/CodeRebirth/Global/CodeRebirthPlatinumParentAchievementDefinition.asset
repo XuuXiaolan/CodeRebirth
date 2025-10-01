@@ -1,0 +1,270 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 314862632, guid: cd73415377293454abda168a425682f7, type: 3}
+  m_Name: CodeRebirthPlatinumParentAchievementDefinition
+  m_EditorClassIdentifier: 
+  _configEntries: []
+  _tags: []
+  _typedKey:
+    _namespace: code_rebirth
+    _key: code_rebirth_platinum
+  <AchievementIcon>k__BackingField: {fileID: 21300000, guid: 75aae18b2b8e54f4dad2591be8eaba52,
+    type: 3}
+  <AchievementName>k__BackingField: Code Rebirth Platinum
+  <AchievementDescription>k__BackingField: A true test of will and endeavour, complete
+    the entirety of the CodeRebirth available achievements.
+  <FinishedAchievementNameColorGradientPreset>k__BackingField: {fileID: 11400000,
+    guid: 7f29882e99a858e4c804442648eed272, type: 2}
+  <FinishedAchievementDescColorGradientPreset>k__BackingField: {fileID: 11400000,
+    guid: 7f29882e99a858e4c804442648eed272, type: 2}
+  <FinishedAchievementBackgroundIcon>k__BackingField: {fileID: 0}
+  <FinishAchievementAudioClip>k__BackingField: {fileID: 0}
+  <AchievementRequirement>k__BackingField: Placeholder
+  <IsHidden>k__BackingField: 1
+  <CanBeUnhidden>k__BackingField: 1
+  <PopupTime>k__BackingField: 10
+  <ChildrenAchievementReferences>k__BackingField:
+  - rid: 76795417780027392
+  - rid: 76795417780027394
+  - rid: 76795417780027395
+  - rid: 76795417780027397
+  - rid: 76795417780027398
+  - rid: 76795417780027399
+  - rid: 76795417780027400
+  - rid: 76795417780027401
+  - rid: 76795417780027402
+  - rid: 76795417780027403
+  - rid: 76795417780027404
+  - rid: 76795417780027405
+  - rid: 76795417780027406
+  - rid: 76795417780027407
+  - rid: 76795417780027408
+  - rid: 76795417780027409
+  - rid: 76795417780027410
+  - rid: 76795417780027411
+  - rid: 76795417780027412
+  - rid: 76795417780027413
+  - rid: 76795417780027414
+  - rid: 76795417780027415
+  - rid: 76795417780027416
+  - rid: 76795417780027417
+  - rid: 76795417780027418
+  - rid: 76795417780027419
+  - rid: 76795417780027420
+  - rid: 76795417780027421
+  - rid: 76795417780027422
+  references:
+    version: 2
+    RefIds:
+    - rid: 76795417780027392
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: 89d430724ee4bee46b05f4d51efadc31
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: banzai
+    - rid: 76795417780027394
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: d531fc1c51d144747a1df125ca553e77
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: bushwacked
+    - rid: 76795417780027395
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: 1165d90027d6363468f41b85e6439bd8
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: capitalism
+    - rid: 76795417780027397
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: 4513047c3d59e2a4e9721fa790206fea
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: company_certified
+    - rid: 76795417780027398
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: c754a133112191840b64d2cc23d15359
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: crateapult
+    - rid: 76795417780027399
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: eda06c987f72db54f80e2a92b4e0c8f3
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: fat_wallet
+    - rid: 76795417780027400
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: 1c8299a5cb050e6458389044533a8b15
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: graveyard_shift
+    - rid: 76795417780027401
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: b91fba98e2b85d74ba50d54127e07057
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: greatest_asset
+    - rid: 76795417780027402
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: f24542092608b71489f1748e3fad7792
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: happy_family
+    - rid: 76795417780027403
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: 75c669e7585844645a9d3b5036fe3f1e
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: i_got_a_headache
+    - rid: 76795417780027404
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: 38092ebf490425341b3035824c7f8fb4
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: hoarding_bug
+    - rid: 76795417780027405
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: 2051ee4376d3de94fb83da2f65a162b9
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: internship
+    - rid: 76795417780027406
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: 9752620b2943f644bbd652ee56b4db30
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: lunch_is_served
+    - rid: 76795417780027407
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: a9b44236875981e49a04d1688db1efe3
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: mayday_mayday
+    - rid: 76795417780027408
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: ab359cc04ad5b4441a6c5f7575b8e246
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: mu_miaolan
+    - rid: 76795417780027409
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: ba3894485d73dec41ae05c4640327f94
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: night_of_betrayal
+    - rid: 76795417780027410
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: 8ee7dff9eaa49614dbc7cf4e202b52a3
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: oh_a_penny
+    - rid: 76795417780027411
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: 95ee3d74cdcb5564887e914f7815d344
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: out_of_stock
+    - rid: 76795417780027412
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: 78184730f59280e419c82a06b2cb4db5
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: peace_kept
+    - rid: 76795417780027413
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: 5ec089ec221335443aa0feff0300488c
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: pest_control
+    - rid: 76795417780027414
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: 384d48147eb1af34186ca7145a2fdbc9
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: safe_and_sound
+    - rid: 76795417780027415
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: e56ac1c3d57fa5a49b4b7a0e3087b804
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: scalper
+    - rid: 76795417780027416
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: 81817edb0996a8b49a0f1b5962ce2dc6
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: short_fuse
+    - rid: 76795417780027417
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: 19259a5d80304204e9f0b051cdacb630
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: some_assembly_required
+    - rid: 76795417780027418
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: c27f2b2355c8fa043b9aae8781f298b7
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: the_uprooted
+    - rid: 76795417780027419
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: 75458a1a6b874bb4ea9c9d39b4324a0b
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: timber
+    - rid: 76795417780027420
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: 05f72ee0a6b0ecd40800aca456f7f368
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: trash_trash_trash
+    - rid: 76795417780027421
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: 1966445c949fb99499fb0ab808127fd6
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: wild_west
+    - rid: 76795417780027422
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: e1ba5b75958c044459f8a7c35875f84d
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: you_monster

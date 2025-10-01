@@ -63,6 +63,10 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
         public GameObject CruiserGalPrefab { get; private set; } = null!;
     }
 
+    public class CodeRebirthPlatinumAssets(DuskMod mod, string filePath) : AssetBundleLoader<CodeRebirthPlatinumAssets>(mod, filePath)
+    {
+    }
+
     public FriendAssets? Friend = null;
     public Fishdispenserassets? ShrimpDispenser = null;
     public SCP999Assets? SCP999 = null;
@@ -75,9 +79,12 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
     public BearTrapGalAssets? BearTrapGal = null;
     public CleanerDroneGalAssets? CleanerDroneGal = null;
     public CruiserGalAssets? CruiserGal = null;
+    public CodeRebirthPlatinumAssets? CodeRebirthPlatinum = null;
 
     public UnlockableHandler(DuskMod mod) : base(mod)
     {
+        RegisterContent("coderebirthplatinumassets", out CodeRebirthPlatinum);
+
         RegisterContent("shockwavebotassets", out ShockwaveBot);
 
         // RegisterContent("plantpotassets", out PlantPot);

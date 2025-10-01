@@ -2,9 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
-using CodeRebirth.src.MiscScripts.DissolveEffect;
 using CodeRebirth.src.Util;
 using Dawn;
 using Dawn.Utils;
@@ -20,7 +18,6 @@ public class Puppeteer : CodeRebirthEnemyAI
     public Transform playerStabPosition = null!;
 
     [Header("Puppeteer Configuration")]
-    public InteractiveEffect[] interactiveEffects = [];
     public float sneakSpeed = 1.5f;
     public float chaseSpeed = 3.0f;
     public float detectionRange = 20f;
@@ -271,6 +268,7 @@ public class Puppeteer : CodeRebirthEnemyAI
 
             possibleDestinations.Add(nodePos);
         }
+
         if (possibleDestinations.Count == 0)
         {
             foreach (var gameObject in RoundManager.Instance.outsideAINodes)
@@ -282,8 +280,11 @@ public class Puppeteer : CodeRebirthEnemyAI
 
                 possibleDestinations.Add(nodePos);
             }
+
             if (possibleDestinations.Count == 0)
+            {
                 return transform.position;
+            }
         }
         return possibleDestinations[UnityEngine.Random.Range(0, possibleDestinations.Count)];
     }
@@ -331,7 +332,11 @@ public class Puppeteer : CodeRebirthEnemyAI
             }
         }
         enemyHP -= force;
-        if (IsServer && currentBehaviourStateIndex != (int)PuppeteerState.Attacking) creatureNetworkAnimator.SetTrigger(DoHitAnimation);
+        if (IsServer && currentBehaviourStateIndex != (int)PuppeteerState.Attacking)
+        {
+            creatureNetworkAnimator.SetTrigger(DoHitAnimation);
+        }
+
         if (enemyHP <= 0 && !isEnemyDead)
         {
             timeSinceLastTakenDamage = 1f;
@@ -348,7 +353,10 @@ public class Puppeteer : CodeRebirthEnemyAI
     {
         teleporting = true;
         targetPlayerToNeedle = StartOfRound.Instance.allPlayerScripts[playerIndex];
-        if (targetPlayerToNeedle.IsLocalPlayer()) creatureSFX.PlayOneShot(grabPlayerSound);
+        if (targetPlayerToNeedle.IsLocalPlayer())
+        {
+            creatureSFX.PlayOneShot(grabPlayerSound);
+        }
         targetPlayerToNeedle.disableMoveInput = true;
         targetPlayerToNeedle.disableLookInput = true;
         targetPlayerToNeedle.inAnimationWithEnemy = this;
@@ -359,10 +367,15 @@ public class Puppeteer : CodeRebirthEnemyAI
     public void UnSetTargetNeedlePlayerClientRpc(int playerIndex)
     {
         PlayerControllerB player = StartOfRound.Instance.allPlayerScripts[playerIndex];
-        if (targetPlayerToNeedle != player) return;
+        if (targetPlayerToNeedle != player)
+            return;
+
         targetPlayerToNeedle.disableMoveInput = false;
         targetPlayerToNeedle.disableLookInput = false;
-        if (targetPlayerToNeedle.inAnimationWithEnemy == this) targetPlayerToNeedle.inAnimationWithEnemy = null;
+        if (targetPlayerToNeedle.inAnimationWithEnemy == this)
+        {
+            targetPlayerToNeedle.inAnimationWithEnemy = null;
+        }
         Plugin.ExtendedLogging($"{this} unsetting target player {player.playerUsername}");
         targetPlayerToNeedle = null;
     }
@@ -392,7 +405,11 @@ public class Puppeteer : CodeRebirthEnemyAI
             RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, LethalContent.Enemies[EnemyKeys.Masked].EnemyType);
         }
         yield return new WaitForSeconds(delay);
-        if (state == PuppeteerState.Attacking) smartAgentNavigator.StopSearchRoutine();
+        if (state == PuppeteerState.Attacking)
+        {
+            smartAgentNavigator.StopSearchRoutine();
+        }
+
         if (IsServer)
         {
             creatureAnimator.SetBool(InCombatAnimation, state == PuppeteerState.Attacking);
@@ -466,23 +483,6 @@ public class Puppeteer : CodeRebirthEnemyAI
     }
 
     #region Animation Events
-    public void ReverseDissolvingAnimEvent()
-    {
-        foreach (var interactiveEffect in interactiveEffects)
-        {
-            interactiveEffect.ResetEffect();
-        }
-    }
-
-    public void StartDissolvingAnimEvent(float duration)
-    {
-        foreach (var interactiveEffect in interactiveEffects)
-        {
-            interactiveEffect.duration = duration;
-            interactiveEffect.PlayEffect();
-        }
-    }
-
     public void PlayFootstepSoundAnimEvent()
     {
         if (currentBehaviourStateIndex == (int)PuppeteerState.Attacking)
@@ -497,9 +497,17 @@ public class Puppeteer : CodeRebirthEnemyAI
 
     public void SpawnAnimationTransitionAnimEvent()
     {
+        if (currentBehaviourStateIndex == (int)PuppeteerState.Attacking)
+        {
+            return;
+        }
+
         targetPlayer = null;
         agent.speed = sneakSpeed;
-        if (IsServer) smartAgentNavigator.StartSearchRoutine(40);
+        if (IsServer)
+        {
+            smartAgentNavigator.StartSearchRoutine(40);
+        }
         SwitchToBehaviourStateOnLocalClient((int)PuppeteerState.Idle);
     }
 
@@ -522,7 +530,11 @@ public class Puppeteer : CodeRebirthEnemyAI
         }
         targetPlayerToNeedle.disableMoveInput = false;
         targetPlayerToNeedle.disableLookInput = false;
-        if (targetPlayerToNeedle.inAnimationWithEnemy == this) targetPlayerToNeedle.inAnimationWithEnemy = null;
+        if (targetPlayerToNeedle.inAnimationWithEnemy == this)
+        {
+            targetPlayerToNeedle.inAnimationWithEnemy = null;
+        }
+
         if (targetPlayerToNeedle == priorityPlayer)
         {
             priorityPlayer = null;
