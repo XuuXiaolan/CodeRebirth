@@ -16,11 +16,9 @@ namespace CodeRebirth.src;
 [BepInDependency("mrov.WeatherRegistry")]
 [BepInDependency("com.rune580.LethalCompanyInputUtils")]
 [BepInDependency(DawnLib.PLUGIN_GUID)]
-[BepInDependency(LethalLevelLoader.Plugin.ModGUID, BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(LethalLevelLoader.Plugin.ModGUID)]
+[BepInDependency(Dusk.MyPluginInfo.PLUGIN_GUID)]
 [BepInDependency("Zaggy1024.OpenBodyCams", BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency(MoreCompany.PluginInformation.PLUGIN_GUID, BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency(MoreShipUpgrades.Misc.Metadata.GUID, BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency(Dusk.MyPluginInfo.PLUGIN_GUID, BepInDependency.DependencyFlags.HardDependency)]
 public class Plugin : BaseUnityPlugin
 {
     internal new static ManualLogSource Logger = null!;

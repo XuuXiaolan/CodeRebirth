@@ -1,4 +1,12 @@
-# v1.2.0
+# v1.2.2
+
+- Gave all the plushies small weights on moons and sometimes interiors.
+
+## v1.2.1
+
+- I couldn't escape a patch huh, removed LateGameUpgrades as a soft dependency because it caused a cyclic dependency loop with a combination of like 6 other mods.
+
+## v1.2.0
 
 - Other than bug fixes, this is one of the final content updates this mod will likely receive, I hope you've enjoyed the CodeRebirth experience provided to you by the main developers, Rodrigo and Xu Xiaolan.
 - Fixed SnailCat names being desynced apparently, host now controls all the names.
