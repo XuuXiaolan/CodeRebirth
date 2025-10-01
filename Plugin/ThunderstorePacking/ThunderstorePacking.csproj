@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <ItemGroup>
         <ProjectReference Include="..\CodeRebirth\CodeRebirth.csproj" />
-        <ProjectReference Include="..\CodeRebirthESKR\CodeRebirthESKR.csproj" />
     </ItemGroup>
     
     <!-- stuff to make msbuild happy because this is almost certainly not how you are supposed to do this -->
