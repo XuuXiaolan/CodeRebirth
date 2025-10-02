@@ -15,6 +15,7 @@ using System.Collections;
 using LethalLevelLoader;
 using Dawn;
 using UnityEngine.InputSystem.Utilities;
+using Dusk;
 
 namespace CodeRebirth.src.Util;
 internal class CodeRebirthUtils : NetworkBehaviour
@@ -51,6 +52,10 @@ internal class CodeRebirthUtils : NetworkBehaviour
         shipAnimator.shipLandAnimation = ModifiedShipLandAnimation;
         shipAnimator.shipNormalLeaveAnimation = ModifiedShipLeaveAnimation;
 
+        if (!LethalContent.Weathers.TryGetValue(CodeRebirthWeatherKeys.NightShift, out _))
+        {
+            return;
+        }
         LevelManager.TryGetExtendedLevel(StartOfRound.Instance.levels.Where(x => x.sceneName == "Oxyde").FirstOrDefault(), out ExtendedLevel? extendedLevel);
         if (extendedLevel == null)
             return;

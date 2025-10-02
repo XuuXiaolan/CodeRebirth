@@ -1,4 +1,8 @@
-# v1.2.3
+# v1.2.4
+
+- Fixed an exception caused by disabling oxyde and night shift.
+
+## v1.2.3
 
 - Fixed an issue with the gal builder.
 - Fixed what node gets loaded when gals are denied being bought.
