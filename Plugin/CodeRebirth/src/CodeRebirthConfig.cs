@@ -215,7 +215,7 @@ public class CodeRebirthConfig
                                             "The volume of the Air Control Unit.");
         #endregion
         #region Cruiser Gal
-        ConfigCruiserGalAutomatic = configFile.Bind("Cruiser Options",
+        ConfigCruiserGalAutomatic = configFile.Bind("Cruiser Gal Options",
                                             "Cruiser Gal | Automatic Behaviour",
                                             false,
                                             "Whether the Cruiser Gal will automatically wake up and choose the nearest player as the owner.");

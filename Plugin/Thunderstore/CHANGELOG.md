@@ -1,4 +1,9 @@
-# v1.2.2
+# v1.2.3
+
+- Fixed an issue with the gal builder.
+- Fixed what node gets loaded when gals are denied being bought.
+
+## v1.2.2
 
 - Gave all the plushies small weights on moons and sometimes interiors.
 
