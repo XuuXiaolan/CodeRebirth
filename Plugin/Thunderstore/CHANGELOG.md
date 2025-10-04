@@ -1,3 +1,7 @@
+# v1.2.5
+
+- Cleaned up forgotten things in the scrapyard.
+
 # v1.2.4
 
 - Fixed an exception caused by disabling oxyde and night shift.
