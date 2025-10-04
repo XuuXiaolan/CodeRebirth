@@ -68,8 +68,8 @@ MonoBehaviour:
   requireNestObjectsToSpawn: 0
   enemyPrefab: {fileID: 408929051958555687, guid: 6d1bdd2d650606645ab7c0334b936aad,
     type: 3}
-  PowerLevel: 0
-  MaxCount: 0
+  PowerLevel: 1
+  MaxCount: 3
   numberSpawned: 0
   nestsSpawned: 0
   isOutsideEnemy: 0
@@ -87,11 +87,13 @@ MonoBehaviour:
   pushPlayerForce: 0.16
   pushPlayerDistance: 1.26
   SizeLimit: 0
+  EnemySize: 0
   timeToPlayAudio: 15
   loudnessMultiplier: 1
   overrideVentSFX: {fileID: 0}
   nestSpawnPrefab: {fileID: 0}
   nestSpawnPrefabWidth: 2
+  nestDistanceFromShip: -1
   useMinEnemyThresholdForNest: 0
   minEnemiesToSpawnNest: 0
   hitBodySFX: {fileID: 0}
