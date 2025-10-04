@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace CodeRebirth.src.MiscScripts;
+
 public class CRUtilities
 {
     private static Dictionary<int, int> _masksByLayer = new();

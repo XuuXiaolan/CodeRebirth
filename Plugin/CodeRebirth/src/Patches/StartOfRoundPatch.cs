@@ -112,7 +112,7 @@ static class StartOfRoundPatch
         // todo: get this with moon keys
         LevelManager.TryGetExtendedLevel(StartOfRound.Instance.levels.Where(x => x.sceneName == "Oxyde").FirstOrDefault(), out ExtendedLevel? extendedLevel);
         Plugin.ExtendedLogging($"Extended level: {extendedLevel?.SelectableLevel}");
-        if (extendedLevel == null)
+        if (extendedLevel == null || !LethalContent.Weathers.TryGetValue(CodeRebirthWeatherKeys.NightShift, out _))
             return;
 
         if (TimeOfDay.Instance.daysUntilDeadline <= 0)

@@ -15,7 +15,6 @@ using System.Collections;
 using LethalLevelLoader;
 using Dawn;
 using UnityEngine.InputSystem.Utilities;
-using Dusk;
 
 namespace CodeRebirth.src.Util;
 internal class CodeRebirthUtils : NetworkBehaviour
