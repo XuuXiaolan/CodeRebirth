@@ -1,4 +1,32 @@
-# v0.2.11
+# v0.2.17
+- **Update to v73. This version and versions after are not compatible with v72 or lower! (revert to v0.2.16 for v72)**
+- Added ItemKeys for the new scrap introduced in v73.
+- New `#lethal_company:body_parts` tag.
+- New `TerminalPredicateCollection` and `PredicateCollection` to allow using multiple predicates on shop items.
+- `DuskAdditionalTilesDefinition` can now use a `DuskPredicate` to determine when the tiles should be injected
+
+## v0.2.16
+
+- Fixed issue with parent achievements not disappearing if they aren't possible.
+- Fixed issue where inside hazards would not spawn.
+- Fixed issue with being unable to move furniture properly with furniture lock mod.
+- Fixed issue where SID started including items that they shouldn't because those items had 0 weights on the moon.
+
+## v0.2.15
+
+- Fixed issues with some specific scrap mods that caused a lot of scraps and other parts of the mod to break.
+- Added some more error safety with using incorrect config formats.
+- Made some weather fields internal rather than public.
+
+## v0.2.13
+
+- Added more debugging for ship unlockables not being registered properly via other mods.
+
+## v0.2.12
+
+- Fixed weathers being unregistered on lobby reload.
+
+## v0.2.11
 
 - Added a date filter predicate to the entity replacement definitions.
 - Serialized some fields from UnlockProgressiveObject that should've been serialized.
