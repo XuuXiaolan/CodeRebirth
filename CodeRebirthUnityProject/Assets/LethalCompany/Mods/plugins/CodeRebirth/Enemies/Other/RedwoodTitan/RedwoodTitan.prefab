@@ -46611,18 +46611,8 @@ MonoBehaviour:
   gotFarthestNodeAsync: 0
   creatureNetworkAnimator: {fileID: 6190392053031910777}
   smartAgentNavigator: {fileID: 7822534254777382931}
-  _idleAudioClips:
-    audioClips: []
-    minTime: 0
-    maxTime: 0
   _hitBodySounds: []
   spawnSound: {fileID: 8300000, guid: eaef63b734a1bc347b1f624d85966587, type: 3}
-  _variantMaterials: []
-  AlbinoMaterials:
-  - {fileID: 2100000, guid: b2f4cfae3f887b645b9bc3d5040ef296, type: 2}
-  - {fileID: 2100000, guid: ecbba3b3c81707549abd5460f942000c, type: 2}
-  - {fileID: 2100000, guid: e84a99972b899da4594b849ebf9142a7, type: 2}
-  - {fileID: 2100000, guid: 83ebd022765c0eb47af87dc5bf1e84b0, type: 2}
   DeathColliders:
   - {fileID: 5127988842370748894}
   - {fileID: 8219533084570719197}
@@ -46810,14 +46800,10 @@ MonoBehaviour:
   m_Script: {fileID: 1066262130, guid: b821795baeb020545a00803c13a7b7c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cantMove: 0
   OnUseEntranceTeleport:
     m_PersistentCalls:
       m_Calls: []
   OnEnableOrDisableAgent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEnterOrExitElevator:
     m_PersistentCalls:
       m_Calls: []
   lastUsedEntranceTeleport: {fileID: 0}
@@ -46836,23 +46822,6 @@ MonoBehaviour:
   m_Script: {fileID: -288042083, guid: b821795baeb020545a00803c13a7b7c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _materialsWithRendererWithWeight:
-  - materialsWithRenderer:
-      materials:
-      - {fileID: 2100000, guid: b2f4cfae3f887b645b9bc3d5040ef296, type: 2}
-      - {fileID: 2100000, guid: ecbba3b3c81707549abd5460f942000c, type: 2}
-      - {fileID: 2100000, guid: e84a99972b899da4594b849ebf9142a7, type: 2}
-      - {fileID: 2100000, guid: 83ebd022765c0eb47af87dc5bf1e84b0, type: 2}
-      renderer: {fileID: 488740101449591505}
-    <Weight>k__BackingField: 1
-  - materialsWithRenderer:
-      materials:
-      - {fileID: 2100000, guid: cee9c60ebf07c7b44ae356c3fb4c21dc, type: 2}
-      - {fileID: 2100000, guid: 47795f3a9b2492245a77b699787b2b5e, type: 2}
-      - {fileID: 2100000, guid: e84a99972b899da4594b849ebf9142a7, type: 2}
-      - {fileID: 2100000, guid: 86f2a6b4d082d8a4ba15258b0790d5c9, type: 2}
-      renderer: {fileID: 488740101449591505}
-    <Weight>k__BackingField: 1
   _applyOnSpawn: 1
 --- !u!1 &6862261050158760410
 GameObject:
