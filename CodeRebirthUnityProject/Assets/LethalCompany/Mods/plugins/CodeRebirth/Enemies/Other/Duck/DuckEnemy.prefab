@@ -1270,17 +1270,9 @@ MonoBehaviour:
   gotFarthestNodeAsync: 0
   creatureNetworkAnimator: {fileID: 7652632877655664251}
   smartAgentNavigator: {fileID: 366647763761197808}
-  _idleAudioClips:
-    audioClips: []
-    minTime: 0
-    maxTime: 0
   _hitBodySounds: []
   spawnSound: {fileID: 0}
-  _variantMaterials: []
   questTimer: 120
-  questItems:
-  - Grape
-  - Lemonade Pitcher
   questName: Duck Quest
   questRepeatChance: 25
   questRepeats: 1
@@ -1498,14 +1490,10 @@ MonoBehaviour:
   m_Script: {fileID: 1066262130, guid: b821795baeb020545a00803c13a7b7c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cantMove: 0
   OnUseEntranceTeleport:
     m_PersistentCalls:
       m_Calls: []
   OnEnableOrDisableAgent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEnterOrExitElevator:
     m_PersistentCalls:
       m_Calls: []
   lastUsedEntranceTeleport: {fileID: 0}
