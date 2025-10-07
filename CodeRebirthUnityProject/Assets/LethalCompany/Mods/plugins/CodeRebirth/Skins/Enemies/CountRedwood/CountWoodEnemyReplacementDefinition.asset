@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -1335308451, guid: 52475c31ba075df46ac5d42b6787e21e, type: 3}
-  m_Name: RedWHalloweenEntityReplacementDefinition
+  m_Name: CountWoodEnemyReplacementDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
   _tags: []
@@ -21,50 +21,45 @@ MonoBehaviour:
     _namespace: code_rebirth
     _key: redwood_titan
   <DatePredicate>k__BackingField: {fileID: 0}
-  <RendererReplacements>k__BackingField:
-  - {fileID: 11400000, guid: 82aeca835713c4a45979d13c9c455987, type: 2}
+  <Replacements>k__BackingField:
+  - {fileID: 11400000, guid: 244fcfcc1f7550d4fbde1d2b33395dc2, type: 2}
   <GameObjectAddons>k__BackingField:
-  - <PathToGameObject>k__BackingField: GyattWood/Bone/Pelvis/Spine.001/Spine.002/Spine.003/TopTeeth
+  - <PathToGameObject>k__BackingField: GyattWood/Bone/Pelvis/Spine.001/Spine.002/Spine.003
     <GameObjectToCreate>k__BackingField: {fileID: 727503653266304239, guid: 0edcb478ac0dd4d4eba93a6114bfaf3a,
       type: 3}
     <PositionOffset>k__BackingField: {x: -0.0009999902, y: 0.14855719, z: 0.24700212}
     <RotationOffset>k__BackingField: {x: -0.7882783, y: 0.000000061353184, z: 0.000000061353184,
       w: 0.6153189}
-  - <PathToGameObject>k__BackingField: GyattWood/Bone/Pelvis/Spine.001/Spine.002/Spine.003/CollarBone.L/Shoulder.L/MiddleArm.L/Forearm.L/Cuffling
+  - <PathToGameObject>k__BackingField: GyattWood/Bone/Pelvis/Spine.001/Spine.002/Spine.003/CollarBone.L/Shoulder.L/MiddleArm.L/Forearm.L
     <GameObjectToCreate>k__BackingField: {fileID: 6359671147007006243, guid: 71aff671683abbe46905e6362bc46286,
       type: 3}
     <PositionOffset>k__BackingField: {x: 0.10232368, y: 0.272255, z: 0.072427556}
     <RotationOffset>k__BackingField: {x: 0.036053836, y: -0.7061863, z: 0.70689166,
       w: 0.017469198}
-  - <PathToGameObject>k__BackingField: GyattWood/Bone/Pelvis/Spine.001/Spine.002/Spine.003/CollarBone.R/Shoulder.R/MiddleArm.R/Forearm.R/Cuffling
+  - <PathToGameObject>k__BackingField: GyattWood/Bone/Pelvis/Spine.001/Spine.002/Spine.003/CollarBone.R/Shoulder.R/MiddleArm.R/Forearm.R
     <GameObjectToCreate>k__BackingField: {fileID: 6359671147007006243, guid: 71aff671683abbe46905e6362bc46286,
       type: 3}
     <PositionOffset>k__BackingField: {x: -0.070574574, y: 0.27167135, z: 0.049000055}
     <RotationOffset>k__BackingField: {x: 0.69175637, y: -0.14652684, z: 0.12827796,
       w: 0.69537604}
-  - <PathToGameObject>k__BackingField: GyattWood/Bone/Pelvis/Spine.001/Bowtie
+  - <PathToGameObject>k__BackingField: GyattWood/Bone/Pelvis/Spine.001
     <GameObjectToCreate>k__BackingField: {fileID: 8730577325511855918, guid: 32983fc28893a904399e968f6c26c0a2,
       type: 3}
     <PositionOffset>k__BackingField: {x: 0.011999926, y: -0.076, z: 0.301}
     <RotationOffset>k__BackingField: {x: -0.018448226, y: -0.7068661, z: -0.7068661,
       w: 0.018448226}
-  - <PathToGameObject>k__BackingField: GyattWood/Bone/Pelvis/Spine.001/BottomTeeth
+  - <PathToGameObject>k__BackingField: GyattWood/Bone/Pelvis/Spine.001
     <GameObjectToCreate>k__BackingField: {fileID: 1208999629703875799, guid: 5e5e73ad20141fc4d83ee3a4af62a48f,
       type: 3}
     <PositionOffset>k__BackingField: {x: 0.0009999066, y: 0.112118006, z: 0.22100186}
     <RotationOffset>k__BackingField: {x: 0.70710677, y: 7.105424e-15, z: 7.105424e-15,
       w: -0.70710677}
-  <AnimationClipReplacements>k__BackingField: []
-  <ParticleSystemReplacements>k__BackingField: []
-  <MoonSpawnWeights>k__BackingField: Vanilla=+9999, Custom=+9999, Valley=+0, Canyon=+0,
-    Tundra=+0, Marsh=+0, Military=+0, Rocky=+0,Amythest=+0, Experimentation=+0, Assurance=+0,
-    Vow=+0, Offense=+0, March=+0, Adamance=+0, Rend=+0, Dine=+0, Titan=+0, Artifice=+0,
-    Embrion=+0
+  <MoonSpawnWeights>k__BackingField: Vanilla=+9999, Custom=+9999
   <InteriorSpawnWeights>k__BackingField: Facility=+0, Mansion=+0, Mineshaft=+0
   <WeatherSpawnWeights>k__BackingField: None=*1, DustClouds=*1, Rainy=*1, Stormy=*1,
     Foggy=*1, Flooded=*1, Eclipsed=*1
   <GenerateSpawnWeightsConfig>k__BackingField: 0
-  <GenerateDisableUnlockConfig>k__BackingField: 0
+  <GenerateDisableDateConfig>k__BackingField: 0
   <NestRendererReplacements>k__BackingField: []
   <HitBodySFX>k__BackingField: {fileID: 0}
   <HitEnemyVoiceSFX>k__BackingField: {fileID: 0}
