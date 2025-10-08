@@ -540,13 +540,13 @@ GameObject:
   - component: {fileID: 1809205322762496473}
   - component: {fileID: 6904610231587874633}
   - component: {fileID: 7682458782736325733}
+  - component: {fileID: 5627089283044738071}
   - component: {fileID: 4395047199544177820}
   - component: {fileID: 1460342213835444441}
   - component: {fileID: 1288711711486736261}
   - component: {fileID: 6979818492783550405}
   - component: {fileID: 628193322848618802}
   - component: {fileID: 8144318307373106634}
-  - component: {fileID: 5627089283044738071}
   - component: {fileID: 4322979011219931231}
   m_Layer: 6
   m_Name: ShockwaveDrone
@@ -622,6 +622,27 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &5627089283044738071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1574516792246697467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 2166090788
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!114 &4395047199544177820
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -730,20 +751,6 @@ MonoBehaviour:
   renderersToHideIn:
   - {fileID: 9145391281392864541}
   smartAgentNavigator: {fileID: 4322979011219931231}
-  boomboxPlaying: 0
-  staringTimer: 0
-  targetEnemy: {fileID: 0}
-  ownerPlayer: {fileID: 0}
-  chargeCount: 10
-  maxChargeCount: 0
-  currentlyAttacking: 0
-  boomboxTimer: 0
-  physicsEnabled: 1
-  idleNeededTimer: 10
-  idleTimer: 0
-  isInHangarShipRoom: 1
-  inActive: 1
-  doneOnce: 0
   RobotFaceController: {fileID: 1288711711486736261}
   FaceSkinnedMeshRenderer: {fileID: 9145391281392864541}
   FaceRenderer: {fileID: 5216258533289101653}
@@ -793,15 +800,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseUnreliableDeltas: 1
   SyncPositionX: 1
   SyncPositionY: 1
   SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
   PositionThreshold: 0.001
   RotAngleThreshold: 0.01
   ScaleThreshold: 0.01
@@ -930,26 +938,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &5627089283044738071
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1574516792246697467}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
 --- !u!114 &4322979011219931231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -962,22 +950,16 @@ MonoBehaviour:
   m_Script: {fileID: 1066262130, guid: b821795baeb020545a00803c13a7b7c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cantMove: 0
-  lastUsedEntranceTeleport: {fileID: 0}
-  agent: {fileID: 0}
-  isOutside: 1
-  exitPoints: []
-  mainEntrance: {fileID: 0}
-  OnEnableOrDisableAgent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEnterOrExitElevator:
-    m_PersistentCalls:
-      m_Calls: []
   OnUseEntranceTeleport:
     m_PersistentCalls:
       m_Calls: []
+  OnEnableOrDisableAgent:
+    m_PersistentCalls:
+      m_Calls: []
+  lastUsedEntranceTeleport: {fileID: 0}
+  agent: {fileID: 0}
   _nodeRemovalPrecision: 5
+  _allowedLinks: 15
 --- !u!1 &2060832966963771189
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8288075076741046}
   - component: {fileID: 4715364238975048576}
-  - component: {fileID: 4163941770002773474}
   - component: {fileID: 3596400706750679749}
+  - component: {fileID: 4163941770002773474}
   - component: {fileID: 119531773123275312}
   m_Layer: 6
   m_Name: BloodyShreds
@@ -133,6 +133,27 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &3596400706750679749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2911150502268147426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 3486508580
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 1
+  AutoObjectParentSync: 0
 --- !u!114 &4163941770002773474
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -183,26 +204,6 @@ MonoBehaviour:
   grabbableToEnemies: 1
   hasBeenHeld: 0
   rotateObject: 0
---- !u!114 &3596400706750679749
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2911150502268147426}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 1
-  AutoObjectParentSync: 0
 --- !u!65 &119531773123275312
 BoxCollider:
   m_ObjectHideFlags: 0

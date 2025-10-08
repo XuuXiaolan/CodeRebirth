@@ -85,8 +85,8 @@ GameObject:
   - component: {fileID: 9172175577758237937}
   - component: {fileID: 2754377112013547800}
   - component: {fileID: 8360288168205409078}
-  - component: {fileID: 5530174003453753030}
   - component: {fileID: 1993251816393428305}
+  - component: {fileID: 5530174003453753030}
   - component: {fileID: 379228805966043309}
   - component: {fileID: 3863091426709390529}
   m_Layer: 6
@@ -162,6 +162,27 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1993251816393428305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8180178557202989774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 4107019436
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 1
+  AutoObjectParentSync: 0
 --- !u!114 &5530174003453753030
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -211,29 +232,10 @@ MonoBehaviour:
   reachedFloorTarget: 0
   grabbableToEnemies: 0
   hasBeenHeld: 0
+  rotateObject: 0
   audioPlayer: {fileID: -3999945600176545704, guid: dbf0c1e6fed9333429cb4d07cccbf0ff,
     type: 3}
   creditValue: 100
---- !u!114 &1993251816393428305
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8180178557202989774}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 1
-  AutoObjectParentSync: 0
 --- !u!65 &379228805966043309
 BoxCollider:
   m_ObjectHideFlags: 0

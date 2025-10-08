@@ -85,8 +85,8 @@ GameObject:
   - component: {fileID: 9172175577758237937}
   - component: {fileID: 2754377112013547800}
   - component: {fileID: 8360288168205409078}
-  - component: {fileID: 4304260346750655267}
   - component: {fileID: 4901285075872224343}
+  - component: {fileID: 4304260346750655267}
   - component: {fileID: 1691176397096617078}
   - component: {fileID: -3999945600176545704}
   m_Layer: 6
@@ -162,6 +162,27 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &4901285075872224343
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8180178557202989774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 2113189373
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!114 &4304260346750655267
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -211,28 +232,9 @@ MonoBehaviour:
   reachedFloorTarget: 0
   grabbableToEnemies: 0
   hasBeenHeld: 0
+  rotateObject: 0
   audioPlayer: {fileID: -3999945600176545704}
   creditValue: 1000
---- !u!114 &4901285075872224343
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8180178557202989774}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
 --- !u!65 &1691176397096617078
 BoxCollider:
   m_ObjectHideFlags: 0

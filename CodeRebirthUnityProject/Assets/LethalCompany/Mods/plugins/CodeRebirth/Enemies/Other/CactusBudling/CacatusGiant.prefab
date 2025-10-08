@@ -1001,9 +1001,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2437202440247865395}
   - component: {fileID: 943510790656798626}
+  - component: {fileID: 6570976075383222441}
   - component: {fileID: 6265036336448907126}
   - component: {fileID: 2643178545942564688}
-  - component: {fileID: 6570976075383222441}
   - component: {fileID: 8653537968367135705}
   - component: {fileID: 7288074083113443494}
   - component: {fileID: 595643781457485384}
@@ -1061,6 +1061,27 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6570976075383222441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4779950444079482818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 1286165706
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 1
+  AutoObjectParentSync: 1
 --- !u!114 &6265036336448907126
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1097,26 +1118,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 2013
   m_ObstacleAvoidanceType: 4
---- !u!114 &6570976075383222441
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4779950444079482818}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 1
-  AutoObjectParentSync: 1
 --- !u!114 &8653537968367135705
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1129,6 +1130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseUnreliableDeltas: 1
   SyncPositionX: 1
   SyncPositionY: 1
   SyncPositionZ: 1
@@ -1312,7 +1314,6 @@ MonoBehaviour:
     maxTime: 50
   _hitBodySounds: []
   spawnSound: {fileID: 8300000, guid: af63250127ce0384b96f22093267c52a, type: 3}
-  _variantMaterials: []
   _rollingSource: {fileID: 5482134468942638221}
   _spawnAnimation: {fileID: 7400000, guid: 4b655cc88e5710f44ac0e1544cc95e5e, type: 2}
   _rootingEndAnimation: {fileID: 7400000, guid: 978c729735aacba45b2d5fd4ab0b21df,
@@ -1381,14 +1382,10 @@ MonoBehaviour:
   m_Script: {fileID: 1066262130, guid: b821795baeb020545a00803c13a7b7c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cantMove: 0
   OnUseEntranceTeleport:
     m_PersistentCalls:
       m_Calls: []
   OnEnableOrDisableAgent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEnterOrExitElevator:
     m_PersistentCalls:
       m_Calls: []
   lastUsedEntranceTeleport: {fileID: 0}
@@ -4698,13 +4695,15 @@ ParticleSystemRenderer:
   m_RenderAlignment: 0
   m_Pivot: {x: 0, y: 0, z: 0}
   m_Flip: {x: 0, y: 0, z: 0}
-  m_UseCustomVertexStreams: 0
   m_EnableGPUInstancing: 1
   m_ApplyActiveColorSpace: 1
   m_AllowRoll: 1
   m_FreeformStretching: 0
   m_RotateWithStretchDirection: 1
+  m_UseCustomVertexStreams: 0
   m_VertexStreams: 00010304
+  m_UseCustomTrailVertexStreams: 0
+  m_TrailVertexStreams: 00010304
   m_Mesh: {fileID: 0}
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}

@@ -735,9 +735,9 @@ GameObject:
   m_Component:
   - component: {fileID: 5128101011132178077}
   - component: {fileID: 7756989740474879032}
+  - component: {fileID: 3116283948564158417}
   - component: {fileID: 1729277325739722496}
   - component: {fileID: 7657444057236633725}
-  - component: {fileID: 3116283948564158417}
   - component: {fileID: 1556765420530883099}
   m_Layer: 0
   m_Name: Jimothybabyboy
@@ -786,6 +786,27 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3116283948564158417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3468775280120201519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 2972968938
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!114 &1729277325739722496
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -845,26 +866,6 @@ MonoBehaviour:
   _jimothyNetworkAnimator: {fileID: 1729277325739722496}
   _minIdleTime: 10
   _maxIdleTime: 20
---- !u!114 &3116283948564158417
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3468775280120201519}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
 --- !u!136 &1556765420530883099
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1119,6 +1120,7 @@ MonoBehaviour:
   animationString: 
   lockPlayerPosition: 0
   playerPositionNode: {fileID: 0}
+  lockedPlayer: {fileID: 0}
   clampLooking: 0
   setVehicleAnimation: 0
   minVerticalClamp: 0

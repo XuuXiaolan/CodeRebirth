@@ -941,9 +941,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8687297032391409077}
   - component: {fileID: 3978754673746557699}
+  - component: {fileID: 8135599528666598451}
   - component: {fileID: 8205759437972258467}
   - component: {fileID: 1196867079622778871}
-  - component: {fileID: 8135599528666598451}
   - component: {fileID: 3813857115523695194}
   - component: {fileID: 5326531890941614610}
   - component: {fileID: 4917579483300113075}
@@ -1003,6 +1003,27 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &8135599528666598451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2039687054478570247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 3365738523
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!114 &8205759437972258467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1098,26 +1119,6 @@ MonoBehaviour:
   ChestCollisionToggleSound: {fileID: 8300000, guid: 7660a816c9c9faf4a9247d6018c964c9,
     type: 3}
   ContainerGO: {fileID: 2222836282299901365}
---- !u!114 &8135599528666598451
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2039687054478570247}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
 --- !u!136 &3813857115523695194
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1209,6 +1210,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseUnreliableDeltas: 1
   SyncPositionX: 1
   SyncPositionY: 1
   SyncPositionZ: 1

@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 2142159729086154151}
   - component: {fileID: 3174671583888777536}
   - component: {fileID: 762478537306033208}
-  - component: {fileID: 4103494455151030900}
   - component: {fileID: 2521792010113748045}
+  - component: {fileID: 4103494455151030900}
   - component: {fileID: 5526483058018538687}
   - component: {fileID: 6928303080020031257}
   - component: {fileID: 8576353793008707337}
@@ -89,6 +89,27 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &2521792010113748045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4540595232750602218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 4113806854
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 1
+  AutoObjectParentSync: 0
 --- !u!114 &4103494455151030900
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -138,27 +159,7 @@ MonoBehaviour:
   reachedFloorTarget: 0
   grabbableToEnemies: 0
   hasBeenHeld: 0
-  smallRigoManager: {fileID: 5526483058018538687}
---- !u!114 &2521792010113748045
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4540595232750602218}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 1
-  AutoObjectParentSync: 0
+  rotateObject: 0
 --- !u!114 &5526483058018538687
 MonoBehaviour:
   m_ObjectHideFlags: 0

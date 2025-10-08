@@ -557,8 +557,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8514601191219114858}
-  - component: {fileID: 3428245190819249937}
   - component: {fileID: 8614259383637444178}
+  - component: {fileID: 3428245190819249937}
   - component: {fileID: 6304825348187553974}
   - component: {fileID: 6431333914892556018}
   - component: {fileID: 1619516385171177948}
@@ -591,6 +591,27 @@ Transform:
   - {fileID: 4473816908780392880}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8614259383637444178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5909732099304660934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 3363777045
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 1
+  AutoObjectParentSync: 0
 --- !u!114 &3428245190819249937
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -784,26 +805,6 @@ MonoBehaviour:
   lastTimeTakenDamageFromEnemy: 0
   puppeteerCreatedBy: {fileID: 0}
   playerControlled: {fileID: 0}
---- !u!114 &8614259383637444178
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5909732099304660934}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 1
-  AutoObjectParentSync: 0
 --- !u!195 &6304825348187553974
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -937,15 +938,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseUnreliableDeltas: 1
   SyncPositionX: 1
   SyncPositionY: 1
   SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
   PositionThreshold: 0.001
   RotAngleThreshold: 0.01
   ScaleThreshold: 0.01
@@ -967,14 +969,10 @@ MonoBehaviour:
   m_Script: {fileID: 1066262130, guid: b821795baeb020545a00803c13a7b7c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cantMove: 0
   OnUseEntranceTeleport:
     m_PersistentCalls:
       m_Calls: []
   OnEnableOrDisableAgent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEnterOrExitElevator:
     m_PersistentCalls:
       m_Calls: []
   lastUsedEntranceTeleport: {fileID: 0}

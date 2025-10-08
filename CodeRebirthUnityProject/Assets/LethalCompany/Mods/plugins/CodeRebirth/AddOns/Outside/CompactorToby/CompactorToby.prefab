@@ -597,9 +597,9 @@ GameObject:
   m_Component:
   - component: {fileID: 5095665124797436266}
   - component: {fileID: 3108158993624154423}
+  - component: {fileID: 1608403115724993152}
   - component: {fileID: 7867356808614483227}
   - component: {fileID: 2494126749904300173}
-  - component: {fileID: 1608403115724993152}
   - component: {fileID: 8496827907601942982}
   m_Layer: 21
   m_Name: CompactorToby
@@ -651,6 +651,27 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1608403115724993152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2736774518853811244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 3920570231
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!114 &7867356808614483227
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -717,26 +738,6 @@ MonoBehaviour:
   _tobyAnimator: {fileID: 3108158993624154423}
   _tobyNetworkAnimator: {fileID: 7867356808614483227}
   compacting: 0
---- !u!114 &1608403115724993152
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2736774518853811244}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
 --- !u!65 &8496827907601942982
 BoxCollider:
   m_ObjectHideFlags: 0

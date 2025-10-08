@@ -1096,8 +1096,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5363147478031748054}
-  - component: {fileID: 2302317280997580263}
   - component: {fileID: 6607607558369177806}
+  - component: {fileID: 2302317280997580263}
   - component: {fileID: 6339478799976304860}
   - component: {fileID: 2435144523524250237}
   - component: {fileID: 685754585422525313}
@@ -1135,6 +1135,27 @@ Transform:
   - {fileID: 7989378473413712787}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6607607558369177806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8752229204695655941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 1364302782
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 1
+  AutoObjectParentSync: 1
 --- !u!114 &2302317280997580263
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1270,9 +1291,14 @@ MonoBehaviour:
   gotFarthestNodeAsync: 0
   creatureNetworkAnimator: {fileID: 7652632877655664251}
   smartAgentNavigator: {fileID: 366647763761197808}
+  _idleAudioClips:
+    audioClips: []
+    minTime: 0
+    maxTime: 0
   _hitBodySounds: []
   spawnSound: {fileID: 0}
   questTimer: 120
+  questItems: []
   questName: Duck Quest
   questRepeatChance: 25
   questRepeats: 1
@@ -1315,26 +1341,6 @@ MonoBehaviour:
   questItemsList: []
   deadBodiesList: []
   changingState: 0
---- !u!114 &6607607558369177806
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8752229204695655941}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 1
-  AutoObjectParentSync: 1
 --- !u!65 &6339478799976304860
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1460,6 +1466,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseUnreliableDeltas: 1
   SyncPositionX: 1
   SyncPositionY: 1
   SyncPositionZ: 1

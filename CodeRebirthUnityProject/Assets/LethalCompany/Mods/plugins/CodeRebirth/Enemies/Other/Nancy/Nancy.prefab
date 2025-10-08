@@ -332,10 +332,10 @@ GameObject:
   - component: {fileID: 1048730069709000307}
   - component: {fileID: 3284587385436963289}
   - component: {fileID: 6158736080623659982}
+  - component: {fileID: 890549359934255411}
   - component: {fileID: 1466305891617668654}
   - component: {fileID: 94270163540468230}
   - component: {fileID: 311618072864790486}
-  - component: {fileID: 890549359934255411}
   - component: {fileID: 2024023877430634483}
   m_Layer: 19
   m_Name: Nancy
@@ -431,6 +431,27 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &890549359934255411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1716716536538948652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 938431519
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 1
+  AutoObjectParentSync: 1
 --- !u!114 &1466305891617668654
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -464,6 +485,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseUnreliableDeltas: 1
   SyncPositionX: 1
   SyncPositionY: 1
   SyncPositionZ: 1
@@ -610,7 +632,6 @@ MonoBehaviour:
     maxTime: 15
   _hitBodySounds: []
   spawnSound: {fileID: 8300000, guid: 67c5c3c67cde9514685c5cdfce4c8c21, type: 3}
-  _variantMaterials: []
   _rollingSource: {fileID: 4590783949368486007}
   _detectInjuredPlayerVoicelines:
   - {fileID: 8300000, guid: e14f6022252f30444aeb417573233d70, type: 3}
@@ -624,26 +645,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: e0d5de6efaf42ff49888c26b21fef610, type: 3}
   _healSuccessVoiceline: []
   _healDuringSource: {fileID: 6411237851739995076}
---- !u!114 &890549359934255411
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1716716536538948652}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 1
-  AutoObjectParentSync: 1
 --- !u!114 &2024023877430634483
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -656,14 +657,10 @@ MonoBehaviour:
   m_Script: {fileID: 1066262130, guid: b821795baeb020545a00803c13a7b7c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cantMove: 0
   OnUseEntranceTeleport:
     m_PersistentCalls:
       m_Calls: []
   OnEnableOrDisableAgent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEnterOrExitElevator:
     m_PersistentCalls:
       m_Calls: []
   lastUsedEntranceTeleport: {fileID: 0}

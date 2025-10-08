@@ -292,8 +292,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7447613661492750482}
-  - component: {fileID: 812396282204182798}
   - component: {fileID: 7625704464166958631}
+  - component: {fileID: 812396282204182798}
   - component: {fileID: 5119897994557127568}
   - component: {fileID: 7633147959170961220}
   - component: {fileID: 1337315153712473542}
@@ -322,6 +322,27 @@ Transform:
   - {fileID: 5434646357372575031}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7625704464166958631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7144384770668021639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 3776468941
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 1
+  AutoObjectParentSync: 0
 --- !u!114 &812396282204182798
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -382,26 +403,6 @@ MonoBehaviour:
       m_Calls: []
   _audioSource: {fileID: 7633147959170961220}
   _useSound: {fileID: 8300000, guid: 7d7d39487770ba2479e2ff5e7f611d24, type: 3}
---- !u!114 &7625704464166958631
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7144384770668021639}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 1
-  AutoObjectParentSync: 0
 --- !u!95 &5119897994557127568
 Animator:
   serializedVersion: 5

@@ -1762,10 +1762,10 @@ GameObject:
   - component: {fileID: 7859824603082174918}
   - component: {fileID: 8987023731650170385}
   - component: {fileID: 6136572846547076047}
+  - component: {fileID: 6002066471921815620}
   - component: {fileID: 578410016872127959}
   - component: {fileID: 1793721248452008528}
   - component: {fileID: 8021487793128385277}
-  - component: {fileID: 6002066471921815620}
   - component: {fileID: 4596584288279080972}
   - component: {fileID: 1956663531283641586}
   m_Layer: 19
@@ -1864,6 +1864,27 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6002066471921815620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3591052539947343789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 604012772
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 1
+  AutoObjectParentSync: 1
 --- !u!114 &578410016872127959
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1918,6 +1939,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseUnreliableDeltas: 1
   SyncPositionX: 1
   SyncPositionY: 1
   SyncPositionZ: 1
@@ -2127,26 +2149,6 @@ MonoBehaviour:
   currentlyGrabbingScrap: 0
   currentlyGrabbingPlayer: 0
   currentlyThrowingPlayer: 0
---- !u!114 &6002066471921815620
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3591052539947343789}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 1
-  AutoObjectParentSync: 1
 --- !u!114 &4596584288279080972
 MonoBehaviour:
   m_ObjectHideFlags: 0

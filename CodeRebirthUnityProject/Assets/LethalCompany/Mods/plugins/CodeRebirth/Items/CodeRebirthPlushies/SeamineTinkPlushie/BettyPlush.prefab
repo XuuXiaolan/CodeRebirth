@@ -663,8 +663,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6535672958259113088}
-  - component: {fileID: 4455777279195735072}
   - component: {fileID: 1322371623254846167}
+  - component: {fileID: 4455777279195735072}
   - component: {fileID: 9013959948794271483}
   - component: {fileID: 2019291492947570982}
   - component: {fileID: 995058488428345130}
@@ -693,6 +693,27 @@ Transform:
   - {fileID: 5357297440702145833}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1322371623254846167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8964158268736019763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 1375796308
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 1
+  AutoObjectParentSync: 0
 --- !u!114 &4455777279195735072
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -753,26 +774,6 @@ MonoBehaviour:
       m_Calls: []
   _audioSource: {fileID: 9013959948794271483}
   _useSound: {fileID: 8300000, guid: 297b59435692b5947a3abdfa0489bd28, type: 3}
---- !u!114 &1322371623254846167
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8964158268736019763}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 1
-  AutoObjectParentSync: 0
 --- !u!82 &9013959948794271483
 AudioSource:
   m_ObjectHideFlags: 0

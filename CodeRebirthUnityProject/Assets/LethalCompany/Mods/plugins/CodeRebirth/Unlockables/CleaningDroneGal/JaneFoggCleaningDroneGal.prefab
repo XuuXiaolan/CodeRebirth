@@ -124,6 +124,7 @@ MonoBehaviour:
   animationString: 
   lockPlayerPosition: 0
   playerPositionNode: {fileID: 0}
+  lockedPlayer: {fileID: 0}
   clampLooking: 0
   setVehicleAnimation: 0
   minVerticalClamp: 0
@@ -511,6 +512,7 @@ MonoBehaviour:
   animationString: 
   lockPlayerPosition: 0
   playerPositionNode: {fileID: 0}
+  lockedPlayer: {fileID: 0}
   clampLooking: 0
   setVehicleAnimation: 0
   minVerticalClamp: 0
@@ -816,6 +818,7 @@ MonoBehaviour:
   AllowPlacementOnWalls: 0
   AllowPlacementOnCounters: 1
   inUse: 0
+  lastTimeScrapWasPlaced: 0
 --- !u!82 &3102963126976293148
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1489,9 +1492,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1605821494247057525}
+  - component: {fileID: 7600490348972371600}
   - component: {fileID: 463239542807286887}
   - component: {fileID: 2850954797403647715}
-  - component: {fileID: 7600490348972371600}
   - component: {fileID: 3168314297503394107}
   - component: {fileID: 39873367635382909}
   m_Layer: 0
@@ -1523,6 +1526,27 @@ Transform:
   - {fileID: 1464734249449532893}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7600490348972371600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8640331156731437576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 2535009465
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!114 &463239542807286887
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1563,26 +1587,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &7600490348972371600
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8640331156731437576}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
 --- !u!114 &3168314297503394107
 MonoBehaviour:
   m_ObjectHideFlags: 0

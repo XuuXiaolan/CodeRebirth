@@ -86,8 +86,8 @@ GameObject:
   - component: {fileID: 2754377112013547800}
   - component: {fileID: 8360288168205409078}
   - component: {fileID: 1461653342648114578}
-  - component: {fileID: 2625903520784203190}
   - component: {fileID: 4107232294532774274}
+  - component: {fileID: 2625903520784203190}
   - component: {fileID: 731738163160299103}
   m_Layer: 6
   m_Name: CreditPad500cc
@@ -183,6 +183,27 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.7061403, y: 0.40789828, z: 1.6946741}
   m_Center: {x: -0.117354624, y: 0.0060061202, z: 0.0312187}
+--- !u!114 &4107232294532774274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8180178557202989774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 1227628897
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 1
+  AutoObjectParentSync: 0
 --- !u!114 &2625903520784203190
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -232,29 +253,10 @@ MonoBehaviour:
   reachedFloorTarget: 0
   grabbableToEnemies: 0
   hasBeenHeld: 0
+  rotateObject: 0
   audioPlayer: {fileID: -3999945600176545704, guid: dbf0c1e6fed9333429cb4d07cccbf0ff,
     type: 3}
   creditValue: 500
---- !u!114 &4107232294532774274
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8180178557202989774}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 1
-  AutoObjectParentSync: 0
 --- !u!82 &731738163160299103
 AudioSource:
   m_ObjectHideFlags: 0

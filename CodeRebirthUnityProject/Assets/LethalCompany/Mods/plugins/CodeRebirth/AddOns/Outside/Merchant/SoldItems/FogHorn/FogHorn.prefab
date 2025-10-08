@@ -218,8 +218,8 @@ GameObject:
   - component: {fileID: 2087468117981914356}
   - component: {fileID: 6392060781429600085}
   - component: {fileID: 3328452086419525417}
-  - component: {fileID: 4777190615751347363}
   - component: {fileID: 5398529444623756126}
+  - component: {fileID: 4777190615751347363}
   - component: {fileID: 9075621103460162310}
   - component: {fileID: 5513184042074248531}
   m_Layer: 6
@@ -319,6 +319,27 @@ CapsuleCollider:
   m_Height: 1.2953647
   m_Direction: 2
   m_Center: {x: 0, y: -0.016125383, z: 0.65022755}
+--- !u!114 &5398529444623756126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8695348052769010099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 1667656421
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 1
+  AutoObjectParentSync: 0
 --- !u!114 &4777190615751347363
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -373,26 +394,6 @@ MonoBehaviour:
   audioSource: {fileID: 9075621103460162310}
   useSound: {fileID: 8300000, guid: 195db6a6d35fc4843bf0b16dd7d4dceb, type: 3}
   failSound: {fileID: 8300000, guid: a73a8a34826f1e84d8150319509eba3f, type: 3}
---- !u!114 &5398529444623756126
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8695348052769010099}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 1
-  AutoObjectParentSync: 0
 --- !u!82 &9075621103460162310
 AudioSource:
   m_ObjectHideFlags: 0
