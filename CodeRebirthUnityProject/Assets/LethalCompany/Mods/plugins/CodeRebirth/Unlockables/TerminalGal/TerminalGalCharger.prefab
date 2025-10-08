@@ -114,6 +114,7 @@ MonoBehaviour:
   AllowPlacementOnWalls: 0
   AllowPlacementOnCounters: 1
   inUse: 0
+  lastTimeScrapWasPlaced: 0
 --- !u!82 &3644759415020212604
 AudioSource:
   m_ObjectHideFlags: 0
@@ -556,8 +557,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2374348103124278636}
   - component: {fileID: 2381353227461550216}
-  - component: {fileID: 1490274840269148471}
   - component: {fileID: 297115021343995810}
+  - component: {fileID: 1490274840269148471}
   - component: {fileID: 5242948292151847415}
   - component: {fileID: 8759776739137215295}
   m_Layer: 0
@@ -608,6 +609,27 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &297115021343995810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4536215619622419527}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 1273520577
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!114 &1490274840269148471
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -622,26 +644,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TransitionStateInfoList: []
   m_Animator: {fileID: 2381353227461550216}
---- !u!114 &297115021343995810
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4536215619622419527}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
 --- !u!114 &5242948292151847415
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -673,9 +675,9 @@ MonoBehaviour:
   m_Script: {fileID: -1645404685, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ActivateOrDeactivateTrigger: {fileID: 153796416411965559}
-  ChargeTransform: {fileID: 1219455125696769321}
-  animator: {fileID: 2381353227461550216}
+  ActivateOrDeactivateTrigger: {fileID: 0}
+  ChargeTransform: {fileID: 0}
+  animator: {fileID: 0}
 --- !u!1 &4774905270476334556
 GameObject:
   m_ObjectHideFlags: 0
@@ -832,6 +834,7 @@ MonoBehaviour:
   animationString: 
   lockPlayerPosition: 0
   playerPositionNode: {fileID: 0}
+  lockedPlayer: {fileID: 0}
   clampLooking: 0
   setVehicleAnimation: 0
   minVerticalClamp: 0

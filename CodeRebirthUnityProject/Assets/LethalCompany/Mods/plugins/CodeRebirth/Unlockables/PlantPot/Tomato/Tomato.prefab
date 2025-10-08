@@ -85,8 +85,8 @@ GameObject:
   - component: {fileID: 8091731509571509236}
   - component: {fileID: 8083975791409271708}
   - component: {fileID: 7493696107271029784}
-  - component: {fileID: 1124077675582232888}
   - component: {fileID: 3712778161532858103}
+  - component: {fileID: 1124077675582232888}
   - component: {fileID: -7252346732173692121}
   - component: {fileID: 5946871007214064024}
   m_Layer: 6
@@ -162,6 +162,27 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &3712778161532858103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8882733536938728809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 2421569494
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 1
+  AutoObjectParentSync: 0
 --- !u!114 &1124077675582232888
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -174,7 +195,7 @@ MonoBehaviour:
   m_Script: {fileID: -736967463, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grabbable: 1
+  grabbable: 0
   isHeld: 0
   isHeldByEnemy: 0
   deactivated: 0
@@ -194,7 +215,7 @@ MonoBehaviour:
   isInFactory: 1
   useCooldown: 0
   currentUseCooldown: 0
-  itemProperties: {fileID: 11400000, guid: 4bc0776f43739a1479f206882289010d, type: 2}
+  itemProperties: {fileID: 0}
   insertedBattery:
     empty: 0
     charge: 0
@@ -203,7 +224,7 @@ MonoBehaviour:
   propColliders: []
   originalScale: {x: 0, y: 0, z: 0}
   wasOwnerLastFrame: 0
-  mainObjectRenderer: {fileID: 7493696107271029784}
+  mainObjectRenderer: {fileID: 0}
   isSendingItemRPC: 0
   scrapPersistedThroughRounds: 0
   heldByPlayerOnServer: 0
@@ -211,26 +232,7 @@ MonoBehaviour:
   reachedFloorTarget: 0
   grabbableToEnemies: 1
   hasBeenHeld: 0
---- !u!114 &3712778161532858103
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8882733536938728809}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 1
-  AutoObjectParentSync: 0
+  rotateObject: 0
 --- !u!82 &-7252346732173692121
 AudioSource:
   m_ObjectHideFlags: 0

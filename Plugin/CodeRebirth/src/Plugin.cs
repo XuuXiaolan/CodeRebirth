@@ -9,6 +9,7 @@ using CodeRebirth.src.Patches;
 using BepInEx.Configuration;
 using Dusk;
 using Dawn;
+using Unity.Netcode;
 
 namespace CodeRebirth.src;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
@@ -78,6 +79,7 @@ public class Plugin : BaseUnityPlugin
         // This should be ran before Network Prefabs are registered.
         InputActionsInstance = new IngameKeybinds();
 
+        InitializeNetworkBehaviours();
         ModConfig.InitMainCodeRebirthConfig(configFile);
 
         AssetBundle mainBundle = AssetBundleUtils.LoadBundle(Assembly.GetExecutingAssembly(), "coderebirthasset");
@@ -103,6 +105,26 @@ public class Plugin : BaseUnityPlugin
         Config.Save();
 
         Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
+    }
+
+    private void InitializeNetworkBehaviours()
+    {
+        var types = Assembly.GetExecutingAssembly().GetLoadableTypes();
+        foreach (var type in types)
+        {
+            if (type.IsNested || !typeof(NetworkBehaviour).IsAssignableFrom(type))
+                continue; // we do not care about fixing it, if it is not a network behaviour
+
+            var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+            foreach (var method in methods)
+            {
+                var attributes = method.GetCustomAttributes(typeof(RuntimeInitializeOnLoadMethodAttribute), false);
+                if (attributes.Length <= 0)
+                    continue;
+
+                method.Invoke(null, null);
+            }
+        }
     }
 
     internal static void ExtendedLogging(object text)
