@@ -2,7 +2,6 @@ using System.Collections;
 using System.Linq;
 using CodeRebirth.src.ModCompats;
 using Dawn.Utils;
-using LethalLevelLoader;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
@@ -17,7 +16,8 @@ public class PlanetUnlocker : GrabbableObject
         base.ItemActivate(used, buttonDown);
         playerHeldBy.inSpecialInteractAnimation = true;
         audioPlayer.Play();
-        LevelManager.TryGetExtendedLevel(StartOfRound.Instance.levels.Where(x => x.sceneName == moonSceneName).FirstOrDefault(), out ExtendedLevel? extendedLevel);
+        // todo
+        /*LevelManager.TryGetExtendedLevel(StartOfRound.Instance.levels.Where(x => x.sceneName == moonSceneName).FirstOrDefault(), out ExtendedLevel? extendedLevel);
         if (extendedLevel != null)
         {
             HUDManager.Instance.DisplayTip("Success", $"Coordinates to {moonSceneName} found.\n{extraText}", false);
@@ -32,7 +32,7 @@ public class PlanetUnlocker : GrabbableObject
         else
         {
             HUDManager.Instance.DisplayTip("Error", $"Coordinates to {moonSceneName} could not be verified, Cancelling operation.\n{extraText}", true);
-        }
+        }*/
         StartCoroutine(WaitForEndOfFrame());
     }
 

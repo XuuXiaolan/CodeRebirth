@@ -6,7 +6,6 @@ using HarmonyLib;
 using Dawn.Utils;
 using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Patches;
-using Unity.Netcode;
 using BepInEx.Configuration;
 using Dusk;
 using Dawn;
@@ -16,7 +15,6 @@ namespace CodeRebirth.src;
 [BepInDependency("mrov.WeatherRegistry")]
 [BepInDependency("com.rune580.LethalCompanyInputUtils")]
 [BepInDependency(DawnLib.PLUGIN_GUID)]
-[BepInDependency(LethalLevelLoader.Plugin.ModGUID)]
 [BepInDependency(Dusk.MyPluginInfo.PLUGIN_GUID)]
 [BepInDependency("Zaggy1024.OpenBodyCams", BepInDependency.DependencyFlags.SoftDependency)]
 public class Plugin : BaseUnityPlugin
@@ -78,7 +76,6 @@ public class Plugin : BaseUnityPlugin
         DeleteFileButtonPatch.Init();
         SoccerBallPropPatch.Init();
         // This should be ran before Network Prefabs are registered.
-        InitializeNetworkBehaviours();
         InputActionsInstance = new IngameKeybinds();
 
         ModConfig.InitMainCodeRebirthConfig(configFile);
@@ -113,26 +110,6 @@ public class Plugin : BaseUnityPlugin
         if (ModConfig.ConfigExtendedLogging.Value)
         {
             Logger.LogInfo(text);
-        }
-    }
-
-    private void InitializeNetworkBehaviours()
-    {
-        var types = Assembly.GetExecutingAssembly().GetLoadableTypes();
-        foreach (var type in types)
-        {
-            if (type.IsNested || !typeof(NetworkBehaviour).IsAssignableFrom(type))
-                continue; // we do not care about fixing it, if it is not a network behaviour
-
-            var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
-            foreach (var method in methods)
-            {
-                var attributes = method.GetCustomAttributes(typeof(RuntimeInitializeOnLoadMethodAttribute), false);
-                if (attributes.Length <= 0)
-                    continue;
-
-                method.Invoke(null, null);
-            }
         }
     }
 }

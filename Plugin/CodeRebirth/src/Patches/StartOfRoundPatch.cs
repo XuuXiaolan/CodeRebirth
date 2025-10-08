@@ -9,9 +9,7 @@ using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Maps;
 using Dawn;
-using System.Linq;
 using UnityEngine.InputSystem.Utilities;
-using LethalLevelLoader;
 
 namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(StartOfRound))]
@@ -109,22 +107,19 @@ static class StartOfRoundPatch
     [HarmonyPatch(nameof(StartOfRound.SetShipReadyToLand)), HarmonyPostfix]
     static void ForceChangeWeathersForOxyde()
     {
-        // todo: get this with moon keys
-        LevelManager.TryGetExtendedLevel(StartOfRound.Instance.levels.Where(x => x.sceneName == "Oxyde").FirstOrDefault(), out ExtendedLevel? extendedLevel);
-        Plugin.ExtendedLogging($"Extended level: {extendedLevel?.SelectableLevel}");
-        if (extendedLevel == null || !LethalContent.Weathers.TryGetValue(CodeRebirthWeatherKeys.NightShift, out _))
+        if (!LethalContent.Moons.TryGetValue(NamespacedKey.From("code_rebirth", "oxyde"), out DawnMoonInfo moonInfo))
             return;
 
         if (TimeOfDay.Instance.daysUntilDeadline <= 0)
         {
-            WeatherRegistry.WeatherController.ChangeWeather(extendedLevel.SelectableLevel, LevelWeatherType.None);
+            WeatherRegistry.WeatherController.ChangeWeather(moonInfo.Level, LevelWeatherType.None);
             return;
         }
 
-        string weatherName = WeatherRegistry.WeatherManager.GetCurrentWeather(extendedLevel.SelectableLevel).name.ToLowerInvariant().Trim();
+        string weatherName = WeatherRegistry.WeatherManager.GetCurrentWeather(moonInfo.Level).name.ToLowerInvariant().Trim();
         if (!Plugin.ModConfig.ConfigOxydeNeedsNightShift.Value && weatherName != "none")
             return;
 
-        WeatherRegistry.WeatherController.ChangeWeather(extendedLevel.SelectableLevel, (LevelWeatherType)TimeOfDay.Instance.effects.IndexOf(LethalContent.Weathers[CodeRebirthWeatherKeys.NightShift].WeatherEffect));
+        WeatherRegistry.WeatherController.ChangeWeather(moonInfo.Level, (LevelWeatherType)TimeOfDay.Instance.effects.IndexOf(LethalContent.Weathers[CodeRebirthWeatherKeys.NightShift].WeatherEffect));
     }
 }

@@ -12,9 +12,9 @@ using Dawn.Utils;
 using GameNetcodeStuff;
 using CodeRebirth.src.Content.Maps;
 using System.Collections;
-using LethalLevelLoader;
 using Dawn;
 using UnityEngine.InputSystem.Utilities;
+using System.Net.Mail;
 
 namespace CodeRebirth.src.Util;
 internal class CodeRebirthUtils : NetworkBehaviour
@@ -55,54 +55,46 @@ internal class CodeRebirthUtils : NetworkBehaviour
         {
             return;
         }
-        LevelManager.TryGetExtendedLevel(StartOfRound.Instance.levels.Where(x => x.sceneName == "Oxyde").FirstOrDefault(), out ExtendedLevel? extendedLevel);
-        if (extendedLevel == null)
+        if (!LethalContent.Moons.TryGetValue(NamespacedKey.From("code_rebirth", "oxyde"), out DawnMoonInfo moonInfo))
             return;
 
-        CheckWithHostToUnlockOxydeServerRpc(new NetworkExtendedLevelReference(extendedLevel));
-        StartCoroutine(HandleWRSetupWithOxyde(extendedLevel));
+        CheckWithHostToUnlockOxydeRpc(moonInfo.TypedKey);
+        StartCoroutine(HandleWRSetupWithOxyde(moonInfo));
     }
 
-    private IEnumerator HandleWRSetupWithOxyde(ExtendedLevel oxydeExtendedLevel)
+    private IEnumerator HandleWRSetupWithOxyde(DawnMoonInfo moonInfo)
     {
         yield return new WaitUntil(() => WeatherRegistry.WeatherManager.IsSetupFinished);
 
         if (TimeOfDay.Instance.daysUntilDeadline <= 0)
         {
-            WeatherRegistry.WeatherController.ChangeWeather(oxydeExtendedLevel.SelectableLevel, LevelWeatherType.None);
+            WeatherRegistry.WeatherController.ChangeWeather(moonInfo.Level, LevelWeatherType.None);
             yield break;
         }
 
-        if (!Plugin.ModConfig.ConfigOxydeNeedsNightShift.Value && WeatherRegistry.WeatherManager.GetCurrentWeather(oxydeExtendedLevel.SelectableLevel).name.ToLowerInvariant().Trim() != "none")
+        if (!Plugin.ModConfig.ConfigOxydeNeedsNightShift.Value && WeatherRegistry.WeatherManager.GetCurrentWeather(moonInfo.Level).name.ToLowerInvariant().Trim() != "none")
             yield break;
 
         Plugin.ExtendedLogging($"Switch weather to: {LethalContent.Weathers[CodeRebirthWeatherKeys.NightShift].WeatherEffect.name}");
         Plugin.ExtendedLogging($"LevelweatherType: {(LevelWeatherType)TimeOfDay.Instance.effects.IndexOf(LethalContent.Weathers[CodeRebirthWeatherKeys.NightShift].WeatherEffect)}");
-        WeatherRegistry.WeatherController.ChangeWeather(oxydeExtendedLevel.SelectableLevel, (LevelWeatherType)TimeOfDay.Instance.effects.IndexOf(LethalContent.Weathers[CodeRebirthWeatherKeys.NightShift].WeatherEffect));
+        WeatherRegistry.WeatherController.ChangeWeather(moonInfo.Level, (LevelWeatherType)TimeOfDay.Instance.effects.IndexOf(LethalContent.Weathers[CodeRebirthWeatherKeys.NightShift].WeatherEffect));
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void CheckWithHostToUnlockOxydeServerRpc(NetworkExtendedLevelReference extendedLevelNetworkReference)
+    [Rpc(SendTo.Server)]
+    private void CheckWithHostToUnlockOxydeRpc(NamespacedKey<DawnMoonInfo> namespacedKey)
     {
-        if (extendedLevelNetworkReference.TryGet(out ExtendedLevel? extendedLevel) && extendedLevel != null)
+        if (Plugin.ModConfig.ConfigOxydeEnabledFromStart.Value)
         {
-            if (Plugin.ModConfig.ConfigOxydeEnabledFromStart.Value)
-            {
-                extendedLevel.IsRouteHidden = false;
-                extendedLevel.IsRouteLocked = false;
-            }
-            CheckWithHostToUnlockOxydeClientRpc(extendedLevelNetworkReference, extendedLevel.IsRouteLocked);
+            // todo
+            // LethalContent.Moons[namespacedKey].PurchasePredicate = ITerminalPurchasePredicate.AlwaysSuccess();
         }
+        CheckWithHostToUnlockOxydeRpc(namespacedKey, LethalContent.Moons[namespacedKey].PurchasePredicate == ITerminalPurchasePredicate.AlwaysSuccess());
     }
 
-    [ClientRpc]
-    private void CheckWithHostToUnlockOxydeClientRpc(NetworkExtendedLevelReference extendedLevelNetworkReference, bool lockOxyde)
+    [Rpc(SendTo.NotMe)]
+    private void CheckWithHostToUnlockOxydeRpc(NamespacedKey<DawnMoonInfo> moonInfo, bool lockOxyde)
     {
-        if (extendedLevelNetworkReference.TryGet(out ExtendedLevel? extendedLevel) && extendedLevel != null)
-        {
-            extendedLevel.IsRouteHidden = lockOxyde;
-            extendedLevel.IsRouteLocked = lockOxyde;
-        }
+        // LethalContent.Moons[namespacedKey].PurchasePredicate = ITerminalPurchasePredicate.AlwaysSuccess();
     }
 
     private void HandleEnemyDropRates()
