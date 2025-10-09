@@ -12,6 +12,7 @@ using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
+using Dawn.Internal;
 
 namespace CodeRebirth.src.Content.Maps;
 public class Merchant : NetworkBehaviour
@@ -67,7 +68,7 @@ public class Merchant : NetworkBehaviour
         {
             if (destroyShipRoutine == null && (!playersWhoStoleKilled || ItemsStolen()))
             {
-                CodeRebirthUtils.Instance.shipAnimator.overrideController[CodeRebirthUtils.Instance.shipAnimator.originalShipLeaveClip] = CodeRebirthUtils.Instance.ModifiedDangerousShipLeaveAnimation;
+                DawnMoonNetworker.Instance?.ReplaceShipAnimations(CodeRebirthUtils.Instance.shipAnimator.originalShipLeaveClip, CodeRebirthUtils.Instance.ModifiedDangerousShipLeaveAnimation);
                 destroyShipRoutine = StartCoroutine(DestroyShip());
             }
             return;

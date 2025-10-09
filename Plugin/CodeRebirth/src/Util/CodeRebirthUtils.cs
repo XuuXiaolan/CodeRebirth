@@ -48,8 +48,6 @@ internal class CodeRebirthUtils : NetworkBehaviour
         shipTerminal = FindFirstObjectByType<Terminal>(FindObjectsInactive.Exclude);
         startMatchLever = FindFirstObjectByType<StartMatchLever>(FindObjectsInactive.Exclude);
         shipAnimator = StartOfRound.Instance.shipAnimatorObject.gameObject.AddComponent<ShipAnimator>();
-        shipAnimator.shipLandAnimation = ModifiedShipLandAnimation;
-        shipAnimator.shipNormalLeaveAnimation = ModifiedShipLeaveAnimation;
 
         if (!LethalContent.Weathers.TryGetValue(CodeRebirthWeatherKeys.NightShift, out _))
         {

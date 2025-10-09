@@ -10,32 +10,18 @@ using UnityEngine;
 namespace CodeRebirth.src.MiscScripts;
 public class ShipAnimator : MonoBehaviour // Some of this code is from Kite, so thanks to them
 {
-    [HideInInspector] public AnimationClip shipLandAnimation = null!;
-    [HideInInspector] public AnimationClip shipNormalLeaveAnimation = null!;
-    private Animator hangarShipAnimator = null!;
-    [HideInInspector] public AnimationClip originalShipLandClip = null!;
     [HideInInspector] public AnimationClip originalShipLeaveClip = null!;
     private RuntimeAnimatorController animatorController = null!; // turn off animator after finishing
-    [HideInInspector] public AnimatorOverrideController overrideController = null!;
     private Coroutine? _messWithEyeVolumeRoutine = null;
 
     private void Start()
     {
-        hangarShipAnimator = StartOfRound.Instance.shipAnimator;
-        animatorController = hangarShipAnimator.runtimeAnimatorController;
-
         foreach (var animClip in animatorController.animationClips)
         {
-            if (animClip.name == "HangarShipLandB")
-            {
-                originalShipLandClip = animClip;
-                continue;
-            }
-
             if (animClip.name == "ShipLeave")
             {
                 originalShipLeaveClip = animClip;
-                continue;
+                break;
             }
         }
         StartCoroutine(WaitToReplaceClip());
@@ -46,7 +32,6 @@ public class ShipAnimator : MonoBehaviour // Some of this code is from Kite, so 
         while (true)
         {
             yield return new WaitUntil(() => RoundManager.Instance.currentLevel.sceneName == "Oxyde" && !StartOfRound.Instance.inShipPhase);
-            ReplaceAnimationClip();
             yield return new WaitUntil(() => StartOfRound.Instance.shipHasLanded);
             StartOfRound.Instance.shipAnimator.enabled = false;
             // turn off animator
@@ -76,16 +61,6 @@ public class ShipAnimator : MonoBehaviour // Some of this code is from Kite, so 
             StartCoroutine(UnReplaceAnimationClip());
         }
     }
-
-    private void ReplaceAnimationClip()
-    {
-        overrideController = new AnimatorOverrideController(animatorController);
-        overrideController[originalShipLandClip] = shipLandAnimation;
-        overrideController[originalShipLeaveClip] = shipNormalLeaveAnimation;
-        hangarShipAnimator.runtimeAnimatorController = overrideController;
-        Plugin.ExtendedLogging("Replaced HangarShipLand with the custom animation clip.");
-    }
-
     public void TurnOnDarkenedVolumeAnimEvent()
     {
         Plugin.ExtendedLogging($"Animation Event worked");
@@ -133,7 +108,6 @@ public class ShipAnimator : MonoBehaviour // Some of this code is from Kite, so 
 
     private IEnumerator UnReplaceAnimationClip()
     {
-        hangarShipAnimator.runtimeAnimatorController = animatorController;
         yield return new WaitUntil(() => _messWithEyeVolumeRoutine == null);
         while (CodeRebirthUtils.Instance.CloseEyeVolume.weight > 0)
         {
