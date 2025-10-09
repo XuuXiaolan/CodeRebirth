@@ -32,7 +32,7 @@ public class Merchant : NetworkBehaviour
     private int currentCoinsStored = 0;
     public GameObject[] coinObjects = [];
     private bool canTarget = true;
-    private NetworkVariable<bool> isActive = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    private NetworkVariable<int> isActive = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     private bool playersWhoStoleKilled = true;
     private Coroutine? destroyShipRoutine = null;
     private static readonly int TakeCoinsAnimation = Animator.StringToHash("takeCoins"); // Trigger
@@ -84,21 +84,21 @@ public class Merchant : NetworkBehaviour
                 playerNearby = true;
                 break;
             }
-            if (!playerNearby && isActive.Value && targetPlayers.Count <= 0)
+            if (!playerNearby && isActive.Value == 1 && targetPlayers.Count <= 0)
             {
-                isActive.Value = false;
+                isActive.Value = 0;
                 merchantAnimator.SetBool(Activated, false);
             }
-            else if (playerNearby && !isActive.Value)
+            else if (playerNearby && isActive.Value == 0)
             {
                 merchantAnimator.SetBool(Activated, true);
-                isActive.Value = true;
+                isActive.Value = 1;
             }
         }
-        else if (IsServer && !isActive.Value)
+        else if (IsServer && isActive.Value == 0)
         {
             merchantAnimator.SetBool(Activated, true);
-            isActive.Value = true;
+            isActive.Value = 1;
         }
         walletTrigger.interactable = GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer != null && GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer.itemProperties.itemName == "Wayfarer's Wallet";
         foreach (KeyValuePair<GrabbableObject, int> item in itemsSpawned)

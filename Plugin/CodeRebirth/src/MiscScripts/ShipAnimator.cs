@@ -11,12 +11,11 @@ namespace CodeRebirth.src.MiscScripts;
 public class ShipAnimator : MonoBehaviour // Some of this code is from Kite, so thanks to them
 {
     [HideInInspector] public AnimationClip originalShipLeaveClip = null!;
-    private RuntimeAnimatorController animatorController = null!; // turn off animator after finishing
     private Coroutine? _messWithEyeVolumeRoutine = null;
 
     private void Start()
     {
-        foreach (var animClip in animatorController.animationClips)
+        foreach (var animClip in StartOfRound.Instance.shipAnimator.runtimeAnimatorController.animationClips)
         {
             if (animClip.name == "ShipLeave")
             {
@@ -42,6 +41,7 @@ public class ShipAnimator : MonoBehaviour // Some of this code is from Kite, so 
             {
                 DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.GreatestAsset);
             }
+            yield return new WaitUntil(() => StartOfRound.Instance.shipDoorsEnabled);
             bool switchOffOxyde = false;
             if (StartOfRound.Instance.livingPlayers == 0)
             {

@@ -80,11 +80,11 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     [HideInInspector]
     public NetworkVariable<int> currentQuestOrder = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     [HideInInspector]
-    public NetworkVariable<bool> questTimedOut = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<int> questTimedOut = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     [HideInInspector]
-    public NetworkVariable<bool> questCompleted = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<int> questCompleted = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     [HideInInspector]
-    public NetworkVariable<bool> questStarted = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<int> questStarted = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     [HideInInspector]
     public NetworkVariable<int> questOrder = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     [HideInInspector]
@@ -149,7 +149,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     {
         if (changingState || !FindClosestPlayerInRange(range)) return;
         SetPlayerTargetServerRpc(targetPlayer);
-        StartCoroutine(ChangingToApproaching(questCompleted.Value));
+        StartCoroutine(ChangingToApproaching(questCompleted.Value == 1));
     }
 
     protected virtual IEnumerator ChangingToApproaching(bool doDelay)
@@ -167,9 +167,9 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
 
     protected virtual void DoApproaching()
     {
-        if (Vector3.Distance(transform.position, targetPlayer.transform.position) < 3f && !questStarted.Value)
+        if (Vector3.Distance(transform.position, targetPlayer.transform.position) < 3f && questStarted.Value == 0)
         {
-            questStarted.Value = true;
+            questStarted.Value = 1;
             creatureNetworkAnimator.SetTrigger(startGiveQuestAnimation);
             StartCoroutine(DoGiveQuest());
         }
@@ -207,7 +207,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     {
         Plugin.ExtendedLogging("Starting Quest: " + questName);
         SetDuckTextManuallyClientRpc("");
-        if (questCompleted.Value)
+        if (questCompleted.Value == 1)
         {
             PlayMiscSoundsClientRpc(0);
             SetDuckStartTalkingClientRpc("And one more thing for you!", 0.13f, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer), false, false);
@@ -220,7 +220,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         yield return new WaitUntil(() => !creatureSFX.isPlaying);
         creatureAnimator.SetBool(isTalkingAnimation, false);
         creatureNetworkAnimator.SetTrigger(startQuestAnimation);
-        questStarted.Value = true;
+        questStarted.Value = 1;
         agent.speed = questSpeed;
         Vector3 randomSpawnPosition = this.transform.position;
         if (RoundManager.Instance.insideAINodes.Length != 0)
@@ -250,7 +250,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
             internalQuestTimer += Time.deltaTime;
             yield return null;
         }
-        questTimedOut.Value = true;
+        questTimedOut.Value = 1;
     }
 
     [ClientRpc]
@@ -266,7 +266,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
             DoCompleteQuest(QuestCompletion.Null);
             return;
         }
-        if (questTimedOut.Value)
+        if (questTimedOut.Value == 1)
         {
             SetDuckStartTalkingClientRpc("Too bad!!!", 0.05f, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer), false, true);
             DoCompleteQuest(QuestCompletion.TimedOut);
@@ -293,7 +293,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
             Plugin.ExtendedLogging("completed!");
             SetDuckStartTalkingClientRpc("Good Job!!", 0.05f, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer), false, true);
             DoCompleteQuest(QuestCompletion.Completed);
-            questStarted.Value = false;
+            questStarted.Value = 0;
         }
     }
     protected virtual void DoCompleteQuest(QuestCompletion reason)
@@ -323,9 +323,9 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         questItemsList.Clear();
         if (UnityEngine.Random.Range(0, 100) < questRepeatChance && reason == QuestCompletion.Completed && questCompletionTimes.Value <= questRepeats)
         {
-            questStarted.Value = false;
-            questTimedOut.Value = false;
-            questCompleted.Value = true;
+            questStarted.Value = 0;
+            questTimedOut.Value = 0;
+            questCompleted.Value = 1;
             SwitchToBehaviourClientRpc((int)State.Wandering);
             return;
         }
@@ -333,7 +333,7 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         {
             PlayMiscSoundsClientRpc(3);
         }
-        questCompleted.Value = true;
+        questCompleted.Value = 1;
         agent.speed = docileSpeed;
         SwitchToBehaviourClientRpc((int)State.Docile);
         float redoTimer = UnityEngine.Random.Range(45, 61);
@@ -355,9 +355,9 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
     {
         questCompletionTimes.Value = 0;
         currentQuestOrder.Value = 0;
-        questTimedOut.Value = false;
-        questCompleted.Value = false;
-        questStarted.Value = false;
+        questTimedOut.Value = 0;
+        questCompleted.Value = 0;
+        questStarted.Value = 0;
         questOrder.Value = 0;
         internalQuestTimer = 0f;
         agent.speed = spawnSpeed;

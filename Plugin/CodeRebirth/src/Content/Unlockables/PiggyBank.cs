@@ -18,8 +18,8 @@ public class PiggyBank : NetworkBehaviour, IHittable
     public Animator piggyBankAnimator = null!;
     public NetworkAnimator piggyBankNetworkAnimator = null!;
 
-    private NetworkVariable<bool> _broken = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-    private NetworkVariable<int> _coinsStored = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    private NetworkVariable<int> _broken = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    private NetworkVariable<int> _coinsStored = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     private static readonly int _BreakAnimation = Animator.StringToHash("borked"); // Bool
     private static readonly int _InsertCoinAnimation = Animator.StringToHash("insertCoin"); // Trigger
 
@@ -61,7 +61,7 @@ public class PiggyBank : NetworkBehaviour, IHittable
 
     public int AddCoinsToPiggyBank(int amount)
     {
-        if (_broken.Value)
+        if (_broken.Value == 1)
             return 0;
 
         if (IsServer)
@@ -81,7 +81,7 @@ public class PiggyBank : NetworkBehaviour, IHittable
 
     public bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
-        if (_broken.Value)
+        if (_broken.Value == 1)
             return false;
 
         RepairOrBreakPiggyBankServerRpc(true);
@@ -98,7 +98,7 @@ public class PiggyBank : NetworkBehaviour, IHittable
     public void RepairOrBreakPiggyBankServerRpc(bool broken)
     {
         piggyBankAnimator.SetBool(_BreakAnimation, broken);
-        _broken.Value = broken;
+        _broken.Value = broken ? 1 : 0;
     }
 
     public void SpawnAllCoinsAnimEvent()

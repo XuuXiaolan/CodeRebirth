@@ -15,11 +15,11 @@ public static class EnemyAICollisionDetectPatch
     {
         if (playerWhoHit != null && playerWhoHit.currentlyHeldObjectServer != null && playerWhoHit.currentlyHeldObjectServer is ScaryShrimp scaryShrimp)
         {
-            if (scaryShrimp.hitEnemy.Value)
+            if (scaryShrimp.hitEnemy.Value == 1)
             {
                 return false;
             }
-            scaryShrimp.hitEnemy.Value = true;
+            scaryShrimp.hitEnemy.Value = 1;
             scaryShrimp.PastHitEnemyServerRpc(self.mainScript.enemyHP);
             self.mainScript.HitEnemyOnLocalClient(3, hitDirection, playerWhoHit, playHitSFX, hitID);
             return false;

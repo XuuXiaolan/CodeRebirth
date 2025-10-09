@@ -11,7 +11,7 @@ public class ScaryShrimp : Shovel
     public GameObject particleEffectGameObject = null!;
 
     private PlayerControllerB lastPlayerHeld = null!;
-    [NonSerialized] public NetworkVariable<bool> hitEnemy = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    [NonSerialized] public NetworkVariable<int> hitEnemy = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public override void Start()
     {
         base.Start();
@@ -33,7 +33,7 @@ public class ScaryShrimp : Shovel
     public override void OnHitGround()
     {
         base.OnHitGround();
-        if (!hitEnemy.Value)
+        if (hitEnemy.Value == 0)
         {
             // var particleEffect = Instantiate(particleEffectGameObject, transform.position, transform.rotation);
             // Destroy(particleEffect, 2f);

@@ -18,7 +18,7 @@ public class SCP999GalAI : NetworkBehaviour
     public List<Transform> revivePositions = new();
 
     [NonSerialized] public float boomboxTimer = 0f;
-    [NonSerialized] public NetworkVariable<bool> boomboxPlaying = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    [NonSerialized] public NetworkVariable<int> boomboxPlaying = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     private List<GameObject> particlesSpawned = new();
     private bool currentlyHealing = false;
     private NetworkVariable<float> cooldownTimer = new(5f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -87,13 +87,13 @@ public class SCP999GalAI : NetworkBehaviour
 
     private void BoomboxUpdate()
     {
-        if (!boomboxPlaying.Value) return;
+        if (boomboxPlaying.Value == 0) return;
 
         boomboxTimer += Time.deltaTime;
         if (boomboxTimer >= 2f)
         {
             boomboxTimer = 0f;
-            boomboxPlaying.Value = false;
+            boomboxPlaying.Value = 0;
             animator.SetBool(isDancing, false);
         }
     }
@@ -136,7 +136,7 @@ public class SCP999GalAI : NetworkBehaviour
     private void HealPlayerInteraction(PlayerControllerB playerInteracting)
     {
         Plugin.ExtendedLogging($"Healing player: {playerInteracting} | Cooldown timer: {cooldownTimer.Value} | Heal Charge count: {healChargeCount.Value} | Revive Charge count: {reviveChargeCount.Value}");
-        if (boomboxPlaying.Value) return;
+        if (boomboxPlaying.Value == 1) return;
         if (cooldownTimer.Value > 0f || (healChargeCount.Value <= 0 && reviveChargeCount.Value <= 0))
         {
             Plugin.ExtendedLogging($"triggering squish animation.");
@@ -468,7 +468,7 @@ public class SCP999GalAI : NetworkBehaviour
             return;
 
         boomboxTimer = 0f;
-        boomboxPlaying.Value = true;
+        boomboxPlaying.Value = 1;
         animator.SetBool(isDancing, true);
     }
 
