@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 14116275f8c6d4b4ba26d1d99aa38d2c
+guid: ee9d90e19d2a5b648aa9f4f47db7cc54
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -19,16 +19,6 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: SlasherItems
     second: {fileID: 2100000, guid: 7d0024fef17eaba419211583bbe74e8f, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: TreadsLeft.002
-    second: {fileID: 2100000, guid: d5837ba9afbd26247b75d04ac3494f89, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: TreadsRight.002
-    second: {fileID: 2100000, guid: 9876aa865a9a62448b00972da6ea0603, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -66,10 +56,10 @@ ModelImporter:
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
     importPhysicalCameras: 1
-    importVisibility: 0
-    importBlendShapes: 0
-    importCameras: 0
-    importLights: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
     nodeNameCollisionStrategy: 1
     fileIdsGeneration: 2
     swapUVChannels: 0
@@ -103,7 +93,7 @@ ModelImporter:
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
   referencedClips: []
-  importAnimation: 0
+  importAnimation: 1
   humanDescription:
     serializedVersion: 3
     human: []
@@ -126,7 +116,7 @@ ModelImporter:
   humanoidOversampling: 1
   avatarSetup: 0
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
-  importBlendShapeDeformPercent: 0
+  importBlendShapeDeformPercent: 1
   remapMaterialsIfMaterialImportModeIsNone: 0
   additionalBone: 0
   userData: 
