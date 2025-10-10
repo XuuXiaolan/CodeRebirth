@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 79184922190906757}
   - component: {fileID: 7218790261948216007}
   - component: {fileID: 5132481820682385826}
+  - component: {fileID: 8786052060796038087}
   m_Layer: 0
   m_Name: JackOLantern
   m_TagString: Untagged
@@ -107,6 +108,38 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.15090889
   m_Center: {x: 0.015173381, y: 0.00077077025, z: 7.3145414e-18}
+--- !u!114 &8786052060796038087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 256353737666934922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -879711481, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <TargetLight>k__BackingField: {fileID: 3869202074407881430}
+  <EmissiveRenderers>k__BackingField:
+  - {fileID: 8293008703643134618}
+  <EmissionColor>k__BackingField: {r: 0.8867924, g: 0.39642403, b: 0.025097746, a: 1}
+  <BaseIntensity>k__BackingField: 3000
+  MinFrac: 0.4
+  MaxFrac: 1.2
+  IntensityLerpSpeed: 100
+  MicroIntervalRange: {x: 0.02, y: 0.08}
+  NoiseSpeed: 6
+  DimEventRate: 0.15
+  DimFloorFrac: 0.08
+  DimDurationRange: {x: 0.08, y: 0.35}
+  BlackoutEventRate: 0.05
+  BlackoutDurationRange: {x: 0.15, y: 0.7}
+  LoopSource: {fileID: 0}
+  OneShotSource: {fileID: 0}
+  DimOrBlackoutClips: []
+  RecoverClips: []
+  OneShotPitchRange: {x: 0.95, y: 1.05}
 --- !u!1 &5520014574828905661
 GameObject:
   m_ObjectHideFlags: 0

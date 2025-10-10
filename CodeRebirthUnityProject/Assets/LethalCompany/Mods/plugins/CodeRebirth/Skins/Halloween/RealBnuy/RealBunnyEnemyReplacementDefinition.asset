@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -100224101, guid: 38b16a0369bd20744a6a915f285df905, type: 3}
+  m_Name: RealBunnyEnemyReplacementDefinition
+  m_EditorClassIdentifier: 
+  _configEntries: []
+  _tags: []
+  _typedKey:
+    _namespace: code_rebirth
+    _key: realbunny
+  <EntityToReplaceKey>k__BackingField:
+    _namespace: code_rebirth
+    _key: rabbit_magician
+  <DatePredicate>k__BackingField: {fileID: 11400000, guid: f635dcda5ba8bac458e944ac6e20e98c,
+    type: 2}
+  <Replacements>k__BackingField:
+  - {fileID: 11400000, guid: 04644a65bc176914e8b5fc8cd288f607, type: 2}
+  - {fileID: 11400000, guid: 3a7a8b461103e9f44affa016025df18d, type: 2}
+  <GameObjectAddons>k__BackingField: []
+  <MoonSpawnWeights>k__BackingField: Vanilla=+9999, Custom=+9999
+  <InteriorSpawnWeights>k__BackingField: Facility=+0, Mansion=+0, Mineshaft=+0
+  <WeatherSpawnWeights>k__BackingField: None=*1, DustClouds=*1, Rainy=*1, Stormy=*1,
+    Foggy=*1, Flooded=*1, Eclipsed=*1
+  <GenerateSpawnWeightsConfig>k__BackingField: 0
+  <GenerateDisableDateConfig>k__BackingField: 0
+  <NestRendererReplacements>k__BackingField: []
+  <HitBodySFX>k__BackingField: {fileID: 0}
+  <HitEnemyVoiceSFX>k__BackingField: {fileID: 0}
+  <StunSFX>k__BackingField: {fileID: 0}
+  <AudioClips>k__BackingField: []
+  _spottedFromGroundAudioClip: {fileID: 0}
+  _spottedFromBackAudioClip: {fileID: 0}
+  spawnSound: {fileID: 0}
+  dieSFX: {fileID: 0}
+  _fallingAudioClips: []
+  potentialCreatureVoice: {fileID: 0}
+  potentialCreatureSFX: {fileID: 0}
+  _confettiParticles: {fileID: 0}
+  ExperimentalAudioToPlay: {fileID: 0}
+  ExperimentalAudioToPlayB: {fileID: 0}
+  ExperimentalAudioClip: {fileID: 0}
+  ExperimentalAudioClip2: {fileID: 0}
+  ExperimentalAudioClip3: {fileID: 0}
+  ExperimentalRandomClips: []
+  ExperimentalRandomClips2: []
+  ExperimentalParticle: {fileID: 0}
