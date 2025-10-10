@@ -29,6 +29,8 @@
    
    <ItemGroup>
       <AssetBundles Include="../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/Assetbundles/*" />
+      <AssetBundles Include="../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/Skins/Dlls/*" />
+      <AssetBundles Remove="../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/Skins/Dlls/*.meta" />
       <AssetBundles Remove="../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/Assetbundles/*.meta" />
       <AssetBundles Remove="../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/Assetbundles/AssetBundles" />
       <Assetbundles Remove="../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/Assetbundles/*.manifest" />

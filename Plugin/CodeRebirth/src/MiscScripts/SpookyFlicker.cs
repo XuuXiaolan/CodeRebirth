@@ -91,7 +91,7 @@ public class SpookyFlicker : MonoBehaviour
 
 
     private float _targetIntensity, _currentIntensity, _noiseT = 0f;
-    private MaterialPropertyBlock _mpb = new();
+    private MaterialPropertyBlock _mpb;
     private Coroutine? _loop = null;
     private bool _inEvent = false;
 
