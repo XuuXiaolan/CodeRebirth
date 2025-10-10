@@ -1298,7 +1298,11 @@ MonoBehaviour:
   _hitBodySounds: []
   spawnSound: {fileID: 0}
   questTimer: 120
-  questItems: []
+  questItems:
+  - _namespace: code_rebirth
+    _key: grape
+  - _namespace: code_rebirth
+    _key: lemonade_pitcher
   questName: Duck Quest
   questRepeatChance: 25
   questRepeats: 1
