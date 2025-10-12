@@ -1,4 +1,22 @@
-# v0.3.1
+# v0.3.3
+
+- Fixed SkinnedMeshReplacement removing all base materials.
+- Allowed materials to be replaced with null to hide.
+- Added `DisableGameObjectReplacement` for doing stuff like disabling unwanted renderers.
+
+## v0.3.2
+
+- Added MaterialPropertiesReplacement to EntityReplacements.
+- Added ScanNodeReplacement to EntityReplacements.
+- Gave devs support to NetworkVariable<bool> and NetworkVariable<float>.
+- Added tag: `#dawn_lib:has_buying_percent` to make your moon have the buying percentage similar to company.
+- Fixed some lag issues in the Editor.dll.
+- Fixed replacing blank SO's of all the ones that LLL replaced (and more) in DawnLib content.
+- Changed MapObjects to use NamespacedKeys.
+- Inside MapObjects spawn more performantly now too.
+- Fixed a small issue with hotloading where loading too early into a moon unlocks the lever too early.
+
+## v0.3.1
 
 - Switched from using quaternion on entity replacements, I realised that if even I don't get how they work, I can't expect anyone else to also understand that.
 

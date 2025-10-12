@@ -1,6 +1,5 @@
 using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.Content.Unlockables;
-using Dawn;
 using Dusk;
 using Dawn.Utils;
 using Unity.Netcode;
@@ -28,7 +27,7 @@ public class Wallet : GrabbableObject
 
     private void UpdateWalletSize()
     {
-        skinnedMeshRenderer.SetBlendShapeWeight(0, Mathf.Clamp(coinsStored.Value * 20f, 0, 300));
+        skinnedMeshRenderer.SetBlendShapeWeight(0, Mathf.Clamp(coinsStored.Value * 5, 0, 100));
     }
 
     public override void ItemActivate(bool used, bool buttonDown = true)
