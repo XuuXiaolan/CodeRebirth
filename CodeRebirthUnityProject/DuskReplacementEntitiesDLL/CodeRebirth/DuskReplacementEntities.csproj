@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <AssemblyName>com.local.Rodriguez.DuskReplacementEntities.CodeRebirth</AssemblyName>
+        <Description>Dusk per-assembly replacements</Description>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <LangVersion>latest</LangVersion>
+        <Configurations>Debug;Release</Configurations>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <RestoreAdditionalProjectSources>
+            https://api.nuget.org/v3/index.json;
+            https://nuget.bepinex.dev/v3/index.json
+        </RestoreAdditionalProjectSources>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>embedded</DebugType>
+        <PathMap>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)'))=./</PathMap>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2" PrivateAssets="all" />
+        <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
+        <PackageReference Include="BepInEx.Core" Version="5.*" />
+        <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
+        <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" PrivateAssets="all" />
+        <PackageReference Include="LethalCompany.GameLibs.Steam" Publicize="true" Version="*-*" PrivateAssets="all" />
+        <PackageReference Include="TeamXiaolan.DawnLib" Version="0.2.16" />
+        <PackageReference Include="TeamXiaolan.DawnLib.DuskMod" Version="0.2.16" />
+    </ItemGroup>
+    <ItemGroup>
+        <Reference Include="CodeRebirth" Private="False"  Publicize="true"><HintPath>F:\Ammar Stuff\ModdingProject\CodeRebirthStuff\CodeRebirth\CodeRebirthUnityProject\Assets\LethalCompany\Mods\plugins\CodeRebirth\CodeRebirth.dll</HintPath></Reference>
+    </ItemGroup>
+</Project>

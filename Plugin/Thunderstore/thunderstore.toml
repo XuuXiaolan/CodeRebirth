@@ -28,7 +28,7 @@ source = "../CodeRebirth/bin/Release/netstandard2.1/CodeRebirth.dll"
 target = "plugins/CodeRebirth/"
 
 [[build.copy]]
-source = "../CodeRebirth/CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/Skins/Dlls/com.local.Rodriguez.DuskReplacementEntities.CodeRebirth.dll"
+source = "../../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/Skins/Dlls/com.local.Rodriguez.DuskReplacementEntities.CodeRebirth.dll"
 target = "plugins/CodeRebirth/"
 
 [[build.copy]]

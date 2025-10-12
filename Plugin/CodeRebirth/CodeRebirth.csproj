@@ -17,6 +17,7 @@
     <Nullable>enable</Nullable>
 
     <AssetBundleDir>$(SolutionDir)../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/AssetBundles/</AssetBundleDir>
+    <SkinDlls>$(SolutionDir)../CodeRebirthUnityProject/Assets/LethalCompany/Mods/plugins/CodeRebirth/Skins/Dlls/</SkinDlls>
   </PropertyGroup>
 
 	<!-- Embedded Debug (without showing your file structure :3) -->
@@ -91,6 +92,20 @@
     <Message Importance="high" Text="About to copy bundles, will take a second!" />
     <MakeDir Directories="$(OutputDir)" Condition="!Exists($(OutputDir))" />
     <Copy SourceFiles="@(AllBundles)" DestinationFolder="$(OutputDir)" />
+  </Target>
+
+  <Target Name="CopySkinDlls" AfterTargets="PostBuildEvent">
+    <ItemGroup>
+      <SkinDlls Include="$(SkinDllDir)*" Exclude="$(SkinDllDir)*.meta" />
+    </ItemGroup>
+    
+    <PropertyGroup>
+      <OutputDir>$(TargetDir)Assets</OutputDir>
+    </PropertyGroup>
+    
+    <Message Importance="high" Text="About to copy skin dlls, will take a second!" />
+    <MakeDir Directories="$(OutputDir)" Condition="!Exists($(OutputDir))" />
+    <Copy SourceFiles="@(SkinDlls)" DestinationFolder="$(OutputDir)" />
   </Target>
 
 <!-- Netcode Patcher -->
