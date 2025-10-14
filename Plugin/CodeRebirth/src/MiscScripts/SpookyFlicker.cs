@@ -71,11 +71,11 @@ public class SpookyFlicker : MonoBehaviour
     [field: Header("Sound")]
     [field: Tooltip("Looping 'buzz/hum' source.")]
     [field: SerializeField]
-    public AudioSource LoopSource = null!;
+    public AudioSource? LoopSource = null;
 
     [field: Tooltip("One-shot source for ticks/pops etc.")]
     [field: SerializeField]
-    public AudioSource OneShotSource = null!;
+    public AudioSource? OneShotSource = null;
 
     [field: Tooltip("Played when a dim or blackout kicks in.")]
     [field: SerializeField]
@@ -97,6 +97,7 @@ public class SpookyFlicker : MonoBehaviour
 
     private void Awake()
     {
+        _mpb = new();
         _currentIntensity = BaseIntensity;
         _targetIntensity = BaseIntensity;
         ApplyIntensityImmediate(_currentIntensity);
@@ -238,7 +239,10 @@ public class SpookyFlicker : MonoBehaviour
             yield return null;
         }
 
-        LoopSource.volume = savedLoopVol;
+        if (LoopSource != null)
+        {
+            LoopSource.volume = savedLoopVol;
+        }
 
         PlayOneShot(RecoverClips);
         yield return TweenTo(BaseIntensity * Random.Range(0.9f, 1.15f), 0.06f, 0.15f);
