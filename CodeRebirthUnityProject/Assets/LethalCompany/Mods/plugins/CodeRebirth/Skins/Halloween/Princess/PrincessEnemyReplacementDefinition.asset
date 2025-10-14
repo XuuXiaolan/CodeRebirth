@@ -37,13 +37,32 @@ MonoBehaviour:
   <HitEnemyVoiceSFX>k__BackingField: {fileID: 0}
   <StunSFX>k__BackingField: {fileID: 0}
   <AudioClips>k__BackingField: []
-  spawnSound: {fileID: 0}
+  _idleAudioClips:
+    audioClips:
+    - {fileID: 8300000, guid: 163d708a28bf7cc4cb6fe0d5eb997487, type: 3}
+    - {fileID: 8300000, guid: 10f4cddfe22db1b489ce2840f8bb23af, type: 3}
+    - {fileID: 8300000, guid: 6982780a5f3540344806497148fcee13, type: 3}
+    - {fileID: 8300000, guid: a28e3f55e2480f645a4dcccbe93c2544, type: 3}
+    - {fileID: 8300000, guid: 3cb2d0123f327e84bb79c0fae540904d, type: 3}
+    - {fileID: 8300000, guid: c096e12e6566fc841b0556906af0288d, type: 3}
+    - {fileID: 8300000, guid: fc89d1bb806676548b9d2c20cd3dfeb4, type: 3}
+    - {fileID: 8300000, guid: 146fde5604aeb6d4cb836833443968f5, type: 3}
+    minTime: 10
+    maxTime: 15
+  spawnSound: {fileID: 8300000, guid: 5a6bb8698ea25c14f8a4128ac7461dad, type: 3}
   dieSFX: {fileID: 0}
   deathSounds: []
   postDeathSounds: []
-  detectItemDroppedSounds: []
+  detectItemDroppedSounds:
+  - {fileID: 8300000, guid: 8cccc398f7f05764fa30746507f28ace, type: 3}
+  - {fileID: 8300000, guid: 142f47832c3a47e4a9ee8eaa22d55405, type: 3}
+  - {fileID: 8300000, guid: f05f65fb971caf74f8c97ef082596982, type: 3}
   grabPlayerSounds: []
-  throwPlayerSounds: []
+  throwPlayerSounds:
+  - {fileID: 8300000, guid: effdc65bb357c134fab9b8e64f2b8702, type: 3}
+  - {fileID: 8300000, guid: e8699c3816cd1834891060a04835fd29, type: 3}
+  - {fileID: 8300000, guid: a700631da2be85841992305a118a7b87, type: 3}
+  - {fileID: 8300000, guid: e3cbc88c1f2e3934a8ef8000edc0bb26, type: 3}
   potentialCreatureVoice: {fileID: 0}
   potentialCreatureSFX: {fileID: 0}
   ExperimentalAudioToPlay: {fileID: 0}

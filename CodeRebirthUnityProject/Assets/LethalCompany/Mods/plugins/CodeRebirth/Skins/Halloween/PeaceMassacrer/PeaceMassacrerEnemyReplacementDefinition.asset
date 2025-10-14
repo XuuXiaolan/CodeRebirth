@@ -37,16 +37,25 @@ MonoBehaviour:
   <HitEnemyVoiceSFX>k__BackingField: {fileID: 0}
   <StunSFX>k__BackingField: {fileID: 0}
   <AudioClips>k__BackingField: []
-  _revUpSound: {fileID: 0}
-  _revDownSound: {fileID: 0}
+  _idleAudioClips:
+    audioClips:
+    - {fileID: 8300000, guid: c3747c3eea6a908459a0ab6bca79018b, type: 3}
+    minTime: 0
+    maxTime: 0
+  _revUpSound: {fileID: 8300000, guid: c3747c3eea6a908459a0ab6bca79018b, type: 3}
+  _revDownSound: {fileID: 8300000, guid: c3747c3eea6a908459a0ab6bca79018b, type: 3}
   _bitchSlapSound: {fileID: 0}
-  _bitchSlapStartSound: {fileID: 0}
-  spawnSound: {fileID: 0}
-  dieSFX: {fileID: 0}
-  potential_treadsSource: {fileID: 0}
-  potential_aggroSFX: {fileID: 0}
-  potentialCreatureVoice: {fileID: 0}
-  potentialCreatureSFX: {fileID: 0}
+  _bitchSlapStartSound: {fileID: 8300000, guid: 2fc4eabd12d5cfd4ea2b8c285269483d,
+    type: 3}
+  spawnSound: {fileID: 8300000, guid: c3747c3eea6a908459a0ab6bca79018b, type: 3}
+  dieSFX: {fileID: 8300000, guid: c3747c3eea6a908459a0ab6bca79018b, type: 3}
+  potential_treadsSource: {fileID: 8300000, guid: c3747c3eea6a908459a0ab6bca79018b,
+    type: 3}
+  potential_aggroSFX: {fileID: 8300000, guid: fa1cb3092fb472046a191665963f39b8, type: 3}
+  potentialCreatureVoice: {fileID: 8300000, guid: fa1cb3092fb472046a191665963f39b8,
+    type: 3}
+  potentialCreatureSFX: {fileID: 8300000, guid: fa1cb3092fb472046a191665963f39b8,
+    type: 3}
   ExperimentalAudioToPlay: {fileID: 0}
   ExperimentalAudioToPlayB: {fileID: 0}
   ExperimentalAudioClip: {fileID: 0}

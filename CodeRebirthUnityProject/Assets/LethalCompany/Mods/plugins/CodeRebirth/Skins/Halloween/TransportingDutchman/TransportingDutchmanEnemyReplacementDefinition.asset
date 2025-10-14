@@ -40,12 +40,19 @@ MonoBehaviour:
   <HitEnemyVoiceSFX>k__BackingField: {fileID: 0}
   <StunSFX>k__BackingField: {fileID: 0}
   <AudioClips>k__BackingField: []
+  _idleAudioClips:
+    audioClips:
+    - {fileID: 8300000, guid: 13602257cfe644542b7003d4c6ebfbd0, type: 3}
+    minTime: 20
+    maxTime: 20
   dumpHazardSound: {fileID: 0}
   hitJimothySound: {fileID: 0}
   pickUpHazardSound: {fileID: 0}
-  spawnSound: {fileID: 0}
+  spawnSound: {fileID: 8300000, guid: a4f163003bd9fdd45b23f37c49bfe4e1, type: 3}
   dieSFX: {fileID: 0}
-  engineAndIdleSounds: []
+  engineAndIdleSounds:
+  - {fileID: 8300000, guid: 90ad520da176ee74f81bcc6a4b7e9664, type: 3}
+  - {fileID: 8300000, guid: 90ad520da176ee74f81bcc6a4b7e9664, type: 3}
   potentialCreatureVoice: {fileID: 0}
   potentialCreatureSFX: {fileID: 0}
   ExperimentalAudioToPlay: {fileID: 0}
