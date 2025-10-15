@@ -368,8 +368,8 @@ public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
             enemy.gameObject.transform.localScale = new Vector3(enemy.transform.localScale.x, enemy.transform.localScale.y * 0.1f, enemy.transform.localScale.z);
 
             bool overrideDestroy = !enemy.enemyType.canDie;
-            if (enemy.IsOwner)
-                enemy.KillEnemyOnOwnerClient(overrideDestroy);
+            enemy.enabled = false;
+            enemy.KillEnemyOnOwnerClient(overrideDestroy);
         }
     }
 
@@ -380,8 +380,10 @@ public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
         if (targetEnemy == null)
             return;
 
-        if (targetEnemy.IsOwner)
-            targetEnemy.KillEnemyOnOwnerClient(true);
+        if (!IsServer)
+            return;
+
+        targetEnemy.NetworkObject.Despawn();
     }
 
     #endregion
