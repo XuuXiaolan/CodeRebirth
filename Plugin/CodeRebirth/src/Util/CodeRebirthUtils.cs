@@ -86,7 +86,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
             // todo
             // LethalContent.Moons[namespacedKey].PurchasePredicate = ITerminalPurchasePredicate.AlwaysSuccess();
         }
-        CheckWithHostToUnlockOxydeRpc(namespacedKey, LethalContent.Moons[namespacedKey].PurchasePredicate == ITerminalPurchasePredicate.AlwaysSuccess());
+        CheckWithHostToUnlockOxydeRpc(namespacedKey, LethalContent.Moons[namespacedKey].DawnPurchaseInfo.PurchasePredicate == ITerminalPurchasePredicate.AlwaysSuccess());
     }
 
     [Rpc(SendTo.NotMe)]
