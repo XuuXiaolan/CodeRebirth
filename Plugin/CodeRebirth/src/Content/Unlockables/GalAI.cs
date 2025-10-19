@@ -143,6 +143,7 @@ public class GalAI : NetworkBehaviour, IHittable
 
     public virtual void ActivateGal(PlayerControllerB owner)
     {
+        Plugin.ExtendedLogging($"Activating Gal: {GalName}");
         ownerPlayer = owner;
         DoGalRadarAction(true);
         GalVoice.PlayOneShot(ActivateSound);
@@ -164,6 +165,7 @@ public class GalAI : NetworkBehaviour, IHittable
 
     public virtual void DeactivateGal()
     {
+        Plugin.ExtendedLogging($"Deactivating Gal: {GalName}");
         ownerPlayer = null;
         DoGalRadarAction(false);
         GalVoice.PlayOneShot(DeactivateSound);
