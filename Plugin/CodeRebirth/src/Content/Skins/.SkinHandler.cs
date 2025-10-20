@@ -1,6 +1,6 @@
 ﻿using Dusk;
 
-namespace CodeRebirth.src.Content.Enemies;
+namespace CodeRebirth.src.Content.Skins;
 public class SkinHandler : ContentHandler<SkinHandler>
 {
     public class CRHalloweenAssets(DuskMod mod, string filePath) : AssetBundleLoader<CRHalloweenAssets>(mod, filePath)

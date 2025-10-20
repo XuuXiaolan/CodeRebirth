@@ -22,24 +22,25 @@ MonoBehaviour:
     _key: swrdone
   <DatePredicate>k__BackingField: {fileID: 11400000, guid: f635dcda5ba8bac458e944ac6e20e98c,
     type: 2}
-  <Replacements>k__BackingField: []
+  <Replacements>k__BackingField:
+  - {fileID: 11400000, guid: ea88c9bdad780f9418b4550c2a95d70b, type: 2}
   <GameObjectAddons>k__BackingField:
-  - <PathToGameObject>k__BackingField: ShockwaveDrone/Armature/Root/Hips
+  - <PathToGameObject>k__BackingField: ShockwaveDrone(Clone)/Armature/Root/Hips
     <GameObjectToCreate>k__BackingField: {fileID: 7715626668051313982, guid: efc3ea089246a524ba1a87c50e99fd78,
       type: 3}
     <PositionOffset>k__BackingField: {x: 0, y: 0.063, z: -0.239}
     <RotationOffset>k__BackingField: {x: -90, y: 0, z: 0}
-  - <PathToGameObject>k__BackingField: ShockwaveDrone/Armature/Root/Hips/Center/Chest/Neck/Head
+  - <PathToGameObject>k__BackingField: ShockwaveDrone(Clone)/Armature/Root/Hips/Center/Chest/Neck/Head
     <GameObjectToCreate>k__BackingField: {fileID: -2949596644013281953, guid: efc3ea089246a524ba1a87c50e99fd78,
       type: 3}
     <PositionOffset>k__BackingField: {x: 0, y: 0.055, z: 0.106}
     <RotationOffset>k__BackingField: {x: -90, y: 0, z: 0}
-  - <PathToGameObject>k__BackingField: ShockwaveDrone/Armature/Root/Hips/Center/Chest/Shoulder.R/Elbow.R/Forearm.R
+  - <PathToGameObject>k__BackingField: ShockwaveDrone(Clone)/Armature/Root/Hips/Center/Chest/Shoulder.R/Elbow.R/Forearm.R
     <GameObjectToCreate>k__BackingField: {fileID: -7104682776809587218, guid: efc3ea089246a524ba1a87c50e99fd78,
       type: 3}
     <PositionOffset>k__BackingField: {x: 0.013, y: 0.306, z: -0.002}
     <RotationOffset>k__BackingField: {x: 0, y: 270, z: 180}
-  - <PathToGameObject>k__BackingField: ShockwaveDrone/Armature/Root/Hips/Center/Chest/Shoulder.L/Elbow.L/Forearm.L
+  - <PathToGameObject>k__BackingField: ShockwaveDrone(Clone)/Armature/Root/Hips/Center/Chest/Shoulder.L/Elbow.L/Forearm.L
     <GameObjectToCreate>k__BackingField: {fileID: -7104682776809587218, guid: efc3ea089246a524ba1a87c50e99fd78,
       type: 3}
     <PositionOffset>k__BackingField: {x: -0.013, y: 0.332, z: -0.003}

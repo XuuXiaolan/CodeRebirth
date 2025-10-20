@@ -1,4 +1,30 @@
-# v0.3.5
+# v0.3.8
+
+- Fixed a compat issue with TwoRadarMap.
+- Fixed registering issues with MoreSuits.
+- Fixes regarding soft dependencies breaking.
+- Fixes regarding UI to achievements tab.
+- Fixed issues regarding LL shop items not being registered potentially
+- Fixed issues regarding items not spawning on top of furniture as they should be, including fixing some vanilla furniture that would have forced items to spawn under, like the following:
+  - Table
+  - Romantic Table
+  - Signal Transmitter
+  - Sofa
+  - Microwave
+  - Fridge
+  - Electric Chair
+  - Dog House
+
+## v0.3.7
+
+- Nothing cuz i accidently pushed it.
+
+## v0.3.6
+
+- Got rid of DawnGrabbableObject, replaced with a preloader injected interface, DawnSaveData
+- Fixed incompat with LL items not getting registered
+
+## v0.3.5
 
 - Replaced vanilla save system (atleast for items rn only) with DawnLib's own system.
   - Also allows for the rotations of items to be retained in comparison to vanilla resetting rotations.
@@ -6,6 +32,7 @@
   - Added config to opt out of it in case of issues or dislike I guess.
 - Added UnlockableReplacementDefinition for replacing the model etc of unlockables
 - Fixed an issue with Unlockables sometimes registering as suits depending on setup errors.
+- Added a loading bar that tracks each player's progress for moons with DawnLib hotloading!
 
 ## v0.3.4
 

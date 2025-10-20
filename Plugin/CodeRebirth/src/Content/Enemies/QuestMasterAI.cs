@@ -228,7 +228,8 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
             randomSpawnPosition = RoundManager.Instance.insideAINodes[UnityEngine.Random.Range(0, RoundManager.Instance.insideAINodes.Length)].transform.position;
         }
         SetDuckUIVisibleClientRpc(true);
-        SetDuckStartTalkingClientRpc($"Find the {questItems[Math.Clamp(questOrder.Value, 0, questItems.Length - 1)]}!!!", 0.12f, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer), false, false);
+        string itemName = LethalContent.Items[questItems[Math.Clamp(questOrder.Value, 0, questItems.Length - 1)]].Item.itemName;
+        SetDuckStartTalkingClientRpc($"Find the {itemName}!!!", 0.12f, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, targetPlayer), false, false);
         StartCoroutine(QuestTimer(randomSpawnPosition, 0.5f));
     }
 
