@@ -221,6 +221,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
 
         List<DawnMapObjectInfo> mapObjectInfos = LethalContent.MapObjects.Values.ToList();
         GameObject hazardToSpawn = mapObjectInfos[_indexToSpawn].MapObject;
+        hazardToSpawn = LethalContent.MapObjects[CodeRebirthMapObjectKeys.Money].MapObject;
         if (hazardToSpawn != null)
         {
             var go = GameObject.Instantiate(hazardToSpawn, position, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);

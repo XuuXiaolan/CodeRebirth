@@ -25,7 +25,13 @@ MonoBehaviour:
   <Replacements>k__BackingField:
   - {fileID: 11400000, guid: a581ce1a6fdeb3143800c5e9f79e9a37, type: 2}
   - {fileID: 11400000, guid: 3f171f4837fd24a4db7d95b3af101fab, type: 2}
-  <GameObjectAddons>k__BackingField: []
+  - {fileID: 11400000, guid: 6c036288b0210d64587664db98691785, type: 2}
+  <GameObjectAddons>k__BackingField:
+  - <PathToGameObject>k__BackingField: 
+    <GameObjectToCreate>k__BackingField: {fileID: 1266782773717815888, guid: c38c46fc191c2bb41b9707712d55c74c,
+      type: 3}
+    <PositionOffset>k__BackingField: {x: 0, y: 0, z: 0}
+    <RotationOffset>k__BackingField: {x: 0, y: 0, z: 0}
   <MoonSpawnWeights>k__BackingField: Vanilla=+9999, Custom=+9999
   <InteriorSpawnWeights>k__BackingField: Facility=+0, Mansion=+0, Mineshaft=+0
   <WeatherSpawnWeights>k__BackingField: None=*1, DustClouds=*1, Rainy=*1, Stormy=*1,
@@ -56,11 +62,3 @@ MonoBehaviour:
     type: 3}
   potentialCreatureSFX: {fileID: 8300000, guid: fa1cb3092fb472046a191665963f39b8,
     type: 3}
-  ExperimentalAudioToPlay: {fileID: 0}
-  ExperimentalAudioToPlayB: {fileID: 0}
-  ExperimentalAudioClip: {fileID: 0}
-  ExperimentalAudioClip2: {fileID: 0}
-  ExperimentalAudioClip3: {fileID: 0}
-  ExperimentalRandomClips: []
-  ExperimentalRandomClips2: []
-  ExperimentalParticle: {fileID: 0}

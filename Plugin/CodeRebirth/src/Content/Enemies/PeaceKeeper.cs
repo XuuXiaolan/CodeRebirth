@@ -4,11 +4,10 @@ using System.Collections.Generic;
 using CodeRebirth.src.Util;
 using Dawn;
 using Dawn.Utils;
-
-
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace CodeRebirth.src.Content.Enemies;
 public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
@@ -21,15 +20,15 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
 
     [Header("Movement")]
     [SerializeField]
-    private float _walkingSpeed = 2f;
+    internal float _walkingSpeed = 2f;
     [SerializeField]
-    private float _chasingSpeed = 5f;
+    internal float _chasingSpeed = 5f;
     [SerializeField]
-    private float _shootingSpeed = 0.1f;
+    internal float _shootingSpeed = 0.1f;
 
     [Header("Visuals")]
     [SerializeField]
-    private GameObject _gunParticleSystemGO = null!;
+    internal GameObject _gunParticleSystemGO = null!;
     [SerializeField]
     private GameObject _fakeGunGO = null!;
 
@@ -52,7 +51,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
     private float _backOffTimer = 0f;
     private bool _isShooting = false;
     private bool _killedByPlayer = false;
-    private float _damageInterval = 0f;
+    internal float _damageInterval = 0f;
     private Coroutine? _bitchSlappingRoutine = null;
     private Coroutine? _rotatingToHitter = null;
     private Collider[] _cachedColliders = new Collider[30];

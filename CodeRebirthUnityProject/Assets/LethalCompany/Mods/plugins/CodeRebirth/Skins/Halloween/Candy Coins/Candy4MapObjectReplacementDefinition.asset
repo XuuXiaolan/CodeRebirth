@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -682508298, guid: 38b16a0369bd20744a6a915f285df905, type: 3}
+  m_Name: Candy4MapObjectReplacementDefinition
+  m_EditorClassIdentifier: 
+  _configEntries: []
+  _tags: []
+  _typedKey:
+    _namespace: code_rebirth
+    _key: candy_four
+  <EntityToReplaceKey>k__BackingField:
+    _namespace: code_rebirth
+    _key: money
+  <DatePredicate>k__BackingField: {fileID: 11400000, guid: f635dcda5ba8bac458e944ac6e20e98c,
+    type: 2}
+  <Replacements>k__BackingField:
+  - {fileID: 11400000, guid: 4d4801eb885f32b4793b64c109af5130, type: 2}
+  - {fileID: 11400000, guid: 1b73211348984144cb6044ce6d4a73a7, type: 2}
+  <GameObjectAddons>k__BackingField: []
+  <MoonSpawnWeights>k__BackingField: Vanilla=+9999, Custom=+9999
+  <InteriorSpawnWeights>k__BackingField: Facility=+0, Mansion=+0, Mineshaft=+0
+  <WeatherSpawnWeights>k__BackingField: None=*1, DustClouds=*1, Rainy=*1, Stormy=*1,
+    Foggy=*1, Flooded=*1, Eclipsed=*1
+  <GenerateSpawnWeightsConfig>k__BackingField: 0
+  <GenerateDisableDateConfig>k__BackingField: 0

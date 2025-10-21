@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1669844095, guid: 38b16a0369bd20744a6a915f285df905, type: 3}
+  m_Name: CandyBucketItemReplacementDefinition
+  m_EditorClassIdentifier: 
+  _configEntries: []
+  _tags: []
+  _typedKey:
+    _namespace: code_rebirth
+    _key: candy_bucket
+  <EntityToReplaceKey>k__BackingField:
+    _namespace: code_rebirth
+    _key: wayfarers_wallet
+  <DatePredicate>k__BackingField: {fileID: 11400000, guid: f635dcda5ba8bac458e944ac6e20e98c,
+    type: 2}
+  <Replacements>k__BackingField:
+  - {fileID: 11400000, guid: d9fdd364e999e454b9c36071738d3242, type: 2}
+  - {fileID: 11400000, guid: 6c49b5f0c2bbda446b17567269045100, type: 2}
+  <GameObjectAddons>k__BackingField:
+  - <PathToGameObject>k__BackingField: 
+    <GameObjectToCreate>k__BackingField: {fileID: 1694496138783962562, guid: 46fffd1117f346449940dcda86aa3ef4,
+      type: 3}
+    <PositionOffset>k__BackingField: {x: 0, y: 0, z: 0}
+    <RotationOffset>k__BackingField: {x: 180, y: 180, z: 0}
+  <MoonSpawnWeights>k__BackingField: Vanilla=+9999, Custom=+9999
+  <InteriorSpawnWeights>k__BackingField: Facility=+0, Mansion=+0, Mineshaft=+0
+  <WeatherSpawnWeights>k__BackingField: None=*1, DustClouds=*1, Rainy=*1, Stormy=*1,
+    Foggy=*1, Flooded=*1, Eclipsed=*1
+  <GenerateSpawnWeightsConfig>k__BackingField: 0
+  <GenerateDisableDateConfig>k__BackingField: 0
+  <GrabSFX>k__BackingField: {fileID: 0}
+  <DropSFX>k__BackingField: {fileID: 0}
+  <PocketSFX>k__BackingField: {fileID: 0}
+  <ThrowSFX>k__BackingField: {fileID: 0}
+  potentialAudioPlayer: {fileID: 0}
