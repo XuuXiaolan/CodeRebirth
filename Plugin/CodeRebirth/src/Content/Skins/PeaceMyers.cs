@@ -15,6 +15,7 @@ public class PeaceMyers : MonoBehaviour
         originalChasingSpeed = peaceKeeper._chasingSpeed;
 
         peaceKeeper._walkingSpeed *= 1.5f;
+        peaceKeeper.enemyHP = 9999;
     }
 
     public void Update()

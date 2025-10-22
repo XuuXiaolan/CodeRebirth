@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using BepInEx.Configuration;
 using CodeRebirth.src.Util;
 using Dawn;
@@ -212,7 +213,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
             SwitchToBehaviourServerRpc((int)MonarchState.Idle);
             return;
         }
-        else if (distanceToClosestPlayer > 10 && !isAttacking && closestPlayer.isInHangarShipRoom)
+        else if (distanceToClosestPlayer > 10 && !isAttacking && !closestPlayer.isInHangarShipRoom)
         {
             agent.speed = 10f;
             creatureAnimator.SetBool(IsFlyingAnimation, true);
@@ -252,33 +253,27 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
             SwitchToBehaviourServerRpc((int)MonarchState.Idle);
             return;
         }
-        else if (!isAttacking && (distanceToClosestPlayer <= 15 || closestPlayer.isInHangarShipRoom))
-        {
-            agent.speed = 5f;
-            creatureAnimator.SetBool(IsFlyingAnimation, false);
-            agent.stoppingDistance = 2f;
-            SwitchToBehaviourServerRpc((int)MonarchState.AttackingGround);
-            return;
-        }
 
         if (isAttacking)
         {
             closestPlayer = targetPlayer;
         }
 
-        if (closestPlayer == null)
-        {
-            Plugin.Logger.LogWarning($"closestPlayer is null, distanceToClosestPlayer: {distanceToClosestPlayer}, isAttacking: {isAttacking}, targetPlayer: {targetPlayer}");
-            return;
-        }
-
         smartAgentNavigator.DoPathingToDestination(closestPlayer.transform.position);
-        if (canAttack && distanceToClosestPlayer <= 5f + agent.stoppingDistance)
+        if (closestPlayer != null && canAttack && distanceToClosestPlayer > agent.stoppingDistance && distanceToClosestPlayer <= 5f + agent.stoppingDistance)
         {
             SetPlayerTargetServerRpc(closestPlayer);
             StartCoroutine(AttackCooldownTimer(5f));
             isAttacking = true;
             creatureNetworkAnimator.SetTrigger(DoAttackAnimation);
+        }
+        else if (!isAttacking && (distanceToClosestPlayer <= 15 || (closestPlayer != null && closestPlayer.isInHangarShipRoom)))
+        {
+            agent.speed = 5f;
+            creatureAnimator.SetBool(IsFlyingAnimation, false);
+            agent.stoppingDistance = 2f;
+            SwitchToBehaviourServerRpc((int)MonarchState.AttackingGround);
+            return;
         }
     }
 

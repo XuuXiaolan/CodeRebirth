@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using CodeRebirth.src.Content.Items;
 using UnityEngine;
@@ -20,6 +21,7 @@ public class WalletCandyReplacement : MonoBehaviour
     {
         int stepAmount = 100 / CandyPrefabs.Count;
         int amountToActivate = (newValue / stepAmount) * 5;
+        amountToActivate = Math.Clamp(amountToActivate, 0, CandyPrefabs.Count);
         foreach (GameObject candyPrefab in CandyPrefabs)
         {
             candyPrefab.SetActive(false);
