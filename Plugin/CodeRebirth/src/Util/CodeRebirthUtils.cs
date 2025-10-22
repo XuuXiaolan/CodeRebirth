@@ -243,10 +243,9 @@ internal class CodeRebirthUtils : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void SpawnScrapServerRpc(NamespacedKey<DawnItemInfo> itemKey, Vector3 position, bool isQuest = false, bool defaultRotation = true, int valueIncrease = 0)
     {
-        if (LethalContent.Items.TryGetValue(itemKey, out var itemInfo))
+        if (!LethalContent.Items.TryGetValue(itemKey, out var itemInfo))
         {
-            // throw for stacktrace
-            Plugin.Logger.LogError($"'{itemInfo.Item.itemName}' either isn't a CodeRebirth scrap or not registered! This method only handles CodeRebirth scrap!");
+            Plugin.Logger.LogError($"'{itemKey.ToString()}' either isn't a CodeRebirth scrap or not registered! This method only handles CodeRebirth scrap!");
             return;
         }
         SpawnScrap(itemInfo.Item, position, isQuest, defaultRotation, valueIncrease);

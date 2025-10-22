@@ -1,4 +1,9 @@
-# v1.3.0
+# v1.3.1
+
+- Fixed Redwood cuffs.
+- Fixed items not spawning when killing enemies etc.
+
+## v1.3.0
 
 - Halloween update
 - (Almost) all enemies have a halloween replacement

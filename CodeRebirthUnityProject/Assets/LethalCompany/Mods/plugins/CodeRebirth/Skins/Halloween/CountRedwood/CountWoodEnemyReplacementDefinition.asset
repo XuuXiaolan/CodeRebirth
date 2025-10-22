@@ -33,12 +33,12 @@ MonoBehaviour:
     <GameObjectToCreate>k__BackingField: {fileID: 6359671147007006243, guid: 71aff671683abbe46905e6362bc46286,
       type: 3}
     <PositionOffset>k__BackingField: {x: 0.088, y: 0.366, z: 0.058}
-    <RotationOffset>k__BackingField: {x: 85.28723, y: 111.459785, z: 284.2385}
+    <RotationOffset>k__BackingField: {x: 94.71301, y: -68.54001, z: 104.238}
   - <PathToGameObject>k__BackingField: GyattWood/Bone/Pelvis/Spine.001/Spine.002/Spine.003/CollarBone.R/Shoulder.R/MiddleArm.R/Forearm.R
     <GameObjectToCreate>k__BackingField: {fileID: 6359671147007006243, guid: 71aff671683abbe46905e6362bc46286,
       type: 3}
     <PositionOffset>k__BackingField: {x: 0.088, y: 0.366, z: 0.058}
-    <RotationOffset>k__BackingField: {x: 85.28728, y: 111.4598, z: 284.2385}
+    <RotationOffset>k__BackingField: {x: 94.71301, y: -68.54001, z: 104.239}
   - <PathToGameObject>k__BackingField: GyattWood/Bone/Pelvis/Spine.001
     <GameObjectToCreate>k__BackingField: {fileID: 8730577325511855918, guid: 32983fc28893a904399e968f6c26c0a2,
       type: 3}
@@ -65,6 +65,10 @@ MonoBehaviour:
   <HitEnemyVoiceSFX>k__BackingField: {fileID: 0}
   <StunSFX>k__BackingField: {fileID: 0}
   <AudioClips>k__BackingField: []
+  _idleAudioClips:
+    audioClips: []
+    minTime: 0
+    maxTime: 0
   eatenSound: {fileID: 0}
   roarSound: {fileID: 0}
   jumpSound: {fileID: 0}
@@ -82,11 +86,3 @@ MonoBehaviour:
   OldBirdParticles: {fileID: 0}
   DeathParticles: {fileID: 0}
   BigSmokeEffect: {fileID: 0}
-  ExperimentalAudioToPlay: {fileID: 0}
-  ExperimentalAudioToPlayB: {fileID: 0}
-  ExperimentalAudioClip: {fileID: 0}
-  ExperimentalAudioClip2: {fileID: 0}
-  ExperimentalAudioClip3: {fileID: 0}
-  ExperimentalRandomClips: []
-  ExperimentalRandomClips2: []
-  ExperimentalParticle: {fileID: 0}
