@@ -1,4 +1,13 @@
-# v1.2.5
+# v1.3.0
+
+- Halloween update
+- (Almost) all enemies have a halloween replacement
+- Coins got up to 9 different skins along with a wallet reskin.
+- PeaceKeeper AI was also tinkered for the new update along with its new skin.
+- SnailCat became greedy.
+- Oxyde got a halloween overhaul too.
+
+## v1.2.5
 
 - Cleaned up forgotten things in the shipyard.
 - Fixed enemy max values and power levels.
