@@ -2,6 +2,7 @@
 using UnityEngine;
 using Dawn;
 using Dusk;
+using CodeRebirth.src.Content.Moons;
 
 namespace CodeRebirth.src.Content.Maps;
 public class MapObjectHandler : ContentHandler<MapObjectHandler>
@@ -104,15 +105,15 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
     public MapObjectHandler(DuskMod mod) : base(mod)
     {
-        RegisterContent("oxydecrashshipassets", out OxydeCrashShip, Plugin.ModConfig.ConfigOxydeEnabled.Value);
+        RegisterContent("oxydecrashshipassets", out OxydeCrashShip, MoonHandler.Instance.Oxyde != null);
 
-        RegisterContent("compactortobyassets", out CompactorToby, Plugin.ModConfig.ConfigOxydeEnabled.Value);
+        RegisterContent("compactortobyassets", out CompactorToby, MoonHandler.Instance.Oxyde != null);
 
-        RegisterContent("gunslingergregassets", out GunslingerGreg, Plugin.ModConfig.ConfigOxydeEnabled.Value);
+        RegisterContent("gunslingergregassets", out GunslingerGreg, MoonHandler.Instance.Oxyde != null);
 
-        RegisterContent("shreddersarahassets", out ShredderSarah, Plugin.ModConfig.ConfigOxydeEnabled.Value);
+        RegisterContent("shreddersarahassets", out ShredderSarah, MoonHandler.Instance.Oxyde != null);
 
-        RegisterContent("merchantassets", out Merchant, Plugin.ModConfig.ConfigOxydeEnabled.Value);
+        RegisterContent("merchantassets", out Merchant, MoonHandler.Instance.Oxyde != null);
 
         RegisterContent("crateassets", out Crate);
 

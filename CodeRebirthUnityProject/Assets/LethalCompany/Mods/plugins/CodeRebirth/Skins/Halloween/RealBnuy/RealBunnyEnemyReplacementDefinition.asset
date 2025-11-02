@@ -30,13 +30,17 @@ MonoBehaviour:
   <InteriorSpawnWeights>k__BackingField: Facility=+0, Mansion=+0, Mineshaft=+0
   <WeatherSpawnWeights>k__BackingField: None=*1, DustClouds=*1, Rainy=*1, Stormy=*1,
     Foggy=*1, Flooded=*1, Eclipsed=*1
-  <GenerateSpawnWeightsConfig>k__BackingField: 0
-  <GenerateDisableDateConfig>k__BackingField: 0
+  <GenerateSpawnWeightsConfig>k__BackingField: 1
+  <GenerateDisableDateConfig>k__BackingField: 1
   <NestRendererReplacements>k__BackingField: []
   <HitBodySFX>k__BackingField: {fileID: 0}
   <HitEnemyVoiceSFX>k__BackingField: {fileID: 0}
   <StunSFX>k__BackingField: {fileID: 0}
   <AudioClips>k__BackingField: []
+  _idleAudioClips:
+    audioClips: []
+    minTime: 0
+    maxTime: 0
   _spottedFromGroundAudioClip: {fileID: 0}
   _spottedFromBackAudioClip: {fileID: 0}
   spawnSound: {fileID: 0}
@@ -45,11 +49,3 @@ MonoBehaviour:
   potentialCreatureVoice: {fileID: 0}
   potentialCreatureSFX: {fileID: 0}
   _confettiParticles: {fileID: 0}
-  ExperimentalAudioToPlay: {fileID: 0}
-  ExperimentalAudioToPlayB: {fileID: 0}
-  ExperimentalAudioClip: {fileID: 0}
-  ExperimentalAudioClip2: {fileID: 0}
-  ExperimentalAudioClip3: {fileID: 0}
-  ExperimentalRandomClips: []
-  ExperimentalRandomClips2: []
-  ExperimentalParticle: {fileID: 0}

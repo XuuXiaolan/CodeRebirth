@@ -1,4 +1,6 @@
-﻿using Dusk;
+﻿using CodeRebirth.src.Content.Enemies;
+using CodeRebirth.src.Content.Moons;
+using Dusk;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Weathers;
@@ -44,6 +46,6 @@ public class WeatherHandler : ContentHandler<WeatherHandler>
 
         RegisterContent("tornadoassets", out Tornado);
 
-        RegisterContent("nightshiftassets", out NightShift, Plugin.ModConfig.ConfigOxydeEnabled.Value);
+        RegisterContent("nightshiftassets", out NightShift, MoonHandler.Instance.Oxyde != null);
     }
 }

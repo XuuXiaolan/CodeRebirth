@@ -1,4 +1,5 @@
-﻿using Dusk;
+﻿using CodeRebirth.src.Content.Moons;
+using Dusk;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;
@@ -93,25 +94,25 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
 
     public EnemyHandler(DuskMod mod) : base(mod)
     {
-        RegisterContent("cactusbudlingassets", out CactusBudling, Plugin.ModConfig.ConfigOxydeEnabled.Value);
+        RegisterContent("cactusbudlingassets", out CactusBudling, MoonHandler.Instance.Oxyde != null);
 
         RegisterContent("rabbitmagicianassets", out RabbitMagician);
 
-        RegisterContent("peacekeeperassets", out PeaceKeeper, Plugin.ModConfig.ConfigOxydeEnabled.Value);
+        RegisterContent("peacekeeperassets", out PeaceKeeper, MoonHandler.Instance.Oxyde != null);
 
-        RegisterContent("manorlordassets", out ManorLord, Plugin.ModConfig.ConfigOxydeEnabled.Value);
+        RegisterContent("manorlordassets", out ManorLord, MoonHandler.Instance.Oxyde != null);
 
-        RegisterContent("janitorassets", out Janitor, Plugin.ModConfig.ConfigOxydeEnabled.Value);
+        RegisterContent("janitorassets", out Janitor, MoonHandler.Instance.Oxyde != null);
 
         // RegisterContent("pandoraassets", out Pandora);
 
         RegisterContent("driftwoodmenaceassets", out DriftwoodMenace);
 
-        RegisterContent("nancyassets", out Nancy, Plugin.ModConfig.ConfigOxydeEnabled.Value);
+        RegisterContent("nancyassets", out Nancy, MoonHandler.Instance.Oxyde != null);
 
         RegisterContent("monarchassets", out Monarch);
 
-        RegisterContent("mistressassets", out Mistress, Plugin.ModConfig.ConfigOxydeEnabled.Value);
+        RegisterContent("mistressassets", out Mistress, MoonHandler.Instance.Oxyde != null);
 
         RegisterContent("redwoodtitanassets", out RedwoodTitan);
 
@@ -121,6 +122,6 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
 
         RegisterContent("ducksongassets", out DuckSong);
 
-        RegisterContent("transporterassets", out Transporter, Plugin.ModConfig.ConfigOxydeEnabled.Value);
+        RegisterContent("transporterassets", out Transporter, MoonHandler.Instance.Oxyde != null);
     }
 }

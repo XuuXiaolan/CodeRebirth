@@ -1,10 +1,73 @@
-# v0.3.9
+# v0.4.2
+
+- Added support for `PlayerControllerReference`, `int` and `double` in `NetworkVariable`s
+- Added components from DawnLib and DuskMod to be visible within the list in the Add Component Menu
+- Added `PlanetUnlocker` a useable grabbable object to unlock a planet that uses `ProgressivePredicate`
+- Actually implemented the OutOfBounds fix from MattyFixes, I accidently forgot.
+- Removed some unneeded obsolete fields like AlwaysKeepLoaded
+
+## v0.4.1
+
+- Removed some redundant code.
+- Implemented an OutOfBounds fix from MattyFixes into here due to having a saving system.
+- Fixed client being able to pull lever during the start of the game that would break the lever.
+- Readme and wiki updated with more information about how to create content with DawnLib.
+
+## v0.4.0
+
+- Fixed incompat with LCBetterSave.
+- Totally didn't screw up the content order thing as well.
+
+## v0.3.16
+
+- Accidently had ContentOrder as internal, changed to public.
+
+## v0.3.15
+
+- Fixed another issue created by some unlockables that caused errors.
+- Fixed an incompat between LLL, DawnLib and DarmuhsTerminalStuff that made every moon hidden.
+- Added a config to disable achievements button in the main menu.
+
+## v0.3.14
+
+- Made unlockables parent to the ship to remove a stuttering issue when landing or leaving.
+- Fixed an issue with replacements where the rotation sometimes isn't accurate depending on parent.
+
+## v0.3.13
+
+- Fixed a lobby reload softlock issue.
+- Fixed issue where only half of the unlockables would save.
+- Removed facility's `#natural` tag.
+
+## v0.3.12
+
+- Added `ContentOrder` attribute to apply to content handlers if you'd like them to run in specific order.
+- Fixed client/host desync in unlockable skins and unlockable id causing position desyncs.
+- Touched up UI a little bit.
+
+## v0.3.11
+
+- Potentially fixed issues regarding save file not being deleted properly.
+- Added ways to edit the item's holding rotation, resting rotation, position offsets etc for skins.
+- Fixed incompat with mod UnlockOnStart.
+- Fixed incompat with mod TooManySuits.
+- Touched up hotloading UI a bit. (will do more later)
+
+## v0.3.10
+
+- Fixed an issue where all replacements wouldn't take more than 1 replacement at once.
+- Added MapObject replacements.
+- Fixed DatePredicate being inaccurate.
+- Made buying unlockables clear terminal text.
+
+## v0.3.9
 
 - Added more logging for a specific issue that shouldn't really happen?
 - Added a `WaitAction` to replacements so you can have a wait happen inbetween actions.
 - Fixed an issue where the combination of the mods WeatherTweaks, TerminalFormatter and OpenMonitors would break the ship monitor.
 - Cleaned up the hotloading UI a bit more.
 - Created ProgressiveMoonScrap that when interacted with, unlocks a specified moon and destroys itself.
+- Added more config options to unlockable definition
 
 ## v0.3.8
 

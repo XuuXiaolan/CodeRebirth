@@ -117,7 +117,7 @@ public class MeteorShower : CodeRebirthWeathers
         }
     }
 
-    private void SpawnOverheadVisualMeteors(int amount = 50, GameObject? overridePrefab = null) // todo: make em rotate
+    private void SpawnOverheadVisualMeteors(int amount = 50, GameObject? overridePrefab = null)
     {
         Vector3 averageLocation = CRUtilities.CalculateAverageLandNodePosition(nodes);
         Vector3 centralLocation = averageLocation + new Vector3(0, random.NextFloat(150, 200), 0);

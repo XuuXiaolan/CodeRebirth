@@ -1,4 +1,8 @@
-# v1.3.1
+# v1.4.0
+
+- Fixed a myriad of bugs.
+
+## v1.3.1
 
 - Fixed Redwood cuffs.
 - Fixed items not spawning when killing enemies etc.

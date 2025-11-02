@@ -1,4 +1,5 @@
-﻿using Dusk;
+﻿using CodeRebirth.src.Content.Moons;
+using Dusk;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
@@ -69,11 +70,11 @@ public class ItemHandler : ContentHandler<ItemHandler>
 
     public ItemHandler(DuskMod mod) : base(mod)
     {
-        RegisterContent("oxydeloreassets", out OxydeLore, Plugin.ModConfig.ConfigOxydeEnabled.Value);
+        RegisterContent("oxydeloreassets", out OxydeLore, MoonHandler.Instance.Oxyde != null);
 
-        RegisterContent("moonunlockerassets", out MoonUnlocker, Plugin.ModConfig.ConfigOxydeEnabled.Value);
+        RegisterContent("moonunlockerassets", out MoonUnlocker, MoonHandler.Instance.Oxyde != null);
 
-        RegisterContent("xuandrigoassets", out XuAndRigo, Plugin.ModConfig.ConfigOxydeEnabled.Value);
+        RegisterContent("xuandrigoassets", out XuAndRigo, MoonHandler.Instance.Oxyde != null);
 
         RegisterContent("zortassets", out Zort);
 

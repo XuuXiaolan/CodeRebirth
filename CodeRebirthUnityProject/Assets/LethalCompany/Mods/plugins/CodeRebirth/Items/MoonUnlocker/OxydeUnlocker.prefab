@@ -172,7 +172,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3000514610868242337}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 834307022, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Script: {fileID: 1505118238, guid: cd73415377293454abda168a425682f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   grabbable: 1
@@ -213,10 +213,26 @@ MonoBehaviour:
   grabbableToEnemies: 1
   hasBeenHeld: 0
   rotateObject: 0
-  moonSceneName: Oxyde
-  extraText: This is an automated message. Report to the director's cabin on Oxyde
-    to start your basic training.
-  audioPlayer: {fileID: 410104691491011007}
+  _moonReference:
+    rid: 7112385640285601793
+  _consumeOnUnlock: 1
+  _unlockAudio: {fileID: 410104691491011007}
+  _showDisplayTip: 1
+  _displayTip:
+    _alertType: 0
+    _header: Coordinates found
+    _body: This is an automated message. Report to the director's cabin on Oxyde
+      to start your basic training.
+  references:
+    version: 2
+    RefIds:
+    - rid: 7112385640285601793
+      type: {class: DuskMoonReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: f300ac5707aebc64cbf151c6702792a6
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: oxyde
 --- !u!82 &410104691491011007
 AudioSource:
   m_ObjectHideFlags: 0
