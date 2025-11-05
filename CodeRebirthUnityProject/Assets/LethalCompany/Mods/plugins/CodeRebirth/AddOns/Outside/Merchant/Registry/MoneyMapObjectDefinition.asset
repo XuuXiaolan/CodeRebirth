@@ -48,15 +48,25 @@ MonoBehaviour:
     requireDistanceBetweenSpawns: 0
     disallowSpawningNearEntrances: 0
   <OutsideMapObjectSettings>k__BackingField:
+    SpawnFacingAwayFromWall: 0
+    ObjectWidth: 0
+    SpawnableFloorTags: []
+    RotationOffset: {x: 0, y: 0, z: 0}
+    VanillaAnimationCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
     AlignWithTerrain: 0
   <IsInsideHazard>k__BackingField: 1
-  <CreateInsideHazardConfig>k__BackingField: 0
+  <CreateInsideHazardConfig>k__BackingField: 1
   <DefaultInsideCurveSpawnWeights>k__BackingField: Vanilla - 0.00,3.00 ; 0.11,3.72
     ; 0.22,4.44 ; 0.33,4.96 ; 0.44,5.10 ; 0.56,5.08 ; 0.67,5.23 ; 0.78,7.14 ; 0.89,7.82
     ; 1.00,8.00 | Custom - 0.00,3.00 ; 0.11,3.72 ; 0.22,4.44 ; 0.33,4.96 ; 0.44,5.10
     ; 0.56,5.08 ; 0.67,5.23 ; 0.78,7.14 ; 0.89,7.82 ; 1.00,8.00
   <CreateInsideCurveSpawnWeightsConfig>k__BackingField: 1
   <IsOutsideHazard>k__BackingField: 0
-  <CreateOutsideHazardConfig>k__BackingField: 0
+  <CreateOutsideHazardConfig>k__BackingField: 1
   <DefaultOutsideCurveSpawnWeights>k__BackingField: 
-  <CreateOutsideCurveSpawnWeightsConfig>k__BackingField: 0
+  <CreateOutsideCurveSpawnWeightsConfig>k__BackingField: 1
