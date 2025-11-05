@@ -105,15 +105,15 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
     public MapObjectHandler(DuskMod mod) : base(mod)
     {
-        RegisterContent("oxydecrashshipassets", out OxydeCrashShip, MoonHandler.Instance.Oxyde != null);
+        RegisterContent("oxydecrashshipassets", out OxydeCrashShip);
 
-        RegisterContent("compactortobyassets", out CompactorToby, MoonHandler.Instance.Oxyde != null);
+        RegisterContent("compactortobyassets", out CompactorToby);
 
-        RegisterContent("gunslingergregassets", out GunslingerGreg, MoonHandler.Instance.Oxyde != null);
+        RegisterContent("gunslingergregassets", out GunslingerGreg);
 
-        RegisterContent("shreddersarahassets", out ShredderSarah, MoonHandler.Instance.Oxyde != null);
+        RegisterContent("shreddersarahassets", out ShredderSarah);
 
-        RegisterContent("merchantassets", out Merchant, MoonHandler.Instance.Oxyde != null);
+        RegisterContent("merchantassets", out Merchant);
 
         RegisterContent("crateassets", out Crate);
 

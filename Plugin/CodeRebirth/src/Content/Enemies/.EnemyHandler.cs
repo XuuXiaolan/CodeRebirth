@@ -94,25 +94,25 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
 
     public EnemyHandler(DuskMod mod) : base(mod)
     {
-        RegisterContent("cactusbudlingassets", out CactusBudling, MoonHandler.Instance.Oxyde != null);
+        RegisterContent("cactusbudlingassets", out CactusBudling);
 
         RegisterContent("rabbitmagicianassets", out RabbitMagician);
 
-        RegisterContent("peacekeeperassets", out PeaceKeeper, MoonHandler.Instance.Oxyde != null);
+        RegisterContent("peacekeeperassets", out PeaceKeeper);
 
-        RegisterContent("manorlordassets", out ManorLord, MoonHandler.Instance.Oxyde != null);
+        RegisterContent("manorlordassets", out ManorLord);
 
-        RegisterContent("janitorassets", out Janitor, MoonHandler.Instance.Oxyde != null);
+        RegisterContent("janitorassets", out Janitor);
 
         // RegisterContent("pandoraassets", out Pandora);
 
         RegisterContent("driftwoodmenaceassets", out DriftwoodMenace);
 
-        RegisterContent("nancyassets", out Nancy, MoonHandler.Instance.Oxyde != null);
+        RegisterContent("nancyassets", out Nancy);
 
         RegisterContent("monarchassets", out Monarch);
 
-        RegisterContent("mistressassets", out Mistress, MoonHandler.Instance.Oxyde != null);
+        RegisterContent("mistressassets", out Mistress);
 
         RegisterContent("redwoodtitanassets", out RedwoodTitan);
 
@@ -122,6 +122,6 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
 
         RegisterContent("ducksongassets", out DuckSong);
 
-        RegisterContent("transporterassets", out Transporter, MoonHandler.Instance.Oxyde != null);
+        RegisterContent("transporterassets", out Transporter);
     }
 }

@@ -46,6 +46,6 @@ public class WeatherHandler : ContentHandler<WeatherHandler>
 
         RegisterContent("tornadoassets", out Tornado);
 
-        RegisterContent("nightshiftassets", out NightShift, MoonHandler.Instance.Oxyde != null);
+        RegisterContent("nightshiftassets", out NightShift);
     }
 }

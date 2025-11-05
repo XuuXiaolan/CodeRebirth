@@ -70,9 +70,9 @@ public class ItemHandler : ContentHandler<ItemHandler>
 
     public ItemHandler(DuskMod mod) : base(mod)
     {
-        RegisterContent("oxydeloreassets", out OxydeLore, MoonHandler.Instance.Oxyde != null);
+        RegisterContent("oxydeloreassets", out OxydeLore);
 
-        RegisterContent("moonunlockerassets", out MoonUnlocker, MoonHandler.Instance.Oxyde != null);
+        RegisterContent("moonunlockerassets", out MoonUnlocker);
 
         RegisterContent("xuandrigoassets", out XuAndRigo, MoonHandler.Instance.Oxyde != null);
 
