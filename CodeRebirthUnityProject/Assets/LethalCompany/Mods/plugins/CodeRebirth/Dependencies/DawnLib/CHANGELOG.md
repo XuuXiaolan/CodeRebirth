@@ -1,4 +1,26 @@
-# v0.4.2
+# v0.4.5
+
+- Edited MapObjects in the editor to be much easier to add onto.
+- Added Interior and Weather onto MapObject spawnweights.
+- Fixed issue with interior registration weights.
+- Added blank reference replacing with interior SpawnSyncedObjects, butlerbees, enemy ai nests, haunted mask, sapsucker, lungprop script.
+- Fixed another issue with unlockables when saving.
+- Gave DawnLib Interiors SpawnWeight configs.
+- Gave DawnLib Moons a lot more configs.
+
+## v0.4.4
+
+- Fixed a small bug with an oversight in storing unlockables.
+- Fixed some editor side tinks and made it a bit cleaner to create content related to moons.
+- Updated the documentation in the DawnLib's thunderstore Wiki page.
+
+## v0.4.3
+
+- Fixed incompat with moresuits.
+- Gave more configs to moons.
+- Fixed a long standing issue with registering no-code mods when you have multiple pieces of content.
+
+## v0.4.2
 
 - Added support for `PlayerControllerReference`, `int` and `double` in `NetworkVariable`s
 - Added components from DawnLib and DuskMod to be visible within the list in the Add Component Menu
