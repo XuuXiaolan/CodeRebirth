@@ -41,13 +41,19 @@ MonoBehaviour:
     AlignWithTerrain: 0
   <IsInsideHazard>k__BackingField: 0
   <CreateInsideHazardConfig>k__BackingField: 1
-  <DefaultInsideCurveSpawnWeights>k__BackingField: 
+  <InsideMoonCurveSpawnWeights>k__BackingField: []
+  <InsideInteriorCurveSpawnWeights>k__BackingField: []
+  <InsidePrioritiseMoonConfig>k__BackingField: 1
   <CreateInsideCurveSpawnWeightsConfig>k__BackingField: 1
   <IsOutsideHazard>k__BackingField: 1
   <CreateOutsideHazardConfig>k__BackingField: 1
+  <OutsideMoonCurveSpawnWeights>k__BackingField: []
+  <OutsideInteriorCurveSpawnWeights>k__BackingField: []
+  <OutsidePrioritiseMoonConfig>k__BackingField: 1
+  <CreateOutsideCurveSpawnWeightsConfig>k__BackingField: 1
   <DefaultOutsideCurveSpawnWeights>k__BackingField: Vanilla - 0.00,0.00 ; 0.11,0.32
     ; 0.22,0.66 ; 0.33,0.94 ; 0.44,1.12 ; 0.56,1.15 ; 0.67,1.17 ; 0.78,1.34 ; 0.89,1.66
     ; 1.00,2.00 | Custom - 0.00,0.00 ; 0.11,0.32 ; 0.22,0.66 ; 0.33,0.94 ; 0.44,1.12
     ; 0.56,1.15 ; 0.67,1.17 ; 0.78,1.34 ; 0.89,1.66 ; 1.00,2.00 | Oxyde - 0.00,0.00
     ; 1.00,0.00
-  <CreateOutsideCurveSpawnWeightsConfig>k__BackingField: 1
+  <DefaultInsideCurveSpawnWeights>k__BackingField: 

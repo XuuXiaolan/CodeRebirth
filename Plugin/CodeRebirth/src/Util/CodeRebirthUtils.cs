@@ -14,7 +14,6 @@ using CodeRebirth.src.Content.Maps;
 using System.Collections;
 using Dawn;
 using UnityEngine.InputSystem.Utilities;
-using System.Net.Mail;
 
 namespace CodeRebirth.src.Util;
 internal class CodeRebirthUtils : NetworkBehaviour

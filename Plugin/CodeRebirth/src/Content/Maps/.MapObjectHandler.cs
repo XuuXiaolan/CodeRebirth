@@ -140,8 +140,8 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
                                             true,
                                             "Whether Flora is enabled.");
 
-        // if (Plugin.ModConfig.ConfigFloraEnabled.Value)
-            // RegisterOutsideFlora(mod);
+        if (Plugin.ModConfig.ConfigFloraEnabled.Value)
+            RegisterOutsideFlora(mod);
     }
 
     public void RegisterOutsideFlora(DuskMod mod)
@@ -173,7 +173,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
     {
         try
         {
-            MapObjectSpawnMechanics floraMapObjectSpawnMechanics = new MapObjectSpawnMechanics(configString);
+            MapObjectSpawnMechanics floraMapObjectSpawnMechanics = new MapObjectSpawnMechanics(configString, string.Empty, true);
 
             RoundManagerPatch.spawnableFlora.Add(new SpawnableFlora()
             {
