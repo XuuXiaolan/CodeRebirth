@@ -14,6 +14,9 @@ namespace CodeRebirth.src.Content.Maps;
 
 public class AutonomousCrane : NetworkBehaviour
 {
+    [SerializeField]
+    private Collider[] _colliders = [];
+
     [Header("Audio")]
     [SerializeField]
     private AudioSource _audioSource = null!;
@@ -79,7 +82,7 @@ public class AutonomousCrane : NetworkBehaviour
         base.OnNetworkSpawn();
         float distanceToShip = Vector3.Distance(this.transform.position, StartOfRound.Instance.shipLandingPosition.position);
         Plugin.ExtendedLogging($"Distance to ship: {distanceToShip}");
-        if (distanceToShip <= 20f)
+        if (distanceToShip <= 30f)
         {
             if (IsServer)
             {
@@ -88,7 +91,24 @@ public class AutonomousCrane : NetworkBehaviour
             }
             return;
         }
+        else
+        {
+            StartCoroutine(MessWithColliders());
+        }
         _disableInteract.onInteract.AddListener(DeactivateCraneTrigger);
+    }
+
+    private IEnumerator MessWithColliders()
+    {
+        foreach (Collider collider in _colliders)
+        {
+            collider.enabled = false;
+        }
+        yield return new WaitUntil(() => StartOfRound.Instance.shipHasLanded);
+        foreach (Collider collider in _colliders)
+        {
+            collider.enabled = true;
+        }
     }
 
     private IEnumerator DiscardAfterABit()
