@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using Dawn;
 using Dawn.Utils;
-
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -43,7 +42,7 @@ public class BearTrap : CodeRebirthHazard
             return;
 
         Vector3 position = this.transform.position;
-        for (int i = 0; i < UnityEngine.Random.Range(4, 8); i++)
+        for (int i = 0; i < UnityEngine.Random.Range(4, 8) - (this is BoomTrap ? 3 : 0); i++)
         {
             Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInRadius(position, 10f) + (Vector3.up * 2);
 
@@ -71,7 +70,7 @@ public class BearTrap : CodeRebirthHazard
                 mapObjectInfo = LethalContent.MapObjects[CodeRebirthMapObjectKeys.BoomTrap];
                 beartrap = mapObjectInfo.MapObject;
             }
-            else if (UnityEngine.Random.Range(0, 100) < 5)
+            else if (UnityEngine.Random.Range(0, 1000) < 5)
             {
                 mapObjectInfo = LethalContent.MapObjects[CodeRebirthMapObjectKeys.BoomTrap];
                 beartrap = mapObjectInfo.MapObject;
