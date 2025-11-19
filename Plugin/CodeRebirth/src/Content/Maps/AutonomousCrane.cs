@@ -93,18 +93,18 @@ public class AutonomousCrane : NetworkBehaviour
         }
         else
         {
-            StartCoroutine(MessWithColliders());
+            StartCoroutine(LandingCondition());
         }
         _disableInteract.onInteract.AddListener(DeactivateCraneTrigger);
     }
 
-    private IEnumerator MessWithColliders()
+    private IEnumerator LandingCondition()
     {
         foreach (Collider collider in _colliders)
         {
             collider.enabled = false;
         }
-        yield return new WaitUntil(() => StartOfRound.Instance.shipHasLanded);
+        yield return new WaitUntil(() => StartOfRound.Instance.shipHasLanded || !GameNetworkManager.Instance.localPlayerController.isInHangarShipRoom);
         foreach (Collider collider in _colliders)
         {
             collider.enabled = true;
@@ -143,6 +143,14 @@ public class AutonomousCrane : NetworkBehaviour
 
     public void Update()
     {
+        if (StartOfRound.Instance.shipIsLeaving && GameNetworkManager.Instance.localPlayerController.isInHangarShipRoom && _colliders[0].enabled)
+        {
+            foreach (Collider collider in _colliders)
+            {
+                collider.enabled = false;
+            }
+        }
+
         if (!IsServer)
             return;
 

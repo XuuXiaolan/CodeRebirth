@@ -1,4 +1,12 @@
-# v1.4.0
+# v1.4.1
+
+- Duck configs.
+- Boomtrap nerfs.
+- Monarch curve fix.
+- Crane collisions turn off while taking off and leaving ship
+- Increased crane despawn range.
+
+## v1.4.0
 
 - Fixed a myriad of bugs.
 
