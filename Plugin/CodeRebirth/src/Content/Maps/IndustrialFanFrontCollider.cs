@@ -1,10 +1,9 @@
-using CodeRebirth.src.Util;
 using Dawn.Utils;
 using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
-public class IndustrialFanFrontCollider : NetworkBehaviour
+public class IndustrialFanFrontCollider : MonoBehaviour
 {
     public IndustrialFan industrialFan = null!;
 

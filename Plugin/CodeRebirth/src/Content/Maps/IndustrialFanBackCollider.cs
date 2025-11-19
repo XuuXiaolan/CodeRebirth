@@ -2,7 +2,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
-public class IndustrialFanBackCollider : NetworkBehaviour
+public class IndustrialFanBackCollider : MonoBehaviour
 {
     public IndustrialFan industrialFan = null!;
 
