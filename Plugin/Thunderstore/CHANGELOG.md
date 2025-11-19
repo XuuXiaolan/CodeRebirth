@@ -6,6 +6,7 @@
 - Crane collisions turn off while taking off and leaving ship
 - Increased crane despawn range.
 - Apparently fan is still bugged so I added a distance check for it working on you.
+- Next update will have some crane stuff related to where they can spawn and despawning based on how big the map size is atleast.
 
 ## v1.4.0
 
