@@ -20,8 +20,7 @@ public class OxydeCrashingShip : FallingObjectBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        // have an LLL soft dependency
-        if (!LethalContent.Moons.TryGetValue(NamespacedKey.From("code_rebirth", "oxyde"), out DawnMoonInfo moonInfo) || moonInfo.DawnPurchaseInfo.PurchasePredicate == ITerminalPurchasePredicate.AlwaysSuccess())
+        if (!LethalContent.Moons.TryGetValue(NamespacedKey.From("code_rebirth", "oxyde"), out DawnMoonInfo moonInfo) || moonInfo.DawnPurchaseInfo.PurchasePredicate.CanPurchase() == TerminalPurchaseResult.SuccessPurchaseResult.Success())
         {
             if (IsServer)
             {
