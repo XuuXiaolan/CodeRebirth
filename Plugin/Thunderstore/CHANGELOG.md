@@ -5,6 +5,7 @@
 - Monarch curve fix.
 - Crane collisions turn off while taking off and leaving ship
 - Increased crane despawn range.
+- Apparently fan is still bugged so I added a distance check for it working on you.
 
 ## v1.4.0
 
