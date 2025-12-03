@@ -1,12 +1,40 @@
-# v0.4.5
+# v0.4.10
+
+- Fixed an issue where the DatePredicate would not run for the entity replacements.
+- Added more options for outside object conditions like ground tag, ship and entrance positions, AI node count, etc.
+- Edited the Editor UI
+
+## v0.4.9
+
+- Cleaned up credits a bit more.
+- Fixed an issue where depending on the pc's locale (country I think?) some configs would get generated incorrectly.
+- Added more logging for the preloader issue that some people rarely have.
+
+## v0.4.8
+
+- Added more null checks just incase.
+- Actually added the GiantKiwi fix what.
+- Fixed an issue with some interior stuff being null.
+
+## v0.4.7
+
+- Fixed issue with GiantKiwi just lying to me about what it has in-game.
+
+## v0.4.6
+
+- Fixed issues relating to joining multiplayer and landing on a moon.
+Not entirely sure how those happened but they did ig.
+
+## v0.4.5
 
 - Edited MapObjects in the editor to be much easier to add onto.
-- Added Interior and Weather onto MapObject spawnweights.
+- Added Interior priority onto MapObject SpawnWeights.
 - Fixed issue with interior registration weights.
 - Added blank reference replacing with interior SpawnSyncedObjects, butlerbees, enemy ai nests, haunted mask, sapsucker, lungprop script.
 - Fixed another issue with unlockables when saving.
 - Gave DawnLib Interiors SpawnWeight configs.
 - Gave DawnLib Moons a lot more configs.
+- Did more work onto documentation and made the editor experience cleaner.
 
 ## v0.4.4
 

@@ -1,4 +1,8 @@
-# v1.4.1
+# v1.4.2
+
+- Fixed wallet and halloween skins not disappearing after november 10th.
+
+## v1.4.1
 
 - Duck configs.
 - Boomtrap nerfs.
