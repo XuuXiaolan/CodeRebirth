@@ -20,34 +20,43 @@ MonoBehaviour:
   <EntityToReplaceKey>k__BackingField:
     _namespace: code_rebirth
     _key: real_enemy_snailcat
-  <DatePredicate>k__BackingField: {fileID: 0}
+  <DatePredicate>k__BackingField: {fileID: 11400000, guid: f635dcda5ba8bac458e944ac6e20e98c,
+    type: 2}
   <Replacements>k__BackingField:
   - {fileID: 11400000, guid: 551cf90ba533e8f4299bfb144123f098, type: 2}
   - {fileID: 11400000, guid: e9c85355420c4294b91efce0d7a8d141, type: 2}
   - {fileID: 11400000, guid: 0c78109074b939141a9a2ae5eeb0216a, type: 2}
   <GameObjectAddons>k__BackingField: []
-  <MoonSpawnWeights>k__BackingField: Vanilla=+9999, Custom=+9999
-  <InteriorSpawnWeights>k__BackingField: Facility=+0, Mansion=+0, Mineshaft=+0
-  <WeatherSpawnWeights>k__BackingField: None=*1, DustClouds=*1, Rainy=*1, Stormy=*1,
-    Foggy=*1, Flooded=*1, Eclipsed=*1
+  <MoonSpawnWeightsConfig>k__BackingField:
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: vanilla
+    MathOperation: 0
+    Weight: 9999
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: custom
+    MathOperation: 0
+    Weight: 9999
+  <InteriorSpawnWeightsConfig>k__BackingField: []
+  <WeatherSpawnWeightsConfig>k__BackingField: []
   <GenerateSpawnWeightsConfig>k__BackingField: 1
   <GenerateDisableDateConfig>k__BackingField: 1
+  <MoonSpawnWeights>k__BackingField: 
+  <InteriorSpawnWeights>k__BackingField: 
+  <WeatherSpawnWeights>k__BackingField: 
   <NestRendererReplacements>k__BackingField: []
   <HitBodySFX>k__BackingField: {fileID: 0}
   <HitEnemyVoiceSFX>k__BackingField: {fileID: 0}
   <StunSFX>k__BackingField: {fileID: 0}
   <AudioClips>k__BackingField: []
+  _idleAudioClips:
+    audioClips: []
+    minTime: 0
+    maxTime: 0
   enemyDetectSound: {fileID: 0}
   spawnSound: {fileID: 0}
   dieSFX: {fileID: 0}
   wiwiwiiiSound: []
   potentialCreatureVoice: {fileID: 0}
   potentialCreatureSFX: {fileID: 0}
-  ExperimentalAudioToPlay: {fileID: 0}
-  ExperimentalAudioToPlayB: {fileID: 0}
-  ExperimentalAudioClip: {fileID: 0}
-  ExperimentalAudioClip2: {fileID: 0}
-  ExperimentalAudioClip3: {fileID: 0}
-  ExperimentalRandomClips: []
-  ExperimentalRandomClips2: []
-  ExperimentalParticle: {fileID: 0}

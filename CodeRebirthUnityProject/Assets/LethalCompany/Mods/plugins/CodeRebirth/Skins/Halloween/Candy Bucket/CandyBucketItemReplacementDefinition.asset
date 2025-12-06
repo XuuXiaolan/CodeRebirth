@@ -31,12 +31,24 @@ MonoBehaviour:
       type: 3}
     <PositionOffset>k__BackingField: {x: 0, y: 0, z: 0}
     <RotationOffset>k__BackingField: {x: 360, y: 180, z: 0}
-  <MoonSpawnWeights>k__BackingField: Vanilla=+9999, Custom=+9999
-  <InteriorSpawnWeights>k__BackingField: Facility=+0, Mansion=+0, Mineshaft=+0
-  <WeatherSpawnWeights>k__BackingField: None=*1, DustClouds=*1, Rainy=*1, Stormy=*1,
-    Foggy=*1, Flooded=*1, Eclipsed=*1
+  <MoonSpawnWeightsConfig>k__BackingField:
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: vanilla
+    MathOperation: 0
+    Weight: 9999
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: custom
+    MathOperation: 0
+    Weight: 9999
+  <InteriorSpawnWeightsConfig>k__BackingField: []
+  <WeatherSpawnWeightsConfig>k__BackingField: []
   <GenerateSpawnWeightsConfig>k__BackingField: 1
   <GenerateDisableDateConfig>k__BackingField: 1
+  <MoonSpawnWeights>k__BackingField: 
+  <InteriorSpawnWeights>k__BackingField: 
+  <WeatherSpawnWeights>k__BackingField: 
   <GrabSFX>k__BackingField: {fileID: 0}
   <DropSFX>k__BackingField: {fileID: 0}
   <PocketSFX>k__BackingField: {fileID: 0}
