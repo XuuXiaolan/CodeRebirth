@@ -21,10 +21,6 @@ public class ItemHandler : ContentHandler<ItemHandler>
     {
     }
 
-    public class SwatterAssets(DuskMod mod, string filePath) : AssetBundleLoader<SwatterAssets>(mod, filePath)
-    {
-    }
-
     public class TomaHopAssets(DuskMod mod, string filePath) : AssetBundleLoader<TomaHopAssets>(mod, filePath)
     {
     }
@@ -64,7 +60,6 @@ public class ItemHandler : ContentHandler<ItemHandler>
     public BrrreakerAssets? Brrreaker = null;
     public TurbulenceAssets? Turbulence = null;
     public MarrowSplitterAssets? MarrowSplitter = null;
-    public SwatterAssets? Swatter = null;
     public TomaHopAssets? TomaHop = null;
     public CodeRebirthPlushiesAssets? CRPlushies = null;
 
@@ -87,8 +82,6 @@ public class ItemHandler : ContentHandler<ItemHandler>
         RegisterContent("turbulenceassets", out Turbulence);
 
         RegisterContent("marrowsplitterassets", out MarrowSplitter);
-
-        // RegisterContent("swatterassets", out Swatter);
 
         RegisterContent("tomahopassets", out TomaHop);
 

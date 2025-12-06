@@ -104,8 +104,6 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
 
         RegisterContent("janitorassets", out Janitor);
 
-        // RegisterContent("pandoraassets", out Pandora);
-
         RegisterContent("driftwoodmenaceassets", out DriftwoodMenace);
 
         RegisterContent("nancyassets", out Nancy);

@@ -1567,7 +1567,7 @@ MonoBehaviour:
   usePreset: -1
   audioChanges:
   - audio: {fileID: 1674935587}
-    changeToClip: {fileID: 8300000, guid: 851b5ddb5119491498b8227977728619, type: 3}
+    changeToClip: {fileID: 8300000, guid: 25c620e2a6e805441bbb7af8e3f43c80, type: 3}
     stopAudio: 1
     changeAudioVolume: 0
     audioVolume: 0.3
@@ -2538,7 +2538,7 @@ MonoBehaviour:
     invertFade: 0
     distanceFadeStart: 100
     distanceFadeEnd: 500
-    textureOffset: {x: -408.52032, y: -0, z: -0}
+    textureOffset: {x: -269.51123, y: -0, z: -0}
     falloffMode: 0
     maskMode: 0
     materialMask: {fileID: 0}
@@ -10275,7 +10275,7 @@ MonoBehaviour:
   usePreset: -1
   audioChanges:
   - audio: {fileID: 377256768}
-    changeToClip: {fileID: 8300000, guid: 9bb9448cb020ce744940e8148db2000d, type: 3}
+    changeToClip: {fileID: 8300000, guid: ff289de8947b2224ca1f7279d53c669a, type: 3}
     stopAudio: 0
     changeAudioVolume: 1
     audioVolume: 0.6
@@ -11356,7 +11356,7 @@ MonoBehaviour:
     invertFade: 0
     distanceFadeStart: 300
     distanceFadeEnd: 500
-    textureOffset: {x: -245.1122, y: -0, z: -0}
+    textureOffset: {x: -161.70674, y: -0, z: -0}
     falloffMode: 1
     maskMode: 0
     materialMask: {fileID: 0}
@@ -20330,6 +20330,71 @@ Transform:
   - {fileID: 1918171475}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -0, z: -0}
+--- !u!1 &1997048134
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1997048136}
+  - component: {fileID: 1997048135}
+  m_Layer: 0
+  m_Name: SpongeShaderForEditor
+  m_TagString: EditorOnly
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1997048135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1997048134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26d6499a6bd256e47b859377446493a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  fadeRadius: 0
+  priority: 0
+  customPasses:
+  - rid: 1768394166855008258
+  injectionPoint: 1
+  m_TargetCamera: {fileID: 0}
+  useTargetCamera: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 1768394166855008258
+      type: {class: SpongeNewCustomPass, ns: Scoops.rendering, asm: Assembly-CSharp}
+      data:
+        m_Name: Custom Pass
+        enabled: 1
+        targetColorBuffer: 0
+        targetDepthBuffer: 2
+        clearFlags: 0
+        passFoldout: 0
+        m_Version: 0
+--- !u!4 &1997048136
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1997048134}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -12.469276, y: -30.462553, z: -33.352985}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2010680697
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22910,6 +22975,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: NavMeshColliders
       objectReference: {fileID: 0}
+    - target: {fileID: 6271793568554925629, guid: 11f608029f0d26f40b881cd0a29dcc8c,
+        type: 3}
+      propertyPath: audioChanges.Array.data[0].audio
+      value: 
+      objectReference: {fileID: 1674935587}
+    - target: {fileID: 7907131202947023658, guid: 11f608029f0d26f40b881cd0a29dcc8c,
+        type: 3}
+      propertyPath: audioChanges.Array.data[0].audio
+      value: 
+      objectReference: {fileID: 1674935587}
     - target: {fileID: 8332592834132441395, guid: 11f608029f0d26f40b881cd0a29dcc8c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -23877,11 +23952,6 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 3961294411
       objectReference: {fileID: 0}
-    - target: {fileID: 6508049580286188778, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7071544595146402373, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -24120,3 +24190,4 @@ SceneRoots:
   - {fileID: 1991192134}
   - {fileID: 1099028725}
   - {fileID: 1263617850}
+  - {fileID: 1997048136}

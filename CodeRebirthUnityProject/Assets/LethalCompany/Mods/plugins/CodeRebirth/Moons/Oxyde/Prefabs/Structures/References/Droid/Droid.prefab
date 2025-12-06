@@ -46,15 +46,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _spawnOnStart: 1
   spawnerType: 1
-  spawnChance: 50
-  spawnSpots: []
+  spawnChance: 80
+  spawnSpots:
+  - {fileID: 514819354008085772}
   specialItemNamesWithRarity:
+  - Name: Pro-flashlight
+    Rarity: 2
+  - Name: Homemade flashbang
+    Rarity: 1
   - Name: Stun grenade
     Rarity: 1
-  - Name: pro flashlight
-    Rarity: 1
-  - Name: Mapper
-    Rarity: 1
+  - Name: Flashlight
+    Rarity: 2
 --- !u!1 &2333037566891494995
 GameObject:
   m_ObjectHideFlags: 0
@@ -209,7 +212,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c36d0a92cbb1f26a39169ef0eae393a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxRange: 5
+  maxRange: 7
   minRange: 1
   requiresLineOfSight: 0
   headerText: Unknown Robot

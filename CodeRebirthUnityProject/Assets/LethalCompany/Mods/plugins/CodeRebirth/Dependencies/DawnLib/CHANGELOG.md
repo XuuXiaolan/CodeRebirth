@@ -1,8 +1,47 @@
-# v0.4.10
+# v0.5.4
+
+- Added Storylog registration.
+- Added `DawnStoryLogSpawner` component to utils addcomponent menu.
+
+## v0.5.3
+
+- Not sure how I missed this issue when testing: fixed not being able to play?
+- Created a migrator for the new saving.
+
+## v0.5.2
+
+- Reverted save system to what it was before temporarily to create a migration system.
+
+## v0.5.1
+
+- Optimised saving system a lot more, it should be a lot faster.
+- If you have a current ongoing save, disable the saving system so it does not delete every item and unlockable in that save, then re-enable it when you make a new save.
+- Made editor experience cleaner again
+
+## v0.5.0
+
+- Optimised the save system even more.
+- Interior hotloading is real.
+- Added more options for outside object conditions like ground tag, ship and entrance positions, AI node count, etc.
+- Added NamespacedKey smart matching, so you should be able to do stuff like `oxyde` without typing in `code_rebirth:oxyde`, needs more testing but should work.
+
+## v0.4.12
+
+- Made weight configs more user friendly to avoid unexpected issues.
+
+## v0.4.11
+
+- Polished vehicle stuff on the station side a bit more.
+- Hotfix for shop items breaking on lobby reload.
+
+## v0.4.10
 
 - Fixed an issue where the DatePredicate would not run for the entity replacements.
-- Added more options for outside object conditions like ground tag, ship and entrance positions, AI node count, etc.
-- Edited the Editor UI
+- Improved the Editor UI for spawn weight related options in the different definitions, i.e. enemies, items, etc.
+- Updated Editor dll for better readability in some cases.
+- Improved vehicle registration, it should technically work now?
+- Internally added a `TryRegisterItemToShop` method for non DawnLib items
+- Internally edited some fields to be private rather than read-only.
 
 ## v0.4.9
 

@@ -107,11 +107,11 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
     {
         RegisterContent("oxydecrashshipassets", out OxydeCrashShip);
 
-        RegisterContent("compactortobyassets", out CompactorToby);
+        RegisterContent("compactortobyassets", out CompactorToby, MoonHandler.Instance.Oxyde != null);
 
         RegisterContent("gunslingergregassets", out GunslingerGreg);
 
-        RegisterContent("shreddersarahassets", out ShredderSarah);
+        RegisterContent("shreddersarahassets", out ShredderSarah, MoonHandler.Instance.Oxyde != null);
 
         RegisterContent("merchantassets", out Merchant);
 
@@ -120,10 +120,6 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
         RegisterContent("aircontrolunitassets", out AirControlUnit);
 
         RegisterContent("flashturretassets", out FlashTurret);
-
-        // RegisterContent("biomeassets", out Biome);
-
-        // RegisterContent("teslashockassets", out TeslaShock);
 
         RegisterContent("beartrapassets", out BearTrap);
 
