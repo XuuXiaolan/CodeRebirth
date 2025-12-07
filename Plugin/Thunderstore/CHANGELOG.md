@@ -1,4 +1,8 @@
-# v1.4.2
+# v1.5.0
+
+- Added compat with LategameUpgrades and FasterItemDropship on Oxyde.
+
+## v1.4.2
 
 - Fixed wallet and halloween skins not disappearing after november 10th.
 

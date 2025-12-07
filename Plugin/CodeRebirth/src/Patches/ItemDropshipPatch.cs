@@ -1,5 +1,5 @@
-using System;
 using CodeRebirth.src.MiscScripts;
+using Dawn;
 
 namespace CodeRebirth.src.Patches;
 public static class ItemDropshipPatch
@@ -10,6 +10,18 @@ public static class ItemDropshipPatch
         On.ItemDropship.ShipLeave += ItemDropship_ShipLeave;
         On.ItemDropship.DeliverVehicleOnServer += ItemDropship_DeliverVehicleOnServer;
         On.ItemDropship.ShipLandedAnimationEvent += ItemDropship_ShipLandedAnimationEvent;
+
+        On.ItemDropship.OpenShipDoorsOnServer += ItemDropship_OpenShipDoorsOnServer;
+    }
+
+    private static void ItemDropship_OpenShipDoorsOnServer(On.ItemDropship.orig_OpenShipDoorsOnServer orig, ItemDropship self)
+    {
+        orig(self);
+        if (LethalContent.Moons[NamespacedKey<DawnMoonInfo>.From("code_rebirth", "oxyde")].Level == RoundManager.Instance.currentLevel)
+        {
+            Plugin.ExtendedLogging($"OpenShipDoorsOnServer");
+            self.shipTimer = 0;
+        }
     }
 
     private static void ItemDropship_ShipLandedAnimationEvent(On.ItemDropship.orig_ShipLandedAnimationEvent orig, ItemDropship self)

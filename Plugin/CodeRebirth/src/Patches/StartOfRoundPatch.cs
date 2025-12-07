@@ -10,6 +10,7 @@ using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Maps;
 using Dawn;
 using UnityEngine.InputSystem.Utilities;
+using CodeRebirth.src.ModCompats;
 
 namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(StartOfRound))]
@@ -21,12 +22,23 @@ static class StartOfRoundPatch
         CodeRebirthUtils.Instance.SaveCodeRebirthData();
     }
 
+    private static bool _patched = false;
+
     [HarmonyPatch(nameof(StartOfRound.Awake))]
     [HarmonyPostfix]
     public static void StartOfRound_Awake(ref StartOfRound __instance)
     {
         Plugin.ExtendedLogging("StartOfRound.Awake");
         __instance.NetworkObject.OnSpawn(CreateNetworkManager);
+
+        if (!_patched)
+        {
+            _patched = true;
+            if (LateGameUpgradesCompat.LateGameUpgradesExists)
+            {
+                LateGameUpgradesCompat.PatchDropshipUpgrades();
+            }
+        }
     }
 
     private static void CreateNetworkManager()

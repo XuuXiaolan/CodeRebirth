@@ -1,10 +1,29 @@
 using BepInEx.Bootstrap;
+using Dawn;
+using HarmonyLib;
+using MonoMod.Cil;
+using MonoMod.RuntimeDetour;
+using MoreShipUpgrades.UpgradeComponents.OneTimeUpgrades.Store;
 using System.Runtime.CompilerServices;
 
 namespace CodeRebirth.src.ModCompats;
 internal static class LateGameUpgradesCompat
 {
-    private static bool LateGameUpgradesExists = Chainloader.PluginInfos.ContainsKey("com.malco.lethalcompany.moreshipupgrades");
+    internal static bool LateGameUpgradesExists = Chainloader.PluginInfos.ContainsKey("com.malco.lethalcompany.moreshipupgrades");
+    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+    internal static void PatchDropshipUpgrades()
+    {
+        _ = new Hook(AccessTools.DeclaredMethod(typeof(MoreShipUpgrades.UpgradeComponents.OneTimeUpgrades.Store.FasterDropPod), "CanLeaveEarly"), FixDropshipOnOxyde);
+    }
+
+    private static bool FixDropshipOnOxyde(RuntimeILReferenceBag.FastDelegateInvokers.Func<float, bool> orig, float shipTimer)
+    {
+        if (LethalContent.Moons[NamespacedKey<DawnMoonInfo>.From("code_rebirth", "oxyde")].Level == RoundManager.Instance.currentLevel)
+        {
+            return false;
+        }
+        return orig(shipTimer);
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     internal static float TryGetItemWeight(float currentItemWeight)
@@ -17,7 +36,7 @@ internal static class LateGameUpgradesCompat
         return currentItemWeight - 1;
     }
 
-    [MethodImpl(MethodImplOptions.NoInlining)]
+    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     private static float GetItemWeight(float currentItemWeight)
     {
         Plugin.ExtendedLogging($"New item weight: {MoreShipUpgrades.UpgradeComponents.TierUpgrades.AttributeUpgrades.BackMuscles.DecreasePossibleWeight(currentItemWeight - 1)}");
