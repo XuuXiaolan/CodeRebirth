@@ -13,7 +13,11 @@ MonoBehaviour:
   m_Name: ACUMapObjectDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  _tags: []
+  _tags:
+  - _namespace: code_rebirth
+    _key: hazard
+  - _namespace: code_rebirth
+    _key: dangerous
   <Key>k__BackingField:
     _namespace: code_rebirth
     _key: air_control_unit
@@ -28,18 +32,11 @@ MonoBehaviour:
     requireDistanceBetweenSpawns: 0
     disallowSpawningNearEntrances: 0
   <OutsideMapObjectSettings>k__BackingField:
-    VanillaAnimationCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
     SpawnFacingAwayFromWall: 0
     ObjectWidth: 0
     RotationOffset: {x: 0, y: 0, z: 0}
     SpawnableFloorTags: []
-    MinimumNodeSpawnRequirement: 0
-    MinimumDistanceFromShipAndEntrances: 0
+    MinimumAINodeSpawnRequirement: 0
     AlignWithTerrain: 0
   <IsInsideHazard>k__BackingField: 0
   <CreateInsideHazardConfig>k__BackingField: 1

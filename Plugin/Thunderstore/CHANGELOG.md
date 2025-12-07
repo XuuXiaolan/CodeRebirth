@@ -7,6 +7,14 @@
 - Crane insta falls down on de-activation and stays fallen until it re-activates.
 - Cactus budling rolling sound now doesn't play desynced if it was previously rooted before rolling.
 - Mistress now targets players more randomly than before, but still implements some priorities.
+- Crane configured so that it doesn't spawn on moons with less than 30 AI nodes.
+- Crane given an object width of 15 units so it will not spawn within some distance to stuff like entrances or the ship itself.
+- Beartraps were given a very minimal ScanNode.
+- Sarah and Toby can no longer be configured and force enabled when oxyde is enabled.
+- Some nonsensical configs turned off like inside merchant, mimic crates, etc.
+- Inside bear traps disabled by default.
+- Gave tags to all the hazards.
+  - List all the tags [PLACEHOLDER].
 
 ## v1.4.2
 

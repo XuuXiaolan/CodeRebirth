@@ -13,7 +13,11 @@ MonoBehaviour:
   m_Name: GrassBearTrapMapObjectDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  _tags: []
+  _tags:
+  - _namespace: code_rebirth
+    _key: hazard
+  - _namespace: code_rebirth
+    _key: stealth
   <Key>k__BackingField:
     _namespace: code_rebirth
     _key: grass_bear_trap
@@ -30,26 +34,27 @@ MonoBehaviour:
   <OutsideMapObjectSettings>k__BackingField:
     SpawnFacingAwayFromWall: 0
     ObjectWidth: 0
-    SpawnableFloorTags: []
     RotationOffset: {x: 0, y: 0, z: 0}
-    VanillaAnimationCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    AlignWithTerrain: 0
-  <IsInsideHazard>k__BackingField: 1
+    SpawnableFloorTags: []
+    MinimumAINodeSpawnRequirement: 0
+    AlignWithTerrain: 1
+  <IsInsideHazard>k__BackingField: 0
   <CreateInsideHazardConfig>k__BackingField: 1
-  <DefaultInsideCurveSpawnWeights>k__BackingField: Vanilla - 0.00,0.00 ; 0.11,0.06
-    ; 0.22,0.10 ; 0.33,0.15 ; 0.44,0.23 ; 0.56,0.34 ; 0.67,0.49 ; 0.78,0.65 ; 0.89,1.03
-    ; 1.00,2.00 | Custom - 0.00,0.00 ; 0.11,0.06 ; 0.22,0.10 ; 0.33,0.15 ; 0.44,0.23
-    ; 0.56,0.34 ; 0.67,0.49 ; 0.78,0.65 ; 0.89,1.03 ; 1.00,2.00
+  <InsideMoonCurveSpawnWeights>k__BackingField: []
+  <InsideInteriorCurveSpawnWeights>k__BackingField: []
+  <InsidePrioritiseMoonConfig>k__BackingField: 0
   <CreateInsideCurveSpawnWeightsConfig>k__BackingField: 1
   <IsOutsideHazard>k__BackingField: 1
   <CreateOutsideHazardConfig>k__BackingField: 1
+  <OutsideMoonCurveSpawnWeights>k__BackingField: []
+  <OutsideInteriorCurveSpawnWeights>k__BackingField: []
+  <OutsidePrioritiseMoonConfig>k__BackingField: 1
+  <CreateOutsideCurveSpawnWeightsConfig>k__BackingField: 1
   <DefaultOutsideCurveSpawnWeights>k__BackingField: Vanilla - 0.00,0.00 ; 0.11,0.34
     ; 0.22,0.69 ; 0.33,0.95 ; 0.44,1.06 ; 0.56,1.03 ; 0.67,0.99 ; 0.78,1.05 ; 0.89,1.32
     ; 1.00,2.00 | Custom - 0.00,0.00 ; 0.11,0.34 ; 0.22,0.69 ; 0.33,0.95 ; 0.44,1.06
     ; 0.56,1.03 ; 0.67,0.99 ; 0.78,1.05 ; 0.89,1.32 ; 1.00,2.00
-  <CreateOutsideCurveSpawnWeightsConfig>k__BackingField: 1
+  <DefaultInsideCurveSpawnWeights>k__BackingField: Vanilla - 0.00,0.00 ; 0.11,0.06
+    ; 0.22,0.10 ; 0.33,0.15 ; 0.44,0.23 ; 0.56,0.34 ; 0.67,0.49 ; 0.78,0.65 ; 0.89,1.03
+    ; 1.00,2.00 | Custom - 0.00,0.00 ; 0.11,0.06 ; 0.22,0.10 ; 0.33,0.15 ; 0.44,0.23
+    ; 0.56,0.34 ; 0.67,0.49 ; 0.78,0.65 ; 0.89,1.03 ; 1.00,2.00

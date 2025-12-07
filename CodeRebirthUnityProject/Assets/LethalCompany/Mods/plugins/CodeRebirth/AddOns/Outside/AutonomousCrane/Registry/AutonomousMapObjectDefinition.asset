@@ -29,7 +29,13 @@ MonoBehaviour:
       m_PostInfinity: 0
       m_RotationOrder: 0
     Description: How long the crane stays deactivated after pulling the lever
-  _tags: []
+  _tags:
+  - _namespace: code_rebirth
+    _key: hazard
+  - _namespace: code_rebirth
+    _key: dangerous
+  - _namespace: code_rebirth
+    _key: mechanical
   <Key>k__BackingField:
     _namespace: code_rebirth
     _key: autonomous_crane
@@ -45,19 +51,19 @@ MonoBehaviour:
     disallowSpawningNearEntrances: 0
   <OutsideMapObjectSettings>k__BackingField:
     SpawnFacingAwayFromWall: 0
-    ObjectWidth: 0
+    ObjectWidth: 15
     RotationOffset: {x: 0, y: 0, z: 0}
     SpawnableFloorTags: []
-    MinimumAINodeSpawnRequirement: 0
+    MinimumAINodeSpawnRequirement: 30
     AlignWithTerrain: 0
   <IsInsideHazard>k__BackingField: 0
-  <CreateInsideHazardConfig>k__BackingField: 1
+  <CreateInsideHazardConfig>k__BackingField: 0
   <InsideMoonCurveSpawnWeights>k__BackingField: []
   <InsideInteriorCurveSpawnWeights>k__BackingField: []
-  <InsidePrioritiseMoonConfig>k__BackingField: 1
-  <CreateInsideCurveSpawnWeightsConfig>k__BackingField: 1
+  <InsidePrioritiseMoonConfig>k__BackingField: 0
+  <CreateInsideCurveSpawnWeightsConfig>k__BackingField: 0
   <IsOutsideHazard>k__BackingField: 1
-  <CreateOutsideHazardConfig>k__BackingField: 1
+  <CreateOutsideHazardConfig>k__BackingField: 0
   <OutsideMoonCurveSpawnWeights>k__BackingField:
   - <Key>k__BackingField:
       _namespace: lethal_company
