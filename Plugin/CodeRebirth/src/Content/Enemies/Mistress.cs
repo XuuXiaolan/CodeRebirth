@@ -316,23 +316,27 @@ public class Mistress : CodeRebirthEnemyAI
         Dictionary<PlayerControllerB, int> playersWithPriorityDict = new();
         foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
         {
-            if (player == null || player.isPlayerDead || !player.isPlayerControlled || player.IsPseudoDead()) continue;
-            playersWithPriorityDict.Add(player, 0);
+            if (player == null || player.isPlayerDead || !player.isPlayerControlled || player.IsPseudoDead())
+                continue;
+
+            int priority = 0;
 
             if (previousTargetPlayers.Contains(player))
             {
-                playersWithPriorityDict[player] += 200;
-            } // Increase priority if was already a previous target.
+                priority += 200; // Increase priority if was already a previous target.
+            }
 
             if (player.isInsideFactory)
             {
-                playersWithPriorityDict[player] += 1;
-            } // Increase priority if currently inside.
+                priority += 1; // Increase priority if currently inside.
+            }
 
             if (player.isPlayerAlone)
             {
-                playersWithPriorityDict[player] += 1;
-            } // Increase priority if currently alone.
+                priority += 1; // Increase priority if currently alone.
+            }
+
+            playersWithPriorityDict[player] = priority;
         }
 
         if (playersWithPriorityDict.Count == 0)
@@ -344,13 +348,20 @@ public class Mistress : CodeRebirthEnemyAI
 
         foreach (var gal in GalAI.Instances)
         {
-            if (gal == null || gal.ownerPlayer == null || gal.ownerPlayer.isPlayerDead || !gal.ownerPlayer.isPlayerControlled || gal.ownerPlayer.IsPseudoDead()) continue;
+            if (gal == null || gal.ownerPlayer == null || gal.ownerPlayer.isPlayerDead || !gal.ownerPlayer.isPlayerControlled || gal.ownerPlayer.IsPseudoDead())
+                continue;
+
+            if (!playersWithPriorityDict.ContainsKey(gal.ownerPlayer))
+                continue;
+
             playersWithPriorityDict[gal.ownerPlayer] += 1;
-        } // Increase priority for each gal a player owns.
+        }
 
-        IEnumerable<PlayerControllerB> orderedPlayerList = playersWithPriorityDict.OrderByDescending(kvp => kvp.Value).Select(kvp => kvp.Key);
+        int maxPriority = playersWithPriorityDict.Values.Max();
 
-        SetPlayerTargetServerRpc(orderedPlayerList.First());
+        List<PlayerControllerB> topCandidates = playersWithPriorityDict.Where(kvp => kvp.Value == maxPriority).Select(kvp => kvp.Key).ToList();
+        PlayerControllerB chosenPlayer = topCandidates[UnityEngine.Random.Range(0, topCandidates.Count)];
+        SetPlayerTargetServerRpc(chosenPlayer);
     }
 
     private Vector3 ChooseNewTeleportPoint()
