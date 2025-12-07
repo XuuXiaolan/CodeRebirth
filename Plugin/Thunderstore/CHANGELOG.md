@@ -2,6 +2,7 @@
 
 - Added compat with Lategame Upgrades and FasterItemDropship on Oxyde.
 - Added compat with Lategame Upgrades and Oxyde's sell percentage.
+- Fixed mistress plushie.
 
 ## v1.4.2
 
