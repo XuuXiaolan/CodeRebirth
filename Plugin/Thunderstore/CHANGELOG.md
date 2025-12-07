@@ -3,6 +3,10 @@
 - Added compat with Lategame Upgrades and FasterItemDropship on Oxyde.
 - Added compat with Lategame Upgrades and Oxyde's sell percentage.
 - Fixed mistress plushie.
+- Gave Crane a bigger de-activation range from 20 to 40 to 60 to 90.
+- Crane insta falls down on de-activation and stays fallen until it re-activates.
+- Cactus budling rolling sound now doesn't play desynced if it was previously rooted before rolling.
+- Mistress now targets players more randomly than before, but still implements some priorities.
 
 ## v1.4.2
 
