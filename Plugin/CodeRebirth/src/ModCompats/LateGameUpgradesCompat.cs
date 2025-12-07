@@ -3,13 +3,28 @@ using Dawn;
 using HarmonyLib;
 using MonoMod.Cil;
 using MonoMod.RuntimeDetour;
-using MoreShipUpgrades.UpgradeComponents.OneTimeUpgrades.Store;
 using System.Runtime.CompilerServices;
 
 namespace CodeRebirth.src.ModCompats;
 internal static class LateGameUpgradesCompat
 {
     internal static bool LateGameUpgradesExists = Chainloader.PluginInfos.ContainsKey("com.malco.lethalcompany.moreshipupgrades");
+    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+    internal static float GetSellableScrapMultiplier()
+    {
+        if (LateGameUpgradesExists)
+        {
+            return GetSigurdAccessMultiplier();
+        }
+        return 1f;
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+    private static float GetSigurdAccessMultiplier()
+    {
+        return MoreShipUpgrades.UpgradeComponents.OneTimeUpgrades.Store.Sigurd.GetBuyingRate(1);
+    }
+
     [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     internal static void PatchDropshipUpgrades()
     {

@@ -195,9 +195,10 @@ public class SellingSally : NetworkBehaviour
             PlayErrorSound();
             return;
         }
+
         foreach (var sellableScrap in _sellableScraps)
         {
-            sellableScrap.SetScrapValue(sellableScrap.scrapValue * 3);
+            sellableScrap.SetScrapValue(Mathf.RoundToInt(sellableScrap.scrapValue * 3f * LateGameUpgradesCompat.GetSellableScrapMultiplier()));
             scrapValueToMake += sellableScrap.scrapValue;
         }
 

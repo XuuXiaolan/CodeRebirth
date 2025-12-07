@@ -1,6 +1,7 @@
 # v1.5.0
 
-- Added compat with LategameUpgrades and FasterItemDropship on Oxyde.
+- Added compat with Lategame Upgrades and FasterItemDropship on Oxyde.
+- Added compat with Lategame Upgrades and Oxyde's sell percentage.
 
 ## v1.4.2
 
