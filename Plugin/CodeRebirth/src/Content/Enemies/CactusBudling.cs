@@ -5,7 +5,6 @@ using System.Linq;
 using CodeRebirth.src.Content.Maps;
 using Dusk;
 using Dawn.Utils;
-
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -356,9 +355,9 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
         _nextStateRoutine = null;
     }
 
-    private IEnumerator RollingSoundStuff()
+    private IEnumerator RollingSoundStuff(float delayTimer)
     {
-        yield return new WaitForSeconds(_rollingStartAnimation.length);
+        yield return new WaitForSeconds(delayTimer);
         _rollingSource.Play();
         while (_rollingTimer > 0)
         {
@@ -440,20 +439,20 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
                 creatureAnimator.SetBool(RootingAnimation, false);
                 creatureAnimator.SetBool(RollingAnimation, true);
             }
-            StartCoroutine(RollingSoundStuff());
-
-            for (int i = 0; i < 10; i++)
-            {
-                _targetRollingPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadius(this.transform.position, 75f, default);
-                if (smartAgentNavigator.CanPathToPoint(this.transform.position, _targetRollingPosition) > 0f)
-                {
-                    break;
-                }
-            }
             float delayTimer = _rollingStartAnimation.length;
             if (currentBehaviourStateIndex == (int)CactusBudlingState.Rooted)
             {
                 delayTimer += _rootingEndAnimation.length;
+            }
+            StartCoroutine(RollingSoundStuff(delayTimer));
+
+            for (int i = 0; i < 10; i++)
+            {
+                _targetRollingPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadius(this.transform.position, 75f, default);
+                if (smartAgentNavigator.CanPathToPoint(this.transform.position, _targetRollingPosition) > 15f)
+                {
+                    break;
+                }
             }
             _rollingTimer = _rollingDuration + delayTimer;
             _nextStateRoutine = StartCoroutine(DelayToNextState(delayTimer, 10f, CactusBudlingState.Rolling));
