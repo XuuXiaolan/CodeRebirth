@@ -155,7 +155,16 @@ public class AutonomousCrane : NetworkBehaviour
             return;
 
         if (!_craneIsActive)
+        {
+            _currentState = CraneState.DropMagnet;
+            if (_magnetState == MagnetState.IdleBottom)
+            {
+                return;
+            }
+
+            DoDroppingMagnetBehaviour();
             return;
+        }
 
         switch (_currentState)
         {

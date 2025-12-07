@@ -20,8 +20,8 @@ MonoBehaviour:
     defaultFloat: 30
     defaultBool: 0
     defaultBoundedRange:
-      <Min>k__BackingField: 20
-      <Max>k__BackingField: 40
+      <Min>k__BackingField: 60
+      <Max>k__BackingField: 90
     defaultAnimationCurve:
       serializedVersion: 2
       m_Curve: []
@@ -46,14 +46,9 @@ MonoBehaviour:
   <OutsideMapObjectSettings>k__BackingField:
     SpawnFacingAwayFromWall: 0
     ObjectWidth: 0
-    SpawnableFloorTags: []
     RotationOffset: {x: 0, y: 0, z: 0}
-    VanillaAnimationCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
+    SpawnableFloorTags: []
+    MinimumAINodeSpawnRequirement: 0
     AlignWithTerrain: 0
   <IsInsideHazard>k__BackingField: 0
   <CreateInsideHazardConfig>k__BackingField: 1
