@@ -37,8 +37,12 @@ MonoBehaviour:
   <EnemyType>k__BackingField: {fileID: 11400000, guid: 560802ac9add3a544bc2b1cebb1fcf88,
     type: 2}
   <SpawnTable>k__BackingField: 2
-  <TerminalNode>k__BackingField: {fileID: 0}
-  <TerminalKeyword>k__BackingField: {fileID: 0}
+  <BestiaryNodeText>k__BackingField: 
+  <BestiaryWordOverride>k__BackingField: 
+  <MoonSpawnWeightsConfig>k__BackingField: []
+  <InteriorSpawnWeightsConfig>k__BackingField: []
+  <WeatherSpawnWeightsConfig>k__BackingField: []
+  <GenerateSpawnWeightsConfig>k__BackingField: 1
   <MoonSpawnWeights>k__BackingField: Vanilla=+10, Custom=+10, Valley=+30, Canyon=+5,
     Tundra=-999, Marsh=+40, Military=-20, Rocky=-50, Amythest=-90, Experimentation=+1,
     Assurance=+5, Vow=+45, Offense=+3, March=+35, Adamance=+40, Rend=-999, Dine=-999,
@@ -49,6 +53,3 @@ MonoBehaviour:
     Code Rebirth:Night Shift=*0.7, Weather Registry:Snowfall=*0, Weather Registry:Blizzard=*0,
     Weather Registry:Heatwave=*0.5, Weather Registry:Solar Flare=*0.5, Weather Registry:Toxic
     Smog=*1, Weather Registry:Cloudy=*1, Weather Registry:Blackout=*0.5
-  <GenerateSpawnWeightsConfig>k__BackingField: 1
-  <PowerLevel>k__BackingField: 0
-  <MaxSpawnCount>k__BackingField: 0

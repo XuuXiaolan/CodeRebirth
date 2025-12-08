@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: BearTrapGalUnlockableDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  _tags: []
+  _tags:
+  - _namespace: code_rebirth
+    _key: gal
   <Key>k__BackingField:
     _namespace: code_rebirth
     _key: beartrap
@@ -47,5 +49,5 @@ MonoBehaviour:
   <IsDecor>k__BackingField: 0
   <GenerateUnlockableTypeConfig>k__BackingField: 1
   <Cost>k__BackingField: 150
-  <GenerateDisablePricingStrategyConfig>k__BackingField: 1
-  <GenerateDisableUnlockRequirementConfig>k__BackingField: 1
+  <GenerateDisablePricingStrategyConfig>k__BackingField: 0
+  <GenerateDisableUnlockRequirementConfig>k__BackingField: 0

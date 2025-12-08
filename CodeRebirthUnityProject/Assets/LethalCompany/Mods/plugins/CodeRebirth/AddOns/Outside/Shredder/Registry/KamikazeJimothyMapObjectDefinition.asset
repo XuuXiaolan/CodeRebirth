@@ -30,20 +30,21 @@ MonoBehaviour:
   <OutsideMapObjectSettings>k__BackingField:
     SpawnFacingAwayFromWall: 0
     ObjectWidth: 0
-    SpawnableFloorTags: []
     RotationOffset: {x: 0, y: 0, z: 0}
-    VanillaAnimationCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
+    SpawnableFloorTags: []
+    MinimumAINodeSpawnRequirement: 0
     AlignWithTerrain: 0
   <IsInsideHazard>k__BackingField: 0
-  <CreateInsideHazardConfig>k__BackingField: 1
-  <DefaultInsideCurveSpawnWeights>k__BackingField: 
-  <CreateInsideCurveSpawnWeightsConfig>k__BackingField: 1
+  <CreateInsideHazardConfig>k__BackingField: 0
+  <InsideMoonCurveSpawnWeights>k__BackingField: []
+  <InsideInteriorCurveSpawnWeights>k__BackingField: []
+  <InsidePrioritiseMoonConfig>k__BackingField: 0
+  <CreateInsideCurveSpawnWeightsConfig>k__BackingField: 0
   <IsOutsideHazard>k__BackingField: 1
-  <CreateOutsideHazardConfig>k__BackingField: 1
+  <CreateOutsideHazardConfig>k__BackingField: 0
+  <OutsideMoonCurveSpawnWeights>k__BackingField: []
+  <OutsideInteriorCurveSpawnWeights>k__BackingField: []
+  <OutsidePrioritiseMoonConfig>k__BackingField: 0
+  <CreateOutsideCurveSpawnWeightsConfig>k__BackingField: 0
   <DefaultOutsideCurveSpawnWeights>k__BackingField: 
-  <CreateOutsideCurveSpawnWeightsConfig>k__BackingField: 1
+  <DefaultInsideCurveSpawnWeights>k__BackingField: 

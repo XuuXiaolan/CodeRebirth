@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: Diary8ItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  _tags: []
+  _tags:
+  - _namespace: code_rebirth
+    _key: lore
   <Key>k__BackingField:
     _namespace: code_rebirth
     _key: director_diary_eight
@@ -25,14 +27,16 @@ MonoBehaviour:
     <ItemInfoNode>k__BackingField: {fileID: 0}
   <TerminalPredicate>k__BackingField: {fileID: 0}
   <PricingStrategy>k__BackingField: {fileID: 0}
+  <MoonSpawnWeightsConfig>k__BackingField: []
+  <InteriorSpawnWeightsConfig>k__BackingField: []
+  <WeatherSpawnWeightsConfig>k__BackingField: []
+  <IsScrap>k__BackingField: 1
+  <GenerateScrapConfig>k__BackingField: 0
+  <IsShopItem>k__BackingField: 0
+  <GenerateShopItemConfig>k__BackingField: 0
+  <Cost>k__BackingField: 0
+  <GenerateDisableUnlockConfig>k__BackingField: 0
+  <GenerateDisablePricingStrategyConfig>k__BackingField: 0
   <MoonSpawnWeights>k__BackingField: 
   <InteriorSpawnWeights>k__BackingField: 
   <WeatherSpawnWeights>k__BackingField: 
-  <GenerateSpawnWeightsConfig>k__BackingField: 1
-  <IsScrap>k__BackingField: 1
-  <GenerateScrapConfig>k__BackingField: 1
-  <IsShopItem>k__BackingField: 0
-  <GenerateShopItemConfig>k__BackingField: 1
-  <Cost>k__BackingField: 0
-  <GenerateDisableUnlockConfig>k__BackingField: 1
-  <GenerateDisablePricingStrategyConfig>k__BackingField: 1

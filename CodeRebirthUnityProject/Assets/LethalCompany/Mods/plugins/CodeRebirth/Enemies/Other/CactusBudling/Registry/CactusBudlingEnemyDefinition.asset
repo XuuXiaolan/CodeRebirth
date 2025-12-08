@@ -29,17 +29,21 @@ MonoBehaviour:
       m_PostInfinity: 0
       m_RotationOrder: 0
     Description: Cacti can only be broken by shovels or player attacks with scrap.
-  _tags: []
+  _tags:
+  - _namespace: code_rebirth
+    _key: plant
   <Key>k__BackingField:
     _namespace: code_rebirth
     _key: cactus_budling
   <EnemyType>k__BackingField: {fileID: 11400000, guid: 828dae466f5ef864ab8cde898f71bbe5,
     type: 2}
   <SpawnTable>k__BackingField: 2
-  <TerminalNode>k__BackingField: {fileID: 11400000, guid: f2c3ed2c1b8442845943bcaa05da0908,
-    type: 2}
-  <TerminalKeyword>k__BackingField: {fileID: 11400000, guid: acd6d6f1a558de84f9b54f0eaaa946e8,
-    type: 2}
+  <BestiaryNodeText>k__BackingField: 
+  <BestiaryWordOverride>k__BackingField: 
+  <MoonSpawnWeightsConfig>k__BackingField: []
+  <InteriorSpawnWeightsConfig>k__BackingField: []
+  <WeatherSpawnWeightsConfig>k__BackingField: []
+  <GenerateSpawnWeightsConfig>k__BackingField: 1
   <MoonSpawnWeights>k__BackingField: Vanilla=+10,Custom=+10,Valley=+5,Canyon=+35,Tundra=-999,Marsh=+15,Military=+0,Rocky=+10,Amythest=+0,Experimentation=+1,Assurance=+50,Vow=+3,Offense=+40,March=+5,Adamance=+1,Rend=-999,Dine=-999,Titan=+0,Artifice=+10,Embrion=+0,Code
     Rebirth:Oxyde=+25
   <InteriorSpawnWeights>k__BackingField: 
@@ -48,6 +52,3 @@ MonoBehaviour:
     Registry:Snowfall=*0,Weather Registry:Blizzard=*0,Weather Registry:Heatwave=*1.5,Weather
     Registry:Solar Flare=*1.5,Weather Registry:Toxic Smog=*1,Weather Registry:Cloudy=*1.2,Weather
     Registry:Blackout=*0.5
-  <GenerateSpawnWeightsConfig>k__BackingField: 1
-  <PowerLevel>k__BackingField: 0
-  <MaxSpawnCount>k__BackingField: 0

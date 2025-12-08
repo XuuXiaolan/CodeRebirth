@@ -13,8 +13,7 @@
 - Sarah and Toby can no longer be configured and force enabled when oxyde is enabled.
 - Some nonsensical configs turned off like inside merchant, mimic crates, etc.
 - Inside bear traps disabled by default.
-- Gave tags to all the hazards.
-  - List all the tags [PLACEHOLDER].
+- Gave tags to all CR content.
 
 ## v1.4.2
 

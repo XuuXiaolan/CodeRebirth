@@ -13,15 +13,21 @@ MonoBehaviour:
   m_Name: RabbitMagicianEnemyDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  _tags: []
+  _tags:
+  - _namespace: code_rebirth
+    _key: mansion
   <Key>k__BackingField:
     _namespace: code_rebirth
     _key: rabbit_magician
   <EnemyType>k__BackingField: {fileID: 11400000, guid: 0a42719f4e0350243932b8d15cd5b065,
     type: 2}
   <SpawnTable>k__BackingField: 1
-  <TerminalNode>k__BackingField: {fileID: 0}
-  <TerminalKeyword>k__BackingField: {fileID: 0}
+  <BestiaryNodeText>k__BackingField: 
+  <BestiaryWordOverride>k__BackingField: 
+  <MoonSpawnWeightsConfig>k__BackingField: []
+  <InteriorSpawnWeightsConfig>k__BackingField: []
+  <WeatherSpawnWeightsConfig>k__BackingField: []
+  <GenerateSpawnWeightsConfig>k__BackingField: 1
   <MoonSpawnWeights>k__BackingField: Vanilla=+3, Custom=+3, Valley=+3, Canyon=+1,
     Tundra=+8, Marsh=+1, Military=+5, Rocky=+1, Amythest=+1, Experimentation=+1,
     Assurance=+1, Vow=+12, Offense=+1, March=+1, Adamance=+1, Rend=+30, Dine=+15,
@@ -33,6 +39,3 @@ MonoBehaviour:
     Weather Registry:Blizzard=*1.5, Weather Registry:Heatwave=*0.5, Weather Registry:Solar
     Flare=*1, Weather Registry:Toxic Smog=*1, Weather Registry:Cloudy=*1, Weather
     Registry:Blackout=*2
-  <GenerateSpawnWeightsConfig>k__BackingField: 1
-  <PowerLevel>k__BackingField: 0
-  <MaxSpawnCount>k__BackingField: 0

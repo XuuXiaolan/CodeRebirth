@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: CutieflyEnemyDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  _tags: []
+  _tags:
+  - _namespace: code_rebirth
+    _key: bug
   <Key>k__BackingField:
     _namespace: code_rebirth
     _key: cutiefly
@@ -22,6 +24,10 @@ MonoBehaviour:
   <SpawnTable>k__BackingField: 4
   <BestiaryNodeText>k__BackingField: 
   <BestiaryWordOverride>k__BackingField: 
+  <MoonSpawnWeightsConfig>k__BackingField: []
+  <InteriorSpawnWeightsConfig>k__BackingField: []
+  <WeatherSpawnWeightsConfig>k__BackingField: []
+  <GenerateSpawnWeightsConfig>k__BackingField: 1
   <MoonSpawnWeights>k__BackingField: Vanilla=+20, Custom=+20, Valley=+40, Canyon=+1,
     Tundra=+0, Marsh=+10, Military=+0, Rocky=+0, Amythest=+0, Experimentation=+1,
     Assurance=+5, Vow=+30, Offense=+5, March=+45, Adamance=+55, Rend=+0, Dine=+0,
@@ -32,4 +38,3 @@ MonoBehaviour:
     Code Rebirth:Night Shift=*0, Weather Registry:Snowfall=*0, Weather Registry:Blizzard=*0,
     Weather Registry:Heatwave=*1.5, Weather Registry:Solar Flare=*1.5, Weather Registry:Toxic
     Smog=*0, Weather Registry:Cloudy=*1.25, Weather Registry:Blackout=*0
-  <GenerateSpawnWeightsConfig>k__BackingField: 1

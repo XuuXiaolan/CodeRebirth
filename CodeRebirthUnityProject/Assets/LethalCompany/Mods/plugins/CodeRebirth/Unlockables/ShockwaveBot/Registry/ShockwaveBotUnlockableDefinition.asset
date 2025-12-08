@@ -31,7 +31,9 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     Description: Enemy name blacklist for what the shockwave bot won't attack.
-  _tags: []
+  _tags:
+  - _namespace: code_rebirth
+    _key: gal
   <Key>k__BackingField:
     _namespace: code_rebirth
     _key: swrdone
@@ -66,5 +68,5 @@ MonoBehaviour:
   <IsDecor>k__BackingField: 0
   <GenerateUnlockableTypeConfig>k__BackingField: 1
   <Cost>k__BackingField: 2200
-  <GenerateDisablePricingStrategyConfig>k__BackingField: 1
+  <GenerateDisablePricingStrategyConfig>k__BackingField: 0
   <GenerateDisableUnlockRequirementConfig>k__BackingField: 1

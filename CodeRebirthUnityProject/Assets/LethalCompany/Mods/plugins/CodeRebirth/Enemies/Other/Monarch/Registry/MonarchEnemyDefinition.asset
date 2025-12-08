@@ -31,17 +31,23 @@ MonoBehaviour:
     Description: Turn on some really cool wings, unfortunately I also found literally
       one person who's pc is so bad they couldn't run this, so disabled by default,
       can be changed on runtime.
-  _tags: []
+  _tags:
+  - _namespace: code_rebirth
+    _key: bug
+  - _namespace: code_rebirth
+    _key: easter_egg
   <Key>k__BackingField:
     _namespace: code_rebirth
     _key: monarch
   <EnemyType>k__BackingField: {fileID: 11400000, guid: b4eadd75cb1361040a7fc4f821ef81ab,
     type: 2}
   <SpawnTable>k__BackingField: 2
-  <TerminalNode>k__BackingField: {fileID: 11400000, guid: 28c3cdf4baa556d44bcc80854b38fcbb,
-    type: 2}
-  <TerminalKeyword>k__BackingField: {fileID: 11400000, guid: f6cd14fae2d88b249b5fdc0a004a953a,
-    type: 2}
+  <BestiaryNodeText>k__BackingField: 
+  <BestiaryWordOverride>k__BackingField: 
+  <MoonSpawnWeightsConfig>k__BackingField: []
+  <InteriorSpawnWeightsConfig>k__BackingField: []
+  <WeatherSpawnWeightsConfig>k__BackingField: []
+  <GenerateSpawnWeightsConfig>k__BackingField: 1
   <MoonSpawnWeights>k__BackingField: Valley=+1, Canyon=+1, Marsh=+1, Adamance=+1
   <InteriorSpawnWeights>k__BackingField: 
   <WeatherSpawnWeights>k__BackingField: None=*1, DustClouds=*1, Rainy=*0, Stormy=*0,
@@ -49,6 +55,3 @@ MonoBehaviour:
     Code Rebirth:Night Shift=*0, Weather Registry:Snowfall=*0, Weather Registry:Blizzard=*0,
     Weather Registry:Heatwave=*2, Weather Registry:Solar Flare=*0, Weather Registry:Toxic
     Smog=*0, Weather Registry:Cloudy=*0, Weather Registry:Blackout=*0
-  <GenerateSpawnWeightsConfig>k__BackingField: 1
-  <PowerLevel>k__BackingField: 0
-  <MaxSpawnCount>k__BackingField: 0

@@ -61,7 +61,9 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     Description: The chance of getting the lemonade quest after the Grape quest.
-  _tags: []
+  _tags:
+  - _namespace: code_rebirth
+    _key: cosmological_horror_beyond_imagination
   <Key>k__BackingField:
     _namespace: code_rebirth
     _key: duck
@@ -70,10 +72,13 @@ MonoBehaviour:
   <SpawnTable>k__BackingField: 1
   <BestiaryNodeText>k__BackingField: 
   <BestiaryWordOverride>k__BackingField: 
+  <MoonSpawnWeightsConfig>k__BackingField: []
+  <InteriorSpawnWeightsConfig>k__BackingField: []
+  <WeatherSpawnWeightsConfig>k__BackingField: []
+  <GenerateSpawnWeightsConfig>k__BackingField: 1
   <MoonSpawnWeights>k__BackingField: Vanilla=+2, Custom=+2, Valley=+2, Canyon=+2,
     Tundra=+2, Marsh=+2, Military=+2, Rocky=+2, Amythest=+2, Experimentation=+20,
     Assurance=+20, Vow=+20, Offense=+20, March=+20, Adamance=+20, Rend=+1, Dine=+1,
     Titan=+1, Artifice=+1, Embrion=+1, Code Rebirth:Oxyde=-999
   <InteriorSpawnWeights>k__BackingField: 
   <WeatherSpawnWeights>k__BackingField: 
-  <GenerateSpawnWeightsConfig>k__BackingField: 1

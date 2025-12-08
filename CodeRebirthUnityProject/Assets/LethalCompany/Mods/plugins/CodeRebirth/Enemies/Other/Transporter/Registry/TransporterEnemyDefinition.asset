@@ -13,17 +13,23 @@ MonoBehaviour:
   m_Name: TransporterEnemyDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  _tags: []
+  _tags:
+  - _namespace: code_rebirth
+    _key: work_force
+  - _namespace: code_rebirth
+    _key: best_boy
   <Key>k__BackingField:
     _namespace: code_rebirth
     _key: transporter
   <EnemyType>k__BackingField: {fileID: 11400000, guid: dc0d8861d69e9fc478d82fcbb3553334,
     type: 2}
   <SpawnTable>k__BackingField: 1
-  <TerminalNode>k__BackingField: {fileID: 11400000, guid: 87e60d35333215f49aa3c8de7b8cec23,
-    type: 2}
-  <TerminalKeyword>k__BackingField: {fileID: 11400000, guid: 31969062d387f5d478b2e96a8e6795db,
-    type: 2}
+  <BestiaryNodeText>k__BackingField: 
+  <BestiaryWordOverride>k__BackingField: 
+  <MoonSpawnWeightsConfig>k__BackingField: []
+  <InteriorSpawnWeightsConfig>k__BackingField: []
+  <WeatherSpawnWeightsConfig>k__BackingField: []
+  <GenerateSpawnWeightsConfig>k__BackingField: 1
   <MoonSpawnWeights>k__BackingField: Vanilla=+20, Custom=+20, Valley=+20, Canyon=+20,
     Tundra=+10, Marsh=+20, Military=+15, Rocky=+10, Amythest=+1, Experimentation=+1,
     Assurance=+10, Vow=+15, Offense=+25, March=+15, Adamance=+10, Rend=+5, Dine=+5,
@@ -35,6 +41,3 @@ MonoBehaviour:
     Weather Registry:Blizzard=*1.4, Weather Registry:Heatwave=*0.6, Weather Registry:Solar
     Flare=*0.6, Weather Registry:Toxic Smog=*0, Weather Registry:Cloudy=*0.9, Weather
     Registry:Blackout=*2
-  <GenerateSpawnWeightsConfig>k__BackingField: 1
-  <PowerLevel>k__BackingField: 0
-  <MaxSpawnCount>k__BackingField: 0

@@ -13,15 +13,21 @@ MonoBehaviour:
   m_Name: NancyEnemyDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  _tags: []
+  _tags:
+  - _namespace: code_rebirth
+    _key: medical
   <Key>k__BackingField:
     _namespace: code_rebirth
     _key: nancy
   <EnemyType>k__BackingField: {fileID: 11400000, guid: 8dca1c945c2c96345981efb41059f5ae,
     type: 2}
   <SpawnTable>k__BackingField: 1
-  <TerminalNode>k__BackingField: {fileID: 0}
-  <TerminalKeyword>k__BackingField: {fileID: 0}
+  <BestiaryNodeText>k__BackingField: 
+  <BestiaryWordOverride>k__BackingField: 
+  <MoonSpawnWeightsConfig>k__BackingField: []
+  <InteriorSpawnWeightsConfig>k__BackingField: []
+  <WeatherSpawnWeightsConfig>k__BackingField: []
+  <GenerateSpawnWeightsConfig>k__BackingField: 1
   <MoonSpawnWeights>k__BackingField: Vanilla=+10, Custom=+10, Valley=+15, Canyon=+15,
     Tundra=+10, Marsh=+5, Military=+20, Rocky=+10, Amythest=+3, Experimentation=+1,
     Assurance=+20, Vow=+20, Offense=+10, March=+10, Adamance=+25, Rend=+6, Dine=+3,
@@ -32,6 +38,3 @@ MonoBehaviour:
     Code Rebirth:Night Shift=*1.25, Weather Registry:Snowfall=*0.5, Weather Registry:Blizzard=*0.5,
     Weather Registry:Heatwave=*0.75, Weather Registry:Solar Flare=*0.75, Weather
     Registry:Toxic Smog=*1, Weather Registry:Cloudy=*0.9, Weather Registry:Blackout=*1.25
-  <GenerateSpawnWeightsConfig>k__BackingField: 1
-  <PowerLevel>k__BackingField: 0
-  <MaxSpawnCount>k__BackingField: 0

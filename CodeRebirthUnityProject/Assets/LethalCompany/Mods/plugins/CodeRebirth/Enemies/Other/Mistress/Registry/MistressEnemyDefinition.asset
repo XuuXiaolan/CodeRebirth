@@ -13,15 +13,23 @@ MonoBehaviour:
   m_Name: MistressEnemyDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  _tags: []
+  _tags:
+  - _namespace: code_rebirth
+    _key: mansion
+  - _namespace: code_rebirth
+    _key: haunted
   <Key>k__BackingField:
     _namespace: code_rebirth
     _key: mistress
   <EnemyType>k__BackingField: {fileID: 11400000, guid: 5215e43a6b2591c4bbbef89860fcf2fb,
     type: 2}
   <SpawnTable>k__BackingField: 1
-  <TerminalNode>k__BackingField: {fileID: 0}
-  <TerminalKeyword>k__BackingField: {fileID: 0}
+  <BestiaryNodeText>k__BackingField: 
+  <BestiaryWordOverride>k__BackingField: 
+  <MoonSpawnWeightsConfig>k__BackingField: []
+  <InteriorSpawnWeightsConfig>k__BackingField: []
+  <WeatherSpawnWeightsConfig>k__BackingField: []
+  <GenerateSpawnWeightsConfig>k__BackingField: 1
   <MoonSpawnWeights>k__BackingField: Vanilla=+2, Custom=+2, Valley=+1, Canyon=+2,
     Tundra=+5, Marsh=+1, Military=+0, Rocky=+0, Amythest=+0, Experimentation=+0,
     Assurance=+0, Vow=+10, Offense=+0, March=+1, Adamance=+3, Rend=+20, Dine=+5,
@@ -33,6 +41,3 @@ MonoBehaviour:
     Weather Registry:Blizzard=*1.4, Weather Registry:Heatwave=*1.2, Weather Registry:Solar
     Flare=*1, Weather Registry:Toxic Smog=*1, Weather Registry:Cloudy=*1.25, Weather
     Registry:Blackout=*1.5
-  <GenerateSpawnWeightsConfig>k__BackingField: 1
-  <PowerLevel>k__BackingField: 0
-  <MaxSpawnCount>k__BackingField: 0

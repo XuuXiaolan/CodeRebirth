@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: PeaceKeeperPlushieItemDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
-  _tags: []
+  _tags:
+  - _namespace: code_rebirth
+    _key: plushie
   <Key>k__BackingField:
     _namespace: code_rebirth
     _key: peacekeeper_plushie
@@ -25,14 +27,26 @@ MonoBehaviour:
     <ItemInfoNode>k__BackingField: {fileID: 0}
   <TerminalPredicate>k__BackingField: {fileID: 0}
   <PricingStrategy>k__BackingField: {fileID: 0}
-  <MoonSpawnWeights>k__BackingField: 
-  <InteriorSpawnWeights>k__BackingField: facility=+1, mineshaft=+3
-  <WeatherSpawnWeights>k__BackingField: 
-  <GenerateSpawnWeightsConfig>k__BackingField: 1
+  <MoonSpawnWeightsConfig>k__BackingField: []
+  <InteriorSpawnWeightsConfig>k__BackingField:
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: facility
+    MathOperation: 0
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: mineshaft
+    MathOperation: 0
+    Weight: 3
+  <WeatherSpawnWeightsConfig>k__BackingField: []
   <IsScrap>k__BackingField: 1
-  <GenerateScrapConfig>k__BackingField: 1
+  <GenerateScrapConfig>k__BackingField: 0
   <IsShopItem>k__BackingField: 0
-  <GenerateShopItemConfig>k__BackingField: 1
+  <GenerateShopItemConfig>k__BackingField: 0
   <Cost>k__BackingField: 0
-  <GenerateDisableUnlockConfig>k__BackingField: 1
-  <GenerateDisablePricingStrategyConfig>k__BackingField: 1
+  <GenerateDisableUnlockConfig>k__BackingField: 0
+  <GenerateDisablePricingStrategyConfig>k__BackingField: 0
+  <MoonSpawnWeights>k__BackingField: 
+  <InteriorSpawnWeights>k__BackingField: 
+  <WeatherSpawnWeights>k__BackingField: 
