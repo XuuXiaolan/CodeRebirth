@@ -14,6 +14,7 @@
 - Some nonsensical configs turned off like inside merchant, mimic crates, etc.
 - Inside bear traps disabled by default.
 - Gave tags to all CR content.
+- Fixed magician interacting with cruiser while held onto player.
 
 ## v1.4.2
 

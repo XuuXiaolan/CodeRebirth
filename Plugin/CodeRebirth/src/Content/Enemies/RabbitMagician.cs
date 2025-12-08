@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using CodeRebirth.src.Util;
 using Dawn.Utils;
 
@@ -52,6 +53,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
         SwitchingTarget
     }
 
+    internal static VehicleController? vehicleController = null;
     public override void Start()
     {
         base.Start();
@@ -60,6 +62,14 @@ public class RabbitMagician : CodeRebirthEnemyAI
             foreach (var playerCollider in GameNetworkManager.Instance.localPlayerController.GetCRPlayerData().playerColliders)
             {
                 Physics.IgnoreCollision(enemyCollider, playerCollider, true);
+            }
+
+            if (vehicleController == null)
+                continue;
+
+            foreach (Collider collider in vehicleController.GetComponentsInChildren<Collider>())
+            {
+                Physics.IgnoreCollision(enemyCollider, collider, true);
             }
         }
         SwitchToBehaviourStateOnLocalClient((int)RabbitMagicianState.Spawn);

@@ -76,6 +76,7 @@ public class Plugin : BaseUnityPlugin
         GameNetworkManagerPatch.Init();
         DeleteFileButtonPatch.Init();
         SoccerBallPropPatch.Init();
+        VehicleControllerPatch.Init();
         // This should be ran before Network Prefabs are registered.
         InputActionsInstance = new IngameKeybinds();
 
