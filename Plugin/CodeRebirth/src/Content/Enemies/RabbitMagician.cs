@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using CodeRebirth.src.Util;
 using Dawn.Utils;
 
@@ -77,6 +76,14 @@ public class RabbitMagician : CodeRebirthEnemyAI
         _idleRoutine = StartCoroutine(SwitchToIdle());
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    private void AttachToPlayerServerRpc(PlayerControllerReference player)
+    {
+        PlayerControllerB playerControllerB = player;
+        SwitchToBehaviourClientRpc((int)RabbitMagicianState.SwitchingTarget);
+        _attachRoutine = StartCoroutine(AttachToPlayer(playerControllerB, null));
+    }
+
     public override void Update()
     {
         base.Update();
@@ -103,17 +110,15 @@ public class RabbitMagician : CodeRebirthEnemyAI
                 return;
 
             SpottedSoundServerRpc(localPlayer, true);
-            _attachRoutine = StartCoroutine(AttachToPlayer(localPlayer, null));
+            SwitchToBehaviourStateOnLocalClient((int)RabbitMagicianState.SwitchingTarget);
+            AttachToPlayerServerRpc(localPlayer);
         }
         else if (currentBehaviourStateIndex == (int)RabbitMagicianState.Attached)
         {
-            if (targetPlayer == null || targetPlayer.isPlayerDead || targetPlayer.IsPseudoDead())
+            if (targetPlayer == null || targetPlayer.isPlayerDead || targetPlayer.IsPseudoDead() || targetPlayer.IsLocalPlayer())
                 return;
 
             if (localPlayer.isPlayerDead || !localPlayer.isPlayerControlled || localPlayer.IsPseudoDead())
-                return;
-
-            if (localPlayer == targetPlayer)
                 return;
 
             if (_killRoutine != null)
@@ -125,8 +130,16 @@ public class RabbitMagician : CodeRebirthEnemyAI
             if (Vector3.Dot(localPlayer.gameplayCamera.transform.forward, targetPlayer.gameplayCamera.transform.forward) <= 0.45f)
                 return;
 
-            _killRoutine = StartCoroutine(KillPlayerAndSwitchTarget(localPlayer));
+            SwitchToBehaviourStateOnLocalClient((int)RabbitMagicianState.SwitchingTarget);
+            KillAndSwitchTargetServerRpc(localPlayer);
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void KillAndSwitchTargetServerRpc(PlayerControllerReference player)
+    {
+        PlayerControllerB playerControllerB = player;
+        _killRoutine = StartCoroutine(KillPlayerAndSwitchTarget(playerControllerB));
     }
 
     public void LateUpdate()

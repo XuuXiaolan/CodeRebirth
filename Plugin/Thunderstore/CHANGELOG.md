@@ -17,6 +17,8 @@
 - Fixed magician interacting with cruiser while held onto player.
 - Gal unlockables now shuffle if you already built that unlockable.
 - Merchant no longer spawns unlockables that you already built.
+- Fixed client and server side issues with Magician.
+- Fixed magician particle destroying itself after one use.
 
 ## v1.4.2
 
