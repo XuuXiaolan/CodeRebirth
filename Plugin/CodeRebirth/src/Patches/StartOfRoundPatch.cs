@@ -125,13 +125,10 @@ static class StartOfRoundPatch
         if (TimeOfDay.Instance.daysUntilDeadline <= 0)
         {
             WeatherRegistry.WeatherController.ChangeWeather(moonInfo.Level, LevelWeatherType.None);
-            return;
         }
-
-        string weatherName = WeatherRegistry.WeatherManager.GetCurrentWeather(moonInfo.Level).name.ToLowerInvariant().Trim();
-        if (!Plugin.ModConfig.ConfigOxydeNeedsNightShift.Value && weatherName != "none")
-            return;
-
-        WeatherRegistry.WeatherController.ChangeWeather(moonInfo.Level, (LevelWeatherType)TimeOfDay.Instance.effects.IndexOf(LethalContent.Weathers[CodeRebirthWeatherKeys.NightShift].WeatherEffect));
+        else
+        {
+            WeatherRegistry.WeatherController.ChangeWeather(moonInfo.Level, (LevelWeatherType)TimeOfDay.Instance.effects.IndexOf(LethalContent.Weathers[CodeRebirthWeatherKeys.NightShift].WeatherEffect));
+        }
     }
 }

@@ -48,14 +48,9 @@ internal class CodeRebirthUtils : NetworkBehaviour
         startMatchLever = FindFirstObjectByType<StartMatchLever>(FindObjectsInactive.Exclude);
         shipAnimator = StartOfRound.Instance.shipAnimatorObject.gameObject.AddComponent<ShipAnimator>();
 
-        if (!LethalContent.Weathers.TryGetValue(CodeRebirthWeatherKeys.NightShift, out _))
-        {
-            return;
-        }
         if (!LethalContent.Moons.TryGetValue(NamespacedKey.From("code_rebirth", "oxyde"), out DawnMoonInfo moonInfo))
             return;
 
-        CheckWithHostToUnlockOxydeRpc(moonInfo.TypedKey);
         StartCoroutine(HandleWRSetupWithOxyde(moonInfo));
     }
 
@@ -66,32 +61,11 @@ internal class CodeRebirthUtils : NetworkBehaviour
         if (TimeOfDay.Instance.daysUntilDeadline <= 0)
         {
             WeatherRegistry.WeatherController.ChangeWeather(moonInfo.Level, LevelWeatherType.None);
-            yield break;
         }
-
-        if (!Plugin.ModConfig.ConfigOxydeNeedsNightShift.Value && WeatherRegistry.WeatherManager.GetCurrentWeather(moonInfo.Level).name.ToLowerInvariant().Trim() != "none")
-            yield break;
-
-        Plugin.ExtendedLogging($"Switch weather to: {LethalContent.Weathers[CodeRebirthWeatherKeys.NightShift].WeatherEffect.name}");
-        Plugin.ExtendedLogging($"LevelweatherType: {(LevelWeatherType)TimeOfDay.Instance.effects.IndexOf(LethalContent.Weathers[CodeRebirthWeatherKeys.NightShift].WeatherEffect)}");
-        WeatherRegistry.WeatherController.ChangeWeather(moonInfo.Level, (LevelWeatherType)TimeOfDay.Instance.effects.IndexOf(LethalContent.Weathers[CodeRebirthWeatherKeys.NightShift].WeatherEffect));
-    }
-
-    [Rpc(SendTo.Server)]
-    private void CheckWithHostToUnlockOxydeRpc(NamespacedKey<DawnMoonInfo> namespacedKey)
-    {
-        if (Plugin.ModConfig.ConfigOxydeEnabledFromStart.Value)
+        else
         {
-            // todo
-            // LethalContent.Moons[namespacedKey].PurchasePredicate = ITerminalPurchasePredicate.AlwaysSuccess();
+            WeatherRegistry.WeatherController.ChangeWeather(moonInfo.Level, (LevelWeatherType)TimeOfDay.Instance.effects.IndexOf(LethalContent.Weathers[CodeRebirthWeatherKeys.NightShift].WeatherEffect));
         }
-        CheckWithHostToUnlockOxydeRpc(namespacedKey, LethalContent.Moons[namespacedKey].DawnPurchaseInfo.PurchasePredicate == ITerminalPurchasePredicate.AlwaysSuccess());
-    }
-
-    [Rpc(SendTo.NotMe)]
-    private void CheckWithHostToUnlockOxydeRpc(NamespacedKey<DawnMoonInfo> moonInfo, bool lockOxyde)
-    {
-        // LethalContent.Moons[namespacedKey].PurchasePredicate = ITerminalPurchasePredicate.AlwaysSuccess();
     }
 
     private void HandleEnemyDropRates()
@@ -319,6 +293,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
 
     private IEnumerator ForceRotationForABit(GameObject go, Quaternion rotation)
     {
+        yield return null;
         float duration = 0.25f;
         while (duration > 0)
         {

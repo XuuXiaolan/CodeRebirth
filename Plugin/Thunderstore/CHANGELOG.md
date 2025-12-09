@@ -15,6 +15,8 @@
 - Inside bear traps disabled by default.
 - Gave tags to all CR content.
 - Fixed magician interacting with cruiser while held onto player.
+- Gal unlockables now shuffle if you already built that unlockable.
+- Merchant no longer spawns unlockables that you already built.
 
 ## v1.4.2
 

@@ -13,6 +13,7 @@ using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
 using Dawn.Internal;
+using CodeRebirth.src.Content.Unlockables;
 
 namespace CodeRebirth.src.Content.Maps;
 public class Merchant : NetworkBehaviour
@@ -235,13 +236,21 @@ public class Merchant : NetworkBehaviour
     public void PopulateItemsWithRarityList()
     {
         Dictionary<string, Item> itemsByName = new();
-        foreach (var item in StartOfRound.Instance.allItemsList.itemsList)
+        foreach (Item item in StartOfRound.Instance.allItemsList.itemsList)
         {
+            if (item.spawnPrefab != null && item.spawnPrefab.TryGetComponent(out CRUnlockableUpgradeScrap unlockableUpgradeScrap))
+            {
+                if (!unlockableUpgradeScrap.UnlockableReference.TryResolve(out DawnUnlockableItemInfo unlockableItemInfo) || unlockableItemInfo.DawnPurchaseInfo.PurchasePredicate.CanPurchase() is not TerminalPurchaseResult.FailedPurchaseResult)
+                {
+                    continue;
+                }
+            }
             Plugin.ExtendedLogging($"Item: {item.itemName}");
             bool duplicate = false;
+            string normalizedItemName = item.itemName.ToLowerInvariant().Trim();
             foreach (var itemAndName in itemsByName)
             {
-                if (itemAndName.Value.itemName.ToLowerInvariant().Trim() == item.itemName.ToLowerInvariant().Trim())
+                if (itemAndName.Value.itemName.ToLowerInvariant().Trim() == normalizedItemName)
                 {
                     Plugin.Logger.LogError($"Some mod added a duplicate item.... {item.itemName}");
                     duplicate = true;
@@ -252,10 +261,10 @@ public class Merchant : NetworkBehaviour
             if (duplicate)
                 continue;
 
-            itemsByName.Add(item.itemName.ToLowerInvariant().Trim(), item);
+            itemsByName.Add(normalizedItemName, item);
         }
 
-        foreach (var barrel in merchantBarrels)
+        foreach (MerchantBarrel barrel in merchantBarrels)
         {
             barrel.validItemsWithRarityAndColor.Clear();
 
@@ -269,9 +278,9 @@ public class Merchant : NetworkBehaviour
                 Color textColor = itemNamesWithRarityAndColor.textColor;
                 if (minPrice > maxPrice)
                 {
-                    Plugin.ExtendedLogging($"Rodrigo did a stinky with item: {name} min price: {minPrice} max price: {maxPrice}");
                     minPrice = maxPrice;
                 }
+
                 string normalizedName = name.ToLowerInvariant().Trim();
                 if (normalizedName == "vanilla")
                 {

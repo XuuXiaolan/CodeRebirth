@@ -4,7 +4,6 @@ namespace CodeRebirth.src;
 public class CodeRebirthConfig
 {
     #region Enables/Disables
-    public ConfigEntry<bool> ConfigOxydeNeedsNightShift { get; private set; }
     public ConfigEntry<bool> ConfigOxydeEnabledFromStart { get; private set; }
     public ConfigEntry<bool> ConfigDisableTrashCans { get; private set; }
     public ConfigEntry<bool> ConfigRemoveInteriorFog { get; private set; }
@@ -103,16 +102,6 @@ public class CodeRebirthConfig
                                             "Debug Mode | Remove Interior Fog",
                                             false,
                                             "Whether zeekerss' horrible interior fog is removed.");
-        #endregion
-        #region Oxyde
-        ConfigOxydeEnabledFromStart = configFile.Bind("Oxyde Options",
-                                            "Oxyde | Enabled from Start",
-                                            false,
-                                            "Whether Oxyde is enabled from the very start.");
-        ConfigOxydeNeedsNightShift = configFile.Bind("Oxyde Options",
-                                            "Oxyde | Needs Night Shift",
-                                            true,
-                                            "Whether Oxyde needs night shift (it'll still be forced to Night Shift is the weather is None on non-company days).");
         #endregion
         #region General
         ConfigAllowPowerLevelChangesFromWeather = configFile.Bind("General",
@@ -216,7 +205,7 @@ public class CodeRebirthConfig
                                             "Whether the Cruiser Gal will automatically wake up and choose the nearest player as the owner.");
         #endregion
         #region Shockwave Gal
-        ConfigShockwaveCharges = configFile.Bind("Shockwave Options",
+        ConfigShockwaveCharges = configFile.Bind("Shockwave Bot Options",
                                             "Shockwave Gal | Charges",
                                             10,
                                             "How many charges the Shockwave Gal has.");
@@ -237,7 +226,7 @@ public class CodeRebirthConfig
                                             "Whether the Shockwave Gal will automatically wake up and choose the nearest player as the owner.");
         #endregion
         #region Seamine Gal
-        ConfigSeamineTinkCharges = configFile.Bind("Seamine Options",
+        ConfigSeamineTinkCharges = configFile.Bind("Seamine Tink Options",
                                             "Seamine Gal | Charges",
                                             3,
                                             "How many charges the Seamine Gal has.");
