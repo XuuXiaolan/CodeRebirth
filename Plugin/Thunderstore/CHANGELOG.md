@@ -19,6 +19,7 @@
 - Merchant no longer spawns unlockables that you already built.
 - Fixed client and server side issues with Magician.
 - Fixed magician particle destroying itself after one use.
+- Fixed magician not being able to kill outside.
 
 ## v1.4.2
 
