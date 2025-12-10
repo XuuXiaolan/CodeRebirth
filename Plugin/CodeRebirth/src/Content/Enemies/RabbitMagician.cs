@@ -124,7 +124,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
             if (_killRoutine != null)
                 return;
 
-            if (!PlayerLookingAtEnemy(localPlayer, 0.2f))
+            if (!PlayerLookingAtPosition(localPlayer, targetPlayer.transform.position, 0.2f))
                 return;
 
             if (Vector3.Dot(localPlayer.gameplayCamera.transform.forward, targetPlayer.gameplayCamera.transform.forward) <= 0.45f)
@@ -380,7 +380,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
                 BackToIdleServerRpc();
                 yield break;
             }
-            lookedAt = PlayerLookingAtEnemy(targetPlayer, 0.2f);
+            lookedAt = PlayerLookingAtPosition(targetPlayer, this.transform.position, 0.2f);
         }
 
         StartAttachedServerRpc();

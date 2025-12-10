@@ -171,15 +171,15 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         return Vector3.Angle(eyeTransform.forward, to) < width;
     }
 
-    public bool PlayerLookingAtEnemy(PlayerControllerB player, float dotProductThreshold)
+    public static bool PlayerLookingAtPosition(PlayerControllerB player, Vector3 position, float dotProductThreshold)
     {
-        Vector3 directionToEnemy = (transform.position - player.gameObject.transform.position).normalized;
+        Vector3 directionToEnemy = (position - player.gameObject.transform.position).normalized;
         if (Vector3.Dot(player.gameplayCamera.transform.forward, directionToEnemy) < dotProductThreshold)
             return false;
 
-        if (Physics.Linecast(player.gameplayCamera.transform.position, transform.position, out RaycastHit hit, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+        if (Physics.Linecast(player.gameplayCamera.transform.position, position, out RaycastHit hit, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
         {
-            Plugin.ExtendedLogging($"hit: {hit.transform.name}");
+            // Plugin.ExtendedLogging($"player position: {player.gameObject.transform.position} | enemy position: {position} | hit: {hit.transform.name}");
             return false;
         }
         return true;
