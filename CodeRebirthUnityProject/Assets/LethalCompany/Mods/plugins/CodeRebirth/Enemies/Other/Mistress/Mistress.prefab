@@ -1346,6 +1346,39 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 0917208964dc6a240bf356f010bbf559, type: 3}
   - {fileID: 8300000, guid: ddc181f80ab107847a307fbdbfa7e8d3, type: 3}
   - {fileID: 8300000, guid: d28db6a7e745a3f4e94b624b25044163, type: 3}
+  BlackOutAnimationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0.4663314
+      outSlope: 0.4663314
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.8597863
+      value: 0.40094534
+      inSlope: 1.1596315
+      outSlope: 1.1596315
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.31214345
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 4.2724395
+      outSlope: 4.2724395
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!114 &4261352933600808359
 MonoBehaviour:
   m_ObjectHideFlags: 0

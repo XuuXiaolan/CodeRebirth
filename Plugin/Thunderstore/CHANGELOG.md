@@ -20,6 +20,7 @@
 - Fixed client and server side issues with Magician.
 - Fixed magician particle destroying itself after one use.
 - Fixed magician not being able to kill outside.
+- Made it so you can move further from mistress before getting beheaded and the blackout effect be slower.
 
 ## v1.4.2
 

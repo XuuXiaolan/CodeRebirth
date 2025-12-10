@@ -19,6 +19,7 @@ public class Mistress : CodeRebirthEnemyAI
     public Transform HeadTransform = null!;
     public AudioClip LoseSightSound = null!;
     public AudioClip[] AttackSounds = null!;
+    public AnimationCurve BlackOutAnimationCurve = null!;
 
     private HashSet<PlayerControllerB> previousTargetPlayers = new();
     private int _seeingCount = 0;
@@ -72,7 +73,7 @@ public class Mistress : CodeRebirthEnemyAI
             if (localPlayer == targetPlayer && playerToKill == null)
             {
                 localPlayer.JumpToFearLevel(0.7f);
-                CodeRebirthUtils.Instance.CloseEyeVolume.weight = Mathf.Clamp01(killTimer / killCooldown);
+                CodeRebirthUtils.Instance.CloseEyeVolume.weight = BlackOutAnimationCurve.Evaluate(Mathf.Clamp01(killTimer / killCooldown));
             }
 
             if (killTimer >= killCooldown)
@@ -395,7 +396,7 @@ public class Mistress : CodeRebirthEnemyAI
         while (CodeRebirthUtils.Instance.CloseEyeVolume.weight > 0f)
         {
             yield return null;
-            CodeRebirthUtils.Instance.CloseEyeVolume.weight = Mathf.MoveTowards(CodeRebirthUtils.Instance.CloseEyeVolume.weight, 0f, Time.deltaTime);
+            CodeRebirthUtils.Instance.CloseEyeVolume.weight = BlackOutAnimationCurve.Evaluate(Mathf.MoveTowards(CodeRebirthUtils.Instance.CloseEyeVolume.weight, 0f, Time.deltaTime));
         }
     }
 
@@ -446,7 +447,6 @@ public class Mistress : CodeRebirthEnemyAI
             playerToCripple.shockingTarget = HeadTransform;
             playerToCripple.inShockingMinigame = true;
             playerToCripple.isMovementHindered++;
-            playerToCripple.hinderedMultiplier *= 2f;
             playerToCripple.sprintMeter = 0f;
         }
         else
@@ -462,7 +462,6 @@ public class Mistress : CodeRebirthEnemyAI
             playerToCripple.shockingTarget = null;
             playerToCripple.inShockingMinigame = false;
             playerToCripple.isMovementHindered--;
-            playerToCripple.hinderedMultiplier /= 2;
             StartCoroutine(ResetVolumeWeightTo0(playerToCripple));
         }
         playerToCripple.disableLookInput = cripple;
