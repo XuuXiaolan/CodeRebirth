@@ -1,5 +1,6 @@
 using CodeRebirth.src.MiscScripts;
 using Dawn.Utils;
+using GameNetcodeStuff;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
@@ -23,6 +24,14 @@ public class GunslingerMissile : MonoBehaviour
         _oldParent = transform.parent;
         transform.SetParent(null);
         greg.rockets.Enqueue(this);
+
+        if (targetTransform.TryGetComponent(out PlayerControllerB player))
+        {
+            if (player.currentlyHeldObjectServer is not JetpackItem _)
+            {
+                curveStrength = 1f;
+            }
+        }
     }
 
     public void FixedUpdate() // this is kinda terrible
