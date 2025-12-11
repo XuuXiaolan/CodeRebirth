@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
-using Dawn.Utils;
 using GameNetcodeStuff;
 using UnityEngine;
 
@@ -13,10 +12,13 @@ public class GunslingerGreg : CodeRebirthHazard
     public float fireRate = 1f;
     public float detectionRange = 50f;
     public AudioSource GregSource = null!;
+    public AudioSource FarGregSource = null!;
     public AudioClip GregLockOnSound = null!;
+    public AudioClip FarGregLockOnSound = null!;
     public AudioClip[] GregFireSounds = [];
-    public AudioClip[] GregResupplySounds = [];
+    public AudioClip[] FarGregFireSounds = [];
     public AudioSource DetectPlayerAudioSound = null!;
+    public AudioSource DetectPlayerFarAudioSound = null!;
     public float playerHeadstart = 5f;
     public float maxAngle = 90f;
     public Queue<GunslingerMissile> rockets = new();
@@ -39,6 +41,7 @@ public class GunslingerGreg : CodeRebirthHazard
         }
         lastTransformTargetted = null;
         DetectPlayerAudioSound.volume = 0f;
+        DetectPlayerFarAudioSound.volume = 0f;
     }
 
     private void Update()
@@ -66,6 +69,7 @@ public class GunslingerGreg : CodeRebirthHazard
         if (StartOfRound.Instance.shipIsLeaving || playerHeadstart > 0 || rockets.Count <= 0)
         {
             DetectPlayerAudioSound.volume = 0f;
+            DetectPlayerFarAudioSound.volume = 0f;
             return;
         }
 
@@ -155,6 +159,7 @@ public class GunslingerGreg : CodeRebirthHazard
         {
             lastTransformTargetted = null;
             DetectPlayerAudioSound.volume = 0f;
+            DetectPlayerFarAudioSound.volume = 0f;
         }
     }
 
@@ -188,10 +193,12 @@ public class GunslingerGreg : CodeRebirthHazard
                 if (lastTransformTargetted == null)
                 {
                     GregSource.PlayOneShot(GregLockOnSound);
+                    FarGregSource.PlayOneShot(FarGregLockOnSound);
                 }
 
                 lastTransformTargetted = toKilltransform;
                 DetectPlayerAudioSound.volume = 1f;
+                DetectPlayerFarAudioSound.volume = 1f;
                 Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
                 targetRotation.z = 0f;
                 targetRotation.x = 0f;
@@ -215,6 +222,7 @@ public class GunslingerGreg : CodeRebirthHazard
         }
 
         GregSource.PlayOneShot(GregFireSounds[UnityEngine.Random.Range(0, GregFireSounds.Length)]);
+        FarGregSource.PlayOneShot(FarGregFireSounds[UnityEngine.Random.Range(0, FarGregFireSounds.Length)]);
         GunslingerMissile rocket = rockets.Dequeue();
         rocket.Initialize(lastTransformTargetted.transform, this);
     }
