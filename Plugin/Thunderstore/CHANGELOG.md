@@ -23,6 +23,7 @@
 - Made it so you can move further from mistress before getting beheaded and the blackout effect be slower.
 - Fan pushing is more linear with distance.
 - Puppet movement is more local to the player so kicking the puppets away should feel a tiny bit more responsive for the local client's puppet.
+- Trashcans auto position themselves to dead end tiles.
 
 ## v1.4.2
 
