@@ -26,23 +26,16 @@ public class TrashCan : NetworkBehaviour
     private IEnumerator Start()
     {
         yield return new WaitForSeconds(1f);
-        List<Tile> allDeadendTiles = RoundManager.Instance.dungeonGenerator.Generator.CurrentDungeon.AllTiles.Where(x => x.AllDoorways.Count == 1).ToList();
+        List<Tile> allDeadendTiles = RoundManager.Instance.dungeonGenerator.Generator.CurrentDungeon.AllTiles.Where(x => x.UsedDoorways.Count == 1).ToList();
 
         if (allDeadendTiles.Count > 0)
         {
             Tile tile = allDeadendTiles[CodeRebirthUtils.Instance.CRRandom.Next(allDeadendTiles.Count)];
-            Vector3 center = tile.Placement.Bounds.center;
-            if (NavMesh.SamplePosition(center, out NavMeshHit hit, 10f, NavMesh.AllAreas))
-            {
-                center = hit.position;
-                transform.position = center;
-                transform.rotation = Quaternion.LookRotation(Vector3.up, hit.normal);
-                Plugin.ExtendedLogging($"Moved trash can to {center}");
-            }
-            else
-            {
-                NetworkObject.Despawn();
-            }
+            NavMeshHit hit = default(NavMeshHit);
+            Vector3 randomNavMeshPositionInBoxPredictable = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(tile.Bounds.center, 6f, hit, CodeRebirthUtils.Instance.CRRandom, NavMesh.AllAreas);
+            transform.position = randomNavMeshPositionInBoxPredictable;
+            // transform.rotation = Quaternion.LookRotation(Vector3.up, hit.normal);
+            Plugin.ExtendedLogging($"Moved trash can to {transform.position}");
         }
     }
 
