@@ -29,6 +29,7 @@
 - Made a config for instrument volume.
 - Disabled hoverboard until I figure out how to work with the unity network update.
 - ManorLord puppet speeds up if you're further from it.
+- Increased redwood threshold for chasing animation.
 
 ## v1.4.2
 
