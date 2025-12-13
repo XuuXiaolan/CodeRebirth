@@ -389,9 +389,9 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         if (!player.isPlayerControlled || player.isPlayerDead || player.isInHangarShipRoom) return;
         float distance = Vector3.Distance(transform.position, player.transform.position);
 
-        if (distance <= 20)
+        if (distance <= 10)
         {
-            player.DamagePlayer(5, true, true, CauseOfDeath.Suffocation, 0, false, default);
+            player.DamagePlayer(2, true, true, CauseOfDeath.Suffocation, 0, false, default);
         }
     }
 
