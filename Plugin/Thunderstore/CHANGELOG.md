@@ -25,6 +25,8 @@
 - Puppet movement is more local to the player so kicking the puppets away should feel a tiny bit more responsive for the local client's puppet.
 - Trashcans auto position themselves to dead end tiles.
 - Nerfed driftwood scream from 5 damage to 2 damage, nerfed distance to getting damaged by it to 10 units.
+- Made non-important unlockables decors.
+- Made a config for instrument volume.
 
 ## v1.4.2
 
