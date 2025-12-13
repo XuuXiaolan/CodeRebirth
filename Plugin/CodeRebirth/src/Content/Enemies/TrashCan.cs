@@ -1,5 +1,11 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using CodeRebirth.src.Util;
+using DunGen;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace CodeRebirth.src.Content.Enemies;
 public class TrashCan : NetworkBehaviour
@@ -14,6 +20,29 @@ public class TrashCan : NetworkBehaviour
         if (Plugin.ModConfig.ConfigDisableTrashCans.Value && meshFilter != null)
         {
             meshFilter.gameObject.SetActive(false);
+        }
+    }
+
+    private IEnumerator Start()
+    {
+        yield return new WaitForSeconds(1f);
+        List<Tile> allDeadendTiles = RoundManager.Instance.dungeonGenerator.Generator.CurrentDungeon.AllTiles.Where(x => x.AllDoorways.Count == 1).ToList();
+
+        if (allDeadendTiles.Count > 0)
+        {
+            Tile tile = allDeadendTiles[CodeRebirthUtils.Instance.CRRandom.Next(allDeadendTiles.Count)];
+            Vector3 center = tile.Placement.Bounds.center;
+            if (NavMesh.SamplePosition(center, out NavMeshHit hit, 10f, NavMesh.AllAreas))
+            {
+                center = hit.position;
+                transform.position = center;
+                transform.rotation = Quaternion.LookRotation(Vector3.up, hit.normal);
+                Plugin.ExtendedLogging($"Moved trash can to {center}");
+            }
+            else
+            {
+                NetworkObject.Despawn();
+            }
         }
     }
 
