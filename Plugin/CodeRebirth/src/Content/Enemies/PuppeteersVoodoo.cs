@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.Util;
@@ -6,7 +5,6 @@ using Dawn;
 using Dawn.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;
-using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -16,7 +14,6 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
 {
     public NavMeshAgent agent = null!;
     public Animator animator = null!;
-    public NetworkAnimator networkAnimator = null!;
     public Renderer renderer = null!;
     public Material[] materialVariants = null!;
     public SmartAgentNavigator smartAgentNavigator = null!;
@@ -91,6 +88,10 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
     public void Init(PlayerControllerB player, Puppeteer puppeteer, int damageTransferMultiplier)
     {
         playerControlled = player;
+        if (this.IsOwner)
+        {
+            NetworkObject.ChangeOwnership(playerControlled.OwnerClientId);
+        }
         puppeteerCreatedBy = puppeteer;
         this.damageTransferMultiplier = damageTransferMultiplier;
     }
@@ -125,9 +126,8 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         if (agent.enabled)
         {
             animator.SetFloat(RunSpeedFloat, agent.velocity.magnitude / 2);
-            smartAgentNavigator.DoPathingToDestination(
-                playerControlled.transform.position
-            );
+            smartAgentNavigator.DoPathingToDestination(playerControlled.transform.position);
+            smartAgentNavigator.AdjustSpeedBasedOnDistance(0, 40, 0, 5, 1);
         }
         else
         {
@@ -153,7 +153,6 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
     private void DoHitAnimationServerRpc(int finalDamage)
     {
         PlayMiscSoundsClientRpc(1, finalDamage);
-        networkAnimator.SetTrigger(OnHitAnimation);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -171,6 +170,7 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
                 dollAudio.PlayOneShot(deathSound);
                 break;
             case 1:
+                animator.SetTrigger(OnHitAnimation);
                 lastTimeTakenDamageFromEnemy = 0;
                 if (playerControlled != null)
                 {
@@ -189,12 +189,19 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
     {
         PlayMiscSoundsServerRpc(0);
         animator.SetBool(IsDeadAnimation, true);
+        DeadAnimationRpc();
         yield return new WaitForSeconds(4f);
         if (playerControlled != null && !playerControlled.isPlayerDead)
         {
             CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[CodeRebirthItemKeys.PuppeteersVoodoo].Item, transform.position, false, true, 0);
         }
         NetworkObject.Despawn();
+    }
+
+    [Rpc(SendTo.NotMe)]
+    private void DeadAnimationRpc()
+    {
+        animator.SetBool(IsDeadAnimation, true);
     }
 
     public bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
@@ -204,7 +211,7 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         if (playerWhoHit != null)
         {
             Vector3 fromPosition = playerWhoHit.transform.position + Vector3.up;
-            BeginKickDoll(fromPosition, triggerCall: false);
+            BeginKickDoll(fromPosition);
         }
         return true;
     }
@@ -213,15 +220,17 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
     {
         if (Time.realtimeSinceStartup - hitTimer < 0.5f)
             return;
-        // Plugin.ExtendedLogging($"OnTriggerEnter: {other.gameObject.name} with tag {other.gameObject.tag}");
-        // If the object is tagged PlayerBody or Enemy
+
+        if (!IsOwner)
+            return;
+
         if (other.tag.StartsWith("PlayerBody") || other.CompareTag("Enemy"))
         {
-            BeginKickDoll(other.transform.position + Vector3.up, triggerCall: true);
+            BeginKickDoll(other.transform.position + Vector3.up);
         }
     }
 
-    private void BeginKickDoll(Vector3 hitFromPosition, bool triggerCall)
+    private void BeginKickDoll(Vector3 hitFromPosition)
     {
         hitTimer = Time.realtimeSinceStartup;
 
@@ -232,18 +241,8 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         Vector3 position = destination;
         position.y = this.transform.position.y;
         this.transform.LookAt(position);
-        // If triggered from OnTriggerEnter, don't do the server RPC
-        if (triggerCall)
-        {
-            if (IsServer)
-            {
-                animator.SetBool(IsKickedAnimation, true);
-            }
-            return;
-        }
         // Otherwise, replicate the effect over the network
-        int playerID = Array.IndexOf(StartOfRound.Instance.allPlayerScripts, GameNetworkManager.Instance.localPlayerController);
-        KickDollServerRpc(destination, playerID);
+        KickDollRpc(destination);
     }
 
     private Vector3 GetKickDestination(Vector3 hitFromPosition)
@@ -271,6 +270,7 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
     private void KickDollLocalClient(Vector3 destinationPos)
     {
         // Disable agent/AI to allow “physics” style arc
+        animator.SetBool(IsKickedAnimation, true);
         smartAgentNavigator.enabled = false;
         agent.enabled = false;
 
@@ -304,27 +304,9 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         return desiredWorldPos;
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void KickDollServerRpc(Vector3 dest, int playerWhoKicked)
+    [Rpc(SendTo.NotOwner, RequireOwnership = false)]
+    private void KickDollRpc(Vector3 dest)
     {
-        animator.SetBool(IsKickedAnimation, true);
-        if (playerWhoKicked != Array.IndexOf(StartOfRound.Instance.allPlayerScripts, GameNetworkManager.Instance.localPlayerController))
-        {
-            KickDollLocalClient(dest);
-        }
-
-        // Then replicate to all other clients
-        KickDollClientRpc(dest, playerWhoKicked);
-    }
-
-    [ClientRpc]
-    private void KickDollClientRpc(Vector3 dest, int playerWhoKicked)
-    {
-        if (IsServer) return;
-        if (playerWhoKicked == Array.IndexOf(StartOfRound.Instance.allPlayerScripts, GameNetworkManager.Instance.localPlayerController))
-            return;
-
-        // Otherwise replicate the local effect
         KickDollLocalClient(dest);
     }
 
@@ -336,36 +318,22 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         Vector3 euler = transform.localEulerAngles;
         euler.x = 0f;
         euler.z = 0f;
-        transform.localEulerAngles = Vector3.Lerp(
-            transform.localEulerAngles,
-            euler,
-            14f * Time.deltaTime / Mathf.Max(distance, 0.01f)
-        );
+        transform.localEulerAngles = Vector3.Lerp(transform.localEulerAngles, euler, 14f * Time.deltaTime / Mathf.Max(distance, 0.01f));
 
-        Vector3 newPos = Vector3.Lerp(
-            startFallingPosition,
-            targetFloorPosition,
-            dollFallCurve.Evaluate(fallTime)
-        );
+        Vector3 newPos = Vector3.Lerp(startFallingPosition, targetFloorPosition, dollFallCurve.Evaluate(fallTime));
 
         // Handle the vertical portion
         if (distance < 3f)
         {
             // No bounce
-            float yLerp = Mathf.Lerp(
-                startFallingPosition.y,
-                targetFloorPosition.y,
-                dollVerticalFallCurveNoBounce.Evaluate(fallTime)
+            float yLerp = Mathf.Lerp(startFallingPosition.y, targetFloorPosition.y, dollVerticalFallCurveNoBounce.Evaluate(fallTime)
             );
             newPos.y = yLerp;
         }
         else
         {
             // Standard bounce
-            float yLerp = Mathf.Lerp(
-                startFallingPosition.y,
-                targetFloorPosition.y,
-                dollVerticalFallCurve.Evaluate(fallTime)
+            float yLerp = Mathf.Lerp(startFallingPosition.y, targetFloorPosition.y, dollVerticalFallCurve.Evaluate(fallTime)
             );
             newPos.y = yLerp + dollVerticalOffset.Evaluate(fallTime) * ballHitUpwardAmount;
         }
@@ -389,10 +357,7 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         dollAudio.PlayOneShot(ballHitFloorSFX[puppetRandom.Next(ballHitFloorSFX.Length)]);
 
         // Only the server should toggle the animation state
-        if (IsServer)
-        {
-            animator.SetBool(IsKickedAnimation, false);
-        }
+        animator.SetBool(IsKickedAnimation, false);
 
         hasHitGround = true;
 

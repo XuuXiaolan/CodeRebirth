@@ -10,6 +10,7 @@ using BepInEx.Configuration;
 using Dusk;
 using Dawn;
 using Unity.Netcode;
+using Dawn.Internal;
 
 namespace CodeRebirth.src;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
@@ -77,6 +78,7 @@ public class Plugin : BaseUnityPlugin
         DeleteFileButtonPatch.Init();
         SoccerBallPropPatch.Init();
         VehicleControllerPatch.Init();
+
         // This should be ran before Network Prefabs are registered.
         InputActionsInstance = new IngameKeybinds();
 

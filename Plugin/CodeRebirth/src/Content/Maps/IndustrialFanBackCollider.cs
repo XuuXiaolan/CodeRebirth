@@ -1,3 +1,5 @@
+using Dawn.Utils;
+using GameNetcodeStuff;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
@@ -7,6 +9,10 @@ public class IndustrialFanBackCollider : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
+        PlayerControllerB player = other.gameObject.GetComponent<PlayerControllerB>();
+        if (!player.IsLocalPlayer())
+            return;
+
         if (industrialFan.IsObstructed(other.transform.position) || Vector3.Distance(other.transform.position, industrialFan.fanTransform.position) > 20f)
         {
             return;

@@ -1,7 +1,41 @@
-# v0.5.4
+# v0.5.9
+
+- Added compatibility with LLL clamping.
+- Added interior clamping.
+- Added a null check in the map objects.
+- Fixed a small issue with smart matching not always working.
+- Fixed an issue where a config with no additive or substractive weights would work
+
+## v0.5.8
+
+- Fixed vanilla story logs not being registered because zeekerss never actually made prefabs for them.
+- Added a config to give LLL control over vanilla moon visibility whether they're locked or hidden, defaulted to false.
+- Made it cleaner to add storylogs' text.
+
+## v0.5.7
+
+- Fixed another minor issue with DatePredicate in some edge cases.
+
+## v0.5.6
+
+- Added a fallback for unity being weird about assets not being picked up sometimes.
+
+## v0.5.5
+
+- Fixed a null ref with some story log mods that add story logs late.
+
+## v0.5.4
 
 - Added Storylog registration.
 - Added `DawnStoryLogSpawner` component to utils addcomponent menu.
+- Properly implemented smart matching.
+- Fixed an obsolete editor oopsie with interior and moon weights for entity replacements.
+- Fixed interior mapobjects blanks not being replaced.
+- Created `StoryLogKeys` for vanilla story logs.
+- Moved where most registries freeze to be after a harmony patch of startofround.start prefix for more compat with more mods that add items etc late.
+- Publicised a few internal methods.
+- Updated wiki to adding a new page on how to make the editor look more like base-game thanks to help by `Scoops`.
+- Fixed a bunch of issues relating to entity replacements not working properly in some edge cases.
 
 ## v0.5.3
 

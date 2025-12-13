@@ -1,4 +1,5 @@
 using Dawn.Utils;
+using GameNetcodeStuff;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
@@ -8,20 +9,25 @@ public class IndustrialFanFrontCollider : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (industrialFan.IsObstructed(other.transform.position) || Vector3.Distance(other.transform.position, industrialFan.fanTransform.position) > 20f)
+        PlayerControllerB player = other.gameObject.GetComponent<PlayerControllerB>();
+        if (!player.IsLocalPlayer())
+            return;
+
+        if (industrialFan.IsObstructed(other.transform.position))
+        {
+            return;
+        }
+
+        float distance = Vector3.Distance(other.transform.position, industrialFan.fanTransform.position);
+        if (distance > 20f)
         {
             return;
         }
 
         Vector3 pushDirection = (other.transform.position - industrialFan.fanTransform.position).normalized;
         Vector3 targetPosition = other.transform.position + (pushDirection * industrialFan.pushForce);
-        if (Physics.Linecast(other.transform.position, targetPosition, MoreLayerMasks.CollidersAndRoomAndRailingAndInteractableMask, QueryTriggerInteraction.Ignore))
-        {
-            other.transform.position = Vector3.Lerp(other.transform.position, targetPosition, industrialFan.pushForce * Time.fixedDeltaTime * 0.1f);
-        }
-        else
-        {
-            other.transform.position = Vector3.Lerp(other.transform.position, targetPosition, industrialFan.pushForce * Time.fixedDeltaTime);
-        }
+
+        float pushForceMultiplier = 1 - (distance / 20f);
+        other.transform.position = Vector3.Lerp(other.transform.position, targetPosition, industrialFan.pushForce * pushForceMultiplier * Time.fixedDeltaTime);
     }
 }
