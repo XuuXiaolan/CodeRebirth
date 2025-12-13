@@ -12,7 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 466683445, guid: cd73415377293454abda168a425682f7, type: 3}
   m_Name: AccordionItemDefinition
   m_EditorClassIdentifier: 
-  _configEntries: []
+  _configEntries:
+  - settingName: Instrument | Volume
+    DynamicConfigType: 2
+    defaultString: 
+    defaultInt: 0
+    defaultFloat: 1
+    defaultBool: 0
+    defaultBoundedRange:
+      <Min>k__BackingField: 0
+      <Max>k__BackingField: 0
+    defaultAnimationCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    Description: Control the volume of the instrument.
   _tags:
   - _namespace: code_rebirth
     _key: instrument

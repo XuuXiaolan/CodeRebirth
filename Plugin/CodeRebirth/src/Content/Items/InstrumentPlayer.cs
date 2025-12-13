@@ -23,6 +23,7 @@ public class InstrumentPlayer : GrabbableObject
             audioPlayer.Stop();
             return;
         }
+        audioPlayer.volume = ItemHandler.Instance.Zort.GetConfig<float>("Instruments | Volume").Value;
         AudioSource? audioSourcePlaying = null;
         foreach (var instrumentPlayer in instrumentPlayers)
         {
