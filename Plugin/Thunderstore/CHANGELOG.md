@@ -27,6 +27,8 @@
 - Nerfed driftwood scream from 5 damage to 2 damage, nerfed distance to getting damaged by it to 10 units.
 - Made non-important unlockables decors.
 - Made a config for instrument volume.
+- Disabled hoverboard until I figure out how to work with the unity network update.
+- ManorLord puppet speeds up if you're further from it.
 
 ## v1.4.2
 
