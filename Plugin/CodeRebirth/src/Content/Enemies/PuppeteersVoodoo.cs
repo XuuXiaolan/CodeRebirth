@@ -127,7 +127,7 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         {
             animator.SetFloat(RunSpeedFloat, agent.velocity.magnitude / 2);
             smartAgentNavigator.DoPathingToDestination(playerControlled.transform.position);
-            smartAgentNavigator.AdjustSpeedBasedOnDistance(0, 40, 0, 5, 1);
+            smartAgentNavigator.AdjustSpeedBasedOnDistance(0, 40, 2.5f, 10, 1);
         }
         else
         {
