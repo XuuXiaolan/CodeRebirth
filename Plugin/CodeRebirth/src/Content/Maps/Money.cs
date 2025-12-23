@@ -1,21 +1,31 @@
-using Unity.Netcode;
+using CodeRebirth.src.Content.Unlockables;
+using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
 
-public class Money : NetworkBehaviour
+public class Money : GrabbableObject
 {
-    internal int value = 0;
+    [field: SerializeField]
+    private int _value = 1;
 
-    public void Start()
-    {
-        value = 1;
-    }
+    [field: SerializeField]
+    public AudioSource _moneySource;
 
-    public void Update()
+    [field: SerializeField]
+    public AudioClip _collectSound;
+
+    public override void ItemActivate(bool used, bool buttonDown = true)
     {
-        if (NetworkObject.IsSpawned && IsServer && StartOfRound.Instance.firingPlayersCutsceneRunning)
-        {
-            NetworkObject.Despawn();
-        }
+        base.ItemActivate(used, buttonDown);
+
+        if (MoneyCounter.Instance == null)
+            return;
+
+        _moneySource.PlayOneShot(_collectSound);
+
+        if (!IsServer)
+            return;
+
+        MoneyCounter.Instance.AddMoney(_value);
     }
 }

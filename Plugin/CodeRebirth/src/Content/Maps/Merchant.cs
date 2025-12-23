@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
 using Dawn;
@@ -42,10 +41,8 @@ public class Merchant : NetworkBehaviour
     public void Start()
     {
         storeSeededRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 37325);
-        DisableOrEnableCoinObjects();
         localDamageCooldownPerTurret.Add(turretBones[0], 0.2f);
         localDamageCooldownPerTurret.Add(turretBones[1], 0.2f);
-        walletTrigger.onInteract.AddListener(TryDepositCoinsOntoBarrel);
         if (!IsServer) return;
         PopulateItemsWithRarityList();
         HandleSpawningMerchantItems();
@@ -74,6 +71,7 @@ public class Merchant : NetworkBehaviour
             }
             return;
         }
+
         if (IsServer && targetPlayers.Count <= 0)
         {
             bool playerNearby = false;
@@ -175,7 +173,6 @@ public class Merchant : NetworkBehaviour
         }
         canTarget = true;
         currentCoinsStored = Math.Clamp(currentCoinsStored - itemCost, 0, 999);
-        DisableOrEnableCoinObjects();
     }
 
     private void EliminateShip()
@@ -397,43 +394,5 @@ public class Merchant : NetworkBehaviour
         forceScanColorOnItem.grabbableObject = grabbableObject;
         forceScanColorOnItem.borderColor = new Color(borderColorR, borderColorG, borderColorB, 1);
         forceScanColorOnItem.textColor = new Color(textColorR, textColorG, textColorB, 1);
-    }
-
-    public void TryDepositCoinsOntoBarrel(PlayerControllerB? playerWhoInteracted)
-    {
-        Plugin.ExtendedLogging("player interacted: " + playerWhoInteracted);
-        if (playerWhoInteracted == null || !playerWhoInteracted.IsLocalPlayer() || playerWhoInteracted.currentlyHeldObjectServer == null || playerWhoInteracted.currentlyHeldObjectServer is not Wallet wallet) return;
-        if (wallet.coinsStored.Value <= 0) return;
-        IncreaseCoinsServerRpc(wallet.coinsStored.Value);
-        wallet.ResetCoinsServerRpc(0);
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void IncreaseCoinsServerRpc(int coinIncrease)
-    {
-        IncreaseCoinsClientRpc(coinIncrease);
-    }
-
-    [ClientRpc]
-    public void IncreaseCoinsClientRpc(int coinIncrease)
-    {
-        currentCoinsStored += coinIncrease;
-        DisableOrEnableCoinObjects();
-    }
-
-    public void DisableOrEnableCoinObjects()
-    {
-        foreach (GameObject coinObject in coinObjects)
-        {
-            coinObject.SetActive(false);
-        }
-        if (currentCoinsStored <= 0) return;
-
-        int objectsToEnable = Mathf.Clamp(currentCoinsStored / 4, 0, coinObjects.Length - 1);
-
-        for (int i = 0; i <= objectsToEnable; i++)
-        {
-            coinObjects[i].SetActive(true);
-        }
     }
 }
