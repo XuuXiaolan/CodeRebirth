@@ -16,7 +16,7 @@ MonoBehaviour:
   itemName: Frag Grenade
   spawnPositionTypes: []
   twoHanded: 0
-  twoHandedAnimation: 1
+  twoHandedAnimation: 0
   disableHandsOnWall: 1
   canBeGrabbedBeforeGameStart: 1
   weight: 1.047619
@@ -51,15 +51,13 @@ MonoBehaviour:
   syncInteractLRFunction: 0
   saveItemVariable: 0
   isDefensiveWeapon: 0
-  toolTips:
-  - 'Incinerate : [RMB]'
-  - 'Decompression : [R]'
-  verticalOffset: 0
+  toolTips: []
+  verticalOffset: 0.06
   floorYOffset: 0
   allowDroppingAheadOfPlayer: 1
-  restingRotation: {x: 0, y: 0, z: 0}
-  rotationOffset: {x: 0, y: 0, z: 0}
-  positionOffset: {x: 0, y: 0, z: 0}
+  restingRotation: {x: 90, y: 0, z: 0}
+  rotationOffset: {x: -80, y: 0, z: -80}
+  positionOffset: {x: -0.2, y: 0.14, z: 0.05}
   meshOffset: 0
   meshVariants: []
   materialVariants: []

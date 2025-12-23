@@ -16,7 +16,7 @@ MonoBehaviour:
   itemName: Orbital Strike Caller
   spawnPositionTypes: []
   twoHanded: 0
-  twoHandedAnimation: 1
+  twoHandedAnimation: 0
   disableHandsOnWall: 1
   canBeGrabbedBeforeGameStart: 1
   weight: 1.047619
@@ -51,15 +51,13 @@ MonoBehaviour:
   syncInteractLRFunction: 0
   saveItemVariable: 0
   isDefensiveWeapon: 0
-  toolTips:
-  - 'Incinerate : [RMB]'
-  - 'Decompression : [R]'
-  verticalOffset: 0
-  floorYOffset: 0
+  toolTips: []
+  verticalOffset: 0.2
+  floorYOffset: 90
   allowDroppingAheadOfPlayer: 1
   restingRotation: {x: 0, y: 0, z: 0}
-  rotationOffset: {x: 0, y: 0, z: 0}
-  positionOffset: {x: 0, y: 0, z: 0}
+  rotationOffset: {x: 90, y: 90, z: 0}
+  positionOffset: {x: 0, y: 0.1, z: -0.15}
   meshOffset: 0
   meshVariants: []
   materialVariants: []

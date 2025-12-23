@@ -36,7 +36,7 @@ MonoBehaviour:
   batteryUsage: 0
   automaticallySetUsingPower: 0
   itemIcon: {fileID: 0}
-  grabAnim: 
+  grabAnim: HoldForward
   useAnim: 
   pocketAnim: 
   throwAnim: 
@@ -51,15 +51,13 @@ MonoBehaviour:
   syncInteractLRFunction: 0
   saveItemVariable: 0
   isDefensiveWeapon: 0
-  toolTips:
-  - 'Incinerate : [RMB]'
-  - 'Decompression : [R]'
-  verticalOffset: 0
-  floorYOffset: 0
+  toolTips: []
+  verticalOffset: -0.045
+  floorYOffset: 90
   allowDroppingAheadOfPlayer: 1
   restingRotation: {x: 0, y: 0, z: 0}
-  rotationOffset: {x: 0, y: 0, z: 0}
-  positionOffset: {x: 0, y: 0, z: 0}
+  rotationOffset: {x: 10, y: 100, z: 0}
+  positionOffset: {x: 0.2, y: -0.26, z: 0.38}
   meshOffset: 0
   meshVariants: []
   materialVariants: []

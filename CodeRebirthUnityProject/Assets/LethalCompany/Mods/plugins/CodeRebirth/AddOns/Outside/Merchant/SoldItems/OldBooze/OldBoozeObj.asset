@@ -51,15 +51,13 @@ MonoBehaviour:
   syncInteractLRFunction: 0
   saveItemVariable: 0
   isDefensiveWeapon: 0
-  toolTips:
-  - 'Incinerate : [RMB]'
-  - 'Decompression : [R]'
-  verticalOffset: 0.25
+  toolTips: []
+  verticalOffset: -0.04
   floorYOffset: 0
   allowDroppingAheadOfPlayer: 1
-  restingRotation: {x: 0, y: 0, z: 0}
-  rotationOffset: {x: 0, y: 0, z: 0}
-  positionOffset: {x: 0, y: 0, z: 0}
+  restingRotation: {x: -90, y: 0, z: 90}
+  rotationOffset: {x: 0, y: 90, z: 30}
+  positionOffset: {x: -0.3, y: 0.1, z: -0.05}
   meshOffset: 0
   meshVariants: []
   materialVariants: []
