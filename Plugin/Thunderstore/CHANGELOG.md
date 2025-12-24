@@ -30,6 +30,8 @@
 - Disabled hoverboard until I figure out how to work with the unity network update.
 - ManorLord puppet speeds up if you're further from it.
 - Increased redwood threshold for chasing animation.
+- Added visual tells and audio tells for the mimic crates.
+- Improved echo effect of the walkie yellie.
 
 ## v1.4.2
 
