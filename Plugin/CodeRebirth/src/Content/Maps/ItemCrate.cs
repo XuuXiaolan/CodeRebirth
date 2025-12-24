@@ -15,7 +15,6 @@ using Dusk;
 namespace CodeRebirth.src.Content.Maps;
 public class ItemCrate : CRHittable
 {
-
     [Header("Hover Tooltips")]
     public string keyHoverTip = "Open : [LMB]";
 
@@ -32,7 +31,6 @@ public class ItemCrate : CRHittable
     public Vector3 originalPosition;
     public System.Random crateRandom = new();
     public static List<Item> ShopItemList = new();
-    public AudioClip creepyWarningSound = null!;
     public enum CrateType
     {
         Wooden,
@@ -298,11 +296,6 @@ public class ItemCrate : CRHittable
     {
         health -= damage;
         Plugin.ExtendedLogging("Crate health: " + health);
-        if (health <= 1)
-        {
-            if (crateType != CrateType.MetalMimic && crateType != CrateType.WoodenMimic) return;
-            openSFX.PlayOneShot(creepyWarningSound, 1f);
-        }
     }
 
     public override bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
@@ -476,12 +469,6 @@ public class ItemCrate : CRHittable
             player.Crouch(true);
             player.transform.position = grabAndPullPlayerScript.pullTransform.position;
         }
-    }
-
-    public void PlayCreepySoundAnimEvent()
-    {
-        if (crateType != CrateType.MetalMimic && crateType != CrateType.WoodenMimic) return;
-        openSFX.PlayOneShot(creepyWarningSound);
     }
 
     private IEnumerator StartDamagingPlayer(PlayerControllerB player)
