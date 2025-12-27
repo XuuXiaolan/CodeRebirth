@@ -131,9 +131,8 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         StartCoroutine(SpawnAnimationCooldown());
     }
 
-    public override void Update()
+    public void LateUpdate()
     {
-        base.Update();
         if (isEnemyDead) return;
 
         _idleTimer -= Time.deltaTime;
@@ -146,10 +145,11 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         // Plugin.ExtendedLogging($"Awareness: {awarenessLevel}");
         if (currentlyGrabbed && targetPlayer != null)
         {
-            if (Vector3.Distance(targetPlayer.transform.position, grabArea.transform.position) > 10f)
+            float distanceToGrabArea = Vector3.Distance(targetPlayer.transform.position, grabArea.transform.position);
+            Plugin.ExtendedLogging($"Position of targetPlayer: {targetPlayer.transform.position}, Position of grabArea: {grabArea.transform.position}, Distance: {distanceToGrabArea}");
+            if (distanceToGrabArea > 10f)
             {
                 // If the target player is too far away or null, we can't grab them.
-                Plugin.ExtendedLogging("Target player is too far away or null, cannot grab.");
                 currentlyGrabbed = false;
                 targetPlayer.inAnimationWithEnemy = null;
                 targetPlayer = null;

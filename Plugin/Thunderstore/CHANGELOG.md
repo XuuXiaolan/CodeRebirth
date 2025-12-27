@@ -27,11 +27,12 @@
 - Nerfed driftwood scream from 5 damage to 2 damage, nerfed distance to getting damaged by it to 10 units.
 - Made non-important unlockables decors.
 - Made a config for instrument volume.
-- Disabled hoverboard until I figure out how to work with the unity network update.
 - ManorLord puppet speeds up if you're further from it.
 - Increased redwood threshold for chasing animation.
 - Added visual tells and audio tells for the mimic crates.
 - Improved echo effect of the walkie yellie.
+- Fixed driftwood not grabbing clients properly.
+- Fixed hoverboard not working for clients (DawnLib update that was needed due to unity having a bug in it).
 
 ## v1.4.2
 
