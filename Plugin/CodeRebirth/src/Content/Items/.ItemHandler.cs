@@ -73,7 +73,7 @@ public class ItemHandler : ContentHandler<ItemHandler>
 
         RegisterContent("zortassets", out Zort);
 
-        // RegisterContent("hoverboardassets", out Hoverboard);
+        RegisterContent("hoverboardassets", out Hoverboard);
 
         RegisterContent("snowglobeassets", out SnowGlobe);
 
