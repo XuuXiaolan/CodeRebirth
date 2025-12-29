@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1963577118, guid: cd73415377293454abda168a425682f7, type: 3}
+  m_Name: CutieCaseUnlockableDefinition
+  m_EditorClassIdentifier: 
+  _configEntries: []
+  _tags: []
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: cutiefly_case
+  <UnlockableItem>k__BackingField:
+    unlockableName: Cutiefly Case
+    prefabObject: {fileID: 622905470373817249, guid: 586cba32638a2814987bbfb5657c54bc,
+      type: 3}
+    unlockableType: 0
+    shopSelectionNode: {fileID: 0}
+    alwaysInStock: 0
+    IsPlaceable: 1
+    hasBeenMoved: 0
+    placedPosition: {x: 0, y: 0, z: 0}
+    placedRotation: {x: 0, y: 0, z: 0}
+    luckValue: 0
+    inStorage: 0
+    canBeStored: 1
+    maxNumber: 1
+    hasBeenUnlockedByPlayer: 0
+    suitMaterial: {fileID: 0}
+    headCostumeObject: {fileID: 0}
+    lowerTorsoCostumeObject: {fileID: 0}
+    alreadyUnlocked: 0
+    unlockedInChallengeFile: 0
+    spawnPrefab: 1
+    jumpAudio: {fileID: 0}
+  <InfoNodeText>k__BackingField: 
+  <TerminalPredicate>k__BackingField: {fileID: 0}
+  <PricingStrategy>k__BackingField: {fileID: 0}
+  <IsShipUpgrade>k__BackingField: 1
+  <IsDecor>k__BackingField: 0
+  <GenerateUnlockableTypeConfig>k__BackingField: 0
+  <Cost>k__BackingField: 0
+  <GenerateDisablePricingStrategyConfig>k__BackingField: 0
+  <GenerateDisableUnlockRequirementConfig>k__BackingField: 0
