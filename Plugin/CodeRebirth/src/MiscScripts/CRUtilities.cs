@@ -114,8 +114,8 @@ public class CRUtilities
         enemy.SyncPositionToClients();
     }
 
-    private static Dictionary<PlayerControllerB, int> playerControllerBToDamage = new();
-    private static Dictionary<EnemyAICollisionDetect, int> enemyAICollisionDetectToDamage = new();
+    private static Dictionary<PlayerControllerB, (float distance, int damage)> playerControllerBToDamage = new();
+    private static Dictionary<EnemyAICollisionDetect, (float distance, int damage)> enemyAICollisionDetectToDamage = new();
     private static List<Landmine> landmineList = new();
     private static List<IHittable> hittablesList = new();
 
@@ -177,26 +177,26 @@ public class CRUtilities
             {
                 if (!player.isPlayerControlled || player.isPlayerDead) continue;
                 int damageToDeal = (int)(damage * (1f - Mathf.Clamp01((distanceOfObjectFromExplosion - minDamageRange) / (maxDamageRange - minDamageRange))));
-                if (playerControllerBToDamage.ContainsKey(player) && playerControllerBToDamage[player] < damageToDeal)
+                if (playerControllerBToDamage.ContainsKey(player) && playerControllerBToDamage[player].damage < damageToDeal)
                 {
-                    playerControllerBToDamage[player] = damageToDeal;
+                    playerControllerBToDamage[player] = (distanceOfObjectFromExplosion, damageToDeal);
                 }
                 else if (!playerControllerBToDamage.ContainsKey(player))
                 {
-                    playerControllerBToDamage.Add(player, damageToDeal);
+                    playerControllerBToDamage.Add(player, (distanceOfObjectFromExplosion, damageToDeal));
                 }
                 continue;
             }
 
             if (cachedColliders[i].gameObject.layer == 19 && cachedColliders[i].TryGetComponent(out EnemyAICollisionDetect enemy))
             {
-                if (enemyAICollisionDetectToDamage.ContainsKey(enemy) && enemyAICollisionDetectToDamage[enemy] < enemyHitForce)
+                if (enemyAICollisionDetectToDamage.ContainsKey(enemy) && enemyAICollisionDetectToDamage[enemy].damage < enemyHitForce)
                 {
-                    enemyAICollisionDetectToDamage[enemy] = enemyHitForce;
+                    enemyAICollisionDetectToDamage[enemy] = (distanceOfObjectFromExplosion, enemyHitForce);
                 }
                 else if (!enemyAICollisionDetectToDamage.ContainsKey(enemy))
                 {
-                    enemyAICollisionDetectToDamage.Add(enemy, enemyHitForce);
+                    enemyAICollisionDetectToDamage.Add(enemy, (distanceOfObjectFromExplosion, enemyHitForce));
                 }
                 continue;
             }
@@ -204,7 +204,9 @@ public class CRUtilities
             if (cachedColliders[i].gameObject.layer == 21 && distanceOfObjectFromExplosion < maxDamageRange)
             {
                 Landmine? componentInChildren = cachedColliders[i].gameObject.GetComponentInChildren<Landmine>();
-                if (componentInChildren == null || landmineList.Contains(componentInChildren)) continue;
+                if (componentInChildren == null || landmineList.Contains(componentInChildren))
+                    continue;
+
                 landmineList.Add(componentInChildren);
                 continue;
             }
@@ -214,7 +216,7 @@ public class CRUtilities
         foreach (PlayerControllerB player in playerControllerBToDamage.Keys)
         {
             Vector3 directionFromCenter = (player.transform.position - explosionPosition).normalized;
-            player.DamagePlayer(playerControllerBToDamage[player], true, true, CauseOfDeath.Burning, 6, false, directionFromCenter * pushForce * 5f);
+            player.DamagePlayer(playerControllerBToDamage[player].damage, true, true, CauseOfDeath.Burning, 6, false, directionFromCenter * pushForce * 5f);
             player.externalForceAutoFade += directionFromCenter * pushForce;
         }
 
@@ -229,7 +231,8 @@ public class CRUtilities
             if (attacker != null && !attacker.IsLocalPlayer())
                 continue;
 
-            enemy.mainScript.HitEnemyOnLocalClient(enemyAICollisionDetectToDamage[enemy], playerWhoHit: attacker);
+            enemy.mainScript.HitEnemyOnLocalClient(enemyAICollisionDetectToDamage[enemy].damage, playerWhoHit: attacker);
+            enemy.mainScript.HitFromExplosion(enemyAICollisionDetectToDamage[enemy].distance);
         }
 
         foreach (Landmine landmine in landmineList)

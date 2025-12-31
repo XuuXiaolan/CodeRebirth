@@ -454,14 +454,14 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
                     if (!IsServer)
                         continue;
 
-                    enemy.mainScript.HitEnemyOnLocalClient(_minigunDamage, gunTransform.position, null, true, -1);
+                    enemy.mainScript.HitEnemyOnLocalClient(_minigunDamage, gunTransform.position, null, true, 1921);
                 }
                 else
                 {
                     if (!IsServer)
                         continue;
 
-                    hittable.Hit(_minigunDamage, gunTransform.position, null, true, -1);
+                    hittable.Hit(_minigunDamage, gunTransform.position, null, true, 1921);
                 }
             }
         }
@@ -507,6 +507,9 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
     {
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
         if (isEnemyDead)
+            return;
+
+        if (hitID == 1921)
             return;
 
         if (playerWhoHit != null)
@@ -613,14 +616,14 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
                 if (enemyAICollisionDetect.mainScript.gameObject == gameObject)
                     continue;
 
-                enemyAICollisionDetect.mainScript.HitEnemyOnLocalClient(2, this.transform.position, null, true, -1);
+                enemyAICollisionDetect.mainScript.HitEnemyOnLocalClient(2, this.transform.position, null, true, 1921);
             }
             else
             {
                 if (!IsServer)
                     continue;
 
-                iHittable.Hit(2, this.transform.position, null, true, -1);
+                iHittable.Hit(2, this.transform.position, null, true, 1921);
             }
         }
     }

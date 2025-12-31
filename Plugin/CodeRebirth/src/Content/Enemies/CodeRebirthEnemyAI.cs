@@ -49,7 +49,15 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         Plugin.ExtendedLogging(enemyType.enemyName + " Spawned.");
 
         if (Plugin.ModConfig.ConfigExtendedLogging.Value)
+        {
             GrabEnemyRarity(enemyType.enemyName);
+        }
+    }
+
+    public override void Update()
+    {
+        serverPosition = transform.position;
+        base.Update();
     }
 
     public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)

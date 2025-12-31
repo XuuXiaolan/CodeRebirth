@@ -33,6 +33,10 @@
 - Improved echo effect of the walkie yellie.
 - Fixed driftwood not grabbing clients properly.
 - Fixed hoverboard not working for clients (DawnLib update that was needed due to unity having a bug in it).
+- Made explosions caused by coderebirth do stuff like burning forest giant, etc.
+- Peacekeepers don't damage eachother anymore.
+- Fixed any issues with mistress head not following the player while being held or any weird visual clarity.
+- Cleaned up mistress' AI a bit more to make it a bit less jank.
 
 ## v1.4.2
 

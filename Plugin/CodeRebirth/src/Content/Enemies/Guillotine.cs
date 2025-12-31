@@ -66,8 +66,8 @@ public class Guillotine : NetworkBehaviour
     {
         playerToKill = playerControllerReference;
         Plugin.ExtendedLogging($"Killing player {playerToKill}!");
-        int alivePlayers = StartOfRound.Instance.allPlayerScripts.Where(player => player.isPlayerControlled && !player.isPlayerDead && !player.IsPseudoDead()).Count();
-        if (StartOfRound.Instance.allPlayerScripts.Where(player => player.isPlayerControlled && !player.isPlayerDead && !player.IsPseudoDead()).Count() == 1)
+        int alivePlayers = StartOfRound.Instance.allPlayerScripts.Count(player => player.isPlayerControlled && !player.isPlayerDead && !player.IsPseudoDead());
+        if (StartOfRound.Instance.allPlayerScripts.Count(player => player.isPlayerControlled && !player.isPlayerDead && !player.IsPseudoDead()) == 1)
         {
             if (playerToKill.IsLocalPlayer())
                 playerToKill.KillPlayer(Vector3.zero, false, CauseOfDeath.Snipped, 0);
