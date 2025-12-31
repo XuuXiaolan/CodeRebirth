@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   disableObject: 0
-  positionOffset: {x: 6.994, y: 2.939998, z: -10.968666}
+  positionOffset: {x: 5.753, y: 2.4931, z: -3.5017}
   rotationOffset: {x: 0, y: 180, z: 0}
   startingPosition: {x: 0, y: 0, z: 0}
   startingRotation: {x: 0, y: 0, z: 0}
@@ -212,9 +212,9 @@ MonoBehaviour:
   mainMesh: {fileID: 5987388337044359174}
   mainTransform: {fileID: 367765240895467161}
   placeObjectCollider: {fileID: 2952411003198846648}
-  yOffset: 0.5
-  overrideWallOffset: 0
-  wallOffset: 0
+  yOffset: 0
+  overrideWallOffset: 1
+  wallOffset: 0.18
   collisionPointCheck: {x: 0, y: 0, z: 0}
   doCollisionPointCheck: 0
   AllowPlacementOnWalls: 1
@@ -350,6 +350,7 @@ GameObject:
   - component: {fileID: 1168465043524139005}
   - component: {fileID: 5987388337044359174}
   - component: {fileID: 8647029902666511171}
+  - component: {fileID: 4261240346014983086}
   m_Layer: 0
   m_Name: CutieflyCase
   m_TagString: Untagged
@@ -423,3 +424,24 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &4261240346014983086
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6936409157372765866}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.2018923, y: 0.30849883, z: 1.044396}
+  m_Center: {x: 0, y: -0.0073265126, z: 0.519406}

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 592804546186903820}
   - component: {fileID: 5557541428415532978}
   - component: {fileID: 622360699182844979}
+  - component: {fileID: 8021782820636905987}
   m_Layer: 26
   m_Name: PlacementCollider
   m_TagString: PlaceableObject
@@ -51,8 +52,8 @@ MonoBehaviour:
   parentObjectSecondary: {fileID: 0}
   mainMesh: {fileID: 8430308606731249338}
   mainTransform: {fileID: 2070462242207474456}
-  placeObjectCollider: {fileID: 1984892249538183392}
-  yOffset: 0.5
+  placeObjectCollider: {fileID: 8021782820636905987}
+  yOffset: 0
   overrideWallOffset: 0
   wallOffset: 0
   collisionPointCheck: {x: 0, y: 0, z: 0}
@@ -158,6 +159,27 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!65 &8021782820636905987
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1333463959069275271}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0715599, y: 1, z: 1.9541326}
+  m_Center: {x: -0.035779953, y: 1.5440393e-13, z: 0.96605945}
 --- !u!1 &1695324153253430568
 GameObject:
   m_ObjectHideFlags: 0
@@ -431,7 +453,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1304400586
+  GlobalObjectIdHash: 3488062129
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -453,7 +475,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   disableObject: 0
-  positionOffset: {x: -2.252269, y: 0.2417145, z: -16.02721}
+  positionOffset: {x: 0.8319, y: -0.0367, z: -8.3972}
   rotationOffset: {x: 0, y: 0, z: 0}
   startingPosition: {x: 0, y: 0, z: 0}
   startingRotation: {x: 0, y: 0, z: 0}

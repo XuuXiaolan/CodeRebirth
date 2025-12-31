@@ -28,7 +28,7 @@ MonoBehaviour:
     hasBeenMoved: 0
     placedPosition: {x: 0, y: 0, z: 0}
     placedRotation: {x: 0, y: 0, z: 0}
-    luckValue: 0
+    luckValue: -0.01
     inStorage: 0
     canBeStored: 1
     maxNumber: 1
@@ -40,12 +40,16 @@ MonoBehaviour:
     unlockedInChallengeFile: 0
     spawnPrefab: 1
     jumpAudio: {fileID: 0}
-  <InfoNodeText>k__BackingField: 
+  <InfoNodeText>k__BackingField: Found in an old burnt down mansion, this item remains
+    in perfect condition. They don't make em like they used to. Employees have reported
+    it having a haunting presence but this is simply a prank to scare new crewmates.
+    Great for hanging any loose clothing. The company does not condone touching any
+    of the old clothing items, simply use the other free hooks.
   <TerminalPredicate>k__BackingField: {fileID: 0}
   <PricingStrategy>k__BackingField: {fileID: 0}
   <IsShipUpgrade>k__BackingField: 0
   <IsDecor>k__BackingField: 1
   <GenerateUnlockableTypeConfig>k__BackingField: 0
-  <Cost>k__BackingField: 0
+  <Cost>k__BackingField: 200
   <GenerateDisablePricingStrategyConfig>k__BackingField: 0
   <GenerateDisableUnlockRequirementConfig>k__BackingField: 0

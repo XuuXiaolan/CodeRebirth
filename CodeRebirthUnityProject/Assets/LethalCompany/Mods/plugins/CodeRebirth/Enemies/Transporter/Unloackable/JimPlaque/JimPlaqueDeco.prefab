@@ -74,9 +74,9 @@ MonoBehaviour:
   mainMesh: {fileID: 6732825367370737248}
   mainTransform: {fileID: 1301126054097812565}
   placeObjectCollider: {fileID: 7909411008742409080}
-  yOffset: 0.5
-  overrideWallOffset: 0
-  wallOffset: 0
+  yOffset: 0
+  overrideWallOffset: 1
+  wallOffset: 0.1
   collisionPointCheck: {x: 0, y: 0, z: 0}
   doCollisionPointCheck: 0
   AllowPlacementOnWalls: 1
@@ -227,7 +227,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2281107973
+  GlobalObjectIdHash: 2735331013
   InScenePlacedSourceGlobalObjectIdHash: 891505319
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -249,7 +249,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   disableObject: 0
-  positionOffset: {x: 2.269, y: 2.329, z: -11.798}
+  positionOffset: {x: 0.95, y: 1.8, z: -4.28}
   rotationOffset: {x: 0, y: 180, z: 0}
   startingPosition: {x: 0, y: 0, z: 0}
   startingRotation: {x: 0, y: 0, z: 0}
@@ -266,6 +266,7 @@ GameObject:
   - component: {fileID: 2746512995500892230}
   - component: {fileID: 6732825367370737248}
   - component: {fileID: 3355195243960191176}
+  - component: {fileID: 1750457927563398915}
   m_Layer: 0
   m_Name: JimPlaque
   m_TagString: Untagged
@@ -338,3 +339,24 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &1750457927563398915
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6327618313607133402}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.7352682, y: 0.068321876, z: 0.9873291}
+  m_Center: {x: 0, y: 0.017992983, z: 0.48679295}

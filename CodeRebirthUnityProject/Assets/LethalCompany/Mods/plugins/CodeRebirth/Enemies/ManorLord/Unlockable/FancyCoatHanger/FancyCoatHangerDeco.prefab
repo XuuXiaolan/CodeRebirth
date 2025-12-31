@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6054852717130650358}
   - component: {fileID: 183262557990699222}
   - component: {fileID: 7036733682829662649}
+  - component: {fileID: 7095573335961279978}
   m_Layer: 26
   m_Name: PlacementCollider
   m_TagString: PlaceableObject
@@ -51,8 +52,8 @@ MonoBehaviour:
   parentObjectSecondary: {fileID: 0}
   mainMesh: {fileID: 4269366069016583282}
   mainTransform: {fileID: 563231719663720329}
-  placeObjectCollider: {fileID: 6421013311762093417}
-  yOffset: 0.5
+  placeObjectCollider: {fileID: 7095573335961279978}
+  yOffset: 0
   overrideWallOffset: 0
   wallOffset: 0
   collisionPointCheck: {x: 0, y: 0, z: 0}
@@ -158,45 +159,13 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!1 &7618584791703145750
-GameObject:
+--- !u!65 &7095573335961279978
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3571647424982449771}
-  - component: {fileID: 6421013311762093417}
-  m_Layer: 0
-  m_Name: Collision
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3571647424982449771
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7618584791703145750}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.25432986, y: 2.0175252, z: 1.0174925}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 563231719663720329}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &6421013311762093417
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7618584791703145750}
+  m_GameObject: {fileID: 6230390133462740554}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -208,11 +177,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.23777199
-  m_Height: 3.4102676
-  m_Direction: 1
-  m_Center: {x: 0.25106955, y: -0.40171134, z: -1.0489123}
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 3.4175289}
+  m_Center: {x: -1.9007487e-15, y: 1.6286797e-14, z: 1.6585369}
 --- !u!1 &8145811974045662267
 GameObject:
   m_ObjectHideFlags: 0
@@ -246,7 +213,6 @@ Transform:
   m_Children:
   - {fileID: 6054852717130650358}
   - {fileID: 1784475449639326713}
-  - {fileID: 3571647424982449771}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4343189732246953530
@@ -261,7 +227,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 32049409
+  GlobalObjectIdHash: 3931756720
   InScenePlacedSourceGlobalObjectIdHash: 3051954731
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -283,7 +249,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   disableObject: 0
-  positionOffset: {x: -0.825, y: 0.2417159, z: -12.698}
+  positionOffset: {x: -2.3, y: 0, z: -5.3}
   rotationOffset: {x: 0, y: 188.617, z: 0}
   startingPosition: {x: 0, y: 0, z: 0}
   startingRotation: {x: 0, y: 0, z: 0}
@@ -300,6 +266,7 @@ GameObject:
   - component: {fileID: 1784475449639326713}
   - component: {fileID: 4269366069016583282}
   - component: {fileID: 5964965467145954887}
+  - component: {fileID: 3676492969893555658}
   m_Layer: 0
   m_Name: FancyCoatHanger
   m_TagString: Untagged
@@ -372,3 +339,26 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!136 &3676492969893555658
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8973479782576513887}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.23777199
+  m_Height: 3.4102676
+  m_Direction: 2
+  m_Center: {x: 0, y: 0, z: 1.63}
