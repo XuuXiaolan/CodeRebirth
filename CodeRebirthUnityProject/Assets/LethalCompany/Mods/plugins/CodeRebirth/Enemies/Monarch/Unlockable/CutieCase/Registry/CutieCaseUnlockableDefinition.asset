@@ -28,7 +28,7 @@ MonoBehaviour:
     hasBeenMoved: 0
     placedPosition: {x: 0, y: 0, z: 0}
     placedRotation: {x: 0, y: 0, z: 0}
-    luckValue: 0
+    luckValue: 0.001
     inStorage: 0
     canBeStored: 1
     maxNumber: 1
@@ -40,12 +40,14 @@ MonoBehaviour:
     unlockedInChallengeFile: 0
     spawnPrefab: 1
     jumpAudio: {fileID: 0}
-  <InfoNodeText>k__BackingField: 
+  <InfoNodeText>k__BackingField: Preserved specimen of a "Cutie fly" insect. A nice
+    splash of color in any ship. Very brittle, handle with care. This one was found
+    dead and dried after if got stuck in the back of a cruiser.
   <TerminalPredicate>k__BackingField: {fileID: 0}
   <PricingStrategy>k__BackingField: {fileID: 0}
-  <IsShipUpgrade>k__BackingField: 1
-  <IsDecor>k__BackingField: 0
+  <IsShipUpgrade>k__BackingField: 0
+  <IsDecor>k__BackingField: 1
   <GenerateUnlockableTypeConfig>k__BackingField: 0
-  <Cost>k__BackingField: 0
+  <Cost>k__BackingField: 100
   <GenerateDisablePricingStrategyConfig>k__BackingField: 0
   <GenerateDisableUnlockRequirementConfig>k__BackingField: 0
