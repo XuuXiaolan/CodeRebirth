@@ -67,6 +67,10 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
     {
     }
 
+    public class TimmyBassAssets(DuskMod mod, string filePath) : AssetBundleLoader<TimmyBassAssets>(mod, filePath)
+    {
+    }
+
     public FriendAssets? Friend = null;
     public Fishdispenserassets? ShrimpDispenser = null;
     public SCP999Assets? SCP999 = null;
@@ -80,6 +84,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
     public CleanerDroneGalAssets? CleanerDroneGal = null;
     public CruiserGalAssets? CruiserGal = null;
     public CodeRebirthPlatinumAssets? CodeRebirthPlatinum = null;
+    public TimmyBassAssets? TimmyBass = null;
 
     public UnlockableHandler(DuskMod mod) : base(mod)
     {
@@ -108,5 +113,7 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
         RegisterContent("friendassets", out Friend);
 
         RegisterContent("bellcrabgalassets", out BellCrab);
+
+        RegisterContent("timmybassassets", out TimmyBass);
     }
 }
