@@ -43,8 +43,6 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
     public class FlashTurretAssets(DuskMod mod, string filePath) : AssetBundleLoader<FlashTurretAssets>(mod, filePath)
     {
-        [LoadFromBundle("FlashTurretUpdated.prefab")]
-        public GameObject FlashTurretPrefab { get; private set; } = null!;
     }
 
     public class TeslaShockAssets(DuskMod mod, string filePath) : AssetBundleLoader<TeslaShockAssets>(mod, filePath)

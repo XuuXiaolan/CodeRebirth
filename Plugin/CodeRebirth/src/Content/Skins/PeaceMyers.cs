@@ -6,7 +6,6 @@ namespace CodeRebirth.src.Content.Skins;
 public class PeaceMyers : MonoBehaviour
 {
     private PeaceKeeper peaceKeeper = null!;
-
     private float originalChasingSpeed = 0f; 
 
     public void Awake()
@@ -36,7 +35,6 @@ public class PeaceMyers : MonoBehaviour
 
         PlayerControllerB targetPlayer = peaceKeeper.targetPlayer;
         float dotProduct = Vector3.Dot(targetPlayer.gameplayCamera.transform.forward, (peaceKeeper.transform.position - targetPlayer.gameplayCamera.transform.position).normalized);
-        Debug.Log($"dotProduct: {dotProduct}");
         if (dotProduct <= 0f)
         {
             peaceKeeper._shootingSpeed = originalChasingSpeed * 2f;

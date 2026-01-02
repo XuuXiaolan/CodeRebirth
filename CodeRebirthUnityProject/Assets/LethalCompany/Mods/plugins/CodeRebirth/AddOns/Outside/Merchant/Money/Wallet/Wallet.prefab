@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7262992720387641273}
   - component: {fileID: 7210017959536718250}
   - component: {fileID: 9144494968854070415}
-  - component: {fileID: 3050913961628052694}
+  - component: {fileID: 2207640554100795282}
   m_Layer: 6
   m_Name: Wallet
   m_TagString: PhysicsProp
@@ -198,7 +198,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &3050913961628052694
+--- !u!114 &2207640554100795282
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -207,7 +207,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3184792357886542752}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1650946515, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Script: {fileID: -1221488607, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   grabbable: 1
@@ -248,11 +248,9 @@ MonoBehaviour:
   grabbableToEnemies: 1
   hasBeenHeld: 0
   rotateObject: 0
-  audioPlayer: {fileID: 9144494968854070415}
-  scanNode: {fileID: 5967244827687194067}
-  skinnedMeshRenderer: {fileID: 6377461073054825993}
-  coinsStored:
-    m_InternalValue: 0
+  _value: 5
+  _moneySource: {fileID: 9144494968854070415}
+  _collectSound: {fileID: 0}
 --- !u!1 &5902236826406273354
 GameObject:
   m_ObjectHideFlags: 0

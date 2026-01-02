@@ -308,6 +308,9 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
                 creatureSFX.PlayOneShot(crunchySquishSound);
                 creatureSFXFar.PlayOneShot(crunchySquishSound);
                 break;
+            case 3:
+                creatureVoice.PlayOneShot(roarSound);
+                break;
         }
     }
     public override void DoAIInterval()
@@ -342,6 +345,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         {
             Plugin.ExtendedLogging("Start Target Giant");
             smartAgentNavigator.StopSearchRoutine();
+            PlayMiscSoundsClientRpc(3);
             SwitchToBehaviourServerRpc((int)State.RunningToTarget);
             StartCoroutine(SetSpeedForChasingGiant());
             return;
