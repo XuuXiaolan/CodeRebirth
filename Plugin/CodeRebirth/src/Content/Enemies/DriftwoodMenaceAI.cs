@@ -118,12 +118,12 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     {
         base.Start();
         var enemyBlacklist = EnemyHandler.Instance.DriftwoodMenace.GetConfig<string>("Driftwood Menace | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
-        foreach (var nameEntry in enemyBlacklist.ToList())
+        foreach (string nameEntry in enemyBlacklist.ToList())
         {
             _enemyTargetBlacklist.UnionWith(LethalContent.Enemies.Values.Where(et => et.EnemyType.enemyName.Equals(nameEntry, System.StringComparison.OrdinalIgnoreCase)).Select(et => et.EnemyType.enemyName));
         }
 
-        foreach (var enemy in _enemyTargetBlacklist)
+        foreach (string enemy in _enemyTargetBlacklist)
         {
             Plugin.ExtendedLogging($"Enemy Blacklist: {enemy}");
         }
@@ -180,16 +180,6 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
             UpdateAwareness();
         }
     }
-
-    /*public void LateUpdate()
-    {
-        if (isEnemyDead) return;
-        if (currentlyGrabbed)
-        {
-            targetPlayer.transform.position = grabArea.transform.position;
-            targetPlayer.ResetFallGravity();
-        }
-    }*/
 
     #region StateMachine
     public override void DoAIInterval()
@@ -268,10 +258,9 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
             Plugin.ExtendedLogging("Resettings state to Scream Animation");
             ClearPlayerTargetServerRpc();
             ClearEnemyTargetServerRpc();
-            StartCoroutine(ChestBangPause((int)DriftwoodState.SearchingForPrey, 7f));
-            agent.speed = 0f;
-            smartAgentNavigator.StopAgent();
-            SwitchToBehaviourServerRpc((int)DriftwoodState.ChestBang);
+            smartAgentNavigator.StartSearchRoutine(50f);
+            agent.speed = 7;
+            SwitchToBehaviourServerRpc((int)DriftwoodState.SearchingForPrey);
             return;
         }
         // Keep targetting target enemy, unless they are over 20 units away and we can't see them.
@@ -281,10 +270,9 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
             {
                 Plugin.ExtendedLogging("Stop chasing target enemy");
                 ClearEnemyTargetServerRpc();
-                StartCoroutine(ChestBangPause((int)DriftwoodState.SearchingForPrey, 7f));
-                agent.speed = 0f;
-                smartAgentNavigator.StopAgent();
-                SwitchToBehaviourServerRpc((int)DriftwoodState.ChestBang);
+                smartAgentNavigator.StartSearchRoutine(50f);
+                agent.speed = 7;
+                SwitchToBehaviourServerRpc((int)DriftwoodState.SearchingForPrey);
                 return;
             }
             smartAgentNavigator.DoPathingToDestination(targetEnemy.transform.position);
@@ -295,10 +283,9 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
             {
                 Plugin.ExtendedLogging("Stop chasing target player");
                 ClearPlayerTargetServerRpc();
-                StartCoroutine(ChestBangPause((int)DriftwoodState.SearchingForPrey, 7f));
-                agent.speed = 0f;
-                smartAgentNavigator.StopAgent();
-                SwitchToBehaviourServerRpc((int)DriftwoodState.ChestBang);
+                smartAgentNavigator.StartSearchRoutine(50f);
+                agent.speed = 7;
+                SwitchToBehaviourServerRpc((int)DriftwoodState.SearchingForPrey);
                 return;
             }
             smartAgentNavigator.DoPathingToDestination(targetPlayer.transform.position);
@@ -389,9 +376,9 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         if (!player.isPlayerControlled || player.isPlayerDead || player.isInHangarShipRoom) return;
         float distance = Vector3.Distance(transform.position, player.transform.position);
 
-        if (distance <= 10)
+        if (distance <= 15)
         {
-            player.DamagePlayer(2, true, true, CauseOfDeath.Suffocation, 0, false, default);
+            player.DamagePlayer(3, true, true, CauseOfDeath.Suffocation, 0, false, default);
         }
     }
 

@@ -44,6 +44,8 @@
 - Expanded on cactus budling weights a bit.
 - Adjusted Cacti weights to add desert.
 - Made cacti spawning on you from cactus budling slower emerging when you're inside the facility.
+- Adjusted driftwood's spawn curve to be higher the later the day.
+- Adjusted driftwood and removed chest bang after losing aggro of the player or enemy.
 
 ## v1.4.2
 
