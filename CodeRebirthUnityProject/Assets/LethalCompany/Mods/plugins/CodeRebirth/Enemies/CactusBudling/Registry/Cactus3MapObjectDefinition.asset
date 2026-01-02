@@ -40,7 +40,97 @@ MonoBehaviour:
     AlignWithTerrain: 0
   <IsInsideHazard>k__BackingField: 0
   <CreateInsideHazardConfig>k__BackingField: 0
-  <InsideMoonCurveSpawnWeights>k__BackingField: []
+  <InsideMoonCurveSpawnWeights>k__BackingField:
+  - <Key>k__BackingField:
+      _namespace: lethal_company
+      _key: canyon
+    <Curve>k__BackingField:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 10
+        inSlope: 6.0000005
+        outSlope: 6.0000005
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.78
+        value: 14.68
+        inSlope: 12.239514
+        outSlope: 12.239514
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.054653946
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.89
+        value: 18.5
+        inSlope: 69.63635
+        outSlope: 69.63635
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1
+        value: 30
+        inSlope: 104.54544
+        outSlope: 104.54544
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+  - <Key>k__BackingField:
+      _namespace: lethal_company
+      _key: desert
+    <Curve>k__BackingField:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 10
+        inSlope: 6.0000005
+        outSlope: 6.0000005
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.78
+        value: 14.68
+        inSlope: 12.239514
+        outSlope: 12.239514
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.054653946
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.89
+        value: 18.5
+        inSlope: 69.63635
+        outSlope: 69.63635
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1
+        value: 30
+        inSlope: 104.54544
+        outSlope: 104.54544
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
   <InsideInteriorCurveSpawnWeights>k__BackingField: []
   <InsidePrioritiseMoonConfig>k__BackingField: 0
   <CreateInsideCurveSpawnWeightsConfig>k__BackingField: 0
@@ -50,7 +140,5 @@ MonoBehaviour:
   <OutsideInteriorCurveSpawnWeights>k__BackingField: []
   <OutsidePrioritiseMoonConfig>k__BackingField: 1
   <CreateOutsideCurveSpawnWeightsConfig>k__BackingField: 1
-  <DefaultOutsideCurveSpawnWeights>k__BackingField: Canyon - 0.00,10.00 ; 0.11,10.64
-    ; 0.22,11.21 ; 0.33,11.77 ; 0.44,12.35 ; 0.56,13.00 ; 0.67,13.76 ; 0.78,14.68
-    ; 0.89,18.50 ; 1.00,30.00
+  <DefaultOutsideCurveSpawnWeights>k__BackingField: 
   <DefaultInsideCurveSpawnWeights>k__BackingField: 

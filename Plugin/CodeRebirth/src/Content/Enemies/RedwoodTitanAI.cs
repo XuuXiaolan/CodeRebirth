@@ -449,7 +449,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         {
             ForestKeeperParticles.Play();
         }
-        else if (targetEnemy is DriftwoodMenaceAI || targetEnemy.enemyType.enemyName == "DriftWoodGiant")
+        else if (targetEnemy is DriftwoodMenaceAI)
         {
             DriftwoodGiantParticles.Play();
         }
@@ -468,7 +468,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
 
         foreach (EnemyAI enemy in RoundManager.Instance.SpawnedEnemies)
         {
-            if (enemy.isEnemyDead || (enemy is not DriftwoodMenaceAI && enemy.enemyType.enemyName != "DriftWoodGiant" && enemy.enemyType.enemyName != "ForestGiant"))
+            if (enemy.isEnemyDead || (enemy is not DriftwoodMenaceAI && enemy is not ForestGiantAI))
                 continue;
 
             float distance = Vector3.Distance(transform.position, enemy.transform.position);

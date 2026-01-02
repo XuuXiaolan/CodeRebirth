@@ -9,6 +9,7 @@ using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem.Utilities;
+using CodeRebirth.src.MiscScripts;
 
 namespace CodeRebirth.src.Content.Enemies;
 public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
@@ -277,7 +278,7 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
             }
             int randomCactiIndex = UnityEngine.Random.Range(0, _budlingCacti.Count);
             int randomAngle = UnityEngine.Random.Range(0, 360);
-            SpawnCactiServerRpc(randomPosition, normal, randomAngle, randomCactiIndex);
+            SpawnCactiServerRpc(randomPosition, normal, randomAngle, randomCactiIndex, randomPlayer.isInsideFactory);
         }
     }
 
@@ -367,21 +368,29 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void SpawnCactiServerRpc(Vector3 position, Vector3 normal, int angle, int index)
+    private void SpawnCactiServerRpc(Vector3 position, Vector3 normal, int angle, int index, bool insideSpawn)
     {
         GameObject randomCacti = _budlingCacti[index];
         var newCacti = GameObject.Instantiate(randomCacti, position, Quaternion.Euler(0, angle, 0), RoundManager.Instance.mapPropsContainer.transform);
         var netObj = newCacti.GetComponent<NetworkObject>();
         netObj.Spawn(true);
-        SpawnCactiClientRpc(netObj, normal);
+        SpawnCactiClientRpc(netObj, normal, insideSpawn);
     }
 
     [ClientRpc]
-    private void SpawnCactiClientRpc(NetworkObjectReference netObjRef, Vector3 normal)
+    private void SpawnCactiClientRpc(NetworkObjectReference netObjRef, Vector3 normal, bool insideSpawn)
     {
         if (netObjRef.TryGet(out NetworkObject netObj))
         {
             netObj.transform.up = normal;
+            if (insideSpawn)
+            {
+                RiseFromGroundOnSpawn riseFromGroundOnSpawn = netObj.gameObject.GetComponent<RiseFromGroundOnSpawn>();
+                foreach (RiseFromDifferentGroundTypes riseFromDifferentGroundTypes in riseFromGroundOnSpawn._riseFromDifferentGroundTypes)
+                {
+                    riseFromDifferentGroundTypes.raiseSpeed /= 4f;
+                }
+            }
             DestructibleObject destructibleObject = netObj.gameObject.GetComponent<DestructibleObject>();
             destructibleObject._destroyCactiRoutine = destructibleObject.StartCoroutine(destructibleObject.DestroyObjectWithDelay(enemyRandom.NextFloat(30f, 45f), true));
         }

@@ -23,7 +23,7 @@ public class RiseFromDifferentGroundTypes
 public class RiseFromGroundOnSpawn : MonoBehaviour
 {
     [SerializeField]
-    private RiseFromDifferentGroundTypes[] _riseFromDifferentGroundTypes = [];
+    internal RiseFromDifferentGroundTypes[] _riseFromDifferentGroundTypes = [];
 
     internal RiseFromDifferentGroundTypes _riseFromDifferentGroundType = new();
     internal float _timeToTake = 0f;

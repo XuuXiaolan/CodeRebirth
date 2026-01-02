@@ -37,6 +37,13 @@
 - Peacekeepers don't damage eachother anymore.
 - Fixed any issues with mistress head not following the player while being held or any weird visual clarity.
 - Cleaned up mistress' AI a bit more to make it a bit less jank.
+- Monarch hp adjusted from 10 to 8.
+- Fixed all plushy scrap values from being backwards, 32 -> 64 into 64 -> 32 (it forced them all to be the same price each time, 32).
+- Removed Xui long voiceline, sad day for me :(.
+- Xui value adjusted from 0 to be same as kingrigo.
+- Expanded on cactus budling weights a bit.
+- Adjusted Cacti weights to add desert.
+- Made cacti spawning on you from cactus budling slower emerging when you're inside the facility.
 
 ## v1.4.2
 
