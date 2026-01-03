@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using BepInEx.Configuration;
 using CodeRebirth.src.Util;
 using Dawn;
@@ -110,6 +110,10 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
         UltraCreatureVoice.Play();
 
         if (!IsServer)
+            return;
+
+        int existingCutieflys = RoundManager.Instance.SpawnedEnemies.Count(x => x != null && x.enemyType == LethalContent.Enemies[CodeRebirthEnemyKeys.CutieFly].EnemyType);
+        if (existingCutieflys >= 15)
             return;
 
         int randomNumberToSpawn = UnityEngine.Random.Range(2, 5);

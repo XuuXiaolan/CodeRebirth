@@ -6,8 +6,12 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Enemies;
 public class CutieFlyAI : CodeRebirthEnemyAI
 {
-    private static readonly int IsDeadAnimation = Animator.StringToHash("doDeath");
+    public GameObject armature = null!;
+
+    private static readonly int IsDeadAnimation = Animator.StringToHash("doDeath"); // Trigger
+    private static readonly int IsLeavingAnimation = Animator.StringToHash("leaving"); // Bool
     private float oldSpeed = 0f;
+    private float timeLeft = 30;
 
     public override void Start()
     {
@@ -17,10 +21,42 @@ public class CutieFlyAI : CodeRebirthEnemyAI
         if (IsServer) smartAgentNavigator.StartSearchRoutine(50);
     }
 
+    public override void Update()
+    {
+        base.Update();
+        if (!IsServer)
+        {
+            return;
+        }
+
+        if (daytimeEnemyLeaving)
+        {
+            timeLeft -= Time.deltaTime;
+            armature.gameObject.transform.position += Vector3.up * Time.deltaTime * 2f;
+            if (timeLeft <= 0)
+            {
+                NetworkObject.Despawn(true);
+            }
+        }
+    }
+
+    public override void DaytimeEnemyLeave()
+    {
+        base.DaytimeEnemyLeave();
+        if (IsServer)
+        {
+            creatureAnimator.SetBool(IsLeavingAnimation, true);
+        }
+    }
+
     public override void OnCollideWithPlayer(Collider other)
     {
         base.OnCollideWithPlayer(other);
-        if (isEnemyDead) return;
+        if (isEnemyDead)
+        {
+            return;
+        }
+
         HitEnemy(1, other.GetComponent<PlayerControllerB>(), true, -1);
     }
 

@@ -222,7 +222,7 @@ public class Mistress : CodeRebirthEnemyAI
 
             // TryReportLookStateToServer(lookedAtEnemy);
 
-            if (localLookCount >= 5)
+            if (localLookCount >= 20)
             {
                 localLookCount = 0;
                 ConfirmLookThresholdServerRpc();
@@ -230,7 +230,7 @@ public class Mistress : CodeRebirthEnemyAI
         }
         else if (currentBehaviourStateIndex == (int)State.Attack)
         {
-            localLookCount = lookedAtEnemy ? localLookCount + 1 : localLookCount - 1;
+            localLookCount = Mathf.Clamp(localLookCount + (lookedAtEnemy ? 1 : -1), -10, 0);
 
             // TryReportLookStateToServer(lookedAtEnemy);
 

@@ -46,6 +46,8 @@
 - Made cacti spawning on you from cactus budling slower emerging when you're inside the facility.
 - Adjusted driftwood's spawn curve to be higher the later the day.
 - Adjusted driftwood and removed chest bang after losing aggro of the player or enemy.
+- Added a limit for monarch to spawn more cutieflies, no more cutieflies past 15.
+- After around 7pm, cutieflies fly up to the sky until they eventually despawn 30 seconds later.
 
 ## v1.4.2
 
