@@ -16,6 +16,7 @@ public class CutieFlyAI : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
+        timeLeft = UnityEngine.Random.Range(30f, 40f);
         oldSpeed = agent.speed;
 
         if (IsServer) smartAgentNavigator.StartSearchRoutine(50);
