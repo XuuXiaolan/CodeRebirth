@@ -115,6 +115,7 @@ public class Meteors : FallingObjectBehaviour
 
         CRUtilities.CreateExplosion(transform.position, true, 100, 0, 15, 4, null, WeatherHandler.Instance.Meteorite.ExplosionPrefab, 25f);
         _onMeteorLand.Invoke();
+        RoundManager.Instance.DestroyTreeAtPosition(transform.position, 15f);
 
         if (!IsServer) yield break;
         yield return new WaitForSeconds(10f);
