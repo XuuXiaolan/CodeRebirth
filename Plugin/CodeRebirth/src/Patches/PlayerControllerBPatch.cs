@@ -10,7 +10,6 @@ using CodeRebirth.src.Util;
 using Dawn;
 using Dusk;
 using Dawn.Utils;
-
 using GameNetcodeStuff;
 using HarmonyLib;
 using Mono.Cecil.Cil;
@@ -102,6 +101,16 @@ static class PlayerControllerBPatch
         On.GameNetcodeStuff.PlayerControllerB.Jump_performed += PlayerControllerB_Jump_performed;
         On.GameNetcodeStuff.PlayerControllerB.Interact_performed += PlayerControllerB_Interact_performed;
         On.GameNetcodeStuff.PlayerControllerB.StopHoldInteractionOnTrigger += PlayerControllerB_StopHoldInteractionOnTrigger;
+        On.GameNetcodeStuff.PlayerControllerB.PlayerHitGroundEffects += PlayerControllerB_PlayerHitGroundEffects;
+    }
+
+    private static void PlayerControllerB_PlayerHitGroundEffects(On.GameNetcodeStuff.PlayerControllerB.orig_PlayerHitGroundEffects orig, PlayerControllerB self)
+    {
+        if (self.fallValue < -9f)
+        {
+            self.SetIsJumping(false);
+        }
+        orig(self);
     }
 
     private static void PlayerControllerB_SetItemInElevator(On.GameNetcodeStuff.PlayerControllerB.orig_SetItemInElevator orig, PlayerControllerB self, bool droppedInShipRoom, bool droppedInElevator, GrabbableObject gObject)

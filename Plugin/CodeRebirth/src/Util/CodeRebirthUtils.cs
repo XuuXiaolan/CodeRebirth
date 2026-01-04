@@ -91,6 +91,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
 
     public void PlayerPressedJump(PlayerControllerB player)
     {
+        player.SetIsJumping(true);
         foreach (var instance in Mountaineer.Instances)
         {
             instance.JumpActionTriggered(player);

@@ -473,7 +473,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
             if (!_cachedHits[i].collider.TryGetComponent(out PlayerControllerB player) || !player.IsOwner)
                 continue;
 
-            if (player.isJumping)
+            if (player.IsJumping())
                 continue;
 
             player.DamagePlayer(33, true, true, CauseOfDeath.Snipped, 7, true, default);

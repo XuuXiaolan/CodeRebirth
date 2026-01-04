@@ -51,6 +51,7 @@
 - Increased value of manorlord puppet from 64 to 32 -> 80 to 50.
 - Mimic and normal safe spawn facing away from walls, same for crane, in the hopes of decreasing softlocks with their mechanics.
 - Meteors now destroy trees in the surroundings.
+- Monarch's jump evasion given more invincibility frames.
 
 ## v1.4.2
 

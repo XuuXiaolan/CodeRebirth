@@ -195,6 +195,7 @@ public class CRPlayerData
     public bool flingingAway = false;
     public bool flung = false;
     public bool pseudoDead = false;
+    public bool isJumping = false;
     public Hoverboard? hoverboardRiding;
     // public AnimatorOverrideController animatorOverrideController = null!;
     public List<Collider> playerColliders = new();
@@ -279,6 +280,12 @@ internal static class PlayerControllerBExtensions
         // player.GetCRPlayerData().animatorOverrideController = new AnimatorOverrideController(player.playerBodyAnimator.runtimeAnimatorController);
         // player.playerBodyAnimator.runtimeAnimatorController = player.GetCRPlayerData().animatorOverrideController;
     }
+
+    internal static bool IsJumping(this PlayerControllerB player) =>
+        player.GetCRPlayerData().isJumping;
+
+    internal static void SetIsJumping(this PlayerControllerB player, bool isJumping) =>
+        player.GetCRPlayerData().isJumping = isJumping;
 
     internal static bool IsPseudoDead(this PlayerControllerB player) =>
         player.GetCRPlayerData().pseudoDead;
