@@ -59,6 +59,10 @@ public class GalAI : NetworkBehaviour, IHittable
     {
         base.OnNetworkSpawn();
         Instances.Add(this);
+        if (_GalAINoiseListener == null)
+        {
+            _GalAINoiseListener = GetComponentInChildren<CRNoiseListener>();
+        }
         _GalAINoiseListener._onNoiseDetected.AddListener(DetectNoise);
         if (!IsServer) return;
 

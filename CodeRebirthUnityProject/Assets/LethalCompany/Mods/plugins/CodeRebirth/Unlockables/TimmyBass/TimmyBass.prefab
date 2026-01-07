@@ -228,7 +228,7 @@ Transform:
   m_GameObject: {fileID: 2270954359508039285}
   serializedVersion: 2
   m_LocalRotation: {x: -0.5000328, y: 0.49996728, z: 0.49996737, w: 0.50003266}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0.32}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -255,7 +255,7 @@ MonoBehaviour:
   placeObjectCollider: {fileID: 1968780058326457763}
   yOffset: 0
   overrideWallOffset: 1
-  wallOffset: 0.06
+  wallOffset: 0.38
   collisionPointCheck: {x: 0, y: 0, z: 0}
   doCollisionPointCheck: 0
   AllowPlacementOnWalls: 1
@@ -379,7 +379,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 0.33310747, y: 1.2766545, z: 0.79776514}
-  m_Center: {x: -0.13321865, y: -0.007840514, z: 0.39335355}
+  m_Center: {x: 0.1867814, y: -0.007840514, z: 0.39335355}
 --- !u!1 &2857599642324081037
 GameObject:
   m_ObjectHideFlags: 0

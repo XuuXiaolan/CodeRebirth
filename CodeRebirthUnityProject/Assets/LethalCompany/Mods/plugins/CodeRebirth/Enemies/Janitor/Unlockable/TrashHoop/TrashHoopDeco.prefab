@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 1333463959069275271}
   serializedVersion: 2
   m_LocalRotation: {x: -0.5000328, y: 0.49996728, z: 0.49996737, w: 0.50003266}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -53,7 +53,7 @@ MonoBehaviour:
   mainMesh: {fileID: 8430308606731249338}
   mainTransform: {fileID: 2070462242207474456}
   placeObjectCollider: {fileID: 8021782820636905987}
-  yOffset: 0
+  yOffset: 0.6
   overrideWallOffset: 0
   wallOffset: 0
   collisionPointCheck: {x: 0, y: 0, z: 0}
@@ -179,7 +179,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1.0715599, y: 1, z: 1.9541326}
-  m_Center: {x: -0.035779953, y: 1.5440393e-13, z: 0.96605945}
+  m_Center: {x: -0.035779953, y: 1.5440393e-13, z: 0.3660594}
 --- !u!1 &1695324153253430568
 GameObject:
   m_ObjectHideFlags: 0
@@ -453,7 +453,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3488062129
+  GlobalObjectIdHash: 1304400586
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -475,8 +475,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   disableObject: 0
-  positionOffset: {x: 0.8319, y: -0.0367, z: -8.3972}
-  rotationOffset: {x: 0, y: 0, z: 0}
+  positionOffset: {x: 8.1629, y: -0.0467, z: -8.7645}
+  rotationOffset: {x: 0, y: 324.2915, z: 0}
   startingPosition: {x: 0, y: 0, z: 0}
   startingRotation: {x: 0, y: 0, z: 0}
   overrideOffset: 1
