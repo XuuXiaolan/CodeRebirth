@@ -340,7 +340,6 @@ internal class CodeRebirthUtils : NetworkBehaviour
     public void SaveCodeRebirthData()
     {
         if (!NetworkManager.Singleton.IsHost) return;
-        PiggyBank.Instance?.SaveCurrentCoins();
         foreach (var plantpot in PlantPot.Instances)
         {
             plantpot.SavePlantData();

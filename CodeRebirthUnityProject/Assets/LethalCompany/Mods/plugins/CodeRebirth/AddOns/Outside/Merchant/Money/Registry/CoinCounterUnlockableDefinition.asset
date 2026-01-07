@@ -10,27 +10,27 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 1963577118, guid: cd73415377293454abda168a425682f7, type: 3}
-  m_Name: PiggyBankUnlockableDefinition
+  m_Name: CoinCounterUnlockableDefinition
   m_EditorClassIdentifier: 
   _configEntries: []
   _tags: []
   <Key>k__BackingField:
     _namespace: code_rebirth
-    _key: piggy
+    _key: coin_counter
   <UnlockableItem>k__BackingField:
-    unlockableName: PIGGY
-    prefabObject: {fileID: 3567497631516016859, guid: ceee6307480c7d84cbabf5f7bdae2f92,
+    unlockableName: Coin Counter
+    prefabObject: {fileID: 3792917014845006617, guid: e4eb40877c23dc04ca0ec8f0737c6e0d,
       type: 3}
-    unlockableType: 1
+    unlockableType: 0
     shopSelectionNode: {fileID: 0}
     alwaysInStock: 1
-    IsPlaceable: 1
+    IsPlaceable: 0
     hasBeenMoved: 0
     placedPosition: {x: 0, y: 0, z: 0}
     placedRotation: {x: 0, y: 0, z: 0}
-    luckValue: -0.02
+    luckValue: 0
     inStorage: 0
-    canBeStored: 0
+    canBeStored: 1
     maxNumber: 1
     hasBeenUnlockedByPlayer: 0
     suitMaterial: {fileID: 0}
@@ -45,7 +45,7 @@ MonoBehaviour:
   <PricingStrategy>k__BackingField: {fileID: 0}
   <IsShipUpgrade>k__BackingField: 1
   <IsDecor>k__BackingField: 0
-  <GenerateUnlockableTypeConfig>k__BackingField: 1
-  <Cost>k__BackingField: 100
+  <GenerateUnlockableTypeConfig>k__BackingField: 0
+  <Cost>k__BackingField: 0
   <GenerateDisablePricingStrategyConfig>k__BackingField: 0
   <GenerateDisableUnlockRequirementConfig>k__BackingField: 0

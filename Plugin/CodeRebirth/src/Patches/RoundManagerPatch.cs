@@ -119,7 +119,6 @@ static class RoundManagerPatch
     private static void ReturnToOrbitMiscPatch()
     {
         plushiesCollectedToday.Clear();
-        PiggyBank.Instance?.RepairOrBreakPiggyBankServerRpc(false);
         foreach (GalAI gal in GalAI.Instances)
         {
             gal.RefillChargesServerRpc();
