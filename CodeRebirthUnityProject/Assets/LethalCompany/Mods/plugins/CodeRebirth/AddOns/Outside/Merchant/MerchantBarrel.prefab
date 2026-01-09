@@ -40,7 +40,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 334900010570619578}
-  m_Mesh: {fileID: 6162390189991579605, guid: 35e31d0cc398ed74d9db20d032554c78, type: 3}
+  m_Mesh: {fileID: 6162390189991579605, guid: 3aca776cba786ee42a164dad0ec2fe42, type: 3}
 --- !u!23 &8415665645348356197
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -173,7 +173,7 @@ Transform:
   m_GameObject: {fileID: 3634271244428066876}
   serializedVersion: 2
   m_LocalRotation: {x: 0.17340867, y: 0.6855141, z: 0.6855139, w: -0.17340872}
-  m_LocalPosition: {x: -0, y: 1.98, z: -0}
+  m_LocalPosition: {x: -0, y: 3.07, z: -0}
   m_LocalScale: {x: 1.2999998, y: 1.3, z: 1.2999998}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -199,9 +199,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.47367364
-  m_Height: 1.307504
+  m_Height: 1.294955
   m_Direction: 2
-  m_Center: {x: -0.019860959, y: -0.000000046279855, z: -0.857133}
+  m_Center: {x: -0.019860959, y: -0.000000046022855, z: -1.6878608}
 --- !u!1 &4290339784009027837
 GameObject:
   m_ObjectHideFlags: 0
@@ -383,6 +383,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1764799058488973979}
+  - component: {fileID: 7328475718161117234}
+  - component: {fileID: 7004442002392512138}
   m_Layer: 0
   m_Name: MerchantBarrel
   m_TagString: Untagged
@@ -409,6 +411,76 @@ Transform:
   - {fileID: 8822797417985263086}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7328475718161117234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5422123737943913922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 1527308982
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 1
+  AutoObjectParentSync: 0
+--- !u!114 &7004442002392512138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5422123737943913922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 523894339, guid: b821795baeb020545a00803c13a7b7c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _outcomes:
+  - weight: 1
+    onSelected:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6111809299045593976}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+    onNotSelected:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 8022139302202823811}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+  _minSelect: 1
+  _maxSelect: 1
+  _allowDuplicates: 0
+  _disableOthers: 1
+  _rollOnSpawn: 1
 --- !u!1 &5809431030126359633
 GameObject:
   m_ObjectHideFlags: 0
@@ -622,7 +694,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6111809299045593976}
-  m_Mesh: {fileID: -616513783935803773, guid: 35e31d0cc398ed74d9db20d032554c78, type: 3}
+  m_Mesh: {fileID: -616513783935803773, guid: 3aca776cba786ee42a164dad0ec2fe42, type: 3}
 --- !u!23 &8572415537920985512
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -682,7 +754,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8822797417985263086
 Transform:
   m_ObjectHideFlags: 0
@@ -706,7 +778,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8022139302202823811}
-  m_Mesh: {fileID: -2102088068045797832, guid: 35e31d0cc398ed74d9db20d032554c78, type: 3}
+  m_Mesh: {fileID: -2102088068045797832, guid: 3aca776cba786ee42a164dad0ec2fe42, type: 3}
 --- !u!23 &5885620969202144120
 MeshRenderer:
   m_ObjectHideFlags: 0
