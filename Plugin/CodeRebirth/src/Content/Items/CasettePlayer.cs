@@ -1,7 +1,5 @@
 using System.Collections;
 using CodeRebirth.src.Util;
-
-
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Video;

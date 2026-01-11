@@ -30,6 +30,15 @@ public class CRPlanetUnlocker : GrabbableObject
     [SerializeField]
     private HUDDisplayTip _displayTip;
 
+    public override void LateUpdate()
+    {
+        base.LateUpdate();
+        if (playerHeldBy != null && playerHeldBy.inSpecialInteractAnimation)
+        {
+            playerHeldBy.disableMoveInput = false;
+        }
+    }
+
     public override void ItemActivate(bool used, bool buttonDown = true)
     {
         base.ItemActivate(used, buttonDown);

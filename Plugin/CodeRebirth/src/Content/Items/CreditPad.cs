@@ -2,12 +2,23 @@ using System.Collections;
 using CodeRebirth.src.Util;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Video;
 
 namespace CodeRebirth.src.Content.Items;
 public class CreditPad : GrabbableObject
 {
     public AudioSource audioPlayer = null!;
+    public VideoPlayer videoPlayer = null!;
     public int creditValue = 0;
+
+    public override void LateUpdate()
+    {
+        base.LateUpdate();
+        if (playerHeldBy != null && playerHeldBy.inSpecialInteractAnimation)
+        {
+            playerHeldBy.disableMoveInput = false;
+        }
+    }
 
     public override void ItemActivate(bool used, bool buttonDown = true)
     {
@@ -20,7 +31,7 @@ public class CreditPad : GrabbableObject
     private IEnumerator WaitForEndOfFrame()
     {
         yield return new WaitForSeconds(0.1f);
-        yield return new WaitUntil(() => !audioPlayer.isPlaying);
+        yield return new WaitUntil(() => !audioPlayer.isPlaying && !videoPlayer.isPlaying);
         playerHeldBy.inSpecialInteractAnimation = false;
         playerHeldBy.DespawnHeldObject();
     }
@@ -40,5 +51,10 @@ public class CreditPad : GrabbableObject
     public void PlaySoundClientRpc()
     {
         audioPlayer.Play();
+        videoPlayer.gameObject.SetActive(true);
+        if (!videoPlayer.playOnAwake)
+        {
+            videoPlayer.Play();
+        }
     }
 }
