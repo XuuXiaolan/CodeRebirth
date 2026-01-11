@@ -1,55 +1,110 @@
 using System.Collections;
-using System.Linq;
-using CodeRebirth.src.ModCompats;
+using Dawn;
 using Dawn.Utils;
+using Dusk;
 using UnityEngine;
+using UnityEngine.Video;
 
 namespace CodeRebirth.src.Content.Items;
-public class PlanetUnlocker : GrabbableObject
+public class CRPlanetUnlocker : GrabbableObject
 {
-    public string moonSceneName = "Oxyde";
-    public string extraText = string.Empty;
-    public AudioSource audioPlayer = null!;
+    [Header("Planet Unlocker Settings")]
+    [SerializeReference]
+    private DuskMoonReference _moonReference;
+
+    [SerializeField]
+    private bool _consumeOnUnlock = true;
+
+    [SerializeField]
+    [Tooltip("Leave empty to have no audio")]
+    private AudioSource _unlockAudio;
+
+    [SerializeField]
+    [Tooltip("Leave empty to have no videoPlayer")]
+    private VideoPlayer _unlockVideoPlayer;
+
+    [Header("Notification Settings")]
+    [SerializeField]
+    private bool _showDisplayTip;
+
+    [SerializeField]
+    private HUDDisplayTip _displayTip;
 
     public override void ItemActivate(bool used, bool buttonDown = true)
     {
         base.ItemActivate(used, buttonDown);
         playerHeldBy.inSpecialInteractAnimation = true;
-        audioPlayer.Play();
-        // todo
-        /*LevelManager.TryGetExtendedLevel(StartOfRound.Instance.levels.Where(x => x.sceneName == moonSceneName).FirstOrDefault(), out ExtendedLevel? extendedLevel);
-        if (extendedLevel != null)
+
+        if (!TryUnlock()) // failed to unlock
         {
-            HUDManager.Instance.DisplayTip("Success", $"Coordinates to {moonSceneName} found.\n{extraText}", false);
-            if (LethalMoonUnlocksCompat.LethalMoonUnlocksExists)
+            HUDManager.Instance.DisplayTip(new HUDDisplayTip(
+                "Error",
+                $"Coordinates to {_moonReference.Key.Key} could not be verified, Cancelling.",
+                HUDDisplayTip.AlertType.Warning
+            ));
+        }
+
+        if (_unlockAudio)
+        {
+            _unlockAudio.Play();
+        }
+
+        if (_unlockVideoPlayer)
+        {
+            _unlockVideoPlayer.gameObject.SetActive(true);
+            if (!_unlockVideoPlayer.playOnAwake)
             {
-                LethalMoonUnlocksCompat.ReleaseOxydeStoryLock(extendedLevel);
+                _unlockVideoPlayer.Play();
+            }
+        }
+
+        StartCoroutine(WaitToDespawn());
+    }
+
+    private bool TryUnlock()
+    {
+        if (_moonReference.TryResolve(out DawnMoonInfo moonInfo))
+        {
+            if (moonInfo.DawnPurchaseInfo.PurchasePredicate is not ProgressivePredicate progressive)
+            {
+                HUDManager.Instance.DisplayTip(_displayTip);
+                return false;
             }
 
-            extendedLevel.IsRouteHidden = false;
-            extendedLevel.IsRouteLocked = false;
+            progressive.Unlock(_showDisplayTip ? _displayTip : null);
+            return true;
         }
         else
         {
-            HUDManager.Instance.DisplayTip("Error", $"Coordinates to {moonSceneName} could not be verified, Cancelling operation.\n{extraText}", true);
-        }*/
-        StartCoroutine(WaitForEndOfFrame());
+            HUDManager.Instance.DisplayTip(_displayTip);
+            return false;
+        }
     }
 
-    private IEnumerator WaitForEndOfFrame()
+    private IEnumerator WaitToDespawn()
     {
-        if (audioPlayer.clip != null)
+        if (_unlockVideoPlayer && _unlockVideoPlayer.clip != null)
         {
-            yield return new WaitForSeconds(audioPlayer.clip.length);
+            yield return new WaitForSeconds((float)_unlockVideoPlayer.clip.length);
+        }
+        else if (_unlockAudio && _unlockAudio.clip != null)
+        {
+            yield return new WaitForSeconds(_unlockAudio.clip.length);
         }
         else
         {
             yield return new WaitForSeconds(1f);
         }
+
         playerHeldBy.inSpecialInteractAnimation = false;
         if (!playerHeldBy.IsLocalPlayer())
+        {
             yield break;
+        }
 
-        playerHeldBy.DespawnHeldObject();
+        if (_consumeOnUnlock)
+        {
+            playerHeldBy.DespawnHeldObject();
+        }
     }
 }

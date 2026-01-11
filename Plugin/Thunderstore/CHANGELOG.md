@@ -53,6 +53,7 @@
 - Meteors now destroy trees in the surroundings.
 - Monarch's jump evasion given more invincibility frames.
 - Made default positions for almost all if not all furnitures.
+- Started weight loss program for Xui.
 
 ## v1.4.2
 
