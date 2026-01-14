@@ -592,7 +592,7 @@ public class CruiserGalAI : GalAI
                 case State.Dancing:
                     HandleStateDancingChange();
                     break;
-            };
+            }
             galState = stateToSwitchTo;
         }
     }

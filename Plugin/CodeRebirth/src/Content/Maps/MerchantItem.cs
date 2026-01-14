@@ -37,7 +37,7 @@ public class MerchantItem : MonoBehaviour
         {
             if (AttemptedPurchase && rejectionMessage == "Not enough money.")
             {
-                
+
             }
             AttemptedPurchase = true;
             return;

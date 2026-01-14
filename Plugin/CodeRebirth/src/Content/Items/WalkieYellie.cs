@@ -101,7 +101,7 @@ public class WalkieYellie : GrabbableObject
         audioSource.maxDistance = maxDistance;
         if (previouslyPlayerHeldBy.playerSteamId == 76561198399127090)
         {
-            SoundManager.Instance.SetPlayerPitch(1f, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, previouslyPlayerHeldBy));                    
+            SoundManager.Instance.SetPlayerPitch(1f, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, previouslyPlayerHeldBy));
         }
     }
 }

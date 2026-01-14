@@ -6,7 +6,7 @@ namespace CodeRebirth.src.Content.Skins;
 public class PeaceMyers : MonoBehaviour
 {
     private PeaceKeeper peaceKeeper = null!;
-    private float originalChasingSpeed = 0f; 
+    private float originalChasingSpeed = 0f;
 
     public void Awake()
     {
