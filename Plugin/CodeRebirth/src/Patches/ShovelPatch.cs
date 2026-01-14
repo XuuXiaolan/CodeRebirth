@@ -13,17 +13,9 @@ public static class ShovelPatch
 
     private static void Shovel_HitShovel(On.Shovel.orig_HitShovel orig, Shovel self, bool cancel)
     {
-        PreHitShovel(ref self);
-
         orig(self, cancel);
 
         PostHitShovel(ref self);
-    }
-
-    private static void PreHitShovel(ref Shovel self)
-    {
-        // if (self is not CodeRebirthWeapons CRWeapon) return;
-        // random ??= new System.Random(StartOfRound.Instance.randomMapSeed + 85);
     }
 
     private static void PostHitShovel(ref Shovel self)
@@ -40,8 +32,6 @@ public static class ShovelPatch
             return;
         }
         TrySpawnCRHazard(ref self);
-        // if (self is not CodeRebirthWeapons CRWeapon) return;
-        // TryBreakTrees(ref CRWeapon);
     }
 
     private static bool DetermineIfShovelHitSomething(Shovel self)
@@ -68,28 +58,6 @@ public static class ShovelPatch
         if (!Plugin.ModConfig.ConfigDebugMode.Value)
             return;
 
-        if (!NetworkManager.Singleton.IsServer || shovel.playerHeldBy.playerSteamId != 0)
-            return;
-
         CodeRebirthUtils.Instance.SpawnRandomCRHazardServerRpc(RoundManager.Instance.GetRandomNavMeshPositionInRadius(shovel.previousPlayerHeldBy.gameplayCamera.transform.position + shovel.previousPlayerHeldBy.gameplayCamera.transform.right * -0.35f, 1f, default));
-    }
-
-    private static void TryBreakTrees(ref CodeRebirthWeapons CRWeapon)
-    {
-        // if (!CRWeapon.canBreakTrees) return;
-
-        /*int numHits = Physics.OverlapSphereNonAlloc(CRWeapon.weaponTip.position, 5f, RoundManager.Instance.tempColliderResults, 33554432, QueryTriggerInteraction.Ignore);
-        RoundManager.Instance.DestroyTreeOnLocalClient(CRWeapon.weaponTip.position);
-        if (numHits <= 0) return;
-        if (EnemyHandler.Instance.RedwoodTitan != null && UnityEngine.Random.Range(0, 100) <= 5)
-        {
-            Plugin.ExtendedLogging("Spawning redwood titan");
-            CodeRebirthUtils.Instance.SpawnEnemyServerRpc(RoundManager.Instance.tempColliderResults[0].transform.position, EnemyHandler.Instance.RedwoodTitan.EnemyDefinitions.GetCREnemyDefinitionWithEnemyName("Redwood")!.enemyType.enemyName);
-        }
-        if (UnlockableHandler.Instance.PlantPot != null && UnityEngine.Random.Range(0, 100) < Plugin.ModConfig.ConfigWoodenSeedTreeSpawnChance.Value)
-        {
-            Plugin.ExtendedLogging("Tree Destroyed with luck");
-            CodeRebirthUtils.Instance.SpawnScrapServerRpc(UnlockableHandler.Instance.PlantPot.ItemDefinitions.GetCRItemDefinitionWithItemName("Seed")?.item.itemName, CRWeapon.weaponTip.position, false, true, 5);
-        }*/
     }
 }

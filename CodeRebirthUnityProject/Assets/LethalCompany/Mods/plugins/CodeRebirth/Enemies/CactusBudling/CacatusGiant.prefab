@@ -1011,6 +1011,7 @@ GameObject:
   - component: {fileID: 8560094686645187079}
   - component: {fileID: 6229482424810426120}
   - component: {fileID: 4236743864150035401}
+  - component: {fileID: 2552605631332530894}
   m_Layer: 19
   m_Name: CacatusGiant
   m_TagString: Enemy
@@ -1073,7 +1074,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1286165706
+  GlobalObjectIdHash: 2777946555
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -1412,6 +1413,34 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 82ab417790f2685428082591981d6512, type: 3}
   audioSourceFar: {fileID: 0}
   farAudioClips: []
+--- !u!114 &2552605631332530894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4779950444079482818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1021229613, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _enemyType: {fileID: 11400000, guid: 828dae466f5ef864ab8cde898f71bbe5, type: 2}
+  _onDeath:
+    m_PersistentCalls:
+      m_Calls: []
+  _achievementReference:
+    rid: 8799786604331270144
+  references:
+    version: 2
+    RefIds:
+    - rid: 8799786604331270144
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: 1966445c949fb99499fb0ab808127fd6
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: wild_west
 --- !u!1 &5169185421139817056
 GameObject:
   m_ObjectHideFlags: 0

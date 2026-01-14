@@ -55,6 +55,8 @@
 - Made default positions for almost all if not all furnitures.
 - Started weight loss program for Xui.
 - Adjusted the pads like credit pads, ship upgrades and furniture unlockers to have an animation on use.
+- Cleaned up a bunch of code.
+- Fixed the issue of the ship boundary being expanded allowing more items to be easily collected with coderebirth installed.
 
 ## v1.4.2
 

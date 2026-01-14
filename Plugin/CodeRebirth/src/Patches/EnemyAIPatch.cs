@@ -36,34 +36,6 @@ static class EnemyAIPatch
         if (!additionalEnemyData.KilledByPlayer)
             return;
 
-        if (additionalEnemyData.PlayerThatLastHit!.IsLocalPlayer())
-        {
-            if (self is RedwoodTitanAI)
-            {
-                DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.Timber);
-            }
-            else if (self is DriftwoodMenaceAI)
-            {
-                DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.Bushwacked);
-            }
-            else if (self is Puppeteer)
-            {
-                DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.NightofBetrayal);
-            }
-            else if (self is PeaceKeeper)
-            {
-                DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.PeaceKept);
-            }
-            else if (self is CactusBudling)
-            {
-                DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.WildWest);
-            }
-            else if (self is Monarch)
-            {
-                DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.PestControl);
-            }
-        }
-
         if (CodeRebirthUtils.Instance.enemyCoinDropRate.TryGetValue(self.enemyType, out float coinDropChance))
         {
             float coinChance = coinDropChance;
@@ -87,10 +59,26 @@ static class EnemyAIPatch
     {
         if (other.gameObject.layer == 19 && other.TryGetComponent(out PuppeteersVoodoo puppet))
         {
-            if (self.isEnemyDead) return;
-            if (!self.IsServer) return;
-            if (puppet.lastTimeTakenDamageFromEnemy <= 1f) return;
-            if (self is Puppeteer) return;
+            if (self.isEnemyDead)
+            {
+                return;
+            }
+
+            if (!self.IsServer)
+            {
+                return;
+            }
+
+            if (puppet.lastTimeTakenDamageFromEnemy <= 1f)
+            {
+                return;
+            }
+
+            if (self is Puppeteer)
+            {
+                return;
+            }
+
             if (self.enemyType.enemyName.Contains("SCP-999"))
             {
                 puppet.Hit(-1, self.transform.position, null, false, -1);

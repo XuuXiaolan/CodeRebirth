@@ -3425,6 +3425,7 @@ GameObject:
   - component: {fileID: 2305020962103078160}
   - component: {fileID: 184172387633389021}
   - component: {fileID: 7949557366426040061}
+  - component: {fileID: 423054840052714377}
   m_Layer: 19
   m_Name: DriftwoodMenace
   m_TagString: Enemy
@@ -3889,6 +3890,34 @@ MonoBehaviour:
   agent: {fileID: 0}
   _nodeRemovalPrecision: 5
   _allowedLinks: 3
+--- !u!114 &423054840052714377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3141116158837514582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1021229613, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _enemyType: {fileID: 11400000, guid: 560802ac9add3a544bc2b1cebb1fcf88, type: 2}
+  _onDeath:
+    m_PersistentCalls:
+      m_Calls: []
+  _achievementReference:
+    rid: 8799786604331270148
+  references:
+    version: 2
+    RefIds:
+    - rid: 8799786604331270148
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: d531fc1c51d144747a1df125ca553e77
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: bushwacked
 --- !u!1 &3161862691732673129
 GameObject:
   m_ObjectHideFlags: 0

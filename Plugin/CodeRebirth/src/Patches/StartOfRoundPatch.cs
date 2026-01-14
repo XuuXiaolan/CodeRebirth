@@ -16,12 +16,6 @@ namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(StartOfRound))]
 static class StartOfRoundPatch
 {
-    [HarmonyPatch(nameof(StartOfRound.AutoSaveShipData)), HarmonyPostfix]
-    static void SaveCodeRebirthData()
-    {
-        CodeRebirthUtils.Instance.SaveCodeRebirthData();
-    }
-
     private static bool _patched = false;
 
     [HarmonyPatch(nameof(StartOfRound.Awake))]
@@ -69,35 +63,6 @@ static class StartOfRoundPatch
     [HarmonyPatch(nameof(StartOfRound.OnShipLandedMiscEvents)), HarmonyPostfix]
     public static void OnShipLandedMiscEventsPatch(StartOfRound __instance)
     {
-        Plugin.ExtendedLogging("Starting big object search");
-
-        if (MapObjectHandler.Instance.Biome != null)
-        {
-            Stopwatch timer = new();
-            timer.Start();
-            var objs = GameObject.FindObjectsByType<GameObject>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
-            int FoundObject = 0;
-            LayerMask foliageLayer = 10;
-            foreach (var item in objs)
-            {
-                if (item.layer == foliageLayer)
-                {
-                    // figure out a way to make this better against static meshes.
-                    item.AddComponent<BoxCollider>().isTrigger = true;
-                    FoundObject++;
-                }
-            }
-
-            timer.Stop();
-
-            Plugin.ExtendedLogging($"Run completed in {timer.ElapsedTicks} ticks and {timer.ElapsedMilliseconds}ms and found {FoundObject} objects out of {objs.Length}");
-        }
-
-        foreach (var plant in PlantPot.Instances)
-        {
-            plant.grewThisOrbit = false;
-        }
-
         foreach (SCP999GalAI gal in SCP999GalAI.Instances)
         {
             gal.MakeTriggerInteractable(true);
@@ -106,29 +71,18 @@ static class StartOfRoundPatch
         if (Plugin.ModConfig.ConfigRemoveInteriorFog.Value)
         {
             Plugin.ExtendedLogging("Disabling halloween fog");
-            if (RoundManager.Instance.indoorFog.gameObject.activeSelf) RoundManager.Instance.indoorFog.gameObject.SetActive(false);
+            if (RoundManager.Instance.indoorFog.gameObject.activeSelf)
+            {
+                RoundManager.Instance.indoorFog.gameObject.SetActive(false);
+            }
         }
 
-        foreach (var gal in GalAI.Instances)
+        foreach (GalAI gal in GalAI.Instances)
         {
-            if (gal.IdleSounds.Length <= 0) continue;
+            if (gal.IdleSounds.Length <= 0)
+                continue;
+
             gal.GalVoice.PlayOneShot(gal.IdleSounds[gal.galRandom.Next(gal.IdleSounds.Length)]);
-        }
-    }
-
-    [HarmonyPatch(nameof(StartOfRound.SetShipReadyToLand)), HarmonyPostfix]
-    static void ForceChangeWeathersForOxyde()
-    {
-        if (!LethalContent.Moons.TryGetValue(NamespacedKey.From("code_rebirth", "oxyde"), out DawnMoonInfo moonInfo))
-            return;
-
-        if (TimeOfDay.Instance.daysUntilDeadline <= 0)
-        {
-            WeatherRegistry.WeatherController.ChangeWeather(moonInfo.Level, LevelWeatherType.None);
-        }
-        else
-        {
-            WeatherRegistry.WeatherController.ChangeWeather(moonInfo.Level, (LevelWeatherType)TimeOfDay.Instance.effects.IndexOf(LethalContent.Weathers[CodeRebirthWeatherKeys.NightShift].WeatherEffect));
         }
     }
 }

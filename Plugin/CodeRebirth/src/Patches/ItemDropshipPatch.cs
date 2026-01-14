@@ -76,7 +76,6 @@ public static class ItemDropshipPatch
             cRDropShip.shipTimer = 0f;
             Plugin.ExtendedLogging("ItemDropship_DeliverVehicleOnServer");
             cRDropShip.shipAnimator.SetTrigger("landingVehicle");
-            // cRDropShip.SpawnVehicleAnimEvent();
             return;
         }
         orig(self);

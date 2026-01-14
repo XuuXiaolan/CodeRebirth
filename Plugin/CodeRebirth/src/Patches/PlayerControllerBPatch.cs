@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using CodeRebirth.src.Content.Enemies;
@@ -7,7 +6,6 @@ using CodeRebirth.src.Content.Items;
 using CodeRebirth.src.Content.Weapons;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
-using Dawn;
 using Dusk;
 using Dawn.Utils;
 using GameNetcodeStuff;
@@ -48,14 +46,6 @@ static class PlayerControllerBPatch
         return !__instance.ContainsCRPlayerData() || !__instance.IsRidingHoverboard();
     }
 
-    [HarmonyPatch(nameof(PlayerControllerB.Awake)), HarmonyPostfix]
-    public static void Awake(PlayerControllerB __instance)
-    {
-        if (__instance.ContainsCRPlayerData()) return;
-
-        __instance.AddCRPlayerData();
-    }
-
     [HarmonyPatch(nameof(PlayerControllerB.PlayerJump), MethodType.Enumerator), HarmonyTranspiler]
     public static IEnumerable<CodeInstruction> RemoveJumpDelay(IEnumerable<CodeInstruction> instructions)
     {
@@ -92,6 +82,7 @@ static class PlayerControllerBPatch
 
     public static void Init()
     {
+        On.GameNetcodeStuff.PlayerControllerB.Awake += PlayerControllerB_Awake;
         IL.GameNetcodeStuff.PlayerControllerB.CheckConditionsForSinkingInQuicksand += PlayerControllerB_CheckConditionsForSinkingInQuicksand;
         On.GameNetcodeStuff.PlayerControllerB.SetItemInElevator += PlayerControllerB_SetItemInElevator;
         On.GameNetcodeStuff.PlayerControllerB.Update += PlayerControllerB_Update;
@@ -102,6 +93,17 @@ static class PlayerControllerBPatch
         On.GameNetcodeStuff.PlayerControllerB.Interact_performed += PlayerControllerB_Interact_performed;
         On.GameNetcodeStuff.PlayerControllerB.StopHoldInteractionOnTrigger += PlayerControllerB_StopHoldInteractionOnTrigger;
         On.GameNetcodeStuff.PlayerControllerB.PlayerHitGroundEffects += PlayerControllerB_PlayerHitGroundEffects;
+    }
+
+    private static void PlayerControllerB_Awake(On.GameNetcodeStuff.PlayerControllerB.orig_Awake orig, PlayerControllerB self)
+    {
+        orig(self);
+        if (self.ContainsCRPlayerData())
+        {
+            return;
+        }
+
+        self.AddCRPlayerData();
     }
 
     private static void PlayerControllerB_PlayerHitGroundEffects(On.GameNetcodeStuff.PlayerControllerB.orig_PlayerHitGroundEffects orig, PlayerControllerB self)
@@ -115,7 +117,7 @@ static class PlayerControllerBPatch
 
     private static void PlayerControllerB_SetItemInElevator(On.GameNetcodeStuff.PlayerControllerB.orig_SetItemInElevator orig, PlayerControllerB self, bool droppedInShipRoom, bool droppedInElevator, GrabbableObject gObject)
     {
-        orig(self, droppedInElevator, droppedInElevator, gObject);
+        orig(self, droppedInShipRoom, droppedInElevator, gObject);
         if (gObject is WrittenDocument)
         {
             DuskModContent.Achievements.TryDiscoverMoreProgressAchievement(CodeRebirthAchievementKeys.MuMiaolan, gObject.itemProperties.itemName);
@@ -185,28 +187,26 @@ static class PlayerControllerBPatch
         if (SlowDownEffect.isSlowDownEffectActive)
         {
             if (self.previousHoveringOverTrigger != null)
+            {
                 SlowDownEffect.ResetSlowTrigger(self.previousHoveringOverTrigger);
+            }
 
             if (self.hoveringOverTrigger != null)
+            {
                 SlowDownEffect.ResetSlowTrigger(self.hoveringOverTrigger);
+            }
         }
         orig(self);
     }
 
-    /*private static bool PlayerControllerB_NearOtherPlayers(On.GameNetcodeStuff.PlayerControllerB.orig_NearOtherPlayers orig, PlayerControllerB self, PlayerControllerB playerScript, float checkRadius)
-    {
-        if (self.IsLocalPlayer() && TalkingHead.talkingHeads.Count > 0 && TalkingHead.talkingHeads.Any(x => x.player == self)) return false;
-        return orig(self, playerScript, checkRadius);
-    }*/
-
     private static void PlayerControllerB_DiscardHeldObject(On.GameNetcodeStuff.PlayerControllerB.orig_DiscardHeldObject orig, PlayerControllerB self, bool placeObject, NetworkObject parentObjectTo, Vector3 placePosition, bool matchRotationOfParent)
     {
         orig(self, placeObject, parentObjectTo, placePosition, matchRotationOfParent);
-        foreach (var janitor in Janitor.janitors)
+        foreach (Janitor janitor in Janitor.janitors)
         {
             if (janitor == null || janitor.isEnemyDead)
                 continue;
-            // If we’re still alive, chase that player if we’re not already
+
             if (self != null && NetworkManager.Singleton.IsServer && janitor.currentBehaviourStateIndex != (int)Janitor.JanitorStates.FollowingPlayer && janitor.currentBehaviourStateIndex != (int)Janitor.JanitorStates.ZoomingOff)
             {
                 if (!janitor.currentlyGrabbingPlayer && !janitor.currentlyGrabbingScrap && !janitor.currentlyThrowingPlayer)
@@ -248,6 +248,12 @@ static class PlayerControllerBPatch
             // Plugin.ExtendedLogging($"Setting player layer to 0.");
             self.gameObject.layer = 0;
         }
+
+        if (ItemHandler.Instance.Hoverboard == null)
+        {
+            return;
+        }
+
         if (self.ContainsCRPlayerData() && ((self.currentlyHeldObjectServer != null && self.currentlyHeldObjectServer.itemProperties != null && !self.currentlyHeldObjectServer.itemProperties.requiresBattery) || (self.currentlyHeldObjectServer == null)))
         {
             Hoverboard? hoverboard = self.TryGetHoverboardRiding();
@@ -256,7 +262,7 @@ static class PlayerControllerBPatch
                 HUDManager.Instance.batteryMeter.fillAmount = hoverboard.insertedBattery.charge / 1.3f;
                 HUDManager.Instance.batteryMeter.gameObject.SetActive(true);
                 HUDManager.Instance.batteryIcon.enabled = true;
-                var num4 = HUDManager.Instance.batteryMeter.fillAmount;
+                float num4 = HUDManager.Instance.batteryMeter.fillAmount;
                 HUDManager.Instance.batteryBlinkUI.SetBool("blink", num4 < 0.2f && num4 > 0f);
             }
         }

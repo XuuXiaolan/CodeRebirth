@@ -25,7 +25,9 @@ public static class SlowDownEffect
             return;
 
         if (CurrentlyEditedTrigger != null)
+        {
             ResetSlowTrigger(CurrentlyEditedTrigger);
+        }
 
         CurrentlyEditedTrigger = trigger;
         CurrentlyEditedTrigger.timeToHoldSpeedMultiplier /= Time.timeScale;

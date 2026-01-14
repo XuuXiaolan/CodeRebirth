@@ -1,4 +1,3 @@
-using System;
 using CodeRebirth.src.Content.Enemies;
 using UnityEngine;
 
@@ -23,8 +22,9 @@ public static class LandminePatch
     private static void Landmine_SpawnExplosion(On.Landmine.orig_SpawnExplosion orig, Vector3 explosionPosition, bool spawnExplosionEffect, float killRange, float damageRange, int nonLethalDamage, float physicsForce, GameObject overridePrefab, bool goThroughCar)
     {
         orig(explosionPosition, spawnExplosionEffect, killRange, damageRange, nonLethalDamage, physicsForce, overridePrefab, goThroughCar);
-        foreach (var voodooDoll in PuppeteersVoodoo.puppeteerList.ToArray())
+        for (int i = PuppeteersVoodoo.puppeteerList.Count; i > 0; i--)
         {
+            PuppeteersVoodoo voodooDoll = PuppeteersVoodoo.puppeteerList[i - 1];
             float distanceFromMine = Vector3.Distance(voodooDoll.transform.position, explosionPosition);
             if (distanceFromMine > 5f) return;
             Plugin.ExtendedLogging($"Hit voodoo doll with landmine: {voodooDoll}");
@@ -39,7 +39,7 @@ public static class LandminePatch
                 {
                     voodooDoll.Hit(2, vector, null, true, -1);
                 }
-            }
+            }            
         }
     }
 }

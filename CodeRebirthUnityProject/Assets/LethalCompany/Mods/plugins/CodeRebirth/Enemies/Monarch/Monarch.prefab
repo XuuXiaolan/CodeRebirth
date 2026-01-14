@@ -1231,6 +1231,7 @@ GameObject:
   - component: {fileID: 6331020970013911093}
   - component: {fileID: 190053233725358190}
   - component: {fileID: 5572793871451428965}
+  - component: {fileID: 9198801566231343986}
   m_Layer: 19
   m_Name: Monarch
   m_TagString: Enemy
@@ -1337,7 +1338,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1477821790
+  GlobalObjectIdHash: 1677627468
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -1640,6 +1641,34 @@ MonoBehaviour:
   agent: {fileID: 0}
   _nodeRemovalPrecision: 5
   _allowedLinks: 3
+--- !u!114 &9198801566231343986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3203094925721137869}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1021229613, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _enemyType: {fileID: 11400000, guid: b4eadd75cb1361040a7fc4f821ef81ab, type: 2}
+  _onDeath:
+    m_PersistentCalls:
+      m_Calls: []
+  _achievementReference:
+    rid: 8799786604331270145
+  references:
+    version: 2
+    RefIds:
+    - rid: 8799786604331270145
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: 5ec089ec221335443aa0feff0300488c
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: pest_control
 --- !u!1 &3372090020525325477
 GameObject:
   m_ObjectHideFlags: 0

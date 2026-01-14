@@ -1,5 +1,3 @@
-
-using System;
 using CodeRebirth.src.Content.Enemies;
 using UnityEngine;
 
@@ -20,7 +18,7 @@ public static class VehicleControllerPatch
             if (enemy is not RabbitMagician)
                 continue;
 
-            foreach (var enemyCollider in enemy.GetComponentsInChildren<Collider>())
+            foreach (Collider enemyCollider in enemy.GetComponentsInChildren<Collider>())
             {
                 foreach (Collider collider in self.GetComponentsInChildren<Collider>())
                 {

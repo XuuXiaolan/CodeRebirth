@@ -38,8 +38,6 @@ static class RoundManagerPatch
         {
             SpawnFlora(staticBatchedParent, random, flora, ref spawnCount);
         }
-
-        // StaticBatchingUtility.Combine(staticBatchedParent);
     }
 
     private static bool TryGetValidFloraSpawnPoint(System.Random random, out RaycastHit hit)
@@ -92,20 +90,16 @@ static class RoundManagerPatch
 
     public static Vector3 GetRandomPointNearPointsOfInterest(System.Random random, float offsetRange = 20f)
     {
-        // Get all points of interest
         GameObject[] pointsOfInterest = RoundManager.Instance.outsideAINodes;
 
-        // Check if there are any points of interest
         if (pointsOfInterest.Length == 0)
         {
             Plugin.Logger.LogWarning("No points of interest found.");
-            return Vector3.zero; // Return default if no points exist
+            return Vector3.zero;
         }
 
-        // Choose a random point of interest
         Vector3 chosenPoint = pointsOfInterest[random.Next(pointsOfInterest.Length)].transform.position;
 
-        // Generate a random offset within the specified range
         Vector3 offset = new(
             random.NextFloat(-offsetRange, offsetRange),
             random.NextFloat(0, offsetRange),

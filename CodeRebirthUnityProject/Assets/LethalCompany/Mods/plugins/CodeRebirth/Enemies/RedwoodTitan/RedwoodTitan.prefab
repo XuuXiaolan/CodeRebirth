@@ -46438,6 +46438,7 @@ GameObject:
   - component: {fileID: 410828306200048651}
   - component: {fileID: 7822534254777382931}
   - component: {fileID: 3948119710304685680}
+  - component: {fileID: 3578545442515887123}
   m_Layer: 19
   m_Name: RedwoodTitan
   m_TagString: Enemy
@@ -46864,6 +46865,34 @@ MonoBehaviour:
       renderer: {fileID: 488740101449591505}
     <_weight>k__BackingField: 1
   _applyOnSpawn: 1
+--- !u!114 &3578545442515887123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6657914976785946626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1021229613, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _enemyType: {fileID: 11400000, guid: 91b71ab5528e7334caf325a14da014a4, type: 2}
+  _onDeath:
+    m_PersistentCalls:
+      m_Calls: []
+  _achievementReference:
+    rid: 8799786604331270149
+  references:
+    version: 2
+    RefIds:
+    - rid: 8799786604331270149
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: 75458a1a6b874bb4ea9c9d39b4324a0b
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: timber
 --- !u!1 &6862261050158760410
 GameObject:
   m_ObjectHideFlags: 0

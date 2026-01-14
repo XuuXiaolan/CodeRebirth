@@ -55,7 +55,6 @@ public class Plugin : BaseUnityPlugin
         _harmony.PatchAll(typeof(EnemyAIPatch));
         _harmony.PatchAll(typeof(ShovelPatch));
         _harmony.PatchAll(typeof(DoorLockPatch));
-        _harmony.PatchAll(typeof(MineshaftElevatorControllerPatch));
         _harmony.PatchAll(typeof(KeyItemPatch));
         _harmony.PatchAll(typeof(RoundManagerPatch));
         _harmony.PatchAll(typeof(StartOfRoundPatch));
@@ -68,14 +67,11 @@ public class Plugin : BaseUnityPlugin
         EnemyAIPatch.Init();
         ShovelPatch.Init();
         DoorLockPatch.Init();
-        MineshaftElevatorControllerPatch.Init();
         SpikeTrapPatch.Init();
         EnemyAICollisionDetectPatch.Init();
         LandminePatch.Init();
         ShotgunItemPatch.Init();
         TurretPatch.Init();
-        GameNetworkManagerPatch.Init();
-        DeleteFileButtonPatch.Init();
         SoccerBallPropPatch.Init();
         VehicleControllerPatch.Init();
 

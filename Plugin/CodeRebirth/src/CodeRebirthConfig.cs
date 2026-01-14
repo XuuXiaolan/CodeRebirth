@@ -209,18 +209,18 @@ public class CodeRebirthConfig
                                             "Shockwave Gal | Charges",
                                             10,
                                             "How many charges the Shockwave Gal has.");
-        ConfigShockwaveHoldsFourItems = configFile.Bind("Shockwave Options",
+        ConfigShockwaveHoldsFourItems = configFile.Bind("Shockwave Bot Options",
                                             "Shockwave Gal | Holds Four Items",
                                             false,
                                             "Whether the Shockwave Gal holds four items regardless of singleplayer or multiplayer.");
-        ConfigShockwaveBotPropellerVolume = configFile.Bind("Shockwave Options",
+        ConfigShockwaveBotPropellerVolume = configFile.Bind("Shockwave Bot Options",
                                             "Shockwave Gal | Propeller Volume",
                                             0.75f,
                                             new ConfigDescription(
                                                 "Volume of the Shockwave Gal's propeller.",
                                                 new AcceptableValueRange<float>(0, 1f)
                                             ));
-        ConfigShockwaveBotAutomatic = configFile.Bind("Shockwave Options",
+        ConfigShockwaveBotAutomatic = configFile.Bind("Shockwave Bot Options",
                                             "Shockwave Gal | Automatic Behaviour",
                                             false,
                                             "Whether the Shockwave Gal will automatically wake up and choose the nearest player as the owner.");
@@ -230,48 +230,48 @@ public class CodeRebirthConfig
                                             "Seamine Gal | Charges",
                                             3,
                                             "How many charges the Seamine Gal has.");
-        ConfigSeamineTinkRidingBruceVolume = configFile.Bind("Seamine Options",
+        ConfigSeamineTinkRidingBruceVolume = configFile.Bind("Seamine Tink Options",
                                             "Seamine Gal | Riding Bruce Volume",
                                             0.75f,
                                             new ConfigDescription(
                                                 "Volume of the Seamine Gal's Riding Bruce.",
                                                 new AcceptableValueRange<float>(0, 1f)
                                             ));
-        ConfigSeamineTinkAutomatic = configFile.Bind("Seamine Options",
+        ConfigSeamineTinkAutomatic = configFile.Bind("Seamine Tink Options",
                                             "Seamine Gal | Automatic Behaviour",
                                             false,
                                             "Whether the Seamine Gal will automatically wake up and choose the nearest player as the owner.");
-        ConfigOnlyOwnerSeesScanEffects = configFile.Bind("Seamine Options",
+        ConfigOnlyOwnerSeesScanEffects = configFile.Bind("Seamine Tink Options",
                                             "Seamine Gal | Only Owner Sees Scan Effects",
                                             false,
                                             "Whether only the owner of the Seamine Gal can see the scan effects.");
-        ConfigSeamineScanRange = configFile.Bind("Seamine Options",
+        ConfigSeamineScanRange = configFile.Bind("Seamine Tink Options",
                                             "Seamine Gal | Scan Range",
                                             50f,
                                             "Range of the Seamine Gal's scan.");
-        ConfigSeamineScanFrequency = configFile.Bind("Seamine Options",
+        ConfigSeamineScanFrequency = configFile.Bind("Seamine Tink Options",
                                             "Seamine Gal | Scan Frequency",
                                             17.5f,
                                             "The average Frequency time of the Seamine Gal's scan in seconds.");
         #endregion
         #region Terminal Gal
-        ConfigTerminalBotAutomatic = configFile.Bind("Terminal Options",
+        ConfigTerminalBotAutomatic = configFile.Bind("Terminal Bot Options",
                                             "Terminal Gal | Automatic Behaviour",
                                             false,
                                             "Whether the Terminal Gal will automatically wake up and choose the nearest player as the owner.");
-        ConfigOnlyOwnerSeesScanEffectsTerminalGal = configFile.Bind("Terminal Options",
+        ConfigOnlyOwnerSeesScanEffectsTerminalGal = configFile.Bind("Terminal Bot Options",
                                             "Terminal Gal | Only Owner Sees Scan Effects",
                                             false,
                                             "Whether only the owner of the Terminal Gal can see the scan effects.");
-        ConfigTerminalScanRange = configFile.Bind("Terminal Options",
+        ConfigTerminalScanRange = configFile.Bind("Terminal Bot Options",
                                             "Terminal Gal | Scan Range",
                                             50f,
                                             "Range of the Terminal Gal's scan.");
-        ConfigTerminalScanFrequency = configFile.Bind("Terminal Options",
+        ConfigTerminalScanFrequency = configFile.Bind("Terminal Bot Options",
                                             "Terminal Gal | Scan Frequency",
                                             17.5f,
                                             "The average Frequency time of the Terminal Gal's scan in seconds.");
-        ConfigTerminalBotFlyingVolume = configFile.Bind("Terminal Options",
+        ConfigTerminalBotFlyingVolume = configFile.Bind("Terminal Bot Options",
                                             "Terminal Gal | Flying Volume",
                                             0.75f,
                                             "Volume of the Terminal Gal's Flying animation.");

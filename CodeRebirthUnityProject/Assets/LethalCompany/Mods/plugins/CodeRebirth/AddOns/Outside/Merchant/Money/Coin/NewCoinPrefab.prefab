@@ -77,6 +77,7 @@ GameObject:
   - component: {fileID: 2423276909695094241}
   - component: {fileID: 5396864524756390701}
   - component: {fileID: 3109238472366480426}
+  - component: {fileID: 8511402090333206804}
   m_Layer: 6
   m_Name: NewCoinPrefab
   m_TagString: PhysicsProp
@@ -135,7 +136,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3277228613
+  GlobalObjectIdHash: 4219964514
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -218,6 +219,7 @@ MonoBehaviour:
   _value: 1
   _moneySource: {fileID: 3109238472366480426}
   _collectSound: {fileID: 0}
+  _ownerNetworkAnimator: {fileID: 8511402090333206804}
 --- !u!82 &3109238472366480426
 AudioSource:
   m_ObjectHideFlags: 0
@@ -314,6 +316,27 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &8511402090333206804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 671622849137528873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1698132433, guid: b821795baeb020545a00803c13a7b7c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TransitionStateInfoList:
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -345672478
+    DestinationState: -1379981918
+    TransitionDuration: 0.0634235
+    TriggerNameHash: -1694571435
+    TransitionIndex: 0
+  m_Animator: {fileID: 6860357665192273717}
 --- !u!1 &2498978428284511785
 GameObject:
   m_ObjectHideFlags: 0

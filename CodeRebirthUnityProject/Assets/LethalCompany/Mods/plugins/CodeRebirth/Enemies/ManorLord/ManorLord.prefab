@@ -2514,6 +2514,7 @@ GameObject:
   - component: {fileID: 2919410584223474381}
   - component: {fileID: 4997557075965351894}
   - component: {fileID: 4583551478409341992}
+  - component: {fileID: 8586425988070975753}
   m_Layer: 19
   m_Name: ManorLord
   m_TagString: Enemy
@@ -2936,6 +2937,34 @@ MonoBehaviour:
   agent: {fileID: 0}
   _nodeRemovalPrecision: 5
   _allowedLinks: 3
+--- !u!114 &8586425988070975753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6915492018009237873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1021229613, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _enemyType: {fileID: 11400000, guid: 737e18cd04330344a98754521e293cb3, type: 2}
+  _onDeath:
+    m_PersistentCalls:
+      m_Calls: []
+  _achievementReference:
+    rid: 8799786604331270147
+  references:
+    version: 2
+    RefIds:
+    - rid: 8799786604331270147
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: ba3894485d73dec41ae05c4640327f94
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: night_of_betrayal
 --- !u!1 &6926373206089999037
 GameObject:
   m_ObjectHideFlags: 0

@@ -335,20 +335,6 @@ internal class CodeRebirthUtils : NetworkBehaviour
         ((GameObject)go).AddComponent<QuestItem>();
     }
 
-    public void SaveCodeRebirthData()
-    {
-        if (!NetworkManager.Singleton.IsHost) return;
-        foreach (var plantpot in PlantPot.Instances)
-        {
-            plantpot.SavePlantData();
-        }
-    }
-
-    public static void ResetCodeRebirthData(ES3Settings saveSettings)
-    {
-        ES3.DeleteFile(saveSettings);
-    }
-
     public T? CreateFallingObject<T>(GameObject prefab, Vector3 origin, Vector3 target, float speed) where T : FallingObjectBehaviour
     {
         Plugin.ExtendedLogging($"creating falling object: {prefab.name} going from {origin} to {target}");
