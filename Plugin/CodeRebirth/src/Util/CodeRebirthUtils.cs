@@ -4,7 +4,6 @@ using UnityEngine;
 using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
 using UnityEngine.Rendering;
-using CodeRebirth.src.Content.Unlockables;
 using System.Linq;
 using UnityEngine.Rendering.HighDefinition;
 using CodeRebirth.src.Content.Items;
@@ -20,17 +19,12 @@ internal class CodeRebirthUtils : NetworkBehaviour
 {
     public Material WireframeMaterial = null!;
     public Shader SeeThroughShader = null!;
-    public Volume TimeSlowVolume = null!;
     public Volume FireyVolume = null!;
     public Volume SmokyVolume = null!;
     public Volume CloseEyeVolume = null!;
-    public AnimationClip ModifiedShipLandAnimation = null!;
     public AnimationClip ModifiedDangerousShipLeaveAnimation = null!;
-    public AnimationClip ModifiedShipLeaveAnimation = null!;
 
-    internal ES3Settings SaveSettings;
     internal ShipAnimator shipAnimator = null!;
-    internal StartMatchLever startMatchLever = null!;
     internal static HashSet<(Light light, HDAdditionalLightData hDAdditionalLightData)> currentRoundLightData = new();
     internal Dictionary<EnemyType, float> enemyCoinDropRate = new();
     internal System.Random CRRandom = new();
@@ -42,28 +36,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         Instance = this;
         HandleEnemyDropRates();
         CRRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
-        SaveSettings = new($"CR{GameNetworkManager.Instance.currentSaveFileName}", ES3.EncryptionType.None);
-        startMatchLever = FindFirstObjectByType<StartMatchLever>(FindObjectsInactive.Exclude);
         shipAnimator = StartOfRound.Instance.shipAnimatorObject.gameObject.AddComponent<ShipAnimator>();
-
-        if (!LethalContent.Moons.TryGetValue(NamespacedKey.From("code_rebirth", "oxyde"), out DawnMoonInfo moonInfo))
-            return;
-
-        StartCoroutine(HandleWRSetupWithOxyde(moonInfo));
-    }
-
-    private IEnumerator HandleWRSetupWithOxyde(DawnMoonInfo moonInfo)
-    {
-        yield return new WaitUntil(() => WeatherRegistry.WeatherManager.IsSetupFinished);
-
-        if (TimeOfDay.Instance.daysUntilDeadline <= 0)
-        {
-            WeatherRegistry.WeatherController.ChangeWeather(moonInfo.Level, LevelWeatherType.None);
-        }
-        else
-        {
-            WeatherRegistry.WeatherController.ChangeWeather(moonInfo.Level, (LevelWeatherType)TimeOfDay.Instance.effects.IndexOf(LethalContent.Weathers[CodeRebirthWeatherKeys.NightShift].WeatherEffect));
-        }
     }
 
     private void HandleEnemyDropRates()
@@ -71,11 +44,11 @@ internal class CodeRebirthUtils : NetworkBehaviour
         if (MapObjectHandler.Instance.Merchant == null)
             return;
 
-        var enemyWithRarityDropRate = MapObjectHandler.Instance.Merchant.GetConfig<string>("Money | Enemy Drop Rates").Value.Split(',').Select(s => s.Trim());
-        foreach (var enemyWithRarity in enemyWithRarityDropRate)
+        IEnumerable<string> enemyWithRarityDropRate = MapObjectHandler.Instance.Merchant.GetConfig<string>("Money | Enemy Drop Rates").Value.Split(',').Select(s => s.Trim());
+        foreach (string enemyWithRarity in enemyWithRarityDropRate)
         {
-            var split = enemyWithRarity.Split(':');
-            EnemyType? enemyType = LethalContent.Enemies.Values.Where(et => et.EnemyType != null && !string.IsNullOrEmpty(et.EnemyType.enemyName) && et.EnemyType.enemyName.Equals(split[0], System.StringComparison.OrdinalIgnoreCase)).FirstOrDefault()?.EnemyType;
+            string[] split = enemyWithRarity.Split(':');
+            EnemyType? enemyType = LethalContent.Enemies.Values.FirstOrDefault(et => et.EnemyType != null && !string.IsNullOrEmpty(et.EnemyType.enemyName) && et.EnemyType.enemyName.Equals(split[0], System.StringComparison.OrdinalIgnoreCase))?.EnemyType;
             if (enemyType == null)
             {
                 Plugin.Logger.LogWarning($"Couldn't find enemy of name '{split[0]}' for the money drop rate config!");
@@ -208,7 +181,9 @@ internal class CodeRebirthUtils : NetworkBehaviour
 
         _indexToSpawn++;
         if (_indexToSpawn >= mapObjectInfos.Count - 1)
+        {
             _indexToSpawn = 0;
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.Util;
+using Dawn.Internal;
 using Dawn.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -26,9 +27,9 @@ public class OxydeCrane : NetworkBehaviour
     public void Awake()
     {
         Instance = this;
-        CodeRebirthUtils.Instance.startMatchLever.triggerScript.interactable = false;
-        previousDisabledTriggerMessage = CodeRebirthUtils.Instance.startMatchLever.triggerScript.disabledHoverTip;
-        CodeRebirthUtils.Instance.startMatchLever.triggerScript.disabledHoverTip = "Ship needs to be un-attached from the magnet.";
+        StartMatchLeverRefs.Instance.triggerScript.interactable = false;
+        previousDisabledTriggerMessage = StartMatchLeverRefs.Instance.triggerScript.disabledHoverTip;
+        StartMatchLeverRefs.Instance.triggerScript.disabledHoverTip = "Ship needs to be un-attached from the magnet.";
         // stop ship lever from being unable to be pulled until ship's already been dropped.
         StartCoroutine(SpawnOutsideHazards());
         StartCoroutine(WaitUntilShipLoads());
@@ -49,7 +50,7 @@ public class OxydeCrane : NetworkBehaviour
     public void Update()
     {
         RoundManager.Instance.currentDungeonType = -1;
-        CodeRebirthUtils.Instance.startMatchLever.triggerScript.interactable = !dropButton.interactable;
+        StartMatchLeverRefs.Instance.triggerScript.interactable = !dropButton.interactable;
     }
 
     public void DropInteract(PlayerControllerB player)
@@ -73,8 +74,8 @@ public class OxydeCrane : NetworkBehaviour
     public IEnumerator TryDropShipFromCrane()
     {
         dropButton.interactable = false;
-        CodeRebirthUtils.Instance.startMatchLever.triggerScript.disabledHoverTip = previousDisabledTriggerMessage;
-        CodeRebirthUtils.Instance.startMatchLever.triggerScript.interactable = true;
+        StartMatchLeverRefs.Instance.triggerScript.disabledHoverTip = previousDisabledTriggerMessage;
+        StartMatchLeverRefs.Instance.triggerScript.interactable = true;
         leverAnimator.SetTrigger(PullLeverAnimation);
         float timeElapsed = 0f;
         List<(GameObject gameObject, Vector3 startPos, Quaternion startRot)> objectsToDrop = [(shipNavColliders, shipNavColliders.transform.position, shipNavColliders.transform.rotation), (StartOfRound.Instance.shipAnimatorObject.gameObject, StartOfRound.Instance.shipAnimatorObject.transform.position, StartOfRound.Instance.shipAnimatorObject.transform.rotation)];
@@ -98,8 +99,8 @@ public class OxydeCrane : NetworkBehaviour
         base.OnNetworkDespawn();
         if (!alreadyDropped)
         {
-            CodeRebirthUtils.Instance.startMatchLever.triggerScript.disabledHoverTip = previousDisabledTriggerMessage;
-            CodeRebirthUtils.Instance.startMatchLever.triggerScript.interactable = true;
+            StartMatchLeverRefs.Instance.triggerScript.disabledHoverTip = previousDisabledTriggerMessage;
+            StartMatchLeverRefs.Instance.triggerScript.interactable = true;
         }
         Instance = null;
     }
