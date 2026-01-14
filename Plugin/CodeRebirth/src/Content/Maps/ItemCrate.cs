@@ -11,6 +11,8 @@ using System;
 using System.Collections;
 using CodeRebirth.src.Content.Enemies;
 using Dusk;
+using Dawn.Internal;
+using Dawn;
 
 namespace CodeRebirth.src.Content.Maps;
 public class ItemCrate : CRHittable
@@ -83,11 +85,13 @@ public class ItemCrate : CRHittable
 
         if ((crateType == CrateType.Wooden || crateType == CrateType.WoodenMimic) && ShopItemList.Count == 0)
         {
-            Terminal terminal = CodeRebirthUtils.Instance.shipTerminal;
-
             foreach (Item item in StartOfRound.Instance.allItemsList.itemsList)
             {
-                if (!item.isScrap && terminal.buyableItemsList.Contains(item))
+                if (!item.HasDawnInfo())
+                    continue;
+
+                DawnItemInfo itemInfo = item.GetDawnInfo();
+                if (itemInfo.ShopInfo != null && itemInfo.ScrapInfo == null)
                 {
                     ShopItemList.Add(item);
                 }
@@ -97,14 +101,22 @@ public class ItemCrate : CRHittable
 
     private void UpdateDigPosition(float old, float newValue)
     {
-        if (newValue == 0) originalPosition = transform.position - (transform.up * 0.5f);
+        if (newValue == 0)
+        {
+            originalPosition = transform.position - (transform.up * 0.5f);
+        }
+
         transform.position = originalPosition + (transform.up * newValue * 0.5f);
         Plugin.ExtendedLogging($"ItemCrate was hit! New digProgress: {newValue}");
     }
 
     private void Update()
     {
-        if ((crateType != CrateType.Metal && crateType != CrateType.MetalMimic) || trigger == null || pickable == null) return;
+        if ((crateType != CrateType.Metal && crateType != CrateType.MetalMimic) || trigger == null || pickable == null)
+        {
+            return;
+        }
+
         bool dugOut = digProgress >= 1;
         trigger.interactable = dugOut && !pickable.IsLocked && !opened;
         pickable.enabled = dugOut && pickable.IsLocked && !opened;

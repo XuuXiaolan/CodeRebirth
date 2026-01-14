@@ -448,6 +448,8 @@ Add lush foliage to any moon. Flora adjusts its coloration to the ground type.
 
 - [Slayer6409](https://thunderstore.io/c/lethal-company/p/slayer6409/Emergency_Dice_Updated/) : Testing
 
+- Generic : Super early Flash Turret idea.
+
 - CoddingCat : Old snail cat model
 
 - [MayaModez](https://mayamodez.straw.page/) : Visit Bozoros poster in shipyard
@@ -462,7 +464,7 @@ The 4 Instrument models and music are from the game "Zort" by Londer Software. (
 
 ## Credits - Misc Online Assets
 
-"Mu Posters" (<https://skfb.ly/oLzIp>) by Estelaris.
+"Mu Posters" (<https://bsky.app/profile/estelaris.bsky.social>) by Estelaris.
 
 "Carnivorous Plant" (<https://skfb.ly/oLzIp>) by mike69420 is licensed under Creative Commons Attribution (<http://creativecommons.org/licenses/by/4.0/>).
 

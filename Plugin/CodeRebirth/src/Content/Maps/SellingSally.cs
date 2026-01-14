@@ -11,6 +11,7 @@ using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
+using Dawn.Internal;
 
 namespace CodeRebirth.src.Content.Maps;
 
@@ -202,7 +203,7 @@ public class SellingSally : NetworkBehaviour
             scrapValueToMake += sellableScrap.scrapValue;
         }
 
-        SellAndDisplayItemProfits(scrapValueToMake, CodeRebirthUtils.Instance.shipTerminal);
+        SellAndDisplayItemProfits(scrapValueToMake, TerminalRefs.Instance);
     }
 
     private void SellAndDisplayItemProfits(int profit, Terminal terminal)

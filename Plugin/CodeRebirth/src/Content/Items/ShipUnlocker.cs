@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.Util;
+using Dawn.Internal;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Video;
@@ -11,29 +13,25 @@ public class ShipUnlocker : GrabbableObject
     public AudioSource audioPlayer = null!;
     public VideoPlayer videoPlayer = null!;
 
-    public override void LateUpdate()
-    {
-        base.LateUpdate();
-        if (playerHeldBy != null && playerHeldBy.inSpecialInteractAnimation)
-        {
-            playerHeldBy.disableMoveInput = false;
-        }
-    }
-
     public override void ItemActivate(bool used, bool buttonDown = true)
     {
         base.ItemActivate(used, buttonDown);
-        playerHeldBy.inSpecialInteractAnimation = true;
-        Terminal terminal = CodeRebirthUtils.Instance.shipTerminal;
         List<UnlockableItem> unlockableItems = new();
-        foreach (var item in StartOfRound.Instance.unlockablesList.unlockables)
+        foreach (UnlockableItem unlockableItem in StartOfRound.Instance.unlockablesList.unlockables)
         {
-            if (item.hasBeenUnlockedByPlayer) continue;
-            unlockableItems.Add(item);
+            if (unlockableItem.hasBeenUnlockedByPlayer || unlockableItem.alreadyUnlocked)
+                continue;
+
+            unlockableItems.Add(unlockableItem);
         }
-        if (unlockableItems.Count <= 0) return;
-        UnlockableItem randomItem = unlockableItems[Random.Range(0, unlockableItems.Count)];
-        StartOfRound.Instance.BuyShipUnlockableServerRpc(StartOfRound.Instance.unlockablesList.unlockables.IndexOf(randomItem), terminal.groupCredits);
+
+        if (unlockableItems.Count <= 0)
+        {
+            return;
+        }
+
+        UnlockableItem randomItem = unlockableItems[UnityEngine.Random.Range(0, unlockableItems.Count)];
+        StartOfRound.Instance.BuyShipUnlockableServerRpc(StartOfRound.Instance.unlockablesList.unlockables.IndexOf(randomItem), TerminalRefs.Instance.groupCredits);
         PlaySoundClientRpc();
         StartCoroutine(WaitForEndOfFrame());
     }
@@ -41,10 +39,21 @@ public class ShipUnlocker : GrabbableObject
     private IEnumerator WaitForEndOfFrame()
     {
         yield return new WaitUntil(() => !audioPlayer.isPlaying && !videoPlayer.isPlaying);
-        playerHeldBy.inSpecialInteractAnimation = false;
-        playerHeldBy.DespawnHeldObject();
+        if (isHeld || isPocketed)
+        {
+            playerHeldBy.DestroyItemInSlotAndSync(Array.IndexOf(playerHeldBy.ItemSlots, this));
+        }
+        else
+        {
+            DespawnItemServerRpc();
+        }
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    public void DespawnItemServerRpc()
+    {
+        NetworkObject.Despawn();
+    }
 
     [ClientRpc]
     public void PlaySoundClientRpc()

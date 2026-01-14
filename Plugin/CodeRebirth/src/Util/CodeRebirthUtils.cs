@@ -31,7 +31,6 @@ internal class CodeRebirthUtils : NetworkBehaviour
     internal ES3Settings SaveSettings;
     internal ShipAnimator shipAnimator = null!;
     internal StartMatchLever startMatchLever = null!;
-    internal Terminal shipTerminal = null!;
     internal static HashSet<(Light light, HDAdditionalLightData hDAdditionalLightData)> currentRoundLightData = new();
     internal Dictionary<EnemyType, float> enemyCoinDropRate = new();
     internal System.Random CRRandom = new();
@@ -44,7 +43,6 @@ internal class CodeRebirthUtils : NetworkBehaviour
         HandleEnemyDropRates();
         CRRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
         SaveSettings = new($"CR{GameNetworkManager.Instance.currentSaveFileName}", ES3.EncryptionType.None);
-        shipTerminal = FindFirstObjectByType<Terminal>(FindObjectsInactive.Exclude);
         startMatchLever = FindFirstObjectByType<StartMatchLever>(FindObjectsInactive.Exclude);
         shipAnimator = StartOfRound.Instance.shipAnimatorObject.gameObject.AddComponent<ShipAnimator>();
 

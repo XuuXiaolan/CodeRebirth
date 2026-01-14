@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using Dawn;
 using Dawn.Utils;
 using Dusk;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Video;
 
@@ -30,19 +32,9 @@ public class CRPlanetUnlocker : GrabbableObject
     [SerializeField]
     private HUDDisplayTip _displayTip;
 
-    public override void LateUpdate()
-    {
-        base.LateUpdate();
-        if (playerHeldBy != null && playerHeldBy.inSpecialInteractAnimation)
-        {
-            playerHeldBy.disableMoveInput = false;
-        }
-    }
-
     public override void ItemActivate(bool used, bool buttonDown = true)
     {
         base.ItemActivate(used, buttonDown);
-        playerHeldBy.inSpecialInteractAnimation = true;
 
         if (!TryUnlock()) // failed to unlock
         {
@@ -105,15 +97,27 @@ public class CRPlanetUnlocker : GrabbableObject
             yield return new WaitForSeconds(1f);
         }
 
-        playerHeldBy.inSpecialInteractAnimation = false;
-        if (!playerHeldBy.IsLocalPlayer())
+        if (!playerHeldBy.IsLocalPlayer() && (isHeld || isPocketed))
         {
             yield break;
         }
 
         if (_consumeOnUnlock)
         {
-            playerHeldBy.DespawnHeldObject();
+            if (isHeld || isPocketed)
+            {
+                playerHeldBy.DestroyItemInSlotAndSync(Array.IndexOf(playerHeldBy.ItemSlots, this));
+            }
+            else if (IsOwner)
+            {
+                DespawnItemServerRpc();
+            }
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void DespawnItemServerRpc()
+    {
+        NetworkObject.Despawn();
     }
 }

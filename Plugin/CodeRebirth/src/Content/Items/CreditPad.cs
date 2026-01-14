@@ -1,5 +1,6 @@
+using System;
 using System.Collections;
-using CodeRebirth.src.Util;
+using Dawn.Internal;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Video;
@@ -11,19 +12,9 @@ public class CreditPad : GrabbableObject
     public VideoPlayer videoPlayer = null!;
     public int creditValue = 0;
 
-    public override void LateUpdate()
-    {
-        base.LateUpdate();
-        if (playerHeldBy != null && playerHeldBy.inSpecialInteractAnimation)
-        {
-            playerHeldBy.disableMoveInput = false;
-        }
-    }
-
     public override void ItemActivate(bool used, bool buttonDown = true)
     {
         base.ItemActivate(used, buttonDown);
-        playerHeldBy.inSpecialInteractAnimation = true;
         IncreaseShipValueServerRpc();
         StartCoroutine(WaitForEndOfFrame());
     }
@@ -32,18 +23,27 @@ public class CreditPad : GrabbableObject
     {
         yield return new WaitForSeconds(0.1f);
         yield return new WaitUntil(() => !audioPlayer.isPlaying && !videoPlayer.isPlaying);
-        playerHeldBy.inSpecialInteractAnimation = false;
-        playerHeldBy.DespawnHeldObject();
+        if (isHeld || isPocketed)
+        {
+            playerHeldBy.DestroyItemInSlotAndSync(Array.IndexOf(playerHeldBy.ItemSlots, this));
+        }
+        else
+        {
+            DespawnItemServerRpc();
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void DespawnItemServerRpc()
+    {
+        NetworkObject.Despawn();
     }
 
     [ServerRpc(RequireOwnership = false)]
     public void IncreaseShipValueServerRpc()
     {
-        Terminal? terminal = CodeRebirthUtils.Instance.shipTerminal;
-        if (terminal == null) return;
-        int moneyToBe = terminal.groupCredits + creditValue;
-        if (moneyToBe < 0) moneyToBe = 0;
-        terminal.SyncGroupCreditsClientRpc(moneyToBe, terminal.numberOfItemsInDropship);
+        int moneyToBe = Mathf.Min(0, TerminalRefs.Instance.groupCredits + creditValue);
+        TerminalRefs.Instance.SyncGroupCreditsClientRpc(moneyToBe, TerminalRefs.Instance.numberOfItemsInDropship);
         PlaySoundClientRpc();
     }
 
