@@ -50,8 +50,8 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
 
     public void SavePlantData()
     {
-        ES3.Save<int>(this.gameObject.name + "Stage", stage.Value, CodeRebirthUtils.Instance.SaveSettings);
-        ES3.Save<int>(this.gameObject.name + "FruitType", fruitType.Value, CodeRebirthUtils.Instance.SaveSettings);
+        // ES3.Save<int>(this.gameObject.name + "Stage", stage.Value, CodeRebirthUtils.Instance.SaveSettings);
+        // ES3.Save<int>(this.gameObject.name + "FruitType", fruitType.Value, CodeRebirthUtils.Instance.SaveSettings);
     }
 
     public IEnumerator LoadPlantData()
@@ -59,8 +59,8 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
         yield return new WaitUntil(() => CodeRebirthUtils.Instance != null);
         if (IsServer)
         {
-            stage.Value = ES3.Load<int>(this.gameObject.name + "Stage", 0, CodeRebirthUtils.Instance.SaveSettings);
-            fruitType.Value = ES3.Load<int>(this.gameObject.name + "FruitType", 0, CodeRebirthUtils.Instance.SaveSettings);
+            // stage.Value = ES3.Load<int>(this.gameObject.name + "Stage", 0, CodeRebirthUtils.Instance.SaveSettings);
+            // fruitType.Value = ES3.Load<int>(this.gameObject.name + "FruitType", 0, CodeRebirthUtils.Instance.SaveSettings);
         }
         Plugin.ExtendedLogging($"Loaded stage {stage.Value} and fruit type {fruitType.Value}");
         if ((Stage)stage.Value != Stage.Zero)
