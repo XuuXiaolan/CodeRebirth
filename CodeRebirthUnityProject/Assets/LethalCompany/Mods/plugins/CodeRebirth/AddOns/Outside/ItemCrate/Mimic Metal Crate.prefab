@@ -30,7 +30,8 @@ Transform:
   m_LocalPosition: {x: 0.995, y: 0.384914, z: -0.814}
   m_LocalScale: {x: 0.51917, y: 0.51917, z: 0.51917}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 7079447695453226483}
   m_Father: {fileID: 4608450983690342670}
   m_LocalEulerAnglesHint: {x: 62.236, y: -6.71, z: 85.428}
 --- !u!33 &7564020552184812197
@@ -83,6 +84,64 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &370495236681408190
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7992493976359779780}
+  - component: {fileID: 5604584707379802224}
+  m_Layer: 0
+  m_Name: MimicBloodSplat2 (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7992493976359779780
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 370495236681408190}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.17100191, y: 0.68804103, z: -0.6803568, w: -0.18566778}
+  m_LocalPosition: {x: 0.099, y: 0.092, z: 0.157}
+  m_LocalScale: {x: 3.1888878, y: 3.1888876, z: 3.1888878}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4745350868489911421}
+  m_LocalEulerAnglesHint: {x: 88.658, y: 256.957, z: 47.739}
+--- !u!114 &5604584707379802224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 370495236681408190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f19d9143a39eb3b46bc4563e9889cfbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 2100000, guid: 081137a51a4fc584d84c4af4eba1103c, type: 2}
+  m_DrawDistance: 1000
+  m_FadeScale: 0.9
+  m_StartAngleFade: 180
+  m_EndAngleFade: 180
+  m_UVScale: {x: 1, y: 1}
+  m_UVBias: {x: 0, y: 0}
+  m_AffectsTransparency: 0
+  m_DecalLayerMask: 1
+  m_ScaleMode: 0
+  m_Offset: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.3, y: 0.3, z: 0.08}
+  m_FadeFactor: 0.854
+  m_Version: 2
 --- !u!1 &447430387918834043
 GameObject:
   m_ObjectHideFlags: 0
@@ -646,6 +705,64 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &1706255063171475656
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1220662081518751916}
+  - component: {fileID: 7407723195530095238}
+  m_Layer: 0
+  m_Name: MimicBloodSplat2 (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1220662081518751916
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1706255063171475656}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.16473638, y: -0.67487586, z: -0.69965416, w: 0.16699877}
+  m_LocalPosition: {x: -0.003, y: 0.032, z: 0.004}
+  m_LocalScale: {x: 1.926152, y: 1.9261518, z: 1.9261522}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8438609450495257217}
+  m_LocalEulerAnglesHint: {x: -87.984, y: 8.352, z: -161.215}
+--- !u!114 &7407723195530095238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1706255063171475656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f19d9143a39eb3b46bc4563e9889cfbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 2100000, guid: 081137a51a4fc584d84c4af4eba1103c, type: 2}
+  m_DrawDistance: 1000
+  m_FadeScale: 0.9
+  m_StartAngleFade: 180
+  m_EndAngleFade: 180
+  m_UVScale: {x: 1, y: 1}
+  m_UVBias: {x: 0, y: 0}
+  m_AffectsTransparency: 0
+  m_DecalLayerMask: 1
+  m_ScaleMode: 0
+  m_Offset: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.5, y: 0.5, z: 0.08}
+  m_FadeFactor: 0.733
+  m_Version: 2
 --- !u!1 &1744748663547943796
 GameObject:
   m_ObjectHideFlags: 0
@@ -3134,7 +3251,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 693831367
+  GlobalObjectIdHash: 3961513256
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -3731,6 +3848,64 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _chance: 50
+--- !u!1 &2391152797710347916
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7079447695453226483}
+  - component: {fileID: 8980860340630895987}
+  m_Layer: 0
+  m_Name: MimicBloodSplat1 (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7079447695453226483
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2391152797710347916}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.5842283, y: 0.36074144, z: 0.3997573, w: -0.6072372}
+  m_LocalPosition: {x: 0.21, y: 0.069, z: 0.007}
+  m_LocalScale: {x: 1.9261515, y: 1.9261508, z: 1.926151}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7050901022259488191}
+  m_LocalEulerAnglesHint: {x: -86.329, y: 386.921, z: -92.02}
+--- !u!114 &8980860340630895987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2391152797710347916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f19d9143a39eb3b46bc4563e9889cfbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 2100000, guid: d93c1aa7ccbee0d40b9f7366701e447a, type: 2}
+  m_DrawDistance: 1000
+  m_FadeScale: 0.9
+  m_StartAngleFade: 180
+  m_EndAngleFade: 180
+  m_UVScale: {x: 1, y: 1}
+  m_UVBias: {x: 0, y: 0}
+  m_AffectsTransparency: 0
+  m_DecalLayerMask: 1
+  m_ScaleMode: 0
+  m_Offset: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.6, y: 0.6, z: 0.1}
+  m_FadeFactor: 0.818
+  m_Version: 2
 --- !u!1 &2414754088224576438
 GameObject:
   m_ObjectHideFlags: 0
@@ -4430,6 +4605,64 @@ Transform:
   m_Children: []
   m_Father: {fileID: 772809861624596174}
   m_LocalEulerAnglesHint: {x: 25.311293, y: 0.6892137, z: 3.0686734}
+--- !u!1 &4243205435888257773
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8642127361886818437}
+  - component: {fileID: 1845163869201567807}
+  m_Layer: 0
+  m_Name: MimicBloodSplat2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8642127361886818437
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4243205435888257773}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.6482653, y: 0.28004482, z: -0.2788435, w: 0.650825}
+  m_LocalPosition: {x: -0.0133973835, y: 0.072151534, z: -0.0073297694}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2289361117534081855}
+  m_LocalEulerAnglesHint: {x: 0, y: 180.36, z: -88.138}
+--- !u!114 &1845163869201567807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4243205435888257773}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f19d9143a39eb3b46bc4563e9889cfbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 2100000, guid: 081137a51a4fc584d84c4af4eba1103c, type: 2}
+  m_DrawDistance: 1000
+  m_FadeScale: 0.9
+  m_StartAngleFade: 180
+  m_EndAngleFade: 180
+  m_UVScale: {x: 1, y: 1}
+  m_UVBias: {x: 0, y: 0}
+  m_AffectsTransparency: 0
+  m_DecalLayerMask: 1
+  m_ScaleMode: 0
+  m_Offset: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 1.24, z: 0.08}
+  m_FadeFactor: 0.854
+  m_Version: 2
 --- !u!1 &4358042921458136023
 GameObject:
   m_ObjectHideFlags: 0
@@ -4462,6 +4695,64 @@ Transform:
   - {fileID: 916667511293745296}
   m_Father: {fileID: 3149913965695956151}
   m_LocalEulerAnglesHint: {x: 0.000007042527, y: -0.0000021441183, z: -19.922602}
+--- !u!1 &4407551529012871634
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3341451327597387056}
+  - component: {fileID: 4383348072612533696}
+  m_Layer: 0
+  m_Name: MimicBloodSplat2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3341451327597387056
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4407551529012871634}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.6513092, y: -0.29550505, z: -0.30521274, w: -0.62874335}
+  m_LocalPosition: {x: -0.003, y: 0.109, z: -0.003}
+  m_LocalScale: {x: 2.2655697, y: 2.2655702, z: 2.26557}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3724403733318856893}
+  m_LocalEulerAnglesHint: {x: 0, y: 180.36, z: -88.138}
+--- !u!114 &4383348072612533696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4407551529012871634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f19d9143a39eb3b46bc4563e9889cfbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 2100000, guid: 081137a51a4fc584d84c4af4eba1103c, type: 2}
+  m_DrawDistance: 1000
+  m_FadeScale: 0.9
+  m_StartAngleFade: 180
+  m_EndAngleFade: 180
+  m_UVScale: {x: 1, y: 1}
+  m_UVBias: {x: 0, y: 0}
+  m_AffectsTransparency: 0
+  m_DecalLayerMask: 1
+  m_ScaleMode: 0
+  m_Offset: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.3, y: 0.5, z: 0.08}
+  m_FadeFactor: 0.854
+  m_Version: 2
 --- !u!1 &4456380179583411496
 GameObject:
   m_ObjectHideFlags: 0
@@ -4492,7 +4783,8 @@ Transform:
   m_LocalPosition: {x: 0.38294917, y: 2.3905911, z: -0.98411775}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 8642127361886818437}
   m_Father: {fileID: 4608450983690342670}
   m_LocalEulerAnglesHint: {x: -48.418, y: -89.869, z: 270}
 --- !u!33 &8205731997687871159
@@ -4610,7 +4902,8 @@ Transform:
   m_LocalPosition: {x: -0.988, y: 2.761, z: -0.695}
   m_LocalScale: {x: 0.75958, y: 0.75958, z: 0.75958}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1083054329152333754}
   m_Father: {fileID: 4608450983690342670}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: -90.747}
 --- !u!33 &3062819689052789717
@@ -4792,6 +5085,64 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &4910210455399644493
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1083054329152333754}
+  - component: {fileID: 8162194187117777006}
+  m_Layer: 0
+  m_Name: MimicBloodSplat2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1083054329152333754
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4910210455399644493}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.7025078, y: -0.08051521, z: -0.094066665, w: -0.7008221}
+  m_LocalPosition: {x: 0.05096252, y: 0.029629655, z: 0.11322041}
+  m_LocalScale: {x: 1.316517, y: 1.3165165, z: 1.3165169}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5804351774888851449}
+  m_LocalEulerAnglesHint: {x: 0, y: 90.36, z: 194.183}
+--- !u!114 &8162194187117777006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4910210455399644493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f19d9143a39eb3b46bc4563e9889cfbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 2100000, guid: 081137a51a4fc584d84c4af4eba1103c, type: 2}
+  m_DrawDistance: 1000
+  m_FadeScale: 0.9
+  m_StartAngleFade: 180
+  m_EndAngleFade: 180
+  m_UVScale: {x: 1, y: 1}
+  m_UVBias: {x: 0, y: 0}
+  m_AffectsTransparency: 0
+  m_DecalLayerMask: 1
+  m_ScaleMode: 0
+  m_Offset: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 1.28, z: 0.08}
+  m_FadeFactor: 0.836
+  m_Version: 2
 --- !u!1 &5255642910599945382
 GameObject:
   m_ObjectHideFlags: 0
@@ -9980,7 +10331,8 @@ Transform:
   m_LocalPosition: {x: -1.366, y: -0.277, z: 0.023}
   m_LocalScale: {x: 0.44139004, y: 0.44138998, z: 0.44138998}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 3341451327597387056}
   m_Father: {fileID: 252001931216302352}
   m_LocalEulerAnglesHint: {x: -48.418, y: 88.369, z: 270}
 --- !u!33 &9142512239790934857
@@ -10033,6 +10385,64 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &6594385261173385740
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 998999341117976112}
+  - component: {fileID: 6855832477761510347}
+  m_Layer: 0
+  m_Name: MimicBloodSplat1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &998999341117976112
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6594385261173385740}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.12183824, y: 0.68500704, z: 0.7022653, w: 0.15081176}
+  m_LocalPosition: {x: -0.09168477, y: 0.07401842, z: 0.16804853}
+  m_LocalScale: {x: 1.926152, y: 1.9261518, z: 1.9261515}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3277329037806685603}
+  m_LocalEulerAnglesHint: {x: 0, y: 270.329, z: -22.918}
+--- !u!114 &6855832477761510347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6594385261173385740}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f19d9143a39eb3b46bc4563e9889cfbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 2100000, guid: d93c1aa7ccbee0d40b9f7366701e447a, type: 2}
+  m_DrawDistance: 1000
+  m_FadeScale: 0.9
+  m_StartAngleFade: 180
+  m_EndAngleFade: 180
+  m_UVScale: {x: 1, y: 1}
+  m_UVBias: {x: 0, y: 0}
+  m_AffectsTransparency: 0
+  m_DecalLayerMask: 1
+  m_ScaleMode: 0
+  m_Offset: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.6, y: 0.6, z: 0.1}
+  m_FadeFactor: 0.818
+  m_Version: 2
 --- !u!1 &6701812626844025896
 GameObject:
   m_ObjectHideFlags: 0
@@ -10261,7 +10671,8 @@ Transform:
   m_LocalPosition: {x: -0.988, y: 0.32153058, z: 0.722}
   m_LocalScale: {x: 0.51917, y: 0.51917, z: 0.51917}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1220662081518751916}
   m_Father: {fileID: 4608450983690342670}
   m_LocalEulerAnglesHint: {x: -86.306, y: -139.237, z: 47.4}
 --- !u!33 &4090279510635866021
@@ -12708,7 +13119,8 @@ Transform:
   m_LocalPosition: {x: -0.87696296, y: 3.1288364, z: -0.9483259}
   m_LocalScale: {x: 0.31358907, y: 0.31358907, z: 0.31358907}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 7992493976359779780}
   m_Father: {fileID: 4608450983690342670}
   m_LocalEulerAnglesHint: {x: 65.277, y: -270.364, z: 450.649}
 --- !u!33 &8046840358703699201
@@ -15999,13 +16411,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9108487528170847183}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.51935697, y: 0.48506287, z: 0.5142302, w: 0.480156}
-  m_LocalPosition: {x: 0.9911793, y: 2.4141867, z: 0.5867839}
+  m_LocalRotation: {x: -0.49457574, y: 0.4990876, z: 0.52108073, w: 0.48454234}
+  m_LocalPosition: {x: 0.99618566, y: 2.4145825, z: 0.5877738}
   m_LocalScale: {x: 0.51917, y: 0.51917, z: 0.51917}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 998999341117976112}
   m_Father: {fileID: 4608450983690342670}
-  m_LocalEulerAnglesHint: {x: -86.04, y: -98.355, z: 188.343}
+  m_LocalEulerAnglesHint: {x: -88.041, y: -68.347, z: 160.699}
 --- !u!33 &1649470468609729846
 MeshFilter:
   m_ObjectHideFlags: 0
