@@ -21,8 +21,13 @@ public class Money : GrabbableObject
     public override void ItemActivate(bool used, bool buttonDown = true)
     {
         base.ItemActivate(used, buttonDown);
+        this.itemProperties.twoHanded = true;
+        playerHeldBy.activatingItem = true;
         if (_ownerNetworkAnimator != null)
         {
+            if (!IsOwner)
+                return;
+
             _ownerNetworkAnimator.SetTrigger("flip");
         }
         else
@@ -33,14 +38,22 @@ public class Money : GrabbableObject
 
     public void TryCollectCoin()
     {
+        this.itemProperties.twoHanded = false;
+        playerHeldBy.activatingItem = false;
+
         if (MoneyCounter.Instance == null)
             return;
 
         _moneySource.PlayOneShot(_collectSound);
 
-        if (!IsServer)
-            return;
+        if (IsServer)
+        {
+            MoneyCounter.Instance.AddMoney(_value);
+        }
 
-        MoneyCounter.Instance.AddMoney(_value);
+        if (IsOwner)
+        {
+            playerHeldBy.DespawnHeldObject();
+        }
     }
 }
