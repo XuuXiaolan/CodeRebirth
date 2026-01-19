@@ -1,4 +1,5 @@
 using System.Collections;
+using Dawn;
 using Dawn.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -22,12 +23,24 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
     [SerializeField]
     private Transform OneWheel;
 
-    private NetworkVariable<int> _totalMoneyStored = new(379, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    private NetworkVariable<int> _totalMoneyStored = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
+    private static NamespacedKey _moneyKey = NamespacedKey.From("code_rebirth", "money_stored");
 
     public override void OnNetworkPostSpawn()
     {
         base.OnNetworkPostSpawn();
+        if (!IsServer)
+        {
+            return;
+        }
 
+        PersistentDataContainer? contract = DawnLib.GetCurrentContract();
+        if (contract != null && contract.TryGet(_moneyKey, out int value))
+        {
+            Plugin.ExtendedLogging($"Loading money from contract: {value}");
+            _totalMoneyStored.Value = value;
+        }
         UpdateVisuals(0, _totalMoneyStored.Value);
     }
 
@@ -82,6 +95,7 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
 
     private void UpdateVisuals(int oldValue, int newValue)
     {
+        DawnLib.GetCurrentContract()?.Set(_moneyKey, _totalMoneyStored.Value);
         UpdateVisualsClientRpc(oldValue, newValue);
     }
 

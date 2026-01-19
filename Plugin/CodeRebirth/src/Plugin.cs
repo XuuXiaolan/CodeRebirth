@@ -9,8 +9,6 @@ using CodeRebirth.src.Patches;
 using BepInEx.Configuration;
 using Dusk;
 using Dawn;
-using Unity.Netcode;
-using Dawn.Internal;
 
 namespace CodeRebirth.src;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
@@ -27,6 +25,7 @@ public class Plugin : BaseUnityPlugin
     public static ConfigFile configFile { get; private set; } = null!;
     public static CodeRebirthConfig ModConfig { get; private set; } = null!; // prevent from accidently overriding the config
     public static DuskMod Mod { get; private set; } = null!;
+    public static PersistentDataContainer PersistentDataContainer { get; private set; } = null!;
 
     internal class MainAssets(AssetBundle bundle) : AssetBundleLoader<MainAssets>(bundle)
     {
@@ -43,6 +42,9 @@ public class Plugin : BaseUnityPlugin
     private void Awake()
     {
         Logger = base.Logger;
+        PersistentDataContainer = this.GetPersistentDataContainer();
+        PersistentDataContainer.Set(NamespacedKey.From("code_rebirth", "last_version"), MyPluginInfo.PLUGIN_VERSION);
+
         configFile = this.Config;
         ModConfig = new CodeRebirthConfig();
 

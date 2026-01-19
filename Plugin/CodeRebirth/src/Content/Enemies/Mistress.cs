@@ -9,6 +9,7 @@ using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Rendering;
 
 namespace CodeRebirth.src.Content.Enemies;
 public class Mistress : CodeRebirthEnemyAI
@@ -452,10 +453,11 @@ public class Mistress : CodeRebirthEnemyAI
             yield break;
         }
 
-        while (CodeRebirthUtils.Instance.CloseEyeVolume.weight > 0f)
+        Volume closeEyeVolume = CodeRebirthUtils.Instance.CloseEyeVolume;
+        while (closeEyeVolume.weight > 0f)
         {
             yield return null;
-            CodeRebirthUtils.Instance.CloseEyeVolume.weight = BlackOutAnimationCurve.Evaluate(Mathf.MoveTowards(CodeRebirthUtils.Instance.CloseEyeVolume.weight, 0f, Time.deltaTime * 0.5f));
+            closeEyeVolume.weight = Mathf.MoveTowards(closeEyeVolume.weight, 0f, Time.deltaTime * 0.5f);
         }
     }
 
