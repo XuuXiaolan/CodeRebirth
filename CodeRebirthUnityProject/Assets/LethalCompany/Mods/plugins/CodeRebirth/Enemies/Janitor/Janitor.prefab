@@ -1769,6 +1769,7 @@ GameObject:
   - component: {fileID: 4596584288279080972}
   - component: {fileID: 1956663531283641586}
   - component: {fileID: 340459322269747544}
+  - component: {fileID: 6445250814085846289}
   m_Layer: 19
   m_Name: Janitor
   m_TagString: Enemy
@@ -2238,6 +2239,26 @@ MonoBehaviour:
   _particleSystems:
   - {fileID: 5683407239770638326}
   - {fileID: 3465323669513768754}
+--- !u!114 &6445250814085846289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3591052539947343789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 26720462, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _audioSourcesWithClips:
+  - nearAudioSource: {fileID: 3485265500856593703}
+    nearClips:
+    - {fileID: 8300000, guid: 6fd1e0d996aebfe42ba757b7dacf2e96, type: 3}
+    - {fileID: 8300000, guid: d7e88a6a422508b4083c9da19d8e42a9, type: 3}
+    - {fileID: 8300000, guid: e4de0ecd320a4e847a07d906797fb484, type: 3}
+    farAudioSource: {fileID: 0}
+    farClips: []
 --- !u!1 &3763124428522132940
 GameObject:
   m_ObjectHideFlags: 0
