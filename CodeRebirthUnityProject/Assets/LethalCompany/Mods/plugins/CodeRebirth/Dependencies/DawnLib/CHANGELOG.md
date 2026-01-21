@@ -1,9 +1,45 @@
-# v0.6.0
+# v0.7.0
+
+- Added DuskTerminalCommandDefinition, allowing you to define commands for the terminal.
+  - Commands can either be one off commands, i.e. `version` to display something like current version of your mod's version (this is just an example setup).
+  - Commands can also be Query commands with a confirm and a cancel.
+- Non-DawnLib registered UnlockableShopItem price can now be affected by stuff like LunarConfig.
+
+## v0.6.4
+
+- Fixed issue where FailedResult predicates would end up using up credits still.
+
+## v0.6.3
+
+- Moved Networkers spawning to be much earlier to avoid a few save-related issues I've noticed.
+- AnimationCurveConverter ignores empty entries now.
+
+## v0.6.2
+
+- Added more logging for incorrect curve config formats.
+- Fixed an edge-case of registered pre-unlocked furniture.
+- Removed erroring from vanilla items that can't be put into the save file (clipboard etc).
+- Fixed a vanilla issue where the same item would be added to a moon spawn list twice.
+- Updated wiki slightly too.
+- Added crafty and darmuh to credits.
+- Next major update is planned to grant a lot of terminal functionality in terms of creating terminal pages, commands, etc.
+
+## v0.6.1
+
+- Fixed rare scenario of some weights not working right if grabbed at the wrong timing (would mostly break dawn interior weights).
+
+## v0.6.0
 
 - Added custom footsteps controlled through the component DawnSurface.
   - You need to register a custom DawnFootstepSurface and then use the component DawnSurface to set a collider to be a specific Surface.
+  - Allows you to also emit particles based on the surface you're setting on incase you'd like to emit sand from the player's footsteps while they're walking on sand.
   - You can also use a DawnSurface to do something like, making Quicksand terrain sink you with cement sounds (use the cement DawnSurface with the appropriate quicksand tags on the terrain!).
 - Adjusted AnimationCurveConverter.ConvertToString to give atleast 10 keys minimum to avoid tangent-related issues.
+- Added more logging to look into invalid furnitures.
+- Fixed an issue with tag weights not averaging.
+- Publicised some functions in NamespacedConfigWeight.
+- Rewrote SpawnWeightsPreset a bit to be cleaner (no breaking changes I hope).
+- AnimationCurveConverter returns a constant 0 curve when provided with null or 0 key curve.
 
 ## v0.5.17
 
