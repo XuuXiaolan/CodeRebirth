@@ -15,7 +15,7 @@ public class PlayEffectsOnAnimation : MonoBehaviour
         }
     }
 
-    public void PlayEffect(int effectIndex)
+    public void PlayEffectWithIndex(int effectIndex)
     {
         _particleSystems[effectIndex].Play(true);
     }
