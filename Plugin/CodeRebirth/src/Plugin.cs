@@ -12,7 +12,7 @@ using Dawn;
 
 namespace CodeRebirth.src;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
-[BepInDependency("mrov.WeatherRegistry")]
+[BepInDependency("mrov.WeatherRegistry", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency("com.rune580.LethalCompanyInputUtils")]
 [BepInDependency(DawnLib.PLUGIN_GUID)]
 [BepInDependency(Dusk.MyPluginInfo.PLUGIN_GUID)]
@@ -91,6 +91,7 @@ public class Plugin : BaseUnityPlugin
 
         Logger.LogInfo("Registering CodeRebirth content.");
 
+        bool exists = WeatherRegistryCompat.WeatherRegistryAPIExists;
         if (OpenBodyCamCompatibilityChecker.Enabled)
         {
             OpenBodyCamCompatibilityChecker.Init();

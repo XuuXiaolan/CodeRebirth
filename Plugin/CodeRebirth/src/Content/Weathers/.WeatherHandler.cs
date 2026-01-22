@@ -1,5 +1,6 @@
 ﻿using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.Content.Moons;
+using CodeRebirth.src.ModCompats;
 using Dusk;
 using UnityEngine;
 
@@ -42,6 +43,11 @@ public class WeatherHandler : ContentHandler<WeatherHandler>
 
     public WeatherHandler(DuskMod mod) : base(mod)
     {
+        if (!WeatherRegistryCompat.WeatherRegistryAPIExists)
+        {
+            Plugin.Logger.LogWarning("Weather Registry not found, skipping weather content registration.");
+            return;
+        }
         RegisterContent("meteorshowerassets", out Meteorite);
 
         RegisterContent("tornadoassets", out Tornado);
