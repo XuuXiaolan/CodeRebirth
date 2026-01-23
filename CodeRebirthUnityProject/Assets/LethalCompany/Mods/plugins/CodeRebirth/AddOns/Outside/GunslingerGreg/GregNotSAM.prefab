@@ -1518,7 +1518,7 @@ MonoBehaviour:
   fireRate: 0.5
   detectionRange: 200
   GregSource: {fileID: 5279458560248911520}
-  FarGregSource: {fileID: 2989197233804817874}
+  FarGregSource: {fileID: 0}
   GregLockOnSound: {fileID: 8300000, guid: f5c51a9f164b21e4c9ce7a46d72e3abc, type: 3}
   FarGregLockOnSound: {fileID: 0}
   GregFireSounds:
@@ -1527,7 +1527,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: d62e7f41ba1f6cd43b55f80274d0ccc3, type: 3}
   FarGregFireSounds: []
   DetectPlayerAudioSound: {fileID: 3895542236213157679}
-  DetectPlayerFarAudioSound: {fileID: 0}
+  DetectPlayerFarAudioSound: {fileID: 2989197233804817874}
   playerHeadstart: 5
   maxAngle: 80
   rocketTransforms:
@@ -1749,7 +1749,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 08a637d180636154abe1e6a48c8677b4, type: 3}
-  m_PlayOnAwake: 0
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 1
