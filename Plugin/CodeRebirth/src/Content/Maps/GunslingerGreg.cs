@@ -14,7 +14,6 @@ public class GunslingerGreg : CodeRebirthHazard
     public AudioSource GregSource = null!;
     public AudioSource FarGregSource = null!;
     public AudioClip GregLockOnSound = null!;
-    public AudioClip FarGregLockOnSound = null!;
     public AudioClip[] GregFireSounds = [];
     public AudioClip[] FarGregFireSounds = [];
     public AudioSource DetectPlayerAudioSound = null!;
@@ -193,7 +192,6 @@ public class GunslingerGreg : CodeRebirthHazard
                 if (lastTransformTargetted == null)
                 {
                     GregSource.PlayOneShot(GregLockOnSound);
-                    FarGregSource.PlayOneShot(FarGregLockOnSound);
                 }
 
                 lastTransformTargetted = toKilltransform;

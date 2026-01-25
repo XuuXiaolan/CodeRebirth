@@ -317,7 +317,7 @@ public class BetterCooldownTrigger : NetworkBehaviour
         Vector3 calculatedForceAfterDeath = CalculateForceDirection(player, forceMagnitudeAfterDeath);
 
         player.DamagePlayer(damageToDealForPlayers, playDefaultPlayerDamageSFX, true, causeOfDeath, (int)deathAnimation, false, calculatedForceAfterDeath);
-        if (displayMessage && Time.time >= lastTipTime + damageIntervalForPlayers)
+        if (displayMessage && Time.time >= lastTipTime + messageInterval)
         {
             HUDManager.Instance.DisplayTip(headerText, message, true);
             lastTipTime = Time.time;
