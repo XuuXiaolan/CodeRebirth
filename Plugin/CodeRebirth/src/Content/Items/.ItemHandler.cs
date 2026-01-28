@@ -69,7 +69,7 @@ public class ItemHandler : ContentHandler<ItemHandler>
 
         RegisterContent("moonunlockerassets", out MoonUnlocker);
 
-        RegisterContent("xuandrigoassets", out XuAndRigo, MoonHandler.Instance.Oxyde != null);
+        RegisterContent("xuandrigoassets", out XuAndRigo);
 
         RegisterContent("zortassets", out Zort);
 

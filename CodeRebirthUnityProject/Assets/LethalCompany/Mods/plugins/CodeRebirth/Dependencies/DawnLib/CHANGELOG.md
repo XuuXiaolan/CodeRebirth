@@ -1,4 +1,35 @@
-# v0.7.0
+# v0.7.5
+
+- Fixed multiplayer connection issues.
+- Fixed renaming terminal entries causing duplicates.
+- Allowed NamespacedKeys to convert digits like `1` into the matching words `one`, this is technically a breaking change in some logic but I doubt anyone will have to adjust anything currently, except maybe me.
+
+## v0.7.4
+
+- Added some null checks to fix compat with experimental WeatherRegistry;
+
+## v0.7.3
+
+- Cleaned up code, removed a few files around.
+- Added `AllowStingerToPlay` to set custom conditions for whether a stinger should play, i.e. current interior.
+- Massively rewrote `SpawnWeightsPreset` class for future maintainability, this is a breaking change with LunarConfig until they update to latest DawnLib (which is soon).
+
+## v0.7.2
+
+- Added compatibility with MoonDaySpeedMultiplierPatcher lol, almost forgot immediately.
+- Prettied finding the components for the Dawn`VanillaWeatherName`Overrides.
+
+## v0.7.1
+
+- Compeletely rebuilt the ship upgrades part instead of only adding dawnlib ship upgrades.
+- Added a script to help with weather overrides (Dawn`VanillaWeatherName`Override).
+- Added a time speed patch so that moon speed can be sped up or slowed down without introducing new bugs into the game.
+- Finished implementing stingers into dawn interiors, allowing you to have stingers that play more than once, set a custom chance for how frequent a stinger will run.
+- Finished implementing giving dawn moons the ability to modify the outside spawn probability range (vanilla hardcodes every moon to have a range of + and - 3).
+- Added a native TerminalConflictFix to fix the terminal conflicts issue with similar keywords.
+  - Added two configs to toggle this off/on and increase/decrease accuracy of the terminal's preciseness of keyword matching.
+
+## v0.7.0
 
 - Added DuskTerminalCommandDefinition, allowing you to define commands for the terminal.
   - Commands can either be one off commands, i.e. `version` to display something like current version of your mod's version (this is just an example setup).
