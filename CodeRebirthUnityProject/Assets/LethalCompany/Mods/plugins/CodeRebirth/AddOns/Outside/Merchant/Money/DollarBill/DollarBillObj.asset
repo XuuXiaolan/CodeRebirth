@@ -16,7 +16,7 @@ MonoBehaviour:
   itemName: Crisp Dollar Bill
   spawnPositionTypes: []
   twoHanded: 0
-  twoHandedAnimation: 0
+  twoHandedAnimation: 1
   disableHandsOnWall: 0
   canBeGrabbedBeforeGameStart: 0
   weight: 1
@@ -36,7 +36,7 @@ MonoBehaviour:
   batteryUsage: 15
   automaticallySetUsingPower: 1
   itemIcon: {fileID: 21300000, guid: c84a2281995ee634782dbb4a7ee98de6, type: 3}
-  grabAnim: 
+  grabAnim: HoldForward
   useAnim: 
   pocketAnim: 
   throwAnim: 
@@ -55,9 +55,9 @@ MonoBehaviour:
   verticalOffset: 0
   floorYOffset: 0
   allowDroppingAheadOfPlayer: 1
-  restingRotation: {x: 0, y: 0, z: 90}
-  rotationOffset: {x: 0, y: 0, z: 0}
-  positionOffset: {x: 0, y: 0, z: 0}
+  restingRotation: {x: -90, y: 0, z: 90}
+  rotationOffset: {x: -20, y: 90, z: 0}
+  positionOffset: {x: 0.2, y: 0.1, z: 0.37}
   meshOffset: 1
   meshVariants: []
   materialVariants: []

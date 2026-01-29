@@ -32,8 +32,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.7069834, y: 0, z: 0, w: 0.7072302}
   m_LocalPosition: {x: -0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1618799667516654168}
   m_Father: {fileID: 0}
@@ -141,7 +141,7 @@ MonoBehaviour:
   isInFactory: 1
   useCooldown: 0
   currentUseCooldown: 0
-  itemProperties: {fileID: 0}
+  itemProperties: {fileID: 11400000, guid: 8ebbb8bd39443b449be3fcf80f1bcf27, type: 2}
   insertedBattery:
     empty: 0
     charge: 0
