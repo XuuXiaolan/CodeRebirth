@@ -35,7 +35,7 @@ MonoBehaviour:
   requiresBattery: 0
   batteryUsage: 0
   automaticallySetUsingPower: 0
-  itemIcon: {fileID: 0}
+  itemIcon: {fileID: 21300000, guid: c84a2281995ee634782dbb4a7ee98de6, type: 3}
   grabAnim: 
   useAnim: 
   pocketAnim: 
@@ -45,9 +45,9 @@ MonoBehaviour:
   dropSFX: {fileID: 8300000, guid: 51fefdbb86193304faebd71049a3e05a, type: 3}
   pocketSFX: {fileID: 8300000, guid: 51fefdbb86193304faebd71049a3e05a, type: 3}
   throwSFX: {fileID: 0}
-  syncGrabFunction: 0
-  syncUseFunction: 0
-  syncDiscardFunction: 0
+  syncGrabFunction: 1
+  syncUseFunction: 1
+  syncDiscardFunction: 1
   syncInteractLRFunction: 0
   saveItemVariable: 0
   isDefensiveWeapon: 0

@@ -73,7 +73,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemData: {fileID: 11400000, guid: 9a8ae9d59c3a8f447b446f9d68cf8e55, type: 2}
   renderers:
-  - {fileID: 6377461073054825993}
+  - {fileID: 2229870121822104058}
   scanNodeText:
   - Wallet (Brown)
   - Wallet (Green)
@@ -248,9 +248,12 @@ MonoBehaviour:
   grabbableToEnemies: 1
   hasBeenHeld: 0
   rotateObject: 0
-  _value: 5
+  _valueRange:
+    <Min>k__BackingField: 1
+    <Max>k__BackingField: 10
   _moneySource: {fileID: 9144494968854070415}
   _collectSound: {fileID: 0}
+  _ownerNetworkAnimator: {fileID: 0}
 --- !u!1 &5902236826406273354
 GameObject:
   m_ObjectHideFlags: 0
@@ -334,7 +337,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2061205598808088626}
-  - component: {fileID: 6377461073054825993}
+  - component: {fileID: 2229870121822104058}
+  - component: {fileID: 3351882348280652157}
   m_Layer: 0
   m_Name: WalletBody
   m_TagString: Untagged
@@ -357,8 +361,8 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5004144375484723467}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
---- !u!137 &6377461073054825993
-SkinnedMeshRenderer:
+--- !u!23 &2229870121822104058
+MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -372,7 +376,7 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 3
+  m_RayTracingMode: 2
   m_RayTraceProcedural: 0
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
@@ -398,15 +402,12 @@ SkinnedMeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  serializedVersion: 2
-  m_Quality: 0
-  m_UpdateWhenOffscreen: 0
-  m_SkinnedMotionVectors: 1
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &3351882348280652157
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7061639821370852276}
   m_Mesh: {fileID: 3631211900962485393, guid: f940334ef2c8b924f85d5163829d687c, type: 3}
-  m_Bones: []
-  m_BlendShapeWeights: []
-  m_RootBone: {fileID: 0}
-  m_AABB:
-    m_Center: {x: -0.02853614, y: 0.0876714, z: -0.0025157034}
-    m_Extent: {x: 0.8889057, y: 0.8380207, z: 0.8446766}
-  m_DirtyAABB: 0

@@ -1,0 +1,140 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 608100558, guid: cd73415377293454abda168a425682f7, type: 3}
+  m_Name: WalletMapDefinition
+  m_EditorClassIdentifier: 
+  _configEntries: []
+  _tags: []
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: wallet
+  <GameObject>k__BackingField: {fileID: 3184792357886542752, guid: e7a28569d3998cb428b2bea3e28368cc,
+    type: 3}
+  <MapObjectName>k__BackingField: Wallet
+  <InsideMapObjectSettings>k__BackingField:
+    spawnFacingAwayFromWall: 0
+    spawnFacingWall: 0
+    spawnWithBackToWall: 0
+    spawnWithBackFlushAgainstWall: 0
+    requireDistanceBetweenSpawns: 0
+    disallowSpawningNearEntrances: 1
+  <OutsideMapObjectSettings>k__BackingField:
+    SpawnFacingAwayFromWall: 0
+    ObjectWidth: 6
+    RotationOffset: {x: 0, y: 0, z: 0}
+    SpawnableFloorTags: []
+    MinimumAINodeSpawnRequirement: 0
+    AlignWithTerrain: 0
+  <IsInsideHazard>k__BackingField: 1
+  <CreateInsideHazardConfig>k__BackingField: 0
+  <InsideMoonCurveSpawnWeights>k__BackingField:
+  - <Key>k__BackingField:
+      _namespace: lethal_company
+      _key: vanilla
+    <Curve>k__BackingField:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0.25
+        inSlope: 2.357526
+        outSlope: 2.357526
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.10614776
+        value: 0.5002461
+        inSlope: 0.7470927
+        outSlope: 0.7470927
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.05559486
+      - serializedVersion: 3
+        time: 0.93972784
+        value: 1.611231
+        inSlope: 1.6092833
+        outSlope: 1.6092833
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.20998184
+      - serializedVersion: 3
+        time: 1
+        value: 3
+        inSlope: 23.041636
+        outSlope: 23.041636
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+  - <Key>k__BackingField:
+      _namespace: lethal_company
+      _key: custom
+    <Curve>k__BackingField:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0.25
+        inSlope: 2.357526
+        outSlope: 2.357526
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.10614776
+        value: 0.5002461
+        inSlope: 0.7470927
+        outSlope: 0.7470927
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.05559486
+      - serializedVersion: 3
+        time: 0.93972784
+        value: 1.611231
+        inSlope: 1.6092833
+        outSlope: 1.6092833
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.20998184
+      - serializedVersion: 3
+        time: 1
+        value: 3
+        inSlope: 23.041636
+        outSlope: 23.041636
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+  <InsideInteriorCurveSpawnWeights>k__BackingField: []
+  <InsidePrioritiseMoonConfig>k__BackingField: 1
+  <CreateInsideCurveSpawnWeightsConfig>k__BackingField: 1
+  <IsOutsideHazard>k__BackingField: 0
+  <CreateOutsideHazardConfig>k__BackingField: 0
+  <OutsideMoonCurveSpawnWeights>k__BackingField: []
+  <OutsideInteriorCurveSpawnWeights>k__BackingField: []
+  <OutsidePrioritiseMoonConfig>k__BackingField: 0
+  <CreateOutsideCurveSpawnWeightsConfig>k__BackingField: 0
+  <DefaultOutsideCurveSpawnWeights>k__BackingField: 
+  <DefaultInsideCurveSpawnWeights>k__BackingField: 

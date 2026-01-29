@@ -6,17 +6,26 @@ namespace CodeRebirth.src.Content.Maps;
 
 public class Money : GrabbableObject
 {
-    [field: SerializeField]
-    private int _value = 1;
+    [SerializeField]
+    private BoundedRange _valueRange = new(1, 1);
 
-    [field: SerializeField]
-    public AudioSource _moneySource;
+    [SerializeField]
+    private AudioSource _moneySource;
 
-    [field: SerializeField]
-    public AudioClip _collectSound;
+    [SerializeField]
+    private AudioClip _collectSound;
 
-    [field: SerializeField]
-    public OwnerNetworkAnimator? _ownerNetworkAnimator;
+    [SerializeField]
+    private OwnerNetworkAnimator? _ownerNetworkAnimator;
+
+    private int _value;
+    private static int _coinsSpawned = 0;
+
+    public void Awake()
+    {
+        _value = (int)_valueRange.GetRandomInRange(new System.Random(StartOfRound.Instance.randomMapSeed + _coinsSpawned));
+        _coinsSpawned++;
+    }
 
     public override void ItemActivate(bool used, bool buttonDown = true)
     {

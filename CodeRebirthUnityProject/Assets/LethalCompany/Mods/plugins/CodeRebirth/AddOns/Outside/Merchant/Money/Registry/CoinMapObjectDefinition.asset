@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 608100558, guid: cd73415377293454abda168a425682f7, type: 3}
+  m_Name: CoinMapObjectDefinition
+  m_EditorClassIdentifier: 
+  _configEntries:
+  - settingName: Money | Enemy Drop Rates
+    DynamicConfigType: 0
+    defaultString: Baboon hawk:2,Crawler:15,Maneater:80,Centipede:1,Flowerman:30,ForestGiant:30,Nutcracker:20,Hoarding
+      Bug:1,Bunker Spider:5,MouthDog:10,Masked:1, Butler:5,Driftwood Menace:20,Cactus
+      Budling:3,Janitor:3,Peace Keeper:100,Lord Of The Manor:100,Monarch:15,Redwood
+      Titan:15,Jester:20,Spring:20,Earth Leviathan:100,Blob:20,Clay Surgeon:30,Puffer:10,RadMech:30
+    defaultInt: 0
+    defaultFloat: 0
+    defaultBool: 0
+    defaultBoundedRange:
+      <Min>k__BackingField: 0
+      <Max>k__BackingField: 0
+    defaultAnimationCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    Description: EnemyName:DropRate for the chance of an enemy dropping a coin on
+      death via player damage.
+  _tags: []
+  <Key>k__BackingField:
+    _namespace: code_rebirth
+    _key: coin
+  <GameObject>k__BackingField: {fileID: 671622849137528873, guid: 0b01bfed1d0bf5d4b89b2477112b8dbd,
+    type: 3}
+  <MapObjectName>k__BackingField: Coin
+  <InsideMapObjectSettings>k__BackingField:
+    spawnFacingAwayFromWall: 0
+    spawnFacingWall: 0
+    spawnWithBackToWall: 0
+    spawnWithBackFlushAgainstWall: 0
+    requireDistanceBetweenSpawns: 0
+    disallowSpawningNearEntrances: 0
+  <OutsideMapObjectSettings>k__BackingField:
+    SpawnFacingAwayFromWall: 0
+    ObjectWidth: 0
+    RotationOffset: {x: 0, y: 0, z: 0}
+    SpawnableFloorTags: []
+    MinimumAINodeSpawnRequirement: 0
+    AlignWithTerrain: 0
+  <IsInsideHazard>k__BackingField: 1
+  <CreateInsideHazardConfig>k__BackingField: 0
+  <InsideMoonCurveSpawnWeights>k__BackingField: []
+  <InsideInteriorCurveSpawnWeights>k__BackingField: []
+  <InsidePrioritiseMoonConfig>k__BackingField: 1
+  <CreateInsideCurveSpawnWeightsConfig>k__BackingField: 1
+  <IsOutsideHazard>k__BackingField: 0
+  <CreateOutsideHazardConfig>k__BackingField: 0
+  <OutsideMoonCurveSpawnWeights>k__BackingField: []
+  <OutsideInteriorCurveSpawnWeights>k__BackingField: []
+  <OutsidePrioritiseMoonConfig>k__BackingField: 0
+  <CreateOutsideCurveSpawnWeightsConfig>k__BackingField: 0
+  <DefaultOutsideCurveSpawnWeights>k__BackingField: 
+  <DefaultInsideCurveSpawnWeights>k__BackingField: Vanilla - 0.00,3.00 ; 0.11,3.72
+    ; 0.22,4.44 ; 0.33,4.96 ; 0.44,5.10 ; 0.56,5.08 ; 0.67,5.23 ; 0.78,7.14 ; 0.89,7.82
+    ; 1.00,8.00 | Custom - 0.00,3.00 ; 0.11,3.72 ; 0.22,4.44 ; 0.33,4.96 ; 0.44,5.10
+    ; 0.56,5.08 ; 0.67,5.23 ; 0.78,7.14 ; 0.89,7.82 ; 1.00,8.00
