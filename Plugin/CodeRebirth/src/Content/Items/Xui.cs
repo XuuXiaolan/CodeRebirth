@@ -74,7 +74,10 @@ public class Xui : GrabbableObject
     {
         base.OnNetworkDespawn();
 
-        if (!IsServer) return;
+        if (!IsServer || StartOfRound.Instance.inShipPhase || StartOfRound.Instance.shipIsLeaving)
+        {
+            return;
+        }
 
         int randomNumber = xuiRandom.Next(100);
         Plugin.ExtendedLogging($"Random Number: {randomNumber}");

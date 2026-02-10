@@ -29,8 +29,8 @@ public class VendingMachine : NetworkBehaviour
     private RealItemWithRarityAndColor currentItemToSpawn;
     private float jammingProgress = 0f;
 
-    private static int JammedAnimationHash = Animator.StringToHash("jammed"); // Bool
-    private static int UseAnimationHash = Animator.StringToHash("use"); // Trigger
+    private static readonly int JammedAnimationHash = Animator.StringToHash("jammed"); // Bool
+    private static readonly int UseAnimationHash = Animator.StringToHash("use"); // Trigger
 
     public override void OnNetworkSpawn()
     {
@@ -57,6 +57,39 @@ public class VendingMachine : NetworkBehaviour
         currentItemToSpawn = CRUtilities.ChooseRandomWeightedType(PossibleItemsToSpawn.Select(x => (x, x.rarity)))!;
     }
 
+    public void StartSpawningAnimation(PlayerControllerB playerControllerB)
+    {
+        if (playerControllerB == null || !playerControllerB.IsLocalPlayer())
+        {
+            return;
+        }
+
+        StartSpawningAnimationServerRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void StartSpawningAnimationServerRpc()
+    {
+        StartSpawningAnimationsClientRpc();
+    }
+
+    [ClientRpc]
+    private void StartSpawningAnimationsClientRpc()
+    {
+        if (MoneyCounter.Instance == null || MoneyCounter.Instance.MoneyStored() < PayPrice)
+        {
+            return;
+        }
+
+        if (JammingCurve.Evaluate(jammingProgress) > UnityEngine.Random.Range(0f, 1f))
+        {
+            JamMachineClientRpc();
+            return;
+        }
+
+        Animator.SetTrigger(UseAnimationHash);
+    }
+
     public void SpawnRandomItem()
     {
         if (!IsServer)
@@ -77,17 +110,6 @@ public class VendingMachine : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     private void SpawnRandomItemServerRpc()
     {
-        if (MoneyCounter.Instance == null || MoneyCounter.Instance.MoneyStored() < PayPrice)
-        {
-            return;
-        }
-
-        if (JammingCurve.Evaluate(jammingProgress) > UnityEngine.Random.Range(0f, 1f))
-        {
-            JamMachineClientRpc();
-            return;
-        }
-
         MoneyCounter.Instance.RemoveMoney(PayPrice);
         jammingProgress += 0.1f;
         GameObject itemGO = (GameObject)CodeRebirthUtils.Instance.SpawnScrap(currentItemToSpawn.item, SpawnPosition.position, false, true, 0);
@@ -99,7 +121,6 @@ public class VendingMachine : NetworkBehaviour
     [ClientRpc]
     private void SyncGrabbableObjectScanStuffClientRpc(NetworkBehaviourReference grabbableObjectRef, float borderColorR, float borderColorG, float borderColorB, float textColorR, float textColorG, float textColorB)
     {
-        Animator.SetTrigger(UseAnimationHash);
         GrabbableObject grabbableObject = (GrabbableObject)grabbableObjectRef;
         grabbableObject.grabbable = true;
         ForceScanColorOnItem forceScanColorOnItem = grabbableObject.gameObject.AddComponent<ForceScanColorOnItem>();
