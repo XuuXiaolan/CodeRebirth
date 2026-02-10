@@ -534,7 +534,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
         {
             creatureNetworkAnimator.SetTrigger(BitchSlapAnimation);
         }
-        enemyHP = Mathf.Clamp(enemyHP - force, -99, 10);
+        enemyHP -= Mathf.Clamp(force, -10, 10);
 
         if (enemyHP <= 0)
         {
