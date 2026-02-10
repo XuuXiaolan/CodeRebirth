@@ -33,3 +33,12 @@ public class SimplifiedRealItemWithRarityAndColor(Item? item, float rarity, Colo
     public Color borderColor = borderColor;
     public Color textColor = textColor;
 }
+
+[Serializable]
+public class SimplifiedItemWithRarityAndColor
+{
+    public string itemName;
+    public float rarity;
+    public Color borderColor;
+    public Color textColor;
+}

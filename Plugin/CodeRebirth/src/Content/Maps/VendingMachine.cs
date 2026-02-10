@@ -13,20 +13,22 @@ namespace CodeRebirth.src.Content.Maps;
 public class VendingMachine : NetworkBehaviour
 {
     [field: SerializeField]
-    public List<ItemWithRarityAndColor> PotentialItemsToSpawn { get; private set; } = new();
+    public List<SimplifiedItemWithRarityAndColor> PotentialItemsToSpawn { get; private set; } = new();
     [field: SerializeField]
     public Animator Animator { get; private set; }
     [field: SerializeField]
     public InteractTrigger SlotTrigger { get; private set; }
     [field: SerializeField]
-    public Transform SpawnPosition { get; private set; }
+    public Transform StartSpawnPosition { get; private set; }
+    [field: SerializeField]
+    public Transform EndSpawnPosition { get; private set; }
     [field: SerializeField]
     public int PayPrice { get; private set; }
     [field: SerializeField]
     public AnimationCurve JammingCurve { get; private set; } = AnimationCurve.Linear(0, 0, 1, 1);
 
-    private List<RealItemWithRarityAndColor> PossibleItemsToSpawn = new();
-    private RealItemWithRarityAndColor currentItemToSpawn;
+    private List<SimplifiedRealItemWithRarityAndColor> possibleItemsToSpawn = new();
+    private SimplifiedRealItemWithRarityAndColor currentItemToSpawn;
     private float jammingProgress = 0f;
 
     private static readonly int JammedAnimationHash = Animator.StringToHash("jammed"); // Bool
@@ -35,7 +37,7 @@ public class VendingMachine : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        foreach (ItemWithRarityAndColor itemWithRarityAndColor in PotentialItemsToSpawn)
+        foreach (SimplifiedItemWithRarityAndColor itemWithRarityAndColor in PotentialItemsToSpawn)
         {
             string itemName = itemWithRarityAndColor.itemName.ToLowerInvariant().Trim();
             itemWithRarityAndColor.itemName = itemName;
@@ -43,7 +45,7 @@ public class VendingMachine : NetworkBehaviour
             {
                 if (item.itemName.ToLowerInvariant().Trim() == itemName)
                 {
-                    PossibleItemsToSpawn.Add(new RealItemWithRarityAndColor(item, itemWithRarityAndColor.rarity, itemWithRarityAndColor.minPrice, itemWithRarityAndColor.maxPrice, itemWithRarityAndColor.borderColor, itemWithRarityAndColor.textColor));
+                    possibleItemsToSpawn.Add(new SimplifiedRealItemWithRarityAndColor(item, itemWithRarityAndColor.rarity, itemWithRarityAndColor.borderColor, itemWithRarityAndColor.textColor));
                     break;
                 }
             }
@@ -54,7 +56,7 @@ public class VendingMachine : NetworkBehaviour
             return;
         }
 
-        currentItemToSpawn = CRUtilities.ChooseRandomWeightedType(PossibleItemsToSpawn.Select(x => (x, x.rarity)))!;
+        currentItemToSpawn = CRUtilities.ChooseRandomWeightedType(possibleItemsToSpawn.Select(x => (x, x.rarity)))!;
     }
 
     public void StartSpawningAnimation(PlayerControllerB playerControllerB)
@@ -112,10 +114,11 @@ public class VendingMachine : NetworkBehaviour
     {
         MoneyCounter.Instance.RemoveMoney(PayPrice);
         jammingProgress += 0.1f;
-        GameObject itemGO = (GameObject)CodeRebirthUtils.Instance.SpawnScrap(currentItemToSpawn.item, SpawnPosition.position, false, true, 0);
+        Vector3 position = StartSpawnPosition.position + UnityEngine.Random.Range(0f, 1f) * (EndSpawnPosition.position - StartSpawnPosition.position).normalized;
+        GameObject itemGO = (GameObject)CodeRebirthUtils.Instance.SpawnScrap(currentItemToSpawn.item, position, false, true, 0);
         GrabbableObject grabbableObject = itemGO.GetComponent<GrabbableObject>();
         SyncGrabbableObjectScanStuffClientRpc(new NetworkBehaviourReference(grabbableObject), currentItemToSpawn.borderColor.r, currentItemToSpawn.borderColor.g, currentItemToSpawn.borderColor.b, currentItemToSpawn.textColor.r, currentItemToSpawn.textColor.g, currentItemToSpawn.textColor.b);
-        currentItemToSpawn = CRUtilities.ChooseRandomWeightedType(PossibleItemsToSpawn.Select(x => (x, x.rarity)))!;
+        currentItemToSpawn = CRUtilities.ChooseRandomWeightedType(possibleItemsToSpawn.Select(x => (x, x.rarity)))!;
     }
 
     [ClientRpc]
