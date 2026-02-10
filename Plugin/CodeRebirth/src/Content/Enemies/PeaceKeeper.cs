@@ -7,7 +7,6 @@ using Dawn.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace CodeRebirth.src.Content.Enemies;
 public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
@@ -535,7 +534,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
         {
             creatureNetworkAnimator.SetTrigger(BitchSlapAnimation);
         }
-        enemyHP -= force;
+        enemyHP = Mathf.Clamp(enemyHP - force, -99, 10);
 
         if (enemyHP <= 0)
         {
@@ -545,12 +544,18 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
                 _killedByPlayer = true;
             }
             if (IsOwner)
+            {
                 KillEnemyOnOwnerClient();
+            }
         }
     }
 
     public override void KillEnemy(bool destroy = false)
     {
+        if (enemyHP > 10)
+        {
+            return;
+        }
         base.KillEnemy(destroy);
         smartAgentNavigator.StopSearchRoutine();
         _aggroSFX.Stop();
