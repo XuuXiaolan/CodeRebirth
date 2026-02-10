@@ -424,7 +424,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2698705612
+  GlobalObjectIdHash: 879622449
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -502,417 +502,233 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemNamesWithRarityAndColor:
-  - itemName: Vanilla
-    rarity: 30
-    minPrice: 1
-    maxPrice: 7
-    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
-    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
-  - itemName: Melanie Drawing
-    rarity: 30
-    minPrice: 1
-    maxPrice: 2
-    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
-    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
-  - itemName: Puppeteer's Voodoo
-    rarity: 10
-    minPrice: 2
-    maxPrice: 4
-    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
-    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
-  - itemName: Puppeteer's Needle
-    rarity: 10
-    minPrice: 3
-    maxPrice: 4
-    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
-    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
-  - itemName: Grape
-    rarity: 5
-    minPrice: 2
-    maxPrice: 3
-    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
-    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
-  - itemName: Lemonade Pitcher
-    rarity: 5
-    minPrice: 2
-    maxPrice: 4
-    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
-    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
-  - itemName: Blue Shrimp
-    rarity: 7
-    minPrice: 1
-    maxPrice: 1
-    borderColor: {r: 0, g: 0.6244762, b: 0.7058824, a: 1}
-    textColor: {r: 0, g: 0.88888884, b: 1, a: 1}
-  - itemName: Charred Fork
-    rarity: 10
-    minPrice: 1
-    maxPrice: 2
-    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
-    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
-  - itemName: Charred Spork
-    rarity: 10
-    minPrice: 1
-    maxPrice: 2
-    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
-    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
-  - itemName: Charred Baby
-    rarity: 5
-    minPrice: 1
-    maxPrice: 3
-    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
-    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
-  - itemName: Violin
-    rarity: 10
-    minPrice: 2
-    maxPrice: 3
-    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
-    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
-  - itemName: Guitar
-    rarity: 10
-    minPrice: 2
-    maxPrice: 3
-    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
-    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
-  - itemName: Recorder
-    rarity: 10
-    minPrice: 2
-    maxPrice: 3
-    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
-    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
-  - itemName: Accordion
-    rarity: 10
-    minPrice: 2
-    maxPrice: 3
-    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
-    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
-  - itemName: Nitroglycerin Crate
-    rarity: 7
-    minPrice: 2
-    maxPrice: 3
-    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
-    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
-  - itemName: Remote Detonator
-    rarity: 7
-    minPrice: 1
-    maxPrice: 2
-    borderColor: {r: 0.1799804, g: 0.7058824, b: 0, a: 1}
-    textColor: {r: 0.2555554, g: 1, b: 0, a: 1}
-  - itemName: Credit Pad 100cc
-    rarity: 10
-    minPrice: 3
-    maxPrice: 4
-    borderColor: {r: 0, g: 0.40669072, b: 0.7058824, a: 1}
-    textColor: {r: 0, g: 0.57777786, b: 1, a: 1}
-  - itemName: Ship Upgrade Pad
+  - itemName: Old Booze
     rarity: 10
     minPrice: 5
-    maxPrice: 6
-    borderColor: {r: 0, g: 0.40669072, b: 0.7058824, a: 1}
-    textColor: {r: 0, g: 0.57777786, b: 1, a: 1}
-  - itemName: InfiniKey
+    maxPrice: 10
+    borderColor: {r: 0, g: 0.40784314, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
+  - itemName: Ducky Tube
     rarity: 10
-    minPrice: 3
-    maxPrice: 4
-    borderColor: {r: 0, g: 0.40669072, b: 0.7058824, a: 1}
-    textColor: {r: 0, g: 0.57777786, b: 1, a: 1}
+    minPrice: 5
+    maxPrice: 10
+    borderColor: {r: 0, g: 0.40784314, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
+  - itemName: Disposable Camera
+    rarity: 10
+    minPrice: 5
+    maxPrice: 10
+    borderColor: {r: 0, g: 0.40784314, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
+  - itemName: Mouse Trap
+    rarity: 10
+    minPrice: 5
+    maxPrice: 10
+    borderColor: {r: 0, g: 0.40784314, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
+  - itemName: Magic 8 Ball
+    rarity: 5
+    minPrice: 5
+    maxPrice: 7
+    borderColor: {r: 0, g: 0.40784314, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
+  - itemName: Rubber band
+    rarity: 10
+    minPrice: 5
+    maxPrice: 10
+    borderColor: {r: 0, g: 0.40784314, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
+  - itemName: Jimothy Core
+    rarity: 10
+    minPrice: 5
+    maxPrice: 10
+    borderColor: {r: 0, g: 0.40784314, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
+  - itemName: Frag Grenade
+    rarity: 10
+    minPrice: 5
+    maxPrice: 10
+    borderColor: {r: 0, g: 0.40784314, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
   - itemName: WalkieYellie
     rarity: 10
-    minPrice: 3
-    maxPrice: 4
-    borderColor: {r: 0, g: 0.40669072, b: 0.7058824, a: 1}
-    textColor: {r: 0, g: 0.57777786, b: 1, a: 1}
-  - itemName: Credit Pad 500cc
-    rarity: 5
-    minPrice: 7
-    maxPrice: 8
-    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
-    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
-  - itemName: FogHorn
-    rarity: 5
-    minPrice: 7
-    maxPrice: 8
-    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
-    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
-  - itemName: Mole Digger
-    rarity: 5
-    minPrice: 6
-    maxPrice: 7
-    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
-    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+    minPrice: 5
+    maxPrice: 10
+    borderColor: {r: 0, g: 0.40784314, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
   - itemName: Rocky
-    rarity: 5
-    minPrice: 100
-    maxPrice: 100
-    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
-    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
-  - itemName: Lifeform Analyser
-    rarity: 5
-    minPrice: 7
-    maxPrice: 8
-    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
-    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
-  - itemName: ShockwaveGal Assembly Parts
     rarity: 10
-    minPrice: 3
-    maxPrice: 5
-    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
-    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
-  - itemName: SeamineGal Assembly Parts
-    rarity: 10
-    minPrice: 3
-    maxPrice: 5
-    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
-    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
-  - itemName: TerminalGal Assembly Parts
-    rarity: 10
-    minPrice: 3
-    maxPrice: 5
-    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
-    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
-  - itemName: CruiserGal Assembly Parts
-    rarity: 10
-    minPrice: 3
-    maxPrice: 5
-    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
-    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
-  - itemName: Stoptime Watch
-    rarity: 3
+    minPrice: 999
+    maxPrice: 999
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: FogHorn
+    rarity: 20
     minPrice: 10
-    maxPrice: 12
-    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
-    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
-  - itemName: Rail Slugger
-    rarity: 3
-    minPrice: 12
-    maxPrice: 15
-    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
-    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
-  - itemName: KingRigo
-    rarity: 3
-    minPrice: 7
-    maxPrice: 9
-    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
-    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
-  - itemName: Xui.
-    rarity: 5
-    minPrice: 7
-    maxPrice: 9
-    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
-    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
-  - itemName: Credit Pad 1000cc
-    rarity: 3
-    minPrice: 11
-    maxPrice: 12
-    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
-    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
-  - itemName: Oxidizer
-    rarity: 3
-    minPrice: 15
-    maxPrice: 17
-    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
-    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
-  - itemName: Ceasefire
-    rarity: 5
-    minPrice: 15
-    maxPrice: 17
-    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
-    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
-  - itemName: Guardsman Phone
-    rarity: 3
-    minPrice: 12
-    maxPrice: 15
-    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
-    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
-  - itemName: Turbulence
-    rarity: 5
-    minPrice: 15
-    maxPrice: 17
-    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
-    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
-  - itemName: Brrreaker
-    rarity: 5
-    minPrice: 6
-    maxPrice: 7
-    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
-    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
-  - itemName: Marrow Splitter
-    rarity: 5
-    minPrice: 6
-    maxPrice: 7
-    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
-    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
-  - itemName: sWATTer
-    rarity: 5
-    minPrice: 6
-    maxPrice: 7
-    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
-    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+    maxPrice: 20
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
   - itemName: Toma Hop
-    rarity: 5
-    minPrice: 6
-    maxPrice: 7
-    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
-    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
+    rarity: 20
+    minPrice: 20
+    maxPrice: 30
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: Brrreaker
+    rarity: 20
+    minPrice: 20
+    maxPrice: 30
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: InfiniKey
+    rarity: 20
+    minPrice: 10
+    maxPrice: 20
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: Scrap-a-pult
+    rarity: 20
+    minPrice: 10
+    maxPrice: 20
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: Mole Digger
+    rarity: 20
+    minPrice: 10
+    maxPrice: 20
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: SeamineGal Assembly Parts
+    rarity: 25
+    minPrice: 15
+    maxPrice: 25
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: TerminalGal Assembly Parts
+    rarity: 25
+    minPrice: 15
+    maxPrice: 25
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: CruiserGal Assembly Parts
+    rarity: 25
+    minPrice: 15
+    maxPrice: 25
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: ShockwaveGal Assembly Parts
+    rarity: 25
+    minPrice: 15
+    maxPrice: 25
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: Jar of 999
+    rarity: 25
+    minPrice: 15
+    maxPrice: 25
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: EZ Bake Oven
+    rarity: 20
+    minPrice: 10
+    maxPrice: 20
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: Credit Pad 500cc
+    rarity: 20
+    minPrice: 15
+    maxPrice: 25
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: Marrow Splitter
+    rarity: 20
+    minPrice: 10
+    maxPrice: 20
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: Lifeform Analyser
+    rarity: 20
+    minPrice: 10
+    maxPrice: 20
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: Ship Upgrade Unlocker
+    rarity: 20
+    minPrice: 10
+    maxPrice: 20
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
   - itemName: Haemoglobin Tablet
-    rarity: 5
-    minPrice: 1
-    maxPrice: 1
-    borderColor: {r: 0.53422034, g: 0, b: 0.7058824, a: 1}
-    textColor: {r: 0.76111126, g: 0, b: 1, a: 1}
-  - itemName: Uchiwa
     rarity: 10
-    minPrice: 2
-    maxPrice: 3
-    borderColor: {r: 0, g: 0.40784317, b: 0.7058824, a: 1}
-    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
-  - itemName: Action Figure
-    rarity: 3
-    minPrice: 1
-    maxPrice: 1
-    borderColor: {r: 0.4039216, g: 0.13333334, b: 0, a: 1}
-    textColor: {r: 0.49056602, g: 0.1613704, b: 0, a: 1}
-  - itemName: Mushroom staff
-    rarity: 10
-    minPrice: 2
-    maxPrice: 4
-    borderColor: {r: 0, g: 0.40784317, b: 0.7058824, a: 1}
-    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
-  - itemName: Syringe
-    rarity: 10
-    minPrice: 2
-    maxPrice: 3
-    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
-    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
-  - itemName: Cheese wedge
-    rarity: 15
-    minPrice: 2
-    maxPrice: 3
-    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
-    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
-  - itemName: Cheese ball
-    rarity: 15
-    minPrice: 1
-    maxPrice: 2
-    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
-    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
-  - itemName: Exotic mushroom
-    rarity: 6
-    minPrice: 1
-    maxPrice: 2
-    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
-    textColor: {r: 0.7607844, g: 0, b: 1, a: 1}
-  - itemName: Glowing vial
-    rarity: 5
-    minPrice: 1
-    maxPrice: 2
-    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
-    textColor: {r: 0.7607844, g: 0, b: 1, a: 1}
-  - itemName: Taiko
-    rarity: 7
-    minPrice: 1
-    maxPrice: 2
-    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
-    textColor: {r: 0.7607844, g: 0, b: 1, a: 1}
-  - itemName: Shamisen
-    rarity: 7
-    minPrice: 1
-    maxPrice: 2
-    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
-    textColor: {r: 0.7607844, g: 0, b: 1, a: 1}
-  - itemName: Pezley dispenser
-    rarity: 5
-    minPrice: 2
-    maxPrice: 3
-    borderColor: {r: 0, g: 0.40784317, b: 0.7058824, a: 1}
-    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
-  - itemName: Chammer
-    rarity: 4
-    minPrice: 4
-    maxPrice: 6
-    borderColor: {r: 0.7924528, g: 0.536135, b: 0.010466317, a: 1}
-    textColor: {r: 1, g: 0.67777777, b: 0, a: 1}
-  - itemName: pikaSleep
-    rarity: 1
-    minPrice: 420
-    maxPrice: 420
-    borderColor: {r: 0.47058827, g: 0.47058827, b: 0.47058827, a: 1}
-    textColor: {r: 0.7843138, g: 0.7843138, b: 0.7843138, a: 1}
-  - itemName: Biomonty
-    rarity: 1
     minPrice: 5
-    maxPrice: 5
-    borderColor: {r: 0.47058827, g: 0.47058827, b: 0.47058827, a: 1}
-    textColor: {r: 0.7843138, g: 0.7843138, b: 0.7843138, a: 1}
-  - itemName: Coconikki
-    rarity: 1
-    minPrice: 5
-    maxPrice: 5
-    borderColor: {r: 0.47058827, g: 0.47058827, b: 0.47058827, a: 1}
-    textColor: {r: 0.7843138, g: 0.7843138, b: 0.7843138, a: 1}
-  - itemName: Webley
-    rarity: 1
-    minPrice: 420
-    maxPrice: 420
-    borderColor: {r: 0.47058827, g: 0.47058827, b: 0.47058827, a: 1}
-    textColor: {r: 0.7843138, g: 0.7843138, b: 0.7843138, a: 1}
-  - itemName: Pikachu
-    rarity: 1
-    minPrice: 0
-    maxPrice: 0
-    borderColor: {r: 0.47058827, g: 0.47058827, b: 0.47058827, a: 1}
-    textColor: {r: 0.7843138, g: 0.7843138, b: 0.7843138, a: 1}
-  - itemName: nethersome duck
-    rarity: 1
-    minPrice: 1
-    maxPrice: 2
-    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
-    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
-  - itemName: coil-shell
-    rarity: 1
-    minPrice: 1
-    maxPrice: 2
-    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
-    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
-  - itemName: Homemade timebomb
-    rarity: 4
-    minPrice: 1
-    maxPrice: 3
-    borderColor: {r: 0.79215693, g: 0.5372549, b: 0.011764707, a: 1}
+    maxPrice: 7
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: Ceasefire
+    rarity: 15
+    minPrice: 60
+    maxPrice: 70
+    borderColor: {r: 0.7921569, g: 0.5372549, b: 0.011764706, a: 1}
     textColor: {r: 1, g: 0.6784314, b: 0, a: 1}
-  - itemName: Sledgehammer
-    rarity: 5
-    minPrice: 1
-    maxPrice: 3
-    borderColor: {r: 0, g: 0.40784317, b: 0.7058824, a: 1}
-    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
-  - itemName: Piranha solution
-    rarity: 4
-    minPrice: 1
-    maxPrice: 2
-    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
-    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
-  - itemName: Maneater plushie
-    rarity: 8
-    minPrice: 3
-    maxPrice: 4
-    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
-    textColor: {r: 0.7607844, g: 0, b: 1, a: 1}
-  - itemName: Big dynamite
-    rarity: 6
-    minPrice: 2
-    maxPrice: 4
-    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
-    textColor: {r: 0.7607844, g: 0, b: 1, a: 1}
-  - itemName: Flag
-    rarity: 5
-    minPrice: 2
-    maxPrice: 5
-    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
-    textColor: {r: 0.7607844, g: 0, b: 1, a: 1}
+  - itemName: Turbulence
+    rarity: 15
+    minPrice: 60
+    maxPrice: 70
+    borderColor: {r: 0.7921569, g: 0.5372549, b: 0.011764706, a: 1}
+    textColor: {r: 1, g: 0.6784314, b: 0, a: 1}
+  - itemName: Rail Slugger
+    rarity: 15
+    minPrice: 50
+    maxPrice: 60
+    borderColor: {r: 0.7921569, g: 0.5372549, b: 0.011764706, a: 1}
+    textColor: {r: 1, g: 0.6784314, b: 0, a: 1}
+  - itemName: Stoptime Watch
+    rarity: 15
+    minPrice: 40
+    maxPrice: 50
+    borderColor: {r: 0.7921569, g: 0.5372549, b: 0.011764706, a: 1}
+    textColor: {r: 1, g: 0.6784314, b: 0, a: 1}
+  - itemName: Orbital Strike Caller
+    rarity: 15
+    minPrice: 40
+    maxPrice: 50
+    borderColor: {r: 0.7921569, g: 0.5372549, b: 0.011764706, a: 1}
+    textColor: {r: 1, g: 0.6784314, b: 0, a: 1}
+  - itemName: Guardsman Phone
+    rarity: 15
+    minPrice: 50
+    maxPrice: 60
+    borderColor: {r: 0.7921569, g: 0.5372549, b: 0.011764706, a: 1}
+    textColor: {r: 1, g: 0.6784314, b: 0, a: 1}
+  - itemName: Credit Pad 1000cc
+    rarity: 15
+    minPrice: 55
+    maxPrice: 65
+    borderColor: {r: 0.7921569, g: 0.5372549, b: 0.011764706, a: 1}
+    textColor: {r: 1, g: 0.6784314, b: 0, a: 1}
+  - itemName: Oxidizer
+    rarity: 15
+    minPrice: 60
+    maxPrice: 70
+    borderColor: {r: 0.7921569, g: 0.5372549, b: 0.011764706, a: 1}
+    textColor: {r: 1, g: 0.6784314, b: 0, a: 1}
+  - itemName: KingRigo
+    rarity: 10
+    minPrice: 40
+    maxPrice: 50
+    borderColor: {r: 0.7921569, g: 0.5372549, b: 0.011764706, a: 1}
+    textColor: {r: 1, g: 0.6784314, b: 0, a: 1}
+  - itemName: Xui.
+    rarity: 15
+    minPrice: 30
+    maxPrice: 40
+    borderColor: {r: 0.6981132, g: 0.0355642, b: 0.078846335, a: 1}
+    textColor: {r: 1, g: 0.74192125, b: 0, a: 1}
   textMeshPro1: {fileID: 8190891965076389486}
   textMeshPro2: {fileID: 8474877015352499051}
   barrelSpawnPoint: {fileID: 774797627190368390}
+  validItemsWithRarityAndColor: []
+  currentlySpawnedGrabbableObject: {fileID: 0}
 --- !u!1 &5809431030126359633
 GameObject:
   m_ObjectHideFlags: 0

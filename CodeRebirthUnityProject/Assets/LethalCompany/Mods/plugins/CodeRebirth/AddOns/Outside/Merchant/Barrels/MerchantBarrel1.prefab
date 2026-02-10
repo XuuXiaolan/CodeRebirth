@@ -514,15 +514,10 @@ MonoBehaviour:
     maxPrice: 5
     borderColor: {r: 0.7075472, g: 0.49944508, b: 0, a: 1}
     textColor: {r: 1, g: 0.7035215, b: 0, a: 1}
-  - itemName: Pandora's box
-    rarity: 25
-    minPrice: 3
-    maxPrice: 5
-    borderColor: {r: 0, g: 0.40784314, b: 0.972549, a: 1}
-    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
   textMeshPro1: {fileID: 8190891965076389486}
   textMeshPro2: {fileID: 8474877015352499051}
   barrelSpawnPoint: {fileID: 774797627190368390}
+  validItemsWithRarityAndColor: []
   currentlySpawnedGrabbableObject: {fileID: 0}
 --- !u!1 &5809431030126359633
 GameObject:
