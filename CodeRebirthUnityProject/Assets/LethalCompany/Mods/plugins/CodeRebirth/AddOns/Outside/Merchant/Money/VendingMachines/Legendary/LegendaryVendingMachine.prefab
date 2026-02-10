@@ -817,7 +817,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 0
+  GlobalObjectIdHash: 116773260
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -838,11 +838,17 @@ MonoBehaviour:
   m_Script: {fileID: 1795929651, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <PotentialItemsToSpawn>k__BackingField: []
+  <PotentialItemsToSpawn>k__BackingField:
+  - itemName: Xui.
+    rarity: 1
+    minPrice: 0
+    maxPrice: 0
+    borderColor: {r: 0.5773585, g: 0, b: 0, a: 0}
+    textColor: {r: 1, g: 0.7076243, b: 0, a: 0}
   <Animator>k__BackingField: {fileID: 1958321107058785117}
   <SlotTrigger>k__BackingField: {fileID: 4029114383673900129}
   <SpawnPosition>k__BackingField: {fileID: 8535480038893258842}
-  <PayPrice>k__BackingField: 4
+  <PayPrice>k__BackingField: 7
   <JammingCurve>k__BackingField:
     serializedVersion: 2
     m_Curve:
@@ -850,16 +856,52 @@ MonoBehaviour:
       time: 0
       value: 0
       inSlope: 0
-      outSlope: 1
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
+      time: 0.2
+      value: 0.02
+      inSlope: 0.10589907
+      outSlope: 0.10589907
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.6302984
+    - serializedVersion: 3
+      time: 0.3
+      value: 0.2
+      inSlope: 4.420321
+      outSlope: 4.420321
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.23021607
+      outWeight: 0.091126956
+    - serializedVersion: 3
+      time: 0.6
+      value: 0.9
+      inSlope: 0.8765973
+      outSlope: 0.8765973
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.9
+      value: 0.95
+      inSlope: 0.050240975
+      outSlope: 0.050240975
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.94004786
+    - serializedVersion: 3
       time: 1
       value: 1
       inSlope: 1
-      outSlope: 0
+      outSlope: 1
       tangentMode: 0
       weightedMode: 0
       inWeight: 0

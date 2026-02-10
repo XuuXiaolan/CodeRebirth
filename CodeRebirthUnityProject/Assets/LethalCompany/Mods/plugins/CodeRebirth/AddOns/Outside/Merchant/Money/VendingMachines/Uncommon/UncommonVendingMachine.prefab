@@ -610,7 +610,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 0
+  GlobalObjectIdHash: 2842735442
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -631,11 +631,17 @@ MonoBehaviour:
   m_Script: {fileID: 1795929651, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <PotentialItemsToSpawn>k__BackingField: []
+  <PotentialItemsToSpawn>k__BackingField:
+  - itemName: Xui.
+    rarity: 1
+    minPrice: 0
+    maxPrice: 0
+    borderColor: {r: 0.5773585, g: 0, b: 0, a: 0}
+    textColor: {r: 1, g: 0.7076243, b: 0, a: 0}
   <Animator>k__BackingField: {fileID: 1686994098094765696}
   <SlotTrigger>k__BackingField: {fileID: 8223596715512651182}
   <SpawnPosition>k__BackingField: {fileID: 3639822318070577539}
-  <PayPrice>k__BackingField: 6
+  <PayPrice>k__BackingField: 3
   <JammingCurve>k__BackingField:
     serializedVersion: 2
     m_Curve:
@@ -643,16 +649,79 @@ MonoBehaviour:
       time: 0
       value: 0
       inSlope: 0
-      outSlope: 1
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
+      time: 0.1
+      value: 0.05
+      inSlope: 0.6780855
+      outSlope: 0.6780855
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.67865705
+    - serializedVersion: 3
+      time: 0.2
+      value: 0.1
+      inSlope: 1.0451235
+      outSlope: 1.0451235
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.3
+      value: 0.3
+      inSlope: 1.1272185
+      outSlope: 1.1272185
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.5
+      value: 0.6
+      inSlope: 1.0028443
+      outSlope: 1.0028443
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.6
+      value: 0.8
+      inSlope: 0.7025409
+      outSlope: 0.7025409
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.7
+      value: 0.9
+      inSlope: 0.3824206
+      outSlope: 0.3824206
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.9
+      value: 0.98
+      inSlope: 0.11309623
+      outSlope: 0.11309623
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
       time: 1
       value: 1
       inSlope: 1
-      outSlope: 0
+      outSlope: 1
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
