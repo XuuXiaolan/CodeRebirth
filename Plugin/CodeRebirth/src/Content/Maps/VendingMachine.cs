@@ -72,12 +72,6 @@ public class VendingMachine : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     private void StartSpawningAnimationServerRpc()
     {
-        StartSpawningAnimationsClientRpc();
-    }
-
-    [ClientRpc]
-    private void StartSpawningAnimationsClientRpc()
-    {
         if (MoneyCounter.Instance == null || MoneyCounter.Instance.MoneyStored() < PayPrice)
         {
             return;
@@ -89,6 +83,12 @@ public class VendingMachine : NetworkBehaviour
             return;
         }
 
+        StartSpawningAnimationsClientRpc();
+    }
+
+    [ClientRpc]
+    private void StartSpawningAnimationsClientRpc()
+    {
         Animator.SetTrigger(UseAnimationHash);
     }
 

@@ -23,20 +23,35 @@ public class TrashCan : NetworkBehaviour
         }
     }
 
-    private IEnumerator Start()
+    private void Start()
     {
-        yield return new WaitForSeconds(1f);
+        if (!IsServer)
+        {
+            return;
+        }
+
         List<Tile> allDeadendTiles = RoundManager.Instance.dungeonGenerator.Generator.CurrentDungeon.AllTiles.Where(x => x.UsedDoorways.Count == 1).ToList();
 
         if (allDeadendTiles.Count > 0)
         {
-            Tile tile = allDeadendTiles[CodeRebirthUtils.Instance.CRRandom.Next(allDeadendTiles.Count)];
-            NavMeshHit hit = default(NavMeshHit);
-            Vector3 randomNavMeshPositionInBoxPredictable = RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(tile.Bounds.center, 6f, hit, CodeRebirthUtils.Instance.CRRandom, NavMesh.AllAreas);
+            Tile tile = allDeadendTiles[UnityEngine.Random.Range(0, allDeadendTiles.Count)];
+            Vector3 roomCenter = tile.Bounds.center;
+            if (Physics.Raycast(roomCenter, Vector3.down, out RaycastHit raycastHit, 5f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+            {
+                roomCenter = raycastHit.point;
+            }
+            NavMeshHit navMeshHit = default(NavMeshHit);
+            Vector3 randomNavMeshPositionInBoxPredictable = RoundManager.Instance.GetRandomNavMeshPositionInRadius(roomCenter, 6f, navMeshHit);
             transform.position = randomNavMeshPositionInBoxPredictable;
-            // transform.rotation = Quaternion.LookRotation(Vector3.up, hit.normal);
+            SyncPositionRpc(transform.position);
             Plugin.ExtendedLogging($"Moved trash can to {transform.position}");
         }
+    }
+
+    [Rpc(SendTo.NotMe)]
+    public void SyncPositionRpc(Vector3 position)
+    {
+        transform.position = position;
     }
 
     public override void OnNetworkDespawn()
