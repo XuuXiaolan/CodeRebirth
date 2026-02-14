@@ -1,10 +1,29 @@
-# v0.7.11
+# v0.7.15
+
+- Organised configs a bit more, user auto generated configs using the editor should be under the main configs auto generated now.
+
+## v0.7.14
+
+- Brought back overriding LLL terminal moon page with DawnLib's version of it.
+
+## v0.7.13
+
+- Updated to add compat with new weather registry breaking changes.
+
+## v0.7.12
+
+- Removed instance warnings from showing up, they were for debugging anyway.
+- Removed LL from being packaged with the DawnLib NuGet
+
+## v0.7.11
 
 - Added to the Query implementation of DawnTerminalCommands.
   - You can now run a DawnEvent after ending a query.
   - You can now set a condition on the query for whether it should continue even after typing the continue keyword.
 - Interiors are now able to add extra scrap upon their generation.
 - Added ability to control gravity through DawnSurfaces.
+  - Editing where gravity comes from does NOT automatically rotate the player or anything like that, it'll likely be a while before that type of thing is implemented (I don't know how to lol).
+- General code quality improvements (`@ratijas` added to credits).
 
 ## v0.7.10
 
