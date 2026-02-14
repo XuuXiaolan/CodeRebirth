@@ -386,6 +386,7 @@ GameObject:
   - component: {fileID: 7328475718161117234}
   - component: {fileID: 7004442002392512138}
   - component: {fileID: 4987624912412195770}
+  - component: {fileID: 958909706813532328}
   m_Layer: 0
   m_Name: OmegaBarrel
   m_TagString: Untagged
@@ -727,6 +728,144 @@ MonoBehaviour:
   textMeshPro1: {fileID: 8190891965076389486}
   textMeshPro2: {fileID: 8474877015352499051}
   barrelSpawnPoint: {fileID: 774797627190368390}
+  validItemsWithRarityAndColor: []
+  currentlySpawnedGrabbableObject: {fileID: 0}
+--- !u!114 &958909706813532328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5422123737943913922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -928161405, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemNamesWithRarityAndColor:
+  - itemName: 999 Plushie
+    rarity: 1
+    minPrice: 5
+    maxPrice: 7
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Cactus Budling Plushie
+    rarity: 1
+    minPrice: 5
+    maxPrice: 7
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Driftwood Menace Plushie
+    rarity: 1
+    minPrice: 5
+    maxPrice: 7
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Janitor Plushie
+    rarity: 1
+    minPrice: 5
+    maxPrice: 7
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Nancy Plushie
+    rarity: 1
+    minPrice: 5
+    maxPrice: 7
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Transporter Plushie
+    rarity: 1
+    minPrice: 5
+    maxPrice: 7
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Snail Cat Plushie
+    rarity: 1
+    minPrice: 5
+    maxPrice: 7
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: PeaceKeeper Plushie
+    rarity: 1
+    minPrice: 8
+    maxPrice: 12
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: Monarch Plushie
+    rarity: 1
+    minPrice: 8
+    maxPrice: 12
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: Rabbit Magician Plushie
+    rarity: 1
+    minPrice: 8
+    maxPrice: 12
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: ManorLord Plushie
+    rarity: 1
+    minPrice: 8
+    maxPrice: 12
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: Cruiser Gal Plushie
+    rarity: 1
+    minPrice: 8
+    maxPrice: 12
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: Terminal Bot Plushie
+    rarity: 1
+    minPrice: 8
+    maxPrice: 12
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: ACUnit Gal Plushie
+    rarity: 1
+    minPrice: 8
+    maxPrice: 12
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: Seamine Tink Plushie
+    rarity: 1
+    minPrice: 8
+    maxPrice: 12
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: Shockwave Bot Plushie
+    rarity: 1
+    minPrice: 10
+    maxPrice: 15
+    borderColor: {r: 0.7921569, g: 0.5372549, b: 0.011764706, a: 1}
+    textColor: {r: 1, g: 0.6784314, b: 0, a: 1}
+  - itemName: Duck Plushie
+    rarity: 1
+    minPrice: 8
+    maxPrice: 12
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: Redwood Titan Plushie
+    rarity: 1
+    minPrice: 10
+    maxPrice: 15
+    borderColor: {r: 0.7921569, g: 0.5372549, b: 0.011764706, a: 1}
+    textColor: {r: 1, g: 0.6784314, b: 0, a: 1}
+  - itemName: Guardsman Plushie
+    rarity: 1
+    minPrice: 10
+    maxPrice: 15
+    borderColor: {r: 0.7921569, g: 0.5372549, b: 0.011764706, a: 1}
+    textColor: {r: 1, g: 0.6784314, b: 0, a: 1}
+  - itemName: Mistress Plushie
+    rarity: 1
+    minPrice: 10
+    maxPrice: 15
+    borderColor: {r: 0.7921569, g: 0.5372549, b: 0.011764706, a: 1}
+    textColor: {r: 1, g: 0.6784314, b: 0, a: 1}
+  textMeshPro1: {fileID: 0}
+  textMeshPro2: {fileID: 0}
+  barrelSpawnPoint: {fileID: 0}
   validItemsWithRarityAndColor: []
   currentlySpawnedGrabbableObject: {fileID: 0}
 --- !u!1 &5809431030126359633

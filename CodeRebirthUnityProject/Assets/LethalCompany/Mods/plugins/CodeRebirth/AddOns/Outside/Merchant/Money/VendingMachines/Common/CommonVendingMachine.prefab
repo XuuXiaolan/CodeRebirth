@@ -87,7 +87,7 @@ Transform:
   m_GameObject: {fileID: 801600811439859608}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1}
+  m_LocalPosition: {x: 0.469, y: 0, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -191,6 +191,7 @@ Transform:
   - {fileID: 2974624223666062065}
   - {fileID: 6290984676972427097}
   - {fileID: 9077824284754927021}
+  - {fileID: 5695575123487425794}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &4282293151303536346
@@ -226,7 +227,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1252013974
+  GlobalObjectIdHash: 1024747116
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -248,15 +249,270 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <PotentialItemsToSpawn>k__BackingField:
+  - itemName: Vanilla
+    rarity: 30
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Violon
+    rarity: 50
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Accordion
+    rarity: 50
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Guitar
+    rarity: 50
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Recorder
+    rarity: 50
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Amber
+    rarity: 50
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Music Box
+    rarity: 50
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Birthday Card
+    rarity: 50
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Burnt Rubble
+    rarity: 30
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Coin
+    rarity: 40
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Bloody Shredded Scraps
+    rarity: 40
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Remote Detonator
+    rarity: 50
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Crisp Dollar Bill
+    rarity: 5
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Talking Head
+    rarity: 20
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Nitroglycerin Crate
+    rarity: 50
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Oxyde Tablet
+    rarity: 5
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Rolling Duck
+    rarity: 50
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Rusted Pick Head
+    rarity: 50
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Saw Blade
+    rarity: 50
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Spud Tater
+    rarity: 50
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Teddy Bear
+    rarity: 50
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Wilted Rose
+    rarity: 50
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Hard Hat
+    rarity: 50
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Hand Drill
+    rarity: 50
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Melanie Drawing
+    rarity: 50
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Yoyo
+    rarity: 50
+    borderColor: {r: 0.18039216, g: 0.7058824, b: 0, a: 1}
+    textColor: {r: 0.25490198, g: 1, b: 0, a: 1}
+  - itemName: Snow Globe
+    rarity: 20
+    borderColor: {r: 0, g: 0.40784314, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
+  - itemName: Giant Caller Horn
+    rarity: 20
+    borderColor: {r: 0, g: 0.40784314, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
+  - itemName: Alarm Clock
+    rarity: 20
+    borderColor: {r: 0, g: 0.40784314, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
+  - itemName: Credit Pad 100cc
+    rarity: 20
+    borderColor: {r: 0, g: 0.40784314, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
+  - itemName: Old Booze
+    rarity: 20
+    borderColor: {r: 0, g: 0.40784314, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
+  - itemName: Ducky Tube
+    rarity: 20
+    borderColor: {r: 0, g: 0.40784314, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
+  - itemName: Disposable Camera
+    rarity: 20
+    borderColor: {r: 0, g: 0.40784314, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
+  - itemName: Mouse Trap
+    rarity: 20
+    borderColor: {r: 0, g: 0.40784314, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
+  - itemName: Magic 8 Ball
+    rarity: 20
+    borderColor: {r: 0, g: 0.40784314, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
+  - itemName: Rubber Band
+    rarity: 20
+    borderColor: {r: 0, g: 0.40784314, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
+  - itemName: Jimothy Core
+    rarity: 20
+    borderColor: {r: 0, g: 0.40784314, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
+  - itemName: Frag Grenade
+    rarity: 20
+    borderColor: {r: 0, g: 0.40784314, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
+  - itemName: WalkieYellie
+    rarity: 20
+    borderColor: {r: 0, g: 0.40784314, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
+  - itemName: Plastic Cake
+    rarity: 20
+    borderColor: {r: 0, g: 0.40784314, b: 0.7058824, a: 1}
+    textColor: {r: 0, g: 0.5764706, b: 1, a: 1}
+  - itemName: FogHorn
+    rarity: 5
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: Rocky
+    rarity: 1
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: Toma Hop
+    rarity: 5
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: Brrreaker
+    rarity: 5
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: InfiniKey
+    rarity: 5
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: Scrap-a-pult
+    rarity: 5
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: Mole Digger
+    rarity: 5
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: SeamineGal Assembly Parts
+    rarity: 5
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: TerminalGal Assembly Parts
+    rarity: 5
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: CruiserGal Assembly Parts
+    rarity: 5
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: ShockwaveGal Assembly Parts
+    rarity: 5
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: Jar of 999
+    rarity: 5
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: EZ Bake Oven
+    rarity: 5
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: Credit Pad 500cc
+    rarity: 5
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: Marrow Splitter
+    rarity: 5
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: Lifeform Analyser
+    rarity: 5
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: Ship Upgrade Unlocker
+    rarity: 5
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: Haemoglobin Tablet
+    rarity: 5
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: Salted Beef
+    rarity: 1
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: Melicious Mel
+    rarity: 1
+    borderColor: {r: 0.53333336, g: 0, b: 0.7058824, a: 1}
+    textColor: {r: 0.7607843, g: 0, b: 1, a: 1}
+  - itemName: Stoptime Watch
+    rarity: 1
+    borderColor: {r: 0.7921569, g: 0.5372549, b: 0.011764706, a: 1}
+    textColor: {r: 1, g: 0.6784314, b: 0, a: 1}
+  - itemName: Orbital Strike Caller
+    rarity: 1
+    borderColor: {r: 0.7921569, g: 0.5372549, b: 0.011764706, a: 1}
+    textColor: {r: 1, g: 0.6784314, b: 0, a: 1}
+  - itemName: Credit Pad 1000cc
+    rarity: 1
+    borderColor: {r: 0.7921569, g: 0.5372549, b: 0.011764706, a: 1}
+    textColor: {r: 1, g: 0.6784314, b: 0, a: 1}
+  - itemName: KingRigo
+    rarity: 1
+    borderColor: {r: 0.7921569, g: 0.5372549, b: 0.011764706, a: 1}
+    textColor: {r: 1, g: 0.6784314, b: 0, a: 1}
   - itemName: Xui.
     rarity: 1
-    minPrice: 0
-    maxPrice: 0
-    borderColor: {r: 0.5773585, g: 0, b: 0, a: 0}
-    textColor: {r: 1, g: 0.7076243, b: 0, a: 0}
+    borderColor: {r: 0.7921569, g: 0.5372549, b: 0.011764706, a: 1}
+    textColor: {r: 1, g: 0.6784314, b: 0, a: 1}
   <Animator>k__BackingField: {fileID: 4282293151303536346}
   <SlotTrigger>k__BackingField: {fileID: 2329069930581923751}
-  <SpawnPosition>k__BackingField: {fileID: 9077824284754927021}
+  <StartSpawnPosition>k__BackingField: {fileID: 9077824284754927021}
+  <EndSpawnPosition>k__BackingField: {fileID: 5695575123487425794}
   <PayPrice>k__BackingField: 2
   <JammingCurve>k__BackingField:
     serializedVersion: 2
@@ -345,6 +601,37 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &2457945484329285111
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5695575123487425794}
+  m_Layer: 0
+  m_Name: ItemDispenseLocation (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5695575123487425794
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2457945484329285111}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.446, y: 0, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 220339329373501720}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2746305474221632999
 GameObject:
   m_ObjectHideFlags: 0

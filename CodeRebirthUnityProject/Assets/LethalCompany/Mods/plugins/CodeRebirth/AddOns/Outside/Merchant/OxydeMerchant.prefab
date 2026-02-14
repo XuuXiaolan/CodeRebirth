@@ -464,7 +464,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1235432373
+  GlobalObjectIdHash: 637534882
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -600,11 +600,13 @@ MonoBehaviour:
   - {fileID: 4987624912412195770, guid: b71b18a6c2cb2fd4ebda3e145e3d6887, type: 3}
   - {fileID: 4987624912412195770, guid: 058e0dfa7b1436743b30d44502ed8409, type: 3}
   - {fileID: 4987624912412195770, guid: 9fb0b87ce9cc0ca4c8a58b2ab5b18bac, type: 3}
+  - {fileID: 4987624912412195770, guid: 90bf640e7905e804881ee5f4facaa4e0, type: 3}
   merchantBarrelSpawns:
   - {fileID: 3838723524144108916}
   - {fileID: 905687812241470934}
   - {fileID: 8078599465747703778}
   - {fileID: 4282015210493257622}
+  - {fileID: 5860700016750218975}
   bugleBoy: {fileID: 7111348912590977979}
   tipPad: {fileID: 2203341260710200177}
   PurchaseAnimation: {fileID: 7400000, guid: aa85073dfc40bc5489176ff0d6777f97, type: 2}
@@ -1231,6 +1233,37 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.37318206, y: 3.4886196, z: 0.9999998}
   m_Center: {x: 0.15235193, y: 1.2443103, z: 0.0000021529293}
+--- !u!1 &3450214185504872148
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5860700016750218975}
+  m_Layer: 0
+  m_Name: Spawn5
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5860700016750218975
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3450214185504872148}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.000000029802319, y: 0.81872636, z: 0.000000029802319, w: 0.5741838}
+  m_LocalPosition: {x: -4.988, y: -0.222, z: -0.402}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4981444408116135656}
+  m_LocalEulerAnglesHint: {x: 0, y: 109.915, z: 0}
 --- !u!1 &3505739802113680103
 GameObject:
   m_ObjectHideFlags: 0
@@ -1903,6 +1936,7 @@ Transform:
   - {fileID: 905687812241470934}
   - {fileID: 8078599465747703778}
   - {fileID: 4282015210493257622}
+  - {fileID: 5860700016750218975}
   m_Father: {fileID: 1165796357723832509}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5191411240786817784
@@ -3470,7 +3504,7 @@ PrefabInstance:
     - target: {fileID: 5663790466453012545, guid: bd0ea20b9d226a246b770f6b5b21baee,
         type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 1235432373
+      value: 343451558
       objectReference: {fileID: 0}
     - target: {fileID: 6869786495289370208, guid: bd0ea20b9d226a246b770f6b5b21baee,
         type: 3}
