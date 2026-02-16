@@ -2538,7 +2538,7 @@ MonoBehaviour:
     invertFade: 0
     distanceFadeStart: 100
     distanceFadeEnd: 500
-    textureOffset: {x: -140.14165, y: -0, z: -0}
+    textureOffset: {x: -153.07877, y: -0, z: -0}
     falloffMode: 0
     maskMode: 0
     materialMask: {fileID: 0}
@@ -11356,7 +11356,7 @@ MonoBehaviour:
     invertFade: 0
     distanceFadeStart: 300
     distanceFadeEnd: 500
-    textureOffset: {x: -84.08499, y: -0, z: -0}
+    textureOffset: {x: -91.84726, y: -0, z: -0}
     falloffMode: 1
     maskMode: 0
     materialMask: {fileID: 0}
@@ -24032,6 +24032,11 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 772026575
       objectReference: {fileID: 0}
+    - target: {fileID: 8170150484358545226, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8201113634922178522, guid: d0ceccc0fe1c44d429ec5a7053532a6e,
         type: 3}
       propertyPath: shipNavColliders
@@ -24048,7 +24053,8 @@ PrefabInstance:
       value: 903552331
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 8170150484358545226, guid: d0ceccc0fe1c44d429ec5a7053532a6e, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d0ceccc0fe1c44d429ec5a7053532a6e, type: 3}
