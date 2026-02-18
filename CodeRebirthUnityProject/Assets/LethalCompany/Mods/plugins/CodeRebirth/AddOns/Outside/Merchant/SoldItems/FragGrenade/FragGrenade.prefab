@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5081526148751994398}
   - component: {fileID: 49304805995248657}
   - component: {fileID: 350949448147481039}
+  - component: {fileID: 266686740338377398}
   m_Layer: 6
   m_Name: FragGrenade
   m_TagString: PhysicsProp
@@ -228,6 +229,27 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!95 &266686740338377398
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 390610759670586548}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a86bf39fa18b42446b27617e22ca5aba, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1333185945674057519
 GameObject:
   m_ObjectHideFlags: 0
@@ -510,7 +532,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6557140717006444615}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -2.4536699e-13, y: -0.0000053784215, z: -0.0000026138682}
 --- !u!1 &6652441482393748523
 GameObject:
   m_ObjectHideFlags: 0
@@ -630,7 +652,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6557140717006444615}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -0.0000023745865, y: -0.000012991557, z: -10.182769}
 --- !u!1 &7453521384663304687
 GameObject:
   m_ObjectHideFlags: 0
@@ -695,7 +717,7 @@ Transform:
   m_Children:
   - {fileID: 1028464596327873191}
   m_Father: {fileID: 3907966701501007011}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -89.98021, y: 0, z: 0}
 --- !u!1 &9141499503043121284
 GameObject:
   m_ObjectHideFlags: 0
@@ -727,4 +749,4 @@ Transform:
   m_Children:
   - {fileID: 6557140717006444615}
   m_Father: {fileID: 5562049146257932161}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 89.98021, y: 0, z: 0}
