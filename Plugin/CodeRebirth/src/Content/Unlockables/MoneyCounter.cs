@@ -213,7 +213,7 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
     {
         OnGoingDebt.Invoke();
         Material material = _renderer.GetSharedMaterial();
-        material.SetColor(EmissiveColor, new Color(176f/255f, 0f, 0f, 1f));
+        material.SetColor(EmissiveColor, new Color(50f, 0f, 0f, 1f));
     }
 
     private IEnumerator SpinWheels(int targetHundred, int targetTen, int targetOne, float duration)
