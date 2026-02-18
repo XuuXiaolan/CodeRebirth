@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Linq;
 using Dawn;
@@ -6,6 +7,7 @@ using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace CodeRebirth.src.Content.Unlockables;
 
@@ -23,6 +25,15 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
     private Transform TenWheel;
     [SerializeField]
     private Transform OneWheel;
+
+    [SerializeField]
+    private Renderer _renderer;
+
+    [SerializeField]
+    private UnityEvent OnGoingDebt = new();
+
+    [SerializeField]
+    private UnityEvent OnLeavingDebt = new();
 
     private NetworkVariable<int> _totalMoneyStored = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
@@ -84,8 +95,8 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
             return;
         }
 
-        Plugin.ExtendedLogging($"Applying 10 coin max penalty on all team wipe");
-        RemoveMoney(10);
+        Plugin.ExtendedLogging($"Applying 40 coin max penalty on all team wipe");
+        RemoveMoney(40);
     }
 
     private void SaveMoneyToContract(On.StartOfRound.orig_AutoSaveShipData orig, StartOfRound self)
@@ -134,7 +145,7 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
         }
 
         int oldValue = _totalMoneyStored.Value;
-        _totalMoneyStored.Value = Mathf.Max(0, _totalMoneyStored.Value - amount);
+        _totalMoneyStored.Value -= amount;
         UpdateVisuals(oldValue, _totalMoneyStored.Value);
     }
 
@@ -142,9 +153,14 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
     {
         if (StartOfRound.Instance.inShipPhase)
         {
+            if (oldValue >= 0 && newValue < 0)
+            {
+                _totalMoneyStored.Value = -150;
+            }
             Plugin.ExtendedLogging($"Saving money to contract: {_totalMoneyStored.Value}");
             DawnLib.GetCurrentContract()?.Set(_moneyKey, _totalMoneyStored.Value);
         }
+
         UpdateVisualsClientRpc(oldValue, newValue);
     }
 
@@ -153,6 +169,17 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
     [ClientRpc]
     private void UpdateVisualsClientRpc(int oldValue, int newValue)
     {
+        if (newValue < 0 && oldValue >= 0)
+        {
+            newValue = 0;
+            GoToDebtMode();
+        }
+
+        if (oldValue < 0 && newValue >= 0)
+        {
+            LeaveDebt();
+        }
+
         int hundreds = newValue / 100;
         int tens = (newValue % 100) / 10;
         int ones = newValue % 10;
@@ -172,6 +199,21 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
             duration = 5f;
         }
         _spinRoutine = StartCoroutine(SpinWheels(hundreds, tens, ones, duration));
+    }
+
+    private void LeaveDebt()
+    {
+        OnLeavingDebt.Invoke();
+        Material material = _renderer.GetSharedMaterial();
+        material.SetColor(EmissiveColor, Color.black);
+    }
+
+    private static readonly int EmissiveColor = Shader.PropertyToID("_EmissiveColor");
+    private void GoToDebtMode()
+    {
+        OnGoingDebt.Invoke();
+        Material material = _renderer.GetSharedMaterial();
+        material.SetColor(EmissiveColor, new Color(176f/255f, 0f, 0f, 1f));
     }
 
     private IEnumerator SpinWheels(int targetHundred, int targetTen, int targetOne, float duration)

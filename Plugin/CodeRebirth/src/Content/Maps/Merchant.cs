@@ -147,7 +147,7 @@ public class Merchant : NetworkBehaviour
                 }
                 else
                 {
-                    StartCoroutine(Steal());
+                    Steal();
                 }
             }
         }
@@ -189,7 +189,7 @@ public class Merchant : NetworkBehaviour
         }
     }
 
-    private IEnumerator Steal()
+    private void Steal()
     {
         foreach (GrabbableObject grabbableObject in itemsOnSale.Keys)
         {
@@ -199,8 +199,10 @@ public class Merchant : NetworkBehaviour
         bugleBoy.DisableSelf();
         tipPad.CloseDonations();
         merchantAnimator.SetTrigger(StealHash);
-        yield return new WaitForSeconds(StealAnimation.length);
-        yield break;
+        if (IsServer)
+        {
+            MoneyCounter.Instance!.RemoveMoney(999);
+        }
     }
 
     public void PopulateItemsWithRarityList()
