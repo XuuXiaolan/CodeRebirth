@@ -769,6 +769,56 @@ Transform:
   m_Children: []
   m_Father: {fileID: 632339317372527099}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4131481880088878538
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8262233821720783427}
+  - component: {fileID: 3199489838764769285}
+  m_Layer: 8
+  m_Name: Message
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &8262233821720783427
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4131481880088878538}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6825219803038951662}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3199489838764769285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4131481880088878538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 857109259, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tip:
+    _alertType: 1
+    _header: Ship Warning
+    _body: 'Ship landing interrupted. Magnetic force detected on upper haul. Immediate
+      crew intervention necessary. '
+  playOnAwake: 1
 --- !u!1 &5324632757733817760
 GameObject:
   m_ObjectHideFlags: 0
@@ -949,6 +999,7 @@ Transform:
   - {fileID: 4637462586841570018}
   - {fileID: 6370074950332706798}
   - {fileID: 1473438576185704761}
+  - {fileID: 8262233821720783427}
   - {fileID: 7690792912176009901}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0.73, z: 0}
