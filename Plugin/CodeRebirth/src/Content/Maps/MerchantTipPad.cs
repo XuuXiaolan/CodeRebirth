@@ -11,6 +11,10 @@ public class MerchantTipPad : NetworkBehaviour
 {
     [field: SerializeField]
     public InteractTrigger[] TipTriggers { get; private set; } = [];
+    [field: SerializeField]
+    public InteractTrigger TipJarTrigger { get; private set; }
+    [field: SerializeField]
+    public GameObject[] ObjectsToEnableOnDonationAmounts { get; private set; } = [];
 
     private bool shopClosed = false;
     public static int _tippedAmount = 0;
@@ -60,6 +64,7 @@ public class MerchantTipPad : NetworkBehaviour
         {
             trigger.interactable = false;
         }
+        ToggleDonationObjects();
     }
 
     public void CloseDonations()
@@ -84,6 +89,31 @@ public class MerchantTipPad : NetworkBehaviour
         TipTriggers[2].interactable = MoneyCounter.Instance.MoneyStored() >= 10;
     }
 
+    public void ToggleDonationObjects()
+    {
+        if (_tippedAmount <= 24)
+        {
+            ObjectsToEnableOnDonationAmounts[0].SetActive(true);
+        }
+
+        if (_tippedAmount >= 49)
+        {
+            ObjectsToEnableOnDonationAmounts[1].SetActive(true);
+        }
+
+        if (_tippedAmount >= 74)
+        {
+            ObjectsToEnableOnDonationAmounts[2].SetActive(true);
+        }
+
+        if (_tippedAmount >= 75)
+        {
+            ObjectsToEnableOnDonationAmounts[3].SetActive(true);
+        }
+
+        TipJarTrigger.disabledHoverTip = $"Coins Tipped: {_tippedAmount}";
+    }
+
     public void Tip1Coin()
     {
         if (MoneyCounter.Instance == null || MoneyCounter.Instance.MoneyStored() < 1)
@@ -96,6 +126,7 @@ public class MerchantTipPad : NetworkBehaviour
             MoneyCounter.Instance.RemoveMoney(1);
         }
         _tippedAmount += 1;
+        ToggleDonationObjects();
     }
 
     public void Tip5Coins()
@@ -110,6 +141,7 @@ public class MerchantTipPad : NetworkBehaviour
             MoneyCounter.Instance.RemoveMoney(5);
         }
         _tippedAmount += 5;
+        ToggleDonationObjects();
     }
 
     public void Tip10Coins()
@@ -124,6 +156,7 @@ public class MerchantTipPad : NetworkBehaviour
             MoneyCounter.Instance.RemoveMoney(10);
         }
         _tippedAmount += 10;
+        ToggleDonationObjects();
     }
 
     public static float GetTippedAmount()
