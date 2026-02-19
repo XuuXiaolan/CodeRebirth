@@ -2538,7 +2538,7 @@ MonoBehaviour:
     invertFade: 0
     distanceFadeStart: 100
     distanceFadeEnd: 500
-    textureOffset: {x: -1588.0946, y: -0, z: -0}
+    textureOffset: {x: -14.470001, y: -0, z: -0}
     falloffMode: 0
     maskMode: 0
     materialMask: {fileID: 0}
@@ -11356,7 +11356,7 @@ MonoBehaviour:
     invertFade: 0
     distanceFadeStart: 300
     distanceFadeEnd: 500
-    textureOffset: {x: -952.8568, y: -0, z: -0}
+    textureOffset: {x: -8.682001, y: -0, z: -0}
     falloffMode: 1
     maskMode: 0
     materialMask: {fileID: 0}
@@ -20330,71 +20330,6 @@ Transform:
   - {fileID: 1918171475}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -0, z: -0}
---- !u!1 &1997048134
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1997048136}
-  - component: {fileID: 1997048135}
-  m_Layer: 0
-  m_Name: SpongeShaderForEditor
-  m_TagString: EditorOnly
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1997048135
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1997048134}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26d6499a6bd256e47b859377446493a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IsGlobal: 1
-  fadeRadius: 0
-  priority: 0
-  customPasses:
-  - rid: 1768394166855008258
-  injectionPoint: 1
-  m_TargetCamera: {fileID: 0}
-  useTargetCamera: 0
-  references:
-    version: 2
-    RefIds:
-    - rid: 1768394166855008258
-      type: {class: SpongeNewCustomPass, ns: Scoops.rendering, asm: Assembly-CSharp}
-      data:
-        m_Name: Custom Pass
-        enabled: 1
-        targetColorBuffer: 0
-        targetDepthBuffer: 2
-        clearFlags: 0
-        passFoldout: 0
-        m_Version: 0
---- !u!4 &1997048136
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1997048134}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12.469276, y: -30.462553, z: -33.352985}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2010680697
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -23040,6 +22975,74 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 11f608029f0d26f40b881cd0a29dcc8c, type: 3}
+--- !u!1001 &3485181660158747475
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 15795674551081862, guid: d07f2673e6d0dcb43a1e7c342759e677,
+        type: 3}
+      propertyPath: m_Name
+      value: SpongeShaderForEditor
+      objectReference: {fileID: 0}
+    - target: {fileID: 5497633210021354471, guid: d07f2673e6d0dcb43a1e7c342759e677,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -12.469276
+      objectReference: {fileID: 0}
+    - target: {fileID: 5497633210021354471, guid: d07f2673e6d0dcb43a1e7c342759e677,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -30.462553
+      objectReference: {fileID: 0}
+    - target: {fileID: 5497633210021354471, guid: d07f2673e6d0dcb43a1e7c342759e677,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -33.352985
+      objectReference: {fileID: 0}
+    - target: {fileID: 5497633210021354471, guid: d07f2673e6d0dcb43a1e7c342759e677,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5497633210021354471, guid: d07f2673e6d0dcb43a1e7c342759e677,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5497633210021354471, guid: d07f2673e6d0dcb43a1e7c342759e677,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5497633210021354471, guid: d07f2673e6d0dcb43a1e7c342759e677,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5497633210021354471, guid: d07f2673e6d0dcb43a1e7c342759e677,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5497633210021354471, guid: d07f2673e6d0dcb43a1e7c342759e677,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5497633210021354471, guid: d07f2673e6d0dcb43a1e7c342759e677,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d07f2673e6d0dcb43a1e7c342759e677, type: 3}
 --- !u!1 &3560681587554483027
 GameObject:
   m_ObjectHideFlags: 0
@@ -24226,4 +24229,4 @@ SceneRoots:
   - {fileID: 1991192134}
   - {fileID: 1099028725}
   - {fileID: 1263617850}
-  - {fileID: 1997048136}
+  - {fileID: 3485181660158747475}
