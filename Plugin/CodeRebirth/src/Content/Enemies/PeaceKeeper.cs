@@ -168,6 +168,10 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
         {
             _aggroSFX.Play();
         }
+        else if (_aggroSFX.isPlaying && currentBehaviourStateIndex != (int)PeaceKeeperState.AttackingPlayer)
+        {
+            _aggroSFX.Stop();
+        }
 
         float velocity = (_lastPosition - this.transform.position).magnitude;
         _materials[0].SetVector(ScrollSpeedID, new Vector3(0, -velocity, 0)); // Left Tread
