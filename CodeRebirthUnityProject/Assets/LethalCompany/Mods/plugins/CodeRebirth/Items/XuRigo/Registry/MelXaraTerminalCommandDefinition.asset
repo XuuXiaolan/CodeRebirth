@@ -16,17 +16,30 @@ MonoBehaviour:
   _tags: []
   <Key>k__BackingField:
     _namespace: code_rebirth
-    _key: melxara
-  <CommandName>k__BackingField: MelXara
-  <CommandMainText>k__BackingField: 'Lover of lunxara <3 :blushes:'
+    _key: mel_loving_command
+  <CommandBasicInformation>k__BackingField:
+    <CommandName>k__BackingField: Mel loving command
+    <CategoryName>k__BackingField: Love
+    <Description>k__BackingField: Yeehaw.
+    <ClearTextFlags>k__BackingField: -1
   <CommandKeywordsList>k__BackingField:
   - Melanie
-  <CommandCategory>k__BackingField: Love
-  <CommandDescription>k__BackingField: A command that shows melanie's love to lunxara.
-  <CommandClearTextFlags>k__BackingField: -1
-  <QueryCommand>k__BackingField:
+  <SimpleQueryCommand>k__BackingField:
     <Enabled>k__BackingField: 0
-    <QueryDisplayText>k__BackingField: 
+    <ResultDisplayText>k__BackingField: 
+    <ContinueOrCancelDisplayText>k__BackingField: 
     <CancelDisplayText>k__BackingField: 
     <CancelKeyword>k__BackingField: 
     <ContinueKeyword>k__BackingField: 
+  <ComplexQueryCommand>k__BackingField:
+    <Enabled>k__BackingField: 0
+    <ResultDisplayTexts>k__BackingField: []
+    <ContinueKeywords>k__BackingField: []
+    <ContinueOrCancelDisplayText>k__BackingField: 
+  <ComplexCommand>k__BackingField:
+    <Enabled>k__BackingField: 0
+    <SecondaryKeywords>k__BackingField: []
+    <ResultDisplayTexts>k__BackingField: []
+  <SimpleCommand>k__BackingField:
+    <Enabled>k__BackingField: 1
+    <ResultDisplayText>k__BackingField: Official lover of lunxara.
