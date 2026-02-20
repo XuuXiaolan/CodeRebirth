@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Content.Unlockables;
@@ -39,6 +40,11 @@ public class VendingMachine : NetworkBehaviour
         base.OnNetworkSpawn();
         foreach (SimplifiedItemWithRarityAndColor itemWithRarityAndColor in PotentialItemsToSpawn)
         {
+            if (itemWithRarityAndColor.itemName.Equals("vanilla", StringComparison.OrdinalIgnoreCase))
+            {
+                possibleItemsToSpawn.Add(new SimplifiedRealItemWithRarityAndColor(null, itemWithRarityAndColor.rarity, itemWithRarityAndColor.borderColor, itemWithRarityAndColor.textColor));
+                continue;
+            }
             string itemName = itemWithRarityAndColor.itemName.ToLowerInvariant().Trim();
             itemWithRarityAndColor.itemName = itemName;
             foreach (Item item in StartOfRound.Instance.allItemsList.itemsList)
@@ -115,6 +121,10 @@ public class VendingMachine : NetworkBehaviour
         MoneyCounter.Instance.RemoveMoney(PayPrice);
         jammingProgress += 0.1f;
         Vector3 position = StartSpawnPosition.position + UnityEngine.Random.Range(0f, 1f) * (EndSpawnPosition.position - StartSpawnPosition.position).normalized;
+        if (currentItemToSpawn.item == null)
+        {
+            currentItemToSpawn.item = Merchant.GetRandomVanillaItem(false);
+        }
         GameObject itemGO = (GameObject)CodeRebirthUtils.Instance.SpawnScrap(currentItemToSpawn.item, position, false, true, 0);
         GrabbableObject grabbableObject = itemGO.GetComponent<GrabbableObject>();
         SyncGrabbableObjectScanStuffClientRpc(new NetworkBehaviourReference(grabbableObject), currentItemToSpawn.borderColor.r, currentItemToSpawn.borderColor.g, currentItemToSpawn.borderColor.b, currentItemToSpawn.textColor.r, currentItemToSpawn.textColor.g, currentItemToSpawn.textColor.b);

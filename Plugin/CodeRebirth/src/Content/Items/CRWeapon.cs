@@ -5,7 +5,6 @@ using Unity.Netcode;
 using UnityEngine;
 using System.Collections;
 using UnityEngine.Events;
-using CodeRebirth.src.Util;
 using System;
 
 using Dawn.Utils;
@@ -85,7 +84,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
     private List<IHittable> _iHittableList = new();
     private List<VehicleController> _hitVehicles = new();
     private List<PlayerControllerB> _hitPlayers = new();
-    private List<EnemyAICollisionDetect> _hitEnemies = new();
+    private List<EnemyAI> _hitEnemies = new();
 
     private static readonly int UseHeldItem1Animation = Animator.StringToHash("UseHeldItem1"); // Trigger
     private static readonly int ShovelHitAnimation = Animator.StringToHash("shovelHit"); // Trigger
@@ -285,9 +284,12 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
             Plugin.ExtendedLogging($"Hit hittable: {hit.collider.name} at position: {hit.collider.gameObject.transform.position}");
             if (hittable is EnemyAICollisionDetect enemyAICollisionDetect)
             {
-                if (_hitEnemies.Contains(enemyAICollisionDetect)) continue;
+                if (_hitEnemies.Contains(enemyAICollisionDetect.mainScript))
+                {
+                    continue;
+                }
                 Plugin.ExtendedLogging($"Hit enemy: {hit.collider.name} at position: {hit.collider.gameObject.transform.position}");
-                _hitEnemies.Add(enemyAICollisionDetect);
+                _hitEnemies.Add(enemyAICollisionDetect.mainScript);
                 continue;
             }
             else if (hittable is PlayerControllerB playerControllerB)
@@ -356,15 +358,18 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
         }
     }
 
-    private void HandleHittingEnemies(List<EnemyAICollisionDetect> _hitEnemies)
+    private void HandleHittingEnemies(List<EnemyAI> _hitEnemies)
     {
         if (!damageEnemies) return;
         if (_hitEnemies.Count <= 0) return;
-        foreach (var enemyAICollisionDetect in _hitEnemies)
+        foreach (var enemyAI in _hitEnemies)
         {
-            Plugin.ExtendedLogging($"Hitting enemy: {enemyAICollisionDetect.mainScript}");
-            OnEnemyHit.Invoke(enemyAICollisionDetect.mainScript);
-            if (!enemyAICollisionDetect.mainScript.isEnemyDead) enemyAICollisionDetect.mainScript.HitEnemyOnLocalClient(HitForce, weaponTip.transform.position, previousPlayerHeldBy, true, HitId);
+            Plugin.ExtendedLogging($"Hitting enemy: {enemyAI}");
+            OnEnemyHit.Invoke(enemyAI);
+            if (!enemyAI.isEnemyDead)
+            {
+                enemyAI.HitEnemyOnLocalClient(HitForce, weaponTip.transform.position, previousPlayerHeldBy, true, HitId);
+            }
         }
         PlayRandomSFX(hitEnemySFX);
         bloodParticle?.Play(true);

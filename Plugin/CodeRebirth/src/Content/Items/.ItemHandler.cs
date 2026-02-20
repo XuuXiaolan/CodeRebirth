@@ -1,4 +1,6 @@
 ﻿using CodeRebirth.src.Content.Moons;
+using CodeRebirth.src.MiscScripts;
+using Dawn;
 using Dusk;
 using UnityEngine;
 
@@ -45,6 +47,8 @@ public class ItemHandler : ContentHandler<ItemHandler>
 
     public class OxydeLoreAssets(DuskMod mod, string filePath) : AssetBundleLoader<OxydeLoreAssets>(mod, filePath)
     {
+        [LoadFromBundle("745LogCommandDetails.asset")]
+        public LogCommandDetails SevenFourFiveLogCommandDetails { get; private set; } = null!;
     }
 
     public class CodeRebirthPlushiesAssets(DuskMod mod, string filePath) : AssetBundleLoader<CodeRebirthPlushiesAssets>(mod, filePath)
@@ -66,6 +70,17 @@ public class ItemHandler : ContentHandler<ItemHandler>
     public ItemHandler(DuskMod mod) : base(mod)
     {
         RegisterContent("oxydeloreassets", out OxydeLore);
+        if (OxydeLore != null)
+        {
+            DawnLib.DefineTerminalCommand(OxydeLore.SevenFourFiveLogCommandDetails.NamespacedKey, OxydeLore.SevenFourFiveLogCommandDetails.CommandBasicInformation, builder =>
+            {
+                builder.SetKeywords([OxydeLore.SevenFourFiveLogCommandDetails.MainKeyword]);
+                builder.DefineInputCommand(inputCommandBuilder =>
+                {
+                    inputCommandBuilder.SetResultDisplayText(OxydeLore.SevenFourFiveLogCommandDetails.ResultDisplayText);
+                });
+            });
+        }
 
         RegisterContent("moonunlockerassets", out MoonUnlocker);
 

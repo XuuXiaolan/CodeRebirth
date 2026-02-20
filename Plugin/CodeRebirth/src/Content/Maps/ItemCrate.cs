@@ -119,6 +119,7 @@ public class ItemCrate : CRHittable
     {
         if (burned)
         {
+            damageBurningTicks -= Time.deltaTime;
             if (isBurning && damageBurningTicks <= 0)
             {
                 damageBurningTicks = 0.5f;

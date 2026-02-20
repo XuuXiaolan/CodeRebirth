@@ -96,12 +96,12 @@ public class MerchantTipPad : NetworkBehaviour
             ObjectsToEnableOnDonationAmounts[0].SetActive(true);
         }
 
-        if (_tippedAmount >= 49)
+        if (_tippedAmount >= 25)
         {
             ObjectsToEnableOnDonationAmounts[1].SetActive(true);
         }
 
-        if (_tippedAmount >= 74)
+        if (_tippedAmount >= 50)
         {
             ObjectsToEnableOnDonationAmounts[2].SetActive(true);
         }

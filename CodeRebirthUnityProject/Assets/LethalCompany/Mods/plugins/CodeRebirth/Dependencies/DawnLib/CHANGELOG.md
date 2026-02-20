@@ -1,4 +1,18 @@
-# v0.8.1
+# v0.8.4
+
+- Fixed issue where extra scan events wouldn't run.
+- Improved terminal writing space for the display text to be bigger.
+
+## v0.8.3
+
+- Added a new command, `SimpleInput` for editor use, uses the Input command but for editor purposes like multiple results with specific inputs, including a failed result.
+- Added a bool for code based terminal commands to decide whether to build the command on terminal awake or manually call `DawnTerminalCommandInfo.InjectCommandIntoTerminal();`.
+
+## v0.8.2
+
+- Forgot to serialize the fields for the custom terminal commands in editor.
+
+## v0.8.1
 
 - Inherited a patch from CruiserImproved (that doesn't work with DawnLib installed) that fixes items from the cruiser close to the ship not being sent to the ship on lobby reload causing them to just float.
 
