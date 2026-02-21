@@ -92,13 +92,14 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         return null;
     }
 
-    internal static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
-    internal static readonly int GrabPlayerAnimation = Animator.StringToHash("GrabPlayer"); // Trigger
-    internal static readonly int DoAggroAnimation = Animator.StringToHash("DoAggro"); // Trigger
-    internal static readonly int DriftwoodSmashAnimation = Animator.StringToHash("DriftwoodSmash"); // Trigger
-    internal static readonly int EatEnemyAnimation = Animator.StringToHash("EatEnemy"); // Trigger
+    private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
+    private static readonly int GrabPlayerAnimation = Animator.StringToHash("GrabPlayer"); // Trigger
+    private static readonly int DoAggroAnimation = Animator.StringToHash("DoAggro"); // Trigger
+    private static readonly int DriftwoodSmashAnimation = Animator.StringToHash("DriftwoodSmash"); // Trigger
+    private static readonly int EatEnemyAnimation = Animator.StringToHash("EatEnemy"); // Trigger
     internal static readonly int GrabbedAnimation = Animator.StringToHash("Grabbed"); // Bool
-    internal static readonly int DeadAnimation = Animator.StringToHash("Dead"); // Bool
+    private static readonly int DeadAnimation = Animator.StringToHash("Dead"); // Bool
+    private static readonly int StunnedAnimation = Animator.StringToHash("Stunned"); // Bool
 
     public enum DriftwoodState
     {
@@ -131,10 +132,49 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         StartCoroutine(SpawnAnimationCooldown());
     }
 
+    private bool currentlyStunned = false;
     public override void Update()
     {
         base.Update();
-        if (isEnemyDead) return;
+        if (isEnemyDead)
+        {
+            return;
+        }
+
+        if (stunNormalizedTimer > 0f && !currentlyStunned)
+        {
+            currentlyStunned = true;
+            currentlyGrabbed = false;
+            targetPlayer.inAnimationWithEnemy = null;
+            targetPlayer = null;
+            if (IsServer)
+            {
+                creatureAnimator.SetBool(StunnedAnimation, true);
+            }
+        }
+
+    
+        if (currentlyStunned && stunNormalizedTimer <= 0f)
+        {
+            currentlyStunned = false;
+            if (IsServer)
+            {
+                creatureAnimator.SetBool(StunnedAnimation, false);
+            }
+            SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.ChestBang);
+            if (!IsServer)
+                return;
+
+            agent.speed = 0f;
+            smartAgentNavigator.StopAgent();
+            StartCoroutine(ChestBangPause((int)DriftwoodState.SearchingForPrey, 7f));
+        }
+
+        if (currentlyStunned)
+        {
+            smartAgentNavigator.StopAgent();
+            return;
+        }
 
         _idleTimer -= Time.deltaTime;
         if (_idleTimer <= 0 && targetPlayer == null)
@@ -168,7 +208,10 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         }
 
         PlayerControllerB localPlayer = GameNetworkManager.Instance.localPlayerController;
-        if (localPlayer.isPlayerDead || !localPlayer.isPlayerControlled || localPlayer.isInsideFactory || localPlayer.isInHangarShipRoom) return;
+        if (localPlayer.isPlayerDead || !localPlayer.isPlayerControlled || localPlayer.isInsideFactory || localPlayer.isInHangarShipRoom)
+        {
+            return;
+        }
 
         if (EnemyHasLineOfSightToPosition(localPlayer.transform.position, 60f, seeingRange, 5))
         {
@@ -185,7 +228,11 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     public override void DoAIInterval()
     {
         base.DoAIInterval();
-        if (isEnemyDead || StartOfRound.Instance.allPlayersDead) return;
+        if (isEnemyDead || StartOfRound.Instance.allPlayersDead || currentlyStunned)
+        {
+            return;
+        }
+
         creatureAnimator.SetFloat(RunSpeedFloat, agent.velocity.magnitude / 2);
         switch (currentBehaviourStateIndex)
         {
@@ -641,7 +688,9 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
 
         foreach (EnemyAI enemy in RoundManager.Instance.SpawnedEnemies)
         {
-            if (!enemy.enemyType.canDie || enemy.isEnemyDead || enemy.enemyHP <= 0 || enemy is DriftwoodMenaceAI) continue;
+            if (!enemy.enemyType.canDie || enemy.isEnemyDead || enemy.enemyHP <= 0 || enemy is DriftwoodMenaceAI)
+                continue;
+
             if (_enemyTargetBlacklist.Contains(enemy.enemyType.enemyName))
                 continue;
 
@@ -655,11 +704,13 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
                 }
             }
         }
+
         if (closestEnemy != null)
         {
             SetEnemyTargetServerRpc(new NetworkBehaviourReference(closestEnemy));
             return true;
         }
+
         return false;
     }
 
@@ -736,7 +787,10 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
-        if (isEnemyDead) return;
+        if (isEnemyDead)
+        {
+            return;
+        }
 
         enemyHP -= force;
         if (enemyHP <= 0)
@@ -781,7 +835,11 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         smartAgentNavigator.StopSearchRoutine();
         SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.Death);
 
-        if (!IsServer) return;
+        if (!IsServer)
+        {
+            return;
+        }
+
         creatureAnimator.SetBool(DeadAnimation, true);
     }
 

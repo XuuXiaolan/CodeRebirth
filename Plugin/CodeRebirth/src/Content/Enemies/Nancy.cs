@@ -44,6 +44,7 @@ public class Nancy : CodeRebirthEnemyAI
     private static readonly int HealingPlayerAnimation = Animator.StringToHash("HealingPlayer"); // Bool
     private static readonly int FailHealAnimation = Animator.StringToHash("FailHeal"); // Trigger
     private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
+    private static readonly int StunnedAnimation = Animator.StringToHash("Stunned"); // Bool
 
     public enum NancyState
     {
@@ -60,11 +61,37 @@ public class Nancy : CodeRebirthEnemyAI
 
     #region StateMachine
 
+    private bool currentlyStunned = false;
     public override void Update()
     {
         base.Update();
         if (isEnemyDead)
             return;
+
+        if (stunNormalizedTimer > 0f && !currentlyStunned)
+        {
+            currentlyStunned = true;
+            if (IsServer)
+            {
+                creatureAnimator.SetBool(StunnedAnimation, true);
+            }
+        }
+
+    
+        if (currentlyStunned && stunNormalizedTimer <= 0f)
+        {
+            currentlyStunned = false;
+            if (IsServer)
+            {
+                creatureAnimator.SetBool(StunnedAnimation, false);
+            }
+        }
+
+        if (currentlyStunned)
+        {
+            smartAgentNavigator.StopAgent();
+            return;
+        }
 
         _idleTimer -= Time.deltaTime;
         if (_idleTimer <= 0f)
@@ -106,7 +133,10 @@ public class Nancy : CodeRebirthEnemyAI
     public override void DoAIInterval()
     {
         base.DoAIInterval();
-        if (StartOfRound.Instance.allPlayersDead || isEnemyDead) return;
+        if (StartOfRound.Instance.allPlayersDead || isEnemyDead || currentlyStunned)
+        {
+            return;
+        }
 
         failTimer -= AIIntervalTime;
         creatureAnimator.SetFloat(RunSpeedFloat, agent.velocity.magnitude);

@@ -35,6 +35,7 @@ public class Transporter : CodeRebirthEnemyAI
     private static readonly int OnHitAnim = Animator.StringToHash("onHit"); // Trigger
     private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeedFloat"); // Float
     private static readonly int RotationSpeed = Animator.StringToHash("RotationSpeed"); // Float
+    private static readonly int StunnedAnimation = Animator.StringToHash("Stunned"); // Bool
 
     public enum TransporterStates
     {
@@ -121,9 +122,35 @@ public class Transporter : CodeRebirthEnemyAI
         emptyNetworkObject.transform.SetPositionAndRotation(palletTransform.position, palletTransform.rotation);
     }
 
+    private bool currentlyStunned = false;
     public override void Update()
     {
         base.Update();
+        if (stunNormalizedTimer > 0f && !currentlyStunned)
+        {
+            currentlyStunned = true;
+            if (IsServer)
+            {
+                creatureAnimator.SetBool(StunnedAnimation, true);
+            }
+        }
+
+    
+        if (currentlyStunned && stunNormalizedTimer <= 0f)
+        {
+            currentlyStunned = false;
+            if (IsServer)
+            {
+                creatureAnimator.SetBool(StunnedAnimation, false);
+            }
+        }
+
+        if (currentlyStunned)
+        {
+            smartAgentNavigator.StopAgent();
+            return;
+        }
+
         if (agent.velocity.magnitude > 0.5f && creatureSFX.clip != engineAndIdleSounds[0])
         {
             creatureSFX.clip = engineAndIdleSounds[0];
@@ -141,7 +168,7 @@ public class Transporter : CodeRebirthEnemyAI
             _idleTimer = enemyRandom.NextFloat(_idleAudioClips.minTime, _idleAudioClips.maxTime);
             creatureVoice.PlayOneShot(_idleAudioClips.audioClips[enemyRandom.Next(_idleAudioClips.audioClips.Length)]);
         }
-        if (!IsServer) return;
+
         creatureAnimator.SetFloat(RunSpeedFloat, agent.velocity.magnitude);
     }
 
@@ -149,7 +176,7 @@ public class Transporter : CodeRebirthEnemyAI
     public override void DoAIInterval()
     {
         base.DoAIInterval();
-        if (smartAgentNavigator.CheckPathsOngoing())
+        if (smartAgentNavigator.CheckPathsOngoing() || currentlyStunned)
         {
             return;
         }
@@ -231,9 +258,7 @@ public class Transporter : CodeRebirthEnemyAI
             IEnumerable<(GameObject obj, Vector3 position)> candidateObjects = [];
 
             // Loop 20 times, pick random nodes, add them to the list
-            List<GameObject> allNodes = new();
-            allNodes.AddRange(RoundManager.Instance.outsideAINodes);
-            allNodes.AddRange(RoundManager.Instance.insideAINodes);
+            List<GameObject> allNodes = [.. RoundManager.Instance.outsideAINodes, .. RoundManager.Instance.insideAINodes];
 
             candidateObjects = allNodes
                 .Where(kv => kv != null).Select(kv => (kv, kv.transform.position));

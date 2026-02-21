@@ -39,8 +39,9 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
     private static readonly int IsFlyingAnimation = Animator.StringToHash("isFlying"); // Bool
     private static readonly int IsDeadAnimation = Animator.StringToHash("isDead"); // Bool
     private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
+    private static readonly int StunnedAnimation = Animator.StringToHash("Stunned"); // Bool
 
-    private static readonly int ParallaxSwitch = Shader.PropertyToID("_ParallaxSwitch"); // TODO
+    private static readonly int ParallaxSwitch = Shader.PropertyToID("_ParallaxSwitch");
     #region IVisibleThreat
     public ThreatType type => ThreatType.EyelessDog;
 
@@ -140,11 +141,37 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
         smartAgentNavigator.StartSearchRoutine(50);
     }
 
+    private bool currentlyStunned = false;
     public override void Update()
     {
         base.Update();
         if (isEnemyDead)
             return;
+
+        if (stunNormalizedTimer > 0f && !currentlyStunned)
+        {
+            currentlyStunned = true;
+            if (IsServer)
+            {
+                creatureAnimator.SetBool(StunnedAnimation, true);
+            }
+        }
+
+    
+        if (currentlyStunned && stunNormalizedTimer <= 0f)
+        {
+            currentlyStunned = false;
+            if (IsServer)
+            {
+                creatureAnimator.SetBool(StunnedAnimation, false);
+            }
+        }
+
+        if (currentlyStunned)
+        {
+            smartAgentNavigator.StopAgent();
+            return;
+        }
 
         if (targetPlayer != null && isAttacking && currentBehaviourStateIndex == (int)MonarchState.AttackingGround)
         {
@@ -167,7 +194,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
     public override void DoAIInterval()
     {
         base.DoAIInterval();
-        if (StartOfRound.Instance.allPlayersDead || isEnemyDead)
+        if (StartOfRound.Instance.allPlayersDead || isEnemyDead || currentlyStunned)
             return;
 
         creatureAnimator.SetFloat(RunSpeedFloat, agent.velocity.magnitude / 3f);

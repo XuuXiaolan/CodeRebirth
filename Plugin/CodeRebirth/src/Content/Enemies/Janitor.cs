@@ -57,14 +57,15 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
     [HideInInspector]
     public bool currentlyThrowingPlayer = false;
 
-    private static readonly int RightTreadFloat = Animator.StringToHash("RightTreadFloat");
-    private static readonly int LeftTreadFloat = Animator.StringToHash("LeftTreadFloat");
-    private static readonly int IsAngryAnimation = Animator.StringToHash("isAngry");
-    private static readonly int HoldingPlayerAnimation = Animator.StringToHash("holdingPlayer");
-    private static readonly int IsDeadAnimation = Animator.StringToHash("isDead");
-    private static readonly int GrabScrapAnimation = Animator.StringToHash("grabScrap");
-    private static readonly int BreakMovementAnimation = Animator.StringToHash("break");
-    private static readonly int ThrowPlayerAnimation = Animator.StringToHash("throwPlayer");
+    private static readonly int RightTreadFloat = Animator.StringToHash("RightTreadFloat"); // Float
+    private static readonly int LeftTreadFloat = Animator.StringToHash("LeftTreadFloat"); // Float
+    private static readonly int IsAngryAnimation = Animator.StringToHash("isAngry"); // Bool
+    private static readonly int HoldingPlayerAnimation = Animator.StringToHash("holdingPlayer"); // Bool
+    private static readonly int IsDeadAnimation = Animator.StringToHash("isDead"); // Bool
+    private static readonly int GrabScrapAnimation = Animator.StringToHash("grabScrap"); // Trigger
+    private static readonly int BreakMovementAnimation = Animator.StringToHash("break"); // Trigger
+    private static readonly int ThrowPlayerAnimation = Animator.StringToHash("throwPlayer"); // Trigger
+    private static readonly int StunnedAnimation = Animator.StringToHash("Stunned"); // Bool
 
     #endregion
     #region IVisibleThreat
@@ -151,9 +152,61 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
         StartCoroutine(CheckForScrapNearby());
     }
 
+    private bool currentlyStunned = false;
     public override void Update()
     {
         base.Update();
+        if (stunNormalizedTimer > 0f && !currentlyStunned)
+        {
+            if (targetPlayer != null)
+            {
+                targetPlayer.inAnimationWithEnemy = null;
+                targetPlayer.disableMoveInput = false;
+                targetPlayer = null;
+            }
+
+            foreach (GrabbableObject? grabbableObject in _storedScrap)
+            {
+                if (grabbableObject == null)
+                    continue;
+
+                grabbableObject.EnableItemMeshes(true);
+                grabbableObject.EnablePhysics(true);
+                grabbableObject.grabbable = true;
+                grabbableObject.grabbableToEnemies = true;
+                grabbableObject.isHeldByEnemy = false;
+                grabbableObject.isHeld = false;
+                if (!HoarderBugAI.grabbableObjectsInMap.Contains(grabbableObject.gameObject))
+                {
+                    HoarderBugAI.grabbableObjectsInMap.Add(grabbableObject.gameObject);
+                }
+            }
+
+            _storedScrap.Clear();
+            _targetScrap = null;
+
+            currentlyStunned = true;
+            if (IsServer)
+            {
+                creatureAnimator.SetBool(StunnedAnimation, true);
+            }
+        }
+    
+        if (currentlyStunned && stunNormalizedTimer <= 0f)
+        {
+            currentlyStunned = false;
+            if (IsServer)
+            {
+                creatureAnimator.SetBool(StunnedAnimation, false);
+            }
+        }
+
+        if (currentlyStunned)
+        {
+            smartAgentNavigator.StopAgent();
+            return;
+        }
+
         if (currentBehaviourStateIndex == (int)JanitorStates.Idle || currentBehaviourStateIndex == (int)JanitorStates.Dead)
         {
             HandleIdleSoundTimer();
@@ -180,16 +233,16 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
     #region Coroutines
     private IEnumerator CheckForScrapNearby()
     {
-        while (true)
+        while (!isEnemyDead)
         {
-            yield return new WaitUntil(() => currentBehaviourStateIndex == (int)JanitorStates.Idle && _targetScrap == null);
+            yield return new WaitUntil(() => currentBehaviourStateIndex == (int)JanitorStates.Idle && _targetScrap == null && !currentlyStunned);
             TryFindScrapNearby();
         }
     }
 
     public IEnumerator WaitUntilNotDoingAnythingCurrently(PlayerControllerB playerWhoHit)
     {
-        yield return new WaitUntil(() => !currentlyGrabbingScrap && !currentlyGrabbingPlayer && !currentlyThrowingPlayer);
+        yield return new WaitUntil(() => !currentlyGrabbingScrap && !currentlyGrabbingPlayer && !currentlyThrowingPlayer && !currentlyStunned);
         DetectDroppedScrapServerRpc(playerWhoHit.transform.position, playerWhoHit);
     }
     #endregion
@@ -198,7 +251,7 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
     public override void DoAIInterval()
     {
         base.DoAIInterval();
-        if (isEnemyDead || StartOfRound.Instance.allPlayersDead)
+        if (isEnemyDead || StartOfRound.Instance.allPlayersDead || currentlyStunned)
             return;
 
         switch (currentBehaviourStateIndex)

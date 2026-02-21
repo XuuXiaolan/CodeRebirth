@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using Dawn;
 using GameNetcodeStuff;
 using UnityEngine;
@@ -16,15 +17,28 @@ public class CutieFlyAI : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
-        timeLeft = UnityEngine.Random.Range(30f, 40f);
+        timeLeft = UnityEngine.Random.Range(30f, 50f);
         oldSpeed = agent.speed;
 
-        if (IsServer) smartAgentNavigator.StartSearchRoutine(50);
+        if (IsServer)
+        {
+            smartAgentNavigator.StartSearchRoutine(50);
+        }
     }
 
     public override void Update()
     {
         base.Update();
+        if (isEnemyDead)
+        {
+            return;
+        }
+
+        if (stunNormalizedTimer > 0)
+        {
+            HitEnemy(1, null, true, 999123);
+        }
+
         if (!IsServer)
         {
             return;
@@ -64,7 +78,11 @@ public class CutieFlyAI : CodeRebirthEnemyAI
     public override void HitEnemy(int force = 1, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
-        if (isEnemyDead || playerWhoHit == null) return;
+        if (isEnemyDead || (playerWhoHit == null && hitID != 999123))
+        {
+            return;
+        }
+
         enemyHP -= force;
         if (IsOwner && enemyHP <= 0)
         {
@@ -76,7 +94,10 @@ public class CutieFlyAI : CodeRebirthEnemyAI
     {
         base.KillEnemy(destroy);
         smartAgentNavigator.StopSearchRoutine();
-        if (IsServer && creatureNetworkAnimator != null) creatureNetworkAnimator.SetTrigger(IsDeadAnimation);
+        if (IsServer)
+        {
+            creatureNetworkAnimator.SetTrigger(IsDeadAnimation);
+        }
     }
 
     public void LandCutieflyAnimEvent()

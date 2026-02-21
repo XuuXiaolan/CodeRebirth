@@ -58,7 +58,7 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
     private static readonly int IsDeadAnimation = Animator.StringToHash("isDead"); // Bool
     private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
     private static readonly int BitchSlapAnimation = Animator.StringToHash("bitchSlap"); // Trigger
-
+    private static readonly int StunAnimation = Animator.StringToHash("stun"); // Trigger
     private static readonly int ScrollSpeedID = Shader.PropertyToID("_ScrollSpeed"); // Vector3
 
     #region IVisibleThreat
@@ -147,7 +147,11 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
         _lastPosition = this.transform.position;
         _materials.Add(skinnedMeshRenderers[0].materials[2]);
         _materials.Add(skinnedMeshRenderers[0].materials[3]);
-        if (!IsServer) return;
+        if (!IsServer)
+        {
+            return;
+        }
+
         HandleSwitchingToIdle();
     }
 
@@ -156,6 +160,13 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
         base.Update();
         if (isEnemyDead)
             return;
+
+        if (stunNormalizedTimer > 0f)
+        {
+            smartAgentNavigator.StopAgent();
+            creatureAnimator.SetTrigger(StunAnimation);
+            stunNormalizedTimer = 0f;
+        }
 
         _idleTimer -= Time.deltaTime;
         if (_idleTimer <= 0)
@@ -418,10 +429,14 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
         }
         _damageInterval = 0f;
 
-        if (!IsServer) return;
+        if (!IsServer)
+        {
+            return;
+        }
+
         HashSet<IHittable> damagedTargets = new HashSet<IHittable>();
 
-        Transform[] gunTransforms = new Transform[] { _leftGunStartTransform, _rightGunStartTransform };
+        Transform[] gunTransforms = [_leftGunStartTransform, _rightGunStartTransform];
 
         foreach (var gunTransform in gunTransforms)
         {
