@@ -361,9 +361,10 @@ GameObject:
   m_Component:
   - component: {fileID: 5944099533687354973}
   - component: {fileID: 2016929007572383265}
+  - component: {fileID: 3523899179670145541}
   m_Layer: 0
-  m_Name: box
-  m_TagString: Untagged
+  m_Name: PokeBox
+  m_TagString: DoNotSet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -402,5 +403,50 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.099202394, y: 0.2228413, z: 0.08154125}
-  m_Center: {x: 0.038269043, y: 0.6417447, z: 0.27082765}
+  m_Size: {x: 0.44788826, y: 0.57362276, z: 0.41949373}
+  m_Center: {x: 0.0809384, y: 0.5323141, z: 0.28113797}
+--- !u!114 &3523899179670145541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7819855244967489531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1835421178, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enabledScript: 1
+  deathAnimation: 0
+  forceDirection: 1
+  forceMagnitudeAfterDamage: 10
+  forceMagnitudeAfterDeath: 0
+  forceDirectionFromThisObject: 1
+  causeOfDeath: 0
+  triggerForPlayers: 1
+  triggerForEnemies: 0
+  canThingExit: 1
+  sharedCooldown: 0
+  playDefaultPlayerDamageSFX: 0
+  soundAttractsDogs: 0
+  enemyMainScript: {fileID: 0}
+  damageDuration: 0
+  damageToDealForPlayers: 0
+  damageToDealForEnemies: 0
+  damageIntervalForPlayers: 0.25
+  damageIntervalForEnemies: 0.25
+  damageClips: []
+  damageAudioSources: []
+  deathPrefabForPlayer: {fileID: 0}
+  deathPrefabForEnemy: {fileID: 0}
+  useParticleSystems: 0
+  teleportParticles: 0
+  deathParticlesForPlayer: []
+  damageParticlesForPlayer: []
+  deathParticlesForEnemy: []
+  damageParticlesForEnemy: []
+  displayMessage: 0
+  headerText: Damage Dealt!
+  message: Damage dealt!
+  messageInterval: 10
