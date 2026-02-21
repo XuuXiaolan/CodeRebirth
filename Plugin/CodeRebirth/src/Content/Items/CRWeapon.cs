@@ -8,6 +8,7 @@ using UnityEngine.Events;
 using System;
 
 using Dawn.Utils;
+using Dawn;
 
 namespace CodeRebirth.src.Content.Items;
 public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's JMeleeWeapon
@@ -107,7 +108,11 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
         if (isHeavyWeapon)
         {
             isHoldingButton = buttonDown;
-            if (!buttonDown || _reelingRoutine != null) return;
+            if (!buttonDown || _reelingRoutine != null)
+            {
+                return;
+            }
+
             _reelingRoutine = StartCoroutine(ReelBackWeapon());
         }
         else
@@ -147,6 +152,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
             heldOverHeadTimer.Value += Time.deltaTime;
             yield return null;
         }
+
         EndHeldOverHead();
         yield return new WaitUntil(() => !isHoldingButton || !isHeld);
         SwingHeavyWeapon(!isHeld);
@@ -166,6 +172,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
             yield return new WaitForSeconds(swingTime);
             success = HitWeapon(!isHeld);
         }
+
         EndWeaponHit(success);
         yield return new WaitForSeconds(weaponCooldown);
         heldOverHeadTimer.Value = 0f;
@@ -257,16 +264,37 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
         _hitVehicles.Clear();
         foreach (RaycastHit hit in objectsHit)
         {
-            if (hit.collider.gameObject.CompareTag("Player") || hit.collider.gameObject.CompareTag("Enemy")) continue;
+            if (hit.collider.gameObject.CompareTag("Player") || hit.collider.gameObject.CompareTag("Enemy"))
+                continue;
+
             VehicleController? hitVehicle = GrabVehicleFromHit(hit);
             if (hitVehicle != null)
             {
                 _hitVehicles.Add(hitVehicle);
             }
-            for (int i = 0; i < StartOfRound.Instance.footstepSurfaces.Length; i++)
+
+            DawnSurface dawnSurface = hit.collider.gameObject.GetComponent<DawnSurface>();
+            foreach (DawnSurfaceInfo surfaceInfo in LethalContent.Surfaces.Values)
             {
-                if (!hit.collider.gameObject.CompareTag(StartOfRound.Instance.footstepSurfaces[i].surfaceTag)) continue;
-                surfaceSound = i;
+                if (dawnSurface && dawnSurface.SurfaceIndex > 0)
+                {
+                    surfaceSound = surfaceInfo.SurfaceIndex;
+                    if (surfaceInfo.SurfaceVFXPrefab != null)
+                    {
+                        FootstepVFXPool.Instance!.Play(surfaceInfo.SurfaceVFXPrefab, hit.point, hit.normal, surfaceInfo.SurfaceVFXOffset, Mathf.Clamp(HitForce, 0.1f, 10));
+                    }
+                    Plugin.ExtendedLogging($"Hit surface: {hit.collider.name} at position: {hit.collider.gameObject.transform.position}");
+                    break;
+                }
+
+                if (hit.collider.gameObject.CompareTag(surfaceInfo.Surface.surfaceTag))
+                    continue;
+
+                surfaceSound = surfaceInfo.SurfaceIndex;
+                if (surfaceInfo.SurfaceVFXPrefab != null)
+                {
+                    FootstepVFXPool.Instance!.Play(surfaceInfo.SurfaceVFXPrefab, hit.point, hit.normal, surfaceInfo.SurfaceVFXOffset, Mathf.Clamp(HitForce, 0.1f, 10));
+                }
                 Plugin.ExtendedLogging($"Hit surface: {hit.collider.name} at position: {hit.collider.gameObject.transform.position}");
                 break;
             }
@@ -302,7 +330,11 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
             _iHittableList.Add(hittable);
         }
 
-        if (surfaceSound == -1 && _hitEnemies.Count <= 0 && _hitPlayers.Count <= 0 && _hitVehicles.Count <= 0) return false;
+        if (surfaceSound == -1 && _hitEnemies.Count <= 0 && _hitPlayers.Count <= 0 && _hitVehicles.Count <= 0)
+        {
+            return false;
+        }
+
         foreach (var hittable in _iHittableList)
         {
             OnWeaponHit(hittable, this.transform.position);
@@ -326,8 +358,16 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
 
     private void HandleHittingSurface(int surfaceID)
     {
-        if (!damageSurfaces) return;
-        if (surfaceID == -1) return;
+        if (!damageSurfaces)
+        {
+            return;
+        }
+
+        if (surfaceID == -1)
+        {
+            return;
+        }
+
         OnSurfaceHit.Invoke(surfaceID);
         weaponAudio.PlayOneShot(StartOfRound.Instance.footstepSurfaces[surfaceID].hitSurfaceSFX);
         WalkieTalkie.TransmitOneShotAudio(weaponAudio, StartOfRound.Instance.footstepSurfaces[surfaceID].hitSurfaceSFX);
@@ -337,12 +377,22 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
 
     private void HandleHittingPlayers(List<PlayerControllerB> __hitPlayers)
     {
-        if (!damagePlayers) return;
-        if (__hitPlayers.Count <= 0) return;
+        if (!damagePlayers)
+        {
+            return;
+        }
+
+        if (__hitPlayers.Count <= 0)
+        {
+            return;
+        }
+
         List<CentipedeAI> _relevantCentipedeAI = new();
         foreach (var enemy in RoundManager.Instance.SpawnedEnemies)
         {
-            if (enemy == null || enemy.isEnemyDead) continue;
+            if (enemy == null || enemy.isEnemyDead)
+                continue;
+
             if (enemy is CentipedeAI centipedeAI && centipedeAI.clingingToPlayer != null)
             {
                 _relevantCentipedeAI.Add(centipedeAI);
@@ -354,14 +404,23 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
             OnPlayerHit.Invoke(player);
             if (_relevantCentipedeAI.Any(x => x.clingingToPlayer == player))
                 continue;
+
             player.DamagePlayerFromOtherClientServerRpc(HitForce * 10, weaponTip.transform.position, Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
         }
     }
 
     private void HandleHittingEnemies(List<EnemyAI> _hitEnemies)
     {
-        if (!damageEnemies) return;
-        if (_hitEnemies.Count <= 0) return;
+        if (!damageEnemies)
+        {
+            return;
+        }
+
+        if (_hitEnemies.Count <= 0)
+        {
+            return;
+        }
+
         foreach (var enemyAI in _hitEnemies)
         {
             Plugin.ExtendedLogging($"Hitting enemy: {enemyAI}");
@@ -377,8 +436,16 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
 
     private void HandleHittingVehicles(List<VehicleController> _hitVehicles)
     {
-        if (!damageVehicles) return;
-        if (_hitVehicles.Count <= 0) return;
+        if (!damageVehicles)
+        {
+            return;
+        }
+
+        if (_hitVehicles.Count <= 0)
+        {
+            return;
+        }
+
 
         foreach (var vehicle in _hitVehicles)
         {
@@ -392,16 +459,36 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
 
     public VehicleController? GrabVehicleFromHit(RaycastHit hit)
     {
-        if (!damageVehicles) return null;
-        if (hit.collider.gameObject.layer != 30) return null;
-        if (!hit.collider.TryGetComponent(out VehicleController vehicle)) return null;
-        if (_hitVehicles.Contains(vehicle)) return null;
+        if (!damageVehicles)
+        {
+            return null;
+        }
+
+        if (hit.collider.gameObject.layer != 30)
+        {
+            return null;
+        }
+
+        if (!hit.collider.TryGetComponent(out VehicleController vehicle))
+        {
+            return null;
+        }
+
+        if (_hitVehicles.Contains(vehicle))
+        {
+            return null;
+        }
+
         return vehicle;
     }
 
     public bool OnWeaponHit(IHittable target, Vector3 hitDir)
     {
-        if (!damageObjects) return false;
+        if (!damageObjects)
+        {
+            return false;
+        }
+
         OnObjectHit.Invoke(target);
         return target.Hit(HitForce, hitDir, previousPlayerHeldBy, true, HitId);
     }
@@ -415,14 +502,22 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
     [ClientRpc]
     public void HitWeaponClientRpc(int hitSurfaceID)
     {
-        if (IsOwner) return;
+        if (IsOwner)
+        {
+            return;
+        }
+
         PlayRandomSFX(hitSFX); // hit wall etc sound from weapon
         HitSurface(hitSurfaceID);
     }
 
     private void PlayRandomSFX(AudioClip[] clips)
     {
-        if (clips.Length == 0) return;
+        if (clips.Length == 0)
+        {
+            return;
+        }
+
         RoundManager.PlayRandomClip(weaponAudio, clips);
     }
 
