@@ -158,6 +158,11 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
         base.Update();
         if (stunNormalizedTimer > 0f && !currentlyStunned)
         {
+            currentlyThrowingPlayer = false;
+            currentlyGrabbingPlayer = false;
+            currentlyGrabbingScrap = false;
+            _targetScrap = null;
+            _targetTrashCan = null;
             if (targetPlayer != null)
             {
                 targetPlayer.inAnimationWithEnemy = null;
@@ -189,6 +194,7 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
             if (IsServer)
             {
                 creatureAnimator.SetBool(StunnedAnimation, true);
+                creatureAnimator.SetBool(HoldingPlayerAnimation, false);
             }
         }
     
@@ -766,6 +772,7 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
                 return;
 
             agent.speed = 7.5f;
+            creatureAnimator.SetBool(HoldingPlayerAnimation, false);
             creatureAnimator.SetBool(IsAngryAnimation, false);
         }
         else

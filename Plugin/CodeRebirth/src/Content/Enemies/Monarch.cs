@@ -128,12 +128,12 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
     public override void Start()
     {
         base.Start();
-        _parallaxWingConfig = EnemyHandler.Instance.Monarch.GetConfig<bool>("Monarch | Parallax Wing Effect");
+        _parallaxWingConfig = EnemyHandler.Instance.Monarch!.GetConfig<bool>("Monarch | Parallax Wing Effect");
         wasParallaxOnLastFrame = _parallaxWingConfig.Value;
         skinnedMeshRenderers[0].sharedMaterials[0].SetInt(ParallaxSwitch, wasParallaxOnLastFrame ? 1 : 0);
 
-        BeamController._monarchParticle.transform.SetParent(null);
-        BeamController._monarchParticle.transform.position = Vector3.zero;
+        BeamController._monarchParticle!.transform.SetParent(null);
+        BeamController._monarchParticle!.transform.position = Vector3.zero;
         SwitchToBehaviourStateOnLocalClient((int)MonarchState.Idle);
         if (!IsServer)
             return;
@@ -151,6 +151,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
         if (stunNormalizedTimer > 0f && !currentlyStunned)
         {
             currentlyStunned = true;
+            BeamController._monarchParticle?.Stop();
             if (IsServer)
             {
                 creatureAnimator.SetBool(StunnedAnimation, true);
@@ -244,7 +245,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
             SwitchToBehaviourServerRpc((int)MonarchState.Idle);
             return;
         }
-        else if (distanceToClosestPlayer > 10 && !isAttacking && !closestPlayer.isInHangarShipRoom)
+        else if (distanceToClosestPlayer > 10 && !isAttacking && !closestPlayer!.isInHangarShipRoom)
         {
             agent.speed = 10f;
             creatureAnimator.SetBool(IsFlyingAnimation, true);
@@ -290,7 +291,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
             closestPlayer = targetPlayer;
         }
 
-        smartAgentNavigator.DoPathingToDestination(closestPlayer.transform.position);
+        smartAgentNavigator.DoPathingToDestination(closestPlayer!.transform.position);
         if (closestPlayer != null && canAttack && distanceToClosestPlayer > agent.stoppingDistance && distanceToClosestPlayer <= 5f + agent.stoppingDistance)
         {
             SetPlayerTargetServerRpc(closestPlayer);
@@ -387,7 +388,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
     public IEnumerator ShootingEffect()
     {
         creatureSFX.PlayOneShot(BeamController._beamSound);
-        BeamController._monarchParticle.Play();
+        BeamController._monarchParticle?.Play();
 
         float totalDuration = 3f;
         float damageInterval = 0.25f;

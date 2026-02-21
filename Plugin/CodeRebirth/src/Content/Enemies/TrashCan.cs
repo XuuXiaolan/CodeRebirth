@@ -30,6 +30,11 @@ public class TrashCan : NetworkBehaviour
             return;
         }
 
+        if (Vector3.Distance(this.transform.position, RoundManager.FindMainEntrancePosition(true, false)) <= 5f)
+        {
+            NetworkObject.Despawn(true);
+        }
+
         List<Tile> allDeadendTiles = RoundManager.Instance.dungeonGenerator.Generator.CurrentDungeon.AllTiles.Where(x => x.UsedDoorways.Count == 1).ToList();
 
         if (allDeadendTiles.Count > 0)
@@ -40,11 +45,11 @@ public class TrashCan : NetworkBehaviour
             {
                 roomCenter = raycastHit.point;
             }
-            NavMeshHit navMeshHit = default(NavMeshHit);
+            NavMeshHit navMeshHit = default;
             Vector3 randomNavMeshPositionInBoxPredictable = RoundManager.Instance.GetRandomNavMeshPositionInRadius(roomCenter, 6f, navMeshHit);
             transform.position = randomNavMeshPositionInBoxPredictable;
-            SyncPositionRpc(transform.position);
-            Plugin.ExtendedLogging($"Moved trash can to {transform.position}");
+            SyncPositionRpc(randomNavMeshPositionInBoxPredictable);
+            Plugin.ExtendedLogging($"Moved trash can to {randomNavMeshPositionInBoxPredictable}");
         }
     }
 
