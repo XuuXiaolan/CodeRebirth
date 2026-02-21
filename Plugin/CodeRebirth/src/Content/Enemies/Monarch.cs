@@ -158,7 +158,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
             }
         }
 
-    
+
         if (currentlyStunned && stunNormalizedTimer <= 0f)
         {
             currentlyStunned = false;
