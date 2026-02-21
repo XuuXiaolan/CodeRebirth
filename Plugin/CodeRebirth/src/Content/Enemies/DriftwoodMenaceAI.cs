@@ -145,7 +145,10 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         {
             currentlyStunned = true;
             currentlyGrabbed = false;
-            targetPlayer.inAnimationWithEnemy = null;
+            if (targetPlayer != null)
+            {
+                targetPlayer.inAnimationWithEnemy = null;
+            }
             targetPlayer = null;
             if (IsServer)
             {
