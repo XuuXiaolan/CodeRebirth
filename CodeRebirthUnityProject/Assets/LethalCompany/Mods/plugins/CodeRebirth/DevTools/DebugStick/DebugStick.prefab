@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8578972928201327910}
   m_Layer: 22
   m_Name: ScanNode
-  m_TagString: DoNotSet
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -52,7 +52,7 @@ MonoBehaviour:
   subText: MZ.co is not liable for any injuries
   scrapValue: -1
   creatureScanID: -1
-  nodeType: 2
+  nodeType: 0
 --- !u!65 &8578972928201327910
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -193,7 +193,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7039531907508659519}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d0cf24d2ccc3b7eab72048d0f57c437, type: 3}
+  m_Script: {fileID: 128561726, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   grabbable: 1
@@ -225,7 +225,7 @@ MonoBehaviour:
   propColliders: []
   originalScale: {x: 0, y: 0, z: 0}
   wasOwnerLastFrame: 0
-  mainObjectRenderer: {fileID: 0}
+  mainObjectRenderer: {fileID: 7105687601492147263}
   isSendingItemRPC: 0
   scrapPersistedThroughRounds: 0
   heldByPlayerOnServer: 0
@@ -234,6 +234,8 @@ MonoBehaviour:
   grabbableToEnemies: 1
   hasBeenHeld: 0
   rotateObject: 0
+  <TransparentMaterial>k__BackingField: {fileID: 2100000, guid: 81a62a4daa10d7c4dbd35ce669828fbd,
+    type: 2}
 --- !u!65 &7063845850358266659
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -368,7 +370,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5944099533687354973
 Transform:
   m_ObjectHideFlags: 0
