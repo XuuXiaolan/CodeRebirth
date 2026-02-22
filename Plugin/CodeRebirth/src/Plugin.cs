@@ -47,12 +47,13 @@ public class Plugin : BaseUnityPlugin
         PersistentDataContainer.Set(NamespacedKey.From("code_rebirth", "last_version"), MyPluginInfo.PLUGIN_VERSION);
 
         configFile = this.Config;
-        ModConfig = new CodeRebirthConfig();
-
-        ModConfig.ConfigExtendedLogging = configFile.Bind("Debug Options",
-                                            "Debug Mode | Extended Logging",
-                                            false,
-                                            "Whether ExtendedLogging is enabled.");
+        ModConfig = new CodeRebirthConfig
+        {
+            ConfigExtendedLogging = configFile.Bind("Debug Options",
+                                                "Debug Mode | Extended Logging",
+                                                false,
+                                                "Whether ExtendedLogging is enabled.")
+        };
 
         _harmony.PatchAll(typeof(PlayerControllerBPatch));
         _harmony.PatchAll(typeof(EnemyAIPatch));
