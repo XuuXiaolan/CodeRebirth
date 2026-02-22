@@ -26,6 +26,14 @@
 - Trashcans auto position themselves to dead end tiles.
 - Nerfed driftwood scream from 5 damage to 2 damage, nerfed distance to getting damaged by it to 10 units.
 - Made non-important unlockables decors.
+  - Timmy Bass.
+  - Fancy coatHangar.
+  - Trash Hoop.
+  - Cutiefly Case.
+  - Employee Plaque.
+  - Haunted ???.
+  - ToastyToaster.
+
 - Made a config for instrument volume.
 - ManorLord puppet speeds up if you're further from it.
 - Increased redwood threshold for chasing animation.
@@ -57,8 +65,26 @@
 - Adjusted the pads like credit pads, ship upgrades and furniture unlockers to have an animation on use.
 - Cleaned up a bunch of code.
 - Fixed the issue of the ship boundary being expanded allowing more items to be easily collected with coderebirth installed.
-- Revamped mimic crates and gave interactions with explosions and fire based weapons.
-- Merchant completely revamped with a donation system, a reroll, new store layout ish, and a new way of paying money, more ways to not accidently steal and now a new punishment for stealing.
+- Revamped crates and gave interactions with explosions and fire based weapons.
+- Merchant completely revamped with a donation system, a reroll, new store layout ish, and a new way of paying. money, more ways to not accidently steal and now a new punishment for stealing.
+- Added hazard radar map icons to all our hazards (including crane).
+- Added stun animations and interactions for a few of our enemies.
+  - PeaceKeeper.
+  - Nancy.
+  - Driftwood Menace.
+  - Monarch.
+  - Janitor.
+  - Jimothy.
+  - Cutiefly.
+
+- Nightshift disabled and removed for now and related achievement.
+- Added some DevItems that do not spawn by default and cannot be used unless a config is turned on.
+- Added TrashCan Variants.
+- Added vending machines.
+  - Common
+  - Rare
+  - Epic
+  - Legendary
 
 ## v1.4.2
 
