@@ -12,6 +12,7 @@ using UnityEngine.SceneManagement;
 namespace CodeRebirth.src.Content.Enemies;
 public class Transporter : CodeRebirthEnemyAI
 {
+    public AudioSource StunSource = null!;
     public AudioClip[] engineAndIdleSounds = null!;
     public AudioClip dumpHazardSound = null!;
     public AudioClip hitJimothySound = null!;
@@ -128,6 +129,7 @@ public class Transporter : CodeRebirthEnemyAI
         base.Update();
         if (stunNormalizedTimer > 0f && !currentlyStunned)
         {
+            StunSource.Play();
             currentlyStunned = true;
             if (IsServer)
             {
@@ -138,6 +140,7 @@ public class Transporter : CodeRebirthEnemyAI
     
         if (currentlyStunned && stunNormalizedTimer <= 0f)
         {
+            StunSource.Stop();
             currentlyStunned = false;
             if (IsServer)
             {

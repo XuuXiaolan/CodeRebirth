@@ -21,6 +21,7 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
     public GameObject[] headLights = [];
 
     [Header("Audio & Sounds")]
+    public AudioSource StunSource = null!;
     public AudioClip[] deathSounds = [];
     public AudioClip[] postDeathSounds = [];
     public AudioClip[] detectItemDroppedSounds = [];
@@ -190,6 +191,7 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
             _storedScrap.Clear();
             _targetScrap = null;
 
+            StunSource.Play();
             currentlyStunned = true;
             if (IsServer)
             {
@@ -200,6 +202,7 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
     
         if (currentlyStunned && stunNormalizedTimer <= 0f)
         {
+            StunSource.Stop();
             currentlyStunned = false;
             if (IsServer)
             {

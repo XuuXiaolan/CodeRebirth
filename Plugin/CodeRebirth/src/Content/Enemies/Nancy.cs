@@ -27,10 +27,9 @@ public class Nancy : CodeRebirthEnemyAI
     [SerializeField]
     private AudioClip[] _healFailVoicelines = [];
 
-    [SerializeField]
-    private AudioClip[] _healSuccessVoiceline = [];
-
     [Header("Sound")]
+    [SerializeField]
+    private AudioSource _stunSource = null!;
     [SerializeField]
     private AudioSource _healDuringSource = null!;
 
@@ -70,6 +69,7 @@ public class Nancy : CodeRebirthEnemyAI
 
         if (stunNormalizedTimer > 0f && !currentlyStunned)
         {
+            _stunSource.Play();
             currentlyStunned = true;
             if (IsServer)
             {
@@ -80,6 +80,7 @@ public class Nancy : CodeRebirthEnemyAI
     
         if (currentlyStunned && stunNormalizedTimer <= 0f)
         {
+            _stunSource.Stop();
             currentlyStunned = false;
             if (IsServer)
             {
