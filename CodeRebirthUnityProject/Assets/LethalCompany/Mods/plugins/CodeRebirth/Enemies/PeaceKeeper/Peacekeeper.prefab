@@ -6983,6 +6983,7 @@ GameObject:
   - component: {fileID: 762053588088254881}
   - component: {fileID: 9038374897764814506}
   - component: {fileID: 7861032762665460296}
+  - component: {fileID: 8504833885334648293}
   m_Layer: 19
   m_Name: Peacekeeper
   m_TagString: Enemy
@@ -7365,6 +7366,24 @@ MonoBehaviour:
         <Key>k__BackingField:
           _namespace: code_rebirth
           _key: peace_kept
+--- !u!114 &8504833885334648293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6729101629155576095}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 26720462, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _audioSourcesWithClips:
+  - nearAudioSource: {fileID: 7611748885368582753}
+    nearClips:
+    - {fileID: 8300000, guid: 3d9603fba9a623b469587d0fb90702f5, type: 3}
+    farAudioSource: {fileID: 0}
+    farClips: []
 --- !u!1 &6761455667277072204
 GameObject:
   m_ObjectHideFlags: 0
