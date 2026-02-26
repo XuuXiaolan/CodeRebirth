@@ -164,6 +164,10 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
             {
                 creatureAnimator.SetBool(StunnedAnimation, false);
             }
+
+            SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.SearchingForPrey);
+            smartAgentNavigator.StartSearchRoutine(50f);
+            agent.speed = 7f;
             return;
         }
 
