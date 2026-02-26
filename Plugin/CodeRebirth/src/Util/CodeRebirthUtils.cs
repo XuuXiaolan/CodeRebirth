@@ -33,10 +33,24 @@ internal class CodeRebirthUtils : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+        if (Plugin.ModConfig.ConfigDebugMode.Value && IsHost)
+        {
+            NetworkObjectReference netObjRefDebugStick = SpawnScrap(LethalContent.Items[CodeRebirthItemKeys.DebugStick].Item, Vector3.zero);
+            NetworkObjectReference netObjRefXuBucket = SpawnScrap(LethalContent.Items[CodeRebirthItemKeys.CrispXuBuck].Item, Vector3.zero);
+            StartCoroutine(GiveItemsToPlayer(netObjRefDebugStick, netObjRefXuBucket));
+        }
         Instance = this;
         HandleEnemyDropRates();
         CRRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
         shipAnimator = StartOfRound.Instance.shipAnimatorObject.gameObject.AddComponent<ShipAnimator>();
+    }
+
+    private IEnumerator GiveItemsToPlayer(NetworkObjectReference netObjRefDebugStick, NetworkObjectReference netObjRefXuBucket)
+    {
+        yield return new WaitForSeconds(0.15f);
+        CRUtilities.MakePlayerGrabObject(GameNetworkManager.Instance.localPlayerController, ((GameObject)netObjRefDebugStick).GetComponent<GrabbableObject>());
+        yield return new WaitForSeconds(0.15f);
+        CRUtilities.MakePlayerGrabObject(GameNetworkManager.Instance.localPlayerController, ((GameObject)netObjRefXuBucket).GetComponent<GrabbableObject>());
     }
 
     private void HandleEnemyDropRates()
@@ -197,7 +211,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         SpawnScrap(itemInfo.Item, position, isQuest, defaultRotation, valueIncrease);
     }
 
-    public NetworkObjectReference SpawnScrap(Item? item, Vector3 position, bool isQuest, bool defaultRotation, int valueIncrease, Quaternion rotation = default)
+    public NetworkObjectReference SpawnScrap(Item? item, Vector3 position, bool isQuest = false, bool defaultRotation = true, int valueIncrease = 0, Quaternion rotation = default)
     {
         if (StartOfRound.Instance == null || item == null)
         {

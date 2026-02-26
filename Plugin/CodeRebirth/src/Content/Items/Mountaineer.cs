@@ -10,7 +10,8 @@ public class Mountaineer : CRWeapon
 {
     public Renderer iceRenderer = null!;
     public AudioClip[] unlatchSounds = [];
-    [HideInInspector] public float FreezePercentile => GetFreezePercentage();
+
+    internal float FreezePercentile => GetFreezePercentage();
 
     private Quaternion brrreakerStuckRotation = Quaternion.identity;
     private Vector3 brrreakerStuckPosition = Vector3.zero;

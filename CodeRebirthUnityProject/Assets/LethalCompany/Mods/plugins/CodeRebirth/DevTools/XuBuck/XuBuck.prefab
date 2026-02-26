@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5025630176173778186}
   - component: {fileID: 7769477151709061577}
   - component: {fileID: 695648817046765787}
-  - component: {fileID: 7946437378380385857}
+  - component: {fileID: 2138891324293036098}
   m_Layer: 6
   m_Name: XuBuck
   m_TagString: PhysicsProp
@@ -225,7 +225,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &7946437378380385857
+--- !u!114 &2138891324293036098
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -234,7 +234,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7690121783953365728}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1221488607, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Script: {fileID: -217438271, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   grabbable: 1
@@ -275,9 +275,3 @@ MonoBehaviour:
   grabbableToEnemies: 1
   hasBeenHeld: 0
   rotateObject: 0
-  _valueRange:
-    <Min>k__BackingField: 999
-    <Max>k__BackingField: 999
-  _moneySource: {fileID: 695648817046765787}
-  _collectSound: {fileID: 0}
-  _ownerNetworkAnimator: {fileID: 0}
