@@ -147,13 +147,15 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
             {
                 targetPlayer.inAnimationWithEnemy = null;
             }
+
             targetPlayer = null;
             if (IsServer)
             {
                 creatureAnimator.SetBool(StunnedAnimation, true);
             }
-        }
 
+            return;
+        }
     
         if (currentlyStunned && stunNormalizedTimer <= 0f)
         {
@@ -162,13 +164,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
             {
                 creatureAnimator.SetBool(StunnedAnimation, false);
             }
-            SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.ChestBang);
-            if (!IsServer)
-                return;
-
-            agent.speed = 0f;
-            smartAgentNavigator.StopAgent();
-            StartCoroutine(ChestBangPause((int)DriftwoodState.SearchingForPrey, 7f));
+            return;
         }
 
         if (currentlyStunned)
@@ -803,6 +799,10 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
             return;
         }
 
+        if (currentlyStunned)
+        {
+            return;
+        }
 
         if (IsServer && force == 6 && currentBehaviourStateIndex != (int)DriftwoodState.RunningAway)
         {

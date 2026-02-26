@@ -203,6 +203,7 @@ public class Nancy : CodeRebirthEnemyAI
         int currentHealth = targetPlayer.health;
         if (currentHealth >= 100)
         {
+            StopHealSourceServerRpc();
             creatureAnimator.SetBool(HealModeAnimation, false);
             creatureAnimator.SetBool(HealingPlayerAnimation, false);
             // HealPlayerSuccessServerRpc();
@@ -246,6 +247,7 @@ public class Nancy : CodeRebirthEnemyAI
             creatureAnimator.SetBool(HealModeAnimation, false);
             creatureAnimator.SetBool(HealingPlayerAnimation, false);
             ClearPlayerTargetServerRpc();
+            StopHealSourceServerRpc();
             smartAgentNavigator.StartSearchRoutine(30f);
             SwitchToBehaviourServerRpc((int)NancyState.Wandering);
             return;
@@ -253,6 +255,7 @@ public class Nancy : CodeRebirthEnemyAI
         else if (distanceToPlayer > 2.5f)
         {
             creatureAnimator.SetBool(HealingPlayerAnimation, false);
+            StopHealSourceServerRpc();
             SwitchToBehaviourServerRpc((int)NancyState.ChasingHealTarget);
             return;
         }
@@ -261,6 +264,18 @@ public class Nancy : CodeRebirthEnemyAI
     #endregion
 
     #region Misc Functions
+    [ServerRpc(RequireOwnership = false)]
+    private void StopHealSourceServerRpc()
+    {
+        StopHealSourceClientRpc();
+    }
+
+    [ClientRpc]
+    private void StopHealSourceClientRpc()
+    {
+        _healDuringSource.Stop();
+    }
+
     [ServerRpc(RequireOwnership = false)]
     private void StartHealingPlayerServerRpc()
     {
