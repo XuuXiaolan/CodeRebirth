@@ -694,6 +694,7 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
     public override void KillEnemy(bool destroy = false)
     {
         base.KillEnemy(destroy);
+        StunSource.Stop();
         creatureVoice.PlayOneShot(deathSounds[enemyRandom.Next(deathSounds.Length)]);
         currentlyThrowingPlayer = false;
         currentlyGrabbingPlayer = false;

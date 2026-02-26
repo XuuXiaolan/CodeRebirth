@@ -72,18 +72,18 @@ public class Nancy : CodeRebirthEnemyAI
             _stunSource.Play();
             _healDuringSource.Stop();
             currentlyStunned = true;
-            playersLastPosition = Vector3.zero;
+            playersLastPosition = new Vector3(3000f, 3000f, 3000f);
             if (IsServer)
             {
                 creatureAnimator.SetBool(StunnedAnimation, true);
             }
         }
 
-    
         if (currentlyStunned && stunNormalizedTimer <= 0f)
         {
             _stunSource.Stop();
             currentlyStunned = false;
+            playersLastPosition = new Vector3(3000f, 3000f, 3000f);
             if (IsServer)
             {
                 creatureAnimator.SetBool(StunnedAnimation, false);
