@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using GameNetcodeStuff;
 using UnityEngine;
@@ -6,11 +5,8 @@ using CodeRebirth.src.Util;
 using System.Linq;
 using Unity.Netcode;
 using Dawn.Utils;
-
-
 using System.Collections.Generic;
 using Dawn;
-
 
 namespace CodeRebirth.src.Content.Enemies;
 public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
@@ -19,6 +15,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     public AnimationClip spawnAnimation = null!;
     public AnimationClip chestBangingAnimation = null!;
     public AudioClip screamSound = null!;
+    public AudioClip onStunSound = null!;
     public float seeingRange = 60f;
     public float awarenessLevel = 0.0f; // Giant's awareness level of the player
     public float maxAwarenessLevel = 100.0f; // Maximum awareness level
@@ -143,6 +140,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
 
         if (stunNormalizedTimer > 0f && !currentlyStunned)
         {
+            creatureVoice.PlayOneShot(onStunSound);
             currentlyStunned = true;
             currentlyGrabbed = false;
             if (targetPlayer != null)

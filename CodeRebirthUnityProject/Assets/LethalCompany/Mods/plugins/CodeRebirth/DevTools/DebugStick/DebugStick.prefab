@@ -175,7 +175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 168771209
+  GlobalObjectIdHash: 4097496198
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -234,8 +234,10 @@ MonoBehaviour:
   grabbableToEnemies: 1
   hasBeenHeld: 0
   rotateObject: 0
-  <TransparentMaterial>k__BackingField: {fileID: 2100000, guid: 81a62a4daa10d7c4dbd35ce669828fbd,
-    type: 2}
+  <Source>k__BackingField: {fileID: 1497317153334662339}
+  <PlaceSound>k__BackingField: {fileID: 8300000, guid: 514d0493dbcafb64886a9b439e6bf3c7,
+    type: 3}
+  <PlaceDistance>k__BackingField: 30
 --- !u!65 &7063845850358266659
 BoxCollider:
   m_ObjectHideFlags: 0

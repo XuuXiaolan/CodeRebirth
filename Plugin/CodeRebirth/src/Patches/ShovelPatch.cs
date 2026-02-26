@@ -1,7 +1,5 @@
 ﻿using CodeRebirth.src.Content.Weapons;
-using CodeRebirth.src.Util;
 using UnityEngine;
-using Unity.Netcode;
 
 namespace CodeRebirth.src.Patches;
 public static class ShovelPatch
@@ -14,7 +12,6 @@ public static class ShovelPatch
     private static void Shovel_HitShovel(On.Shovel.orig_HitShovel orig, Shovel self, bool cancel)
     {
         orig(self, cancel);
-
         PostHitShovel(ref self);
     }
 
@@ -31,7 +28,6 @@ public static class ShovelPatch
             }
             return;
         }
-        TrySpawnCRHazard(ref self);
     }
 
     private static bool DetermineIfShovelHitSomething(Shovel self)
@@ -51,13 +47,5 @@ public static class ShovelPatch
             }
         }
         return false;
-    }
-
-    private static void TrySpawnCRHazard(ref Shovel shovel)
-    {
-        if (!Plugin.ModConfig.ConfigDebugMode.Value)
-            return;
-
-        CodeRebirthUtils.Instance.SpawnRandomCRHazardServerRpc(RoundManager.Instance.GetRandomNavMeshPositionInRadius(shovel.previousPlayerHeldBy.gameplayCamera.transform.position + shovel.previousPlayerHeldBy.gameplayCamera.transform.right * -0.35f, 1f, default));
     }
 }

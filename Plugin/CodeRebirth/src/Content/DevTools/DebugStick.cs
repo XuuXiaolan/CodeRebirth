@@ -4,16 +4,22 @@ using System.Linq;
 using Dawn;
 using Dawn.Utils;
 using GameNetcodeStuff;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
 namespace CodeRebirth.src.Content.DevTools;
 
 public class DebugStick : GrabbableObject
 {
     [field: SerializeField]
-    public Material TransparentMaterial { get; private set; }
+    public AudioSource Source { get; private set; }
+
+    [field: SerializeField]
+    public AudioClip PlaceSound { get; private set; }
+
     [field: SerializeField]
     public float PlaceDistance { get; private set; } = 20f;
 
@@ -44,9 +50,10 @@ public class DebugStick : GrabbableObject
         foreach (DawnMapObjectInfo mapObjectInfo in LethalContent.MapObjects.Values)
         {
             _hologramCopies[mapObjectInfo] = new HologramCopy();
-            _hologramCopies[mapObjectInfo].SetUpHologram(mapObjectInfo.MapObject, TransparentMaterial);
+            _hologramCopies[mapObjectInfo].SetUpHologram(mapObjectInfo.MapObject);
         }
 
+        FixControlTips();
         // Q and E to cycle through list of hazards in LethalContent.MapObjects.Values, and update the hologram to match the currently selected hazard
         // Rotate hazard being pointed at with left and arrow right keys.
         // Move it left right forward and back with IJKL keys
@@ -56,16 +63,40 @@ public class DebugStick : GrabbableObject
         // Remove all map hazards with R key.
     }
 
+    private static bool doneOnce = false;
+    private void FixControlTips()
+    {
+        if (doneOnce)
+        {
+            return;
+        }
+        doneOnce = true;
+
+        int extraTooltips = 10;
+        TextMeshProUGUI finalTooltip = HUDManager.Instance.controlTipLines[3];
+        List<TextMeshProUGUI> tooltips = HUDManager.Instance.controlTipLines.ToList();
+        for (int i = 0; i < extraTooltips; i++)
+        {
+            GameObject newTooltip = Instantiate(HUDManager.Instance.controlTipLines[3].gameObject, finalTooltip.transform.parent);
+            TextMeshProUGUI newTooltipText = newTooltip.GetComponent<TextMeshProUGUI>();
+            newTooltipText.text = string.Empty;
+            ((RectTransform)newTooltip.transform).anchoredPosition3D -= new Vector3(0f, 20.5f * (i + 1), 0f);
+            tooltips.Add(newTooltipText);
+        }
+
+        HUDManager.Instance.controlTipLines = tooltips.ToArray();
+    }
+
     public void CycleSelectedHazard(int direction)
     {
-        _hologramCopies[_currentlySelectedHazard].HologramObject.SetActive(false);
+        _hologramCopies[GetCurrentHazard()].HologramObject.SetActive(false);
         _currentlySelectedHazard = direction > 0 ? GetNextHazard() : GetPreviousHazard();
     }
 
     public DawnMapObjectInfo GetPreviousHazard()
     {
         List<DawnMapObjectInfo> mapObjects = LethalContent.MapObjects.Values.ToList();
-        int currentIndex = mapObjects.IndexOf(_currentlySelectedHazard);
+        int currentIndex = mapObjects.IndexOf(GetCurrentHazard());
         int newIndex = (currentIndex - 1) % mapObjects.Count;
         if (newIndex < 0)
         {
@@ -79,7 +110,7 @@ public class DebugStick : GrabbableObject
     public DawnMapObjectInfo GetNextHazard()
     {
         List<DawnMapObjectInfo> mapObjects = LethalContent.MapObjects.Values.ToList();
-        int currentIndex = mapObjects.IndexOf(_currentlySelectedHazard);
+        int currentIndex = mapObjects.IndexOf(GetCurrentHazard());
         int newIndex = (currentIndex + 1) % mapObjects.Count;
         if (newIndex < 0)
         {
@@ -94,21 +125,26 @@ public class DebugStick : GrabbableObject
         base.Update();
         if (!isHeld || isPocketed || playerHeldBy == null || !playerHeldBy.IsLocalPlayer())
         {
-            _hologramCopies[_currentlySelectedHazard].HologramObject.SetActive(false);
+            _hologramCopies[GetCurrentHazard()].HologramObject.SetActive(false);
             return;
         }
 
         if (CanPlaceHologram(out RaycastHit raycastHit))
         {
-            _hologramCopies[_currentlySelectedHazard].UpdateTick(raycastHit);
+            _hologramCopies[GetCurrentHazard()].UpdateTick(raycastHit);
+            Mouse? mouse = Mouse.current;
+            if (mouse != null && mouse.leftButton.wasPressedThisFrame)
+            {
+                _hologramCopies[GetCurrentHazard()].HandleSpawningOriginal(GetCurrentHazard(), raycastHit);
+                Source.PlayOneShot(PlaceSound);
+            }
         }
         else
         {
-            _hologramCopies[_currentlySelectedHazard].HologramObject.SetActive(false);
+            _hologramCopies[GetCurrentHazard()].HologramObject.SetActive(false);
         }
 
         Keyboard? keyboard = Keyboard.current;
-        Mouse? mouse = Mouse.current;
         if (keyboard == null)
         {
             return;
@@ -128,27 +164,96 @@ public class DebugStick : GrabbableObject
         {
             DeleteAllMapObjectsSpawned();
         }
-
-        if (mouse == null)
+        else if (keyboard.xKey.wasPressedThisFrame)
         {
-            return;
+            ResetAllRotationAndPositionEdits();
         }
-
-        if (mouse.leftButton.wasPressedThisFrame)
+        else if (keyboard.leftArrowKey.wasPressedThisFrame)
         {
-            if (_currentlySelectedHazard.HasNetworkObject)
-            {
-                if (IsServer)
-                {
-                    GameObject gameObject = GameObject.Instantiate(_currentlySelectedHazard.MapObject, raycastHit.point, Quaternion.identity);
-                    gameObject.GetComponent<NetworkObject>().Spawn();
-                }
-            }
-            else
-            {
-                GameObject.Instantiate(_currentlySelectedHazard.MapObject, raycastHit.point, Quaternion.identity);
-            }
+            RotateLeftRight(keyboard.leftArrowKey);
         }
+        else if (keyboard.rightArrowKey.wasPressedThisFrame)
+        {
+            RotateLeftRight(keyboard.rightArrowKey);
+        }
+        else if (keyboard.upArrowKey.wasPressedThisFrame)
+        {
+            RotateUpDown(keyboard.upArrowKey);
+        }
+        else if (keyboard.downArrowKey.wasPressedThisFrame)
+        {
+            RotateUpDown(keyboard.downArrowKey);
+        }
+        else if (keyboard.zKey.wasPressedThisFrame)
+        {
+            TeleportToRandomHazard(GetCurrentHazard());
+        }
+        else if (keyboard.iKey.wasPressedThisFrame)
+        {
+            MoveForwardBack(keyboard.iKey);
+        }
+        else if (keyboard.kKey.wasPressedThisFrame)
+        {
+            MoveForwardBack(keyboard.kKey);
+        }
+        else if (keyboard.jKey.wasPressedThisFrame)
+        {
+            MoveLeftRight(keyboard.jKey);
+        }
+        else if (keyboard.lKey.wasPressedThisFrame)
+        {
+            MoveLeftRight(keyboard.lKey);
+        }
+        else if (keyboard.uKey.wasPressedThisFrame)
+        {
+            MoveUpDown(keyboard.uKey);
+        }
+        else if (keyboard.oKey.wasPressedThisFrame)
+        {
+            MoveUpDown(keyboard.oKey);
+        }
+    }
+
+    private void ResetAllRotationAndPositionEdits()
+    {
+        foreach (HologramCopy hologramCopy in _hologramCopies.Values)
+        {
+            hologramCopy.ResetRotationAndPositionEdits();
+        }
+    }
+
+    private void TeleportToRandomHazard(DawnMapObjectInfo currentlySelectedHazard)
+    {
+        List<Vector3> validPositions = FindObjectsOfType<DawnMapObjectNamespacedKeyContainer>().Where(x => x.Value == currentlySelectedHazard.Key).Select(x => x.transform.position).ToList();
+        if (validPositions.Count > 0)
+        {
+            playerHeldBy.transform.position = validPositions[UnityEngine.Random.Range(0, validPositions.Count)] + Vector3.up * 5f;
+        }
+    }
+
+    private void MoveUpDown(KeyControl keyControl)
+    {
+        _hologramCopies[GetCurrentHazard()].EditPositionOffset(Vector3.up, keyControl, keyControl == Keyboard.current.uKey ? 0.1f : -0.1f);
+    }
+
+    private void MoveLeftRight(KeyControl keyControl)
+    {
+        _hologramCopies[GetCurrentHazard()].EditPositionOffset(Vector3.right, keyControl, keyControl == Keyboard.current.jKey ? -0.1f : 0.1f);
+    }
+
+    private void MoveForwardBack(KeyControl keyControl)
+    {
+        _hologramCopies[GetCurrentHazard()].EditPositionOffset(Vector3.forward, keyControl, keyControl == Keyboard.current.iKey ? 0.1f : -0.1f);
+    }
+
+    private void RotateUpDown(KeyControl keyControl)
+    {
+        _hologramCopies[GetCurrentHazard()].RotateUpDown(keyControl, keyControl == Keyboard.current.upArrowKey ? 10 : -10);
+    }
+
+    private void RotateLeftRight(KeyControl keyControl)
+    {
+        _hologramCopies[GetCurrentHazard()].RotateLeftRight(keyControl, keyControl == Keyboard.current.leftArrowKey ? 10 : -10);
     }
 
     public override void EquipItem()
@@ -159,16 +264,41 @@ public class DebugStick : GrabbableObject
 
     public void SetHazardTooltips()
     {
+        HUDManager.Instance.ClearControlTips();
+
         List<string> tooltips =
         [
-            "Press Q and E to cycle through hazards.",
-            "Previous Hazard: " + GetPreviousHazard().Key.Key,
-            "Current hazard: " + _currentlySelectedHazard.Key.Key,
-            "Next Hazard: " + GetNextHazard().Key.Key,
-            "Remove all map hazards with R key.",
+            "Cycle Selection : [Q & E]",
+            "Previous: " + CutoffString(FormatWordsNicely(GetPreviousHazard().Key.Key.Replace("_", " ")).Replace(" ", ""), 17),
+            "Current: " + CutoffString(FormatWordsNicely(GetCurrentHazard().Key.Key.Replace("_", " ")).Replace(" ", ""), 17),
+            "Next: " + CutoffString(FormatWordsNicely(GetNextHazard().Key.Key.Replace("_", " ")).Replace(" ", ""), 21),
+            "Remove all Hazards : [R]",
         ];
 
         HUDManager.Instance.ChangeControlTipMultiple(tooltips.ToArray(), false, null);
+    }
+
+    public string FormatWordsNicely(string text)
+    {
+        var splitWords = text.Split(' ');
+        int i = 0;
+        foreach (string word in splitWords)
+        {
+            splitWords[i] = word.ToCapitalized();
+            i++;
+        }
+
+        text = string.Join(" ", splitWords);
+        return text;
+    }
+    
+    public string CutoffString(string text, int maxLength)
+    {
+        if (text.Length > maxLength)
+        {
+            return text[..maxLength] + "...";
+        }
+        return text;
     }
 
     public void DeleteAllMapObjectsSpawned()

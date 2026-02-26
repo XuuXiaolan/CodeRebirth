@@ -45,7 +45,7 @@ public class AirControlUnit : CodeRebirthHazard
     private void Update()
     {
         playerHeadstart -= Time.deltaTime;
-        if (StartOfRound.Instance.shipIsLeaving || playerHeadstart > 0) return;
+        if (StartOfRound.Instance.shipIsLeaving || playerHeadstart > 0 || Plugin.ModConfig.ConfigDebugMode.Value) return;
         // Rotate the turret to look for targets
         FindAndAimAtTarget();
 

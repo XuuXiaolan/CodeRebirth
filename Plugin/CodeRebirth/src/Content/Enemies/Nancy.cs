@@ -70,7 +70,9 @@ public class Nancy : CodeRebirthEnemyAI
         if (stunNormalizedTimer > 0f && !currentlyStunned)
         {
             _stunSource.Play();
+            _healDuringSource.Stop();
             currentlyStunned = true;
+            playersLastPosition = Vector3.zero;
             if (IsServer)
             {
                 creatureAnimator.SetBool(StunnedAnimation, true);
@@ -213,7 +215,7 @@ public class Nancy : CodeRebirthEnemyAI
         float distanceFromLastAIInterval = Vector3.Distance(targetPlayer.transform.position, playersLastPosition);
         playersLastPosition = targetPlayer.transform.position;
         Plugin.ExtendedLogging($"Distance from last AI interval: {distanceFromLastAIInterval}");
-        if (distanceFromLastAIInterval > 0.25f && failTimer <= 0)
+        if (distanceFromLastAIInterval > 0.25f && distanceFromLastAIInterval <= 20f && failTimer <= 0)
         {
             failTimer = 1f;
             creatureNetworkAnimator.SetTrigger(FailHealAnimation);
