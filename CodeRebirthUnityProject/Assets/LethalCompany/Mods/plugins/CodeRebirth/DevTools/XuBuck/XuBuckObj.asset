@@ -35,7 +35,7 @@ MonoBehaviour:
   requiresBattery: 0
   batteryUsage: 15
   automaticallySetUsingPower: 1
-  itemIcon: {fileID: 0}
+  itemIcon: {fileID: 21300000, guid: ca04522dce6336a4291d6c8f54c955e3, type: 3}
   grabAnim: HoldForward
   useAnim: 
   pocketAnim: 
@@ -51,7 +51,10 @@ MonoBehaviour:
   syncInteractLRFunction: 0
   saveItemVariable: 0
   isDefensiveWeapon: 0
-  toolTips: []
+  toolTips:
+  - 'Get bank $$$: [LMB]'
+  - 'Reset coins: [R]'
+  - 'Enter Debt: [Z]'
   verticalOffset: 0
   floorYOffset: 0
   allowDroppingAheadOfPlayer: 1
