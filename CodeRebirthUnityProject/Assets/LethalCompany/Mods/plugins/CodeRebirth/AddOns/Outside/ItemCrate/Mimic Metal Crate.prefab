@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7129918980988872946}
+  - component: {fileID: 2856198693903539474}
   m_Layer: 0
   m_Name: CrateMapIcons
   m_TagString: Untagged
@@ -24,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 276543276657910625}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0.92387956, z: 0, w: 0.38268343}
   m_LocalPosition: {x: 0, y: 1.39, z: 0}
   m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
   m_ConstrainProportionsScale: 1
@@ -34,7 +35,21 @@ Transform:
   - {fileID: 3433756015101063338}
   - {fileID: 3406888767358436169}
   m_Father: {fileID: 8904816648473574242}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 135, z: 0}
+--- !u!114 &2856198693903539474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 276543276657910625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -619819338, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Direction>k__BackingField: {x: 0, y: 135, z: 0}
+  <RotateOnAwake>k__BackingField: 1
 --- !u!1 &344181753693487064
 GameObject:
   m_ObjectHideFlags: 0
@@ -3639,7 +3654,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2083264772084459009}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0.9890236, z: 0, w: 0.14775774}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 2.7323635, y: 3.24, z: 2.0846992}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3656,7 +3671,7 @@ Transform:
   - {fileID: 4301754381389374082}
   - {fileID: 7129918980988872946}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: -163.006, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4003254189138747239
 MonoBehaviour:
   m_ObjectHideFlags: 0

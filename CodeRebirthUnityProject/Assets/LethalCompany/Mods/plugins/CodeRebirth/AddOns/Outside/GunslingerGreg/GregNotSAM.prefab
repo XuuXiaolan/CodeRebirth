@@ -2119,6 +2119,7 @@ GameObject:
   - component: {fileID: 8182168622031273507}
   - component: {fileID: 843653386375259481}
   - component: {fileID: 7949338924966389293}
+  - component: {fileID: 7441672120363537048}
   m_Layer: 14
   m_Name: AntiAirMapIcon
   m_TagString: DoNotSet
@@ -2134,13 +2135,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8937111593132110836}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
+  m_LocalRotation: {x: -0.6531675, y: -0.27055082, z: -0.2706453, w: 0.65339553}
   m_LocalPosition: {x: 0, y: 0.13, z: -0}
   m_LocalScale: {x: 1.7752249, y: 1.7752249, z: 1.7752249}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 8665214328365687117}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -89.98, y: 0, z: -45}
 --- !u!33 &843653386375259481
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2191,3 +2192,17 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7441672120363537048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8937111593132110836}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -619819338, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Direction>k__BackingField: {x: -90, y: 0, z: -45}
+  <RotateOnAwake>k__BackingField: 1

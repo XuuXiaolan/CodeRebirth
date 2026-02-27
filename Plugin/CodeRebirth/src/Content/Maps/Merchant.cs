@@ -69,10 +69,30 @@ public class Merchant : NetworkBehaviour
                 merchantBarrel.currentlySpawnedGrabbableObject.grabbable = false;
             }
         }
+        StartCoroutine(FixMissedItems());
     }
 
+    private IEnumerator FixMissedItems()
+    {
+        yield return new WaitForSeconds(6f);
+        yield return new WaitUntil(() => itemsDeleted == itemsSpawned);
+        for (int i = itemsSpawned; i < existingMerchantBarrels.Count; i++)
+        {
+            MerchantBarrel merchantBarrel = existingMerchantBarrels[i];
+            if (merchantBarrel.currentlySpawnedGrabbableObject != null)
+            {
+                merchantBarrel.currentlySpawnedGrabbableObject.grabbable = true;
+            }
+        }
+
+        itemsDeleted = 0;
+        itemsSpawned = 0;
+    }
+
+    private int itemsDeleted = 0;
     public void DeleteItemsAtBarrel(int barrelRef)
     {
+        itemsDeleted++;
         MerchantBarrel merchantBarrel = existingMerchantBarrels[barrelRef];
         if (merchantBarrel.currentlySpawnedGrabbableObject == null)
             return;
@@ -80,8 +100,10 @@ public class Merchant : NetworkBehaviour
         merchantBarrel.currentlySpawnedGrabbableObject.NetworkObject.Despawn();
     }
 
+    private int itemsSpawned = 0;
     public void SpawnItemAtBarrel(int barrelRef)
     {
+        itemsSpawned++;
         MerchantBarrel merchantBarrel = existingMerchantBarrels[barrelRef];
         HandleSpawningMerchantItems(merchantBarrel);
     }

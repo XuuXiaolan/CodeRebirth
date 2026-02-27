@@ -175,7 +175,7 @@ public class HologramCopy
         }
         else
         {
-            GameObject.Instantiate(dawnMapObjectInfoContainer.MapObject, raycastHit.point, Quaternion.identity);
+            GameObject.Instantiate(dawnMapObjectInfoContainer.MapObject, raycastHit.point + positionOffset, Quaternion.Euler(rotationOffset));
         }
     }
 }

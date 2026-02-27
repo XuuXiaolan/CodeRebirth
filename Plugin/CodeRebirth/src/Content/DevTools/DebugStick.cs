@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using CodeRebirth.src.ModCompats;
 using Dawn;
 using Dawn.Utils;
 using GameNetcodeStuff;
@@ -123,7 +124,7 @@ public class DebugStick : GrabbableObject
     public override void Update()
     {
         base.Update();
-        if (!isHeld || isPocketed || playerHeldBy == null || !playerHeldBy.IsLocalPlayer())
+        if (!isHeld || isPocketed || playerHeldBy == null || !playerHeldBy.IsLocalPlayer() || playerHeldBy.inSpecialMenu || playerHeldBy.inTerminalMenu)
         {
             _hologramCopies[GetCurrentHazard()].HologramObject.SetActive(false);
             return;
@@ -259,7 +260,20 @@ public class DebugStick : GrabbableObject
     public override void EquipItem()
     {
         base.EquipItem();
+        if (ImperiumCompat.Enabled)
+        {
+            ImperiumCompat.ToggleInputs(false);
+        }
         SetHazardTooltips();
+    }
+
+    public override void DiscardItem()
+    {
+        base.DiscardItem();
+        if (ImperiumCompat.Enabled)
+        {
+            ImperiumCompat.ToggleInputs(true);
+        }
     }
 
     public void SetHazardTooltips()
