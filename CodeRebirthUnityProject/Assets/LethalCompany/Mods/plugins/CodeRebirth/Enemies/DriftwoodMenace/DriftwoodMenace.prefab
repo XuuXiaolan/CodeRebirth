@@ -3426,6 +3426,8 @@ GameObject:
   - component: {fileID: 184172387633389021}
   - component: {fileID: 7949557366426040061}
   - component: {fileID: 423054840052714377}
+  - component: {fileID: 5966508698350376843}
+  - component: {fileID: 2933278853042610886}
   m_Layer: 19
   m_Name: DriftwoodMenace
   m_TagString: Enemy
@@ -3925,6 +3927,38 @@ MonoBehaviour:
         <Key>k__BackingField:
           _namespace: code_rebirth
           _key: bushwacked
+--- !u!114 &5966508698350376843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3141116158837514582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 207563165, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _screenShakeTargets:
+  - {fileID: 2933278853042610886}
+--- !u!114 &2933278853042610886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3141116158837514582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1857289257, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  screenShakeTarget: {fileID: 3141116158837514582}
+  particleSystems: []
+  audioSourceNear: {fileID: 0}
+  nearAudioClips: []
+  audioSourceFar: {fileID: 0}
+  farAudioClips: []
 --- !u!1 &3161862691732673129
 GameObject:
   m_ObjectHideFlags: 0

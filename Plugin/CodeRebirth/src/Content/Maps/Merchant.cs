@@ -59,9 +59,14 @@ public class Merchant : NetworkBehaviour
     private void RerollClientRpc()
     {
         bugleBoy.animator.SetBool(BugleBoy.ActivatedHash, true);
+        bugleBoy.bugleSource.clip = bugleBoy.chosenClip;
+        bugleBoy.bugleSource.Play();
         StartCoroutine(StopHisSinging());
         merchantAnimator.SetTrigger(RerollHash);
-        MoneyCounter.Instance!.RemoveMoney(2);
+        if (IsServer)
+        {
+            MoneyCounter.Instance!.RemoveMoney(2);
+        }
         foreach (MerchantBarrel merchantBarrel in existingMerchantBarrels)
         {
             if (merchantBarrel.currentlySpawnedGrabbableObject != null)

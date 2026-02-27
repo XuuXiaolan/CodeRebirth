@@ -303,7 +303,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5774484164967872551}
   - component: {fileID: 8662835842470369420}
-  m_Layer: 0
+  - component: {fileID: 1693318345228139847}
+  m_Layer: 21
   m_Name: FancyTrashBin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -347,6 +348,19 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!114 &1693318345228139847
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2049652894720590956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1015022814, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  meshFilter: {fileID: 8379641905402514029}
 --- !u!1 &2661027321904953473
 GameObject:
   m_ObjectHideFlags: 0
@@ -956,7 +970,6 @@ GameObject:
   - component: {fileID: 7118996688879098811}
   - component: {fileID: 8379641905402514029}
   - component: {fileID: 5766766751230819766}
-  - component: {fileID: 3456229331962457798}
   - component: {fileID: 2197291442325237177}
   - component: {fileID: 6328075232312888455}
   m_Layer: 8
@@ -1039,19 +1052,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3456229331962457798
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8414891040197461825}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1015022814, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  meshFilter: {fileID: 8379641905402514029}
 --- !u!114 &2197291442325237177
 MonoBehaviour:
   m_ObjectHideFlags: 0

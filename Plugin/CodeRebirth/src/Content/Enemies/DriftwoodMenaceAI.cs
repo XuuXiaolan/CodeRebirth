@@ -426,6 +426,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
 
         if (distance <= 15)
         {
+            HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
             player.DamagePlayer(3, true, true, CauseOfDeath.Suffocation, 0, false, default);
         }
     }

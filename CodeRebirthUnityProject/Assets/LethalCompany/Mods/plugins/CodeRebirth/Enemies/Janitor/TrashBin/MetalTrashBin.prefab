@@ -504,7 +504,6 @@ GameObject:
   - component: {fileID: 3757922034227972423}
   - component: {fileID: 3708423769461064502}
   - component: {fileID: 3270338253492238346}
-  - component: {fileID: 2924590931932069893}
   - component: {fileID: 5476597420251685096}
   - component: {fileID: 8844215293927109193}
   - component: {fileID: 3824127368914246334}
@@ -593,19 +592,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &2924590931932069893
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5696878721890766658}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1015022814, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  meshFilter: {fileID: 3708423769461064502}
 --- !u!114 &5476597420251685096
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1634,7 +1620,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1982057494964313584}
   - component: {fileID: 1329113372536337527}
-  m_Layer: 0
+  - component: {fileID: 6377182012133260709}
+  m_Layer: 21
   m_Name: MetalTrashBin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1678,3 +1665,16 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!114 &6377182012133260709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8529480977019339442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1015022814, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  meshFilter: {fileID: 3708423769461064502}
