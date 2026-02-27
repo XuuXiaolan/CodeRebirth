@@ -49,6 +49,12 @@ public class ItemHandler : ContentHandler<ItemHandler>
     {
         [LoadFromBundle("745LogCommandDetails.asset")]
         public LogCommandDetails SevenFourFiveLogCommandDetails { get; private set; } = null!;
+
+        [LoadFromBundle("906LogCommandDetails.asset")]
+        public LogCommandDetails NineZeroSixLogCommandDetails { get; private set; } = null!;
+
+        [LoadFromBundle("ArchiveLogCommandDetails.asset")]
+        public LogCommandDetails ArchiveLogCommandDetails { get; private set; } = null!;
     }
 
     public class CodeRebirthPlushiesAssets(DuskMod mod, string filePath) : AssetBundleLoader<CodeRebirthPlushiesAssets>(mod, filePath)
@@ -78,6 +84,24 @@ public class ItemHandler : ContentHandler<ItemHandler>
                 builder.DefineInputCommand(inputCommandBuilder =>
                 {
                     inputCommandBuilder.SetResultDisplayText(OxydeLore.SevenFourFiveLogCommandDetails.ResultDisplayText);
+                });
+            });
+
+            DawnLib.DefineTerminalCommand(OxydeLore.NineZeroSixLogCommandDetails.NamespacedKey, OxydeLore.NineZeroSixLogCommandDetails.CommandBasicInformation, builder =>
+            {
+                builder.SetKeywords([OxydeLore.NineZeroSixLogCommandDetails.MainKeyword]);
+                builder.DefineInputCommand(inputCommandBuilder =>
+                {
+                    inputCommandBuilder.SetResultDisplayText(OxydeLore.NineZeroSixLogCommandDetails.ResultDisplayText);
+                });
+            });
+
+            DawnLib.DefineTerminalCommand(OxydeLore.ArchiveLogCommandDetails.NamespacedKey, OxydeLore.ArchiveLogCommandDetails.CommandBasicInformation, builder =>
+            {
+                builder.SetKeywords([OxydeLore.ArchiveLogCommandDetails.MainKeyword]);
+                builder.DefineInputCommand(inputCommandBuilder =>
+                {
+                    inputCommandBuilder.SetResultDisplayText(OxydeLore.ArchiveLogCommandDetails.ResultDisplayText);
                 });
             });
         }
