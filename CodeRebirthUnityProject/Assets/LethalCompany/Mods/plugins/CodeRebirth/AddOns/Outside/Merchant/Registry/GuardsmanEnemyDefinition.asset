@@ -15,9 +15,9 @@ MonoBehaviour:
   _configEntries:
   - settingName: Guardsman | Enemy Blacklist
     DynamicConfigType: 0
-    defaultString: Pikmin, SnailCat, CutieFly, Nancy, Transporter, Docile Locust
-      Bees, Red Locust Bees, Manticoil, Tulip Snake, Nemo, Horse, Mistress, Girl,
-      Rabbit Magician, Janitor, Peace Keeper
+    defaultString: LethalBotNPC, Pikmin, SnailCat, CutieFly, Nancy, Transporter,
+      Docile Locust Bees, Red Locust Bees, Manticoil, Tulip Snake, Nemo, Horse, Mistress,
+      Girl, Rabbit Magician, Janitor, Peace Keeper
     defaultInt: 0
     defaultFloat: 0
     defaultBool: 0
@@ -46,6 +46,8 @@ MonoBehaviour:
   <InteriorSpawnWeightsConfig>k__BackingField: []
   <WeatherSpawnWeightsConfig>k__BackingField: []
   <GenerateSpawnWeightsConfig>k__BackingField: 1
+  <GeneratePowerLevelConfig>k__BackingField: 1
+  <GenerateMaxSpawnCountConfig>k__BackingField: 1
   <MoonSpawnWeights>k__BackingField: Military=+1, Amythest=+1, Experimentation=+1,
     Titan=+1, Artifice=+1, Embrion=+1, Code Rebirth:Oxyde=+1
   <InteriorSpawnWeights>k__BackingField: 
