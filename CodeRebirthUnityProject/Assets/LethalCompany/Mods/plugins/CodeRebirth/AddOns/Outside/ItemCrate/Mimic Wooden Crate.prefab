@@ -10810,6 +10810,7 @@ GameObject:
   - component: {fileID: 6012363648243498999}
   - component: {fileID: 8402372557263301971}
   - component: {fileID: 7507089156426611429}
+  - component: {fileID: 958974270067440854}
   m_Layer: 19
   m_Name: Hit Region
   m_TagString: Untagged
@@ -10866,6 +10867,19 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &958974270067440854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4829458399687050278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1956846042, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <ItemCrate>k__BackingField: {fileID: 4787198475372899351}
 --- !u!1 &4841037034427466430
 GameObject:
   m_ObjectHideFlags: 0

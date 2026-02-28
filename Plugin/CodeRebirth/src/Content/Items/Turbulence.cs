@@ -43,6 +43,7 @@ public class Turbulence : CRWeapon
     {
         if (enemyAI.TryGet(out EnemyAI enemyAIScript))
         {
+            enemyAIScript.HitFromExplosion(5);
             if (enemyAIScript.enemyHP <= 0 || enemyAIScript.isEnemyDead)
             {
                 enemyAIScript.transform.localScale = new Vector3(enemyAIScript.transform.localScale.x, enemyAIScript.transform.localScale.y * 0.1f, enemyAIScript.transform.localScale.z);

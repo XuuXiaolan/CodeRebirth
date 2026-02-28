@@ -267,6 +267,15 @@ public class DebugStick : GrabbableObject
         SetHazardTooltips();
     }
 
+    public override void PocketItem()
+    {
+        base.PocketItem();
+        if (ImperiumCompat.Enabled)
+        {
+            ImperiumCompat.ToggleInputs(true);
+        }
+    }
+
     public override void DiscardItem()
     {
         base.DiscardItem();
@@ -321,9 +330,15 @@ public class DebugStick : GrabbableObject
         for (int i = 0; i < allMapHazards.Length; i++)
         {
             GameObject gameObject = allMapHazards[i].gameObject;
-            if (gameObject.TryGetComponent(out NetworkObject networkObject) && networkObject.IsSpawned)
+            if (gameObject.GetComponent<NetworkObject>())
             {
-                networkObject.Despawn(true);
+                foreach (NetworkObject networkObject in gameObject.GetComponentsInChildren<NetworkObject>())
+                {
+                    if (!networkObject.IsSpawned)
+                        continue;
+
+                    networkObject.Despawn(true);
+                }
                 continue;
             }
 

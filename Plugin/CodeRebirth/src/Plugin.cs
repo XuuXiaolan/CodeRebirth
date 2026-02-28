@@ -38,6 +38,7 @@ public class Plugin : BaseUnityPlugin
     internal static MainAssets Assets { get; private set; } = null!;
 
     internal const ulong GLITCH_STEAM_ID = 9;
+    internal const int BURN_HIT_ID = 745737;
 
     private void Awake()
     {

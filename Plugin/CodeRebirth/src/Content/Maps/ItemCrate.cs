@@ -17,16 +17,12 @@ using UnityEngine.Events;
 namespace CodeRebirth.src.Content.Maps;
 public class ItemCrate : CRHittable
 {
-    [Header("Hover Tooltips")]
-    public string keyHoverTip = "Open : [LMB]";
-
     [Header("Audio")]
     public AudioSource? slowlyOpeningSFX = null;
     public AudioSource openSFX = null!;
 
     public UnityEvent onBurn = new();
     public UnityEvent postBurn = new();
-    public bool despawnOnPostBurn = false;
 
     public InteractTrigger? trigger = null!;
     public Pickable? pickable = null!;
@@ -329,12 +325,12 @@ public class ItemCrate : CRHittable
         Plugin.ExtendedLogging("Crate health: " + health);
     }
 
-    private bool burned = false;
+    internal bool burned = false;
     private bool isBurning = false;
     private static readonly int BurningHash = Animator.StringToHash("burning"); // Bool
 
     [ServerRpc(RequireOwnership = false)]
-    private void DoBurningServerRpc()
+    public void DoBurningServerRpc()
     {
         int randomMimicScrapToSpawn = crateRandom.Next(0, 3);
         DoBurningClientRpc(randomMimicScrapToSpawn);
@@ -392,7 +388,7 @@ public class ItemCrate : CRHittable
             return false;
         }
 
-        if (hitID == 745737)
+        if (hitID == Plugin.BURN_HIT_ID)
         {
             burned = true;
             DoBurningServerRpc();
@@ -570,12 +566,10 @@ public class ItemCrate : CRHittable
 
     private IEnumerator StartDamagingPlayer(PlayerControllerB player)
     {
-        yield return new WaitForSeconds(1.6f);
-        bool trueing = true;
-        while (trueing)
+        yield return new WaitForSeconds(2f);
+        while (!player.isPlayerDead && Vector3.Distance(transform.position, player.transform.position) <= 4f)
         {
-            yield return new WaitForSeconds(4f);
-            if (player.isPlayerDead || Vector3.Distance(transform.position, player.transform.position) > 3f) trueing = false;
+            yield return new WaitForSeconds(2f);
             player.DamagePlayer(10, false, true, CauseOfDeath.Suffocation, 0, false, default);
             player.Crouch(true);
         }

@@ -70,4 +70,19 @@ public class BugleBoy : MonoBehaviour
 
         merchant.RerollServerRpc();
     }
+
+    public void PlayMusic()
+    {
+        bugleSource.clip = chosenClip;
+        bugleSource.Play();
+        StartCoroutine(StopHisSinging());
+    }
+
+    private IEnumerator StopHisSinging()
+    {
+        yield return new WaitUntil(() => !bugleSource.isPlaying);
+        chosenClip = bugleClips[merchant.storeSeededRandom.Next(0, bugleClips.Length)];
+        rerollTrigger.cooldownTime = chosenClip.length;
+        animator.SetBool(ActivatedHash, false);
+    }
 }

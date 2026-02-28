@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Dawn.Utils;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -25,6 +26,10 @@ public class SpawnAndParentObject : NetworkBehaviour
         if (objectInstantiated.TryGetComponent(out NetworkObject networkObject))
         {
             networkObject.Spawn(true);
+            networkObject.OnSpawn(() =>
+            {
+                networkObject.TrySetParent(this.transform);
+            });
         }
         else
         {

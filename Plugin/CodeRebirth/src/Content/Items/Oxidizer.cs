@@ -73,13 +73,13 @@ public class Oxidizer : GrabbableObject
         {
             if (IsOwner)
             {
-                iHittable.Hit(damageToDeal, flameStreamParticleSystems[0].transform.position, playerHeldBy, true, 745737);
+                iHittable.Hit(damageToDeal, flameStreamParticleSystems[0].transform.position, playerHeldBy, true, Plugin.BURN_HIT_ID);
             }
         }
 
         foreach (EnemyAI enemyAI in _enemyAIList)
         {
-            enemyAI.HitEnemy(damageToDeal, playerHeldBy, true, 745737);
+            enemyAI.HitEnemy(damageToDeal, playerHeldBy, true, Plugin.BURN_HIT_ID);
         }
 
         foreach (PlayerControllerB playerControllerB in _playerControllerBList)

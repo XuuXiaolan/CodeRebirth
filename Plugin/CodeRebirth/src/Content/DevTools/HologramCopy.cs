@@ -18,6 +18,7 @@ public class HologramCopy
     {
         // create a hologram copy of the map object and set it up to be displayed as a hologram
         HologramObject = GameObject.Instantiate(gameObject, Vector3.zero, Quaternion.identity);
+        HologramObject.name = gameObject.name + " - HologramCopy";
         List<Component> components = [.. HologramObject.GetComponentsInChildren<Component>()];
         HashSet<Renderer> renderers = new();
         foreach (Component component in components)
@@ -39,7 +40,17 @@ public class HologramCopy
                 continue;
             }
 
-            Component.Destroy(component);
+            try
+            {
+                Component.Destroy(component);
+            }
+            catch
+            {
+                if (component is MonoBehaviour monoBehaviour)
+                {
+                    monoBehaviour.enabled = false;
+                }
+            }
         }
 
         HologramObject.SetActive(false);

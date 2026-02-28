@@ -59,14 +59,12 @@ public class Merchant : NetworkBehaviour
     private void RerollClientRpc()
     {
         bugleBoy.animator.SetBool(BugleBoy.ActivatedHash, true);
-        bugleBoy.bugleSource.clip = bugleBoy.chosenClip;
-        bugleBoy.bugleSource.Play();
-        StartCoroutine(StopHisSinging());
         merchantAnimator.SetTrigger(RerollHash);
         if (IsServer)
         {
             MoneyCounter.Instance!.RemoveMoney(2);
         }
+
         foreach (MerchantBarrel merchantBarrel in existingMerchantBarrels)
         {
             if (merchantBarrel.currentlySpawnedGrabbableObject != null)
@@ -111,14 +109,6 @@ public class Merchant : NetworkBehaviour
         itemsSpawned++;
         MerchantBarrel merchantBarrel = existingMerchantBarrels[barrelRef];
         HandleSpawningMerchantItems(merchantBarrel);
-    }
-
-    private IEnumerator StopHisSinging()
-    {
-        yield return new WaitUntil(() => !bugleBoy.bugleSource.isPlaying);
-        bugleBoy.chosenClip = bugleBoy.bugleClips[storeSeededRandom.Next(0, bugleBoy.bugleClips.Length)];
-        bugleBoy.rerollTrigger.cooldownTime = bugleBoy.chosenClip.length;
-        bugleBoy.animator.SetBool(BugleBoy.ActivatedHash, false);
     }
 
     private bool previouslyActivated = false;

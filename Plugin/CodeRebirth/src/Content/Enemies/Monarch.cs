@@ -18,6 +18,8 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
     [SerializeField]
     private AudioClip[] _biteSounds = [];
     [SerializeField]
+    private AudioClip _stunSound = null!;
+    [SerializeField]
     private Transform MouthTransform = null!;
 
     public static List<Monarch> Monarchs = new();
@@ -152,6 +154,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
         {
             currentlyStunned = true;
             BeamController._monarchParticle?.Stop();
+            creatureVoice.PlayOneShot(_stunSound);
             if (IsServer)
             {
                 creatureAnimator.SetBool(StunnedAnimation, true);

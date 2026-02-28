@@ -31,7 +31,7 @@ Transform:
   m_Children:
   - {fileID: 6434086762472579372}
   m_Father: {fileID: 4667918658943866349}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -89.98021, y: 0, z: 0}
 --- !u!1 &2451990650245543269
 GameObject:
   m_ObjectHideFlags: 0
@@ -62,7 +62,127 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6380077855464058109}
+  m_LocalEulerAnglesHint: {x: 0, y: 21.254517, z: 0}
+--- !u!1 &4331840956935778718
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3987403977906285348}
+  - component: {fileID: 70299886877828225}
+  - component: {fileID: 2818468409972002891}
+  - component: {fileID: 6655539597529743655}
+  - component: {fileID: 6269598746485846881}
+  m_Layer: 0
+  m_Name: EZBakeCollider
+  m_TagString: DoNotSet
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &3987403977906285348
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4331840956935778718}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+  m_LocalPosition: {x: -0, y: 0.31, z: 4.207}
+  m_LocalScale: {x: 1, y: 1, z: 0.75}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4667918658943866349}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &70299886877828225
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4331840956935778718}
+  m_Mesh: {fileID: -5967744886185639391, guid: f978729896ecd004ab4b1e0a0d13e476, type: 3}
+--- !u!23 &2818468409972002891
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4331840956935778718}
+  m_Enabled: 0
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 257
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 73c176f402d2c2f4d929aa5da7585d17, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &6655539597529743655
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4331840956935778718}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 2621512
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -5967744886185639391, guid: f978729896ecd004ab4b1e0a0d13e476, type: 3}
+--- !u!114 &6269598746485846881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4331840956935778718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1198839216, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <EazyBake>k__BackingField: {fileID: 1448584866548083126}
 --- !u!1 &4356975572047666794
 GameObject:
   m_ObjectHideFlags: 0
@@ -94,7 +214,7 @@ Transform:
   m_Children:
   - {fileID: 6361425139714227973}
   m_Father: {fileID: 6434086762472579372}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0.34612754, z: 0}
 --- !u!1 &5897767923254896423
 GameObject:
   m_ObjectHideFlags: 0
@@ -108,7 +228,7 @@ GameObject:
   - component: {fileID: 7227368097983875177}
   - component: {fileID: 7838596678106940579}
   - component: {fileID: 1919149049481351097}
-  - component: {fileID: 4892580719051013221}
+  - component: {fileID: 1448584866548083126}
   m_Layer: 6
   m_Name: EZBakeWeapon
   m_TagString: PhysicsProp
@@ -132,6 +252,7 @@ Transform:
   - {fileID: 1014886389453915991}
   - {fileID: 6705379973251008254}
   - {fileID: 2656604527242513802}
+  - {fileID: 3987403977906285348}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &7227222035067465303
@@ -293,7 +414,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.0987263, y: 0.70676327, z: 0.7207265}
   m_Center: {x: -0.049363136, y: 0.31418204, z: 0.027927637}
---- !u!114 &4892580719051013221
+--- !u!114 &1448584866548083126
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -302,7 +423,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5897767923254896423}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d0cf24d2ccc3b7eab72048d0f57c437, type: 3}
+  m_Script: {fileID: -854609251, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   grabbable: 1
@@ -328,7 +449,7 @@ MonoBehaviour:
   itemProperties: {fileID: 11400000, guid: 4dc8df43f809da943906fcd008e6e124, type: 2}
   insertedBattery:
     empty: 0
-    charge: 0
+    charge: 1
   customGrabTooltip: 
   propBody: {fileID: 0}
   propColliders: []
@@ -342,7 +463,9 @@ MonoBehaviour:
   reachedFloorTarget: 0
   grabbableToEnemies: 1
   hasBeenHeld: 0
-  rotateObject: 0
+  rotateObject: 1
+  <DamagerTimer>k__BackingField: 0.5
+  <Animator>k__BackingField: {fileID: 7227222035067465303}
 --- !u!1 &6975214359940973108
 GameObject:
   m_ObjectHideFlags: 0
@@ -374,7 +497,7 @@ Transform:
   m_Children:
   - {fileID: 6380077855464058109}
   m_Father: {fileID: 2656604527242513802}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 89.98022, y: 0, z: 0}
 --- !u!1 &7138602829161719823
 GameObject:
   m_ObjectHideFlags: 0
@@ -607,7 +730,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5798874335946093551
 Transform:
   m_ObjectHideFlags: 0
