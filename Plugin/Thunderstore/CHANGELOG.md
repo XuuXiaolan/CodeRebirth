@@ -26,13 +26,13 @@
 - Trashcans auto position themselves to dead end tiles.
 - Nerfed driftwood scream from 5 damage to 2 damage, nerfed distance to getting damaged by it to 10 units.
 - Made non-important unlockables decors.
-  - Timmy Bass.
-  - Fancy coatHangar.
-  - Trash Hoop.
-  - Cutiefly Case.
-  - Employee Plaque.
-  - Haunted ???.
-  - ToastyToaster.
+  - Timmy Bass
+  - Fancy coatHangar
+  - Trash Hoop
+  - Cutiefly Case
+  - Employee Plaque
+  - Haunted ???
+  - ToastyToaster
 
 - Made a config for instrument volume.
 - ManorLord puppet speeds up if you're further from it.
@@ -61,7 +61,7 @@
 - Meteors now destroy trees in the surroundings.
 - Monarch's jump evasion given more invincibility frames.
 - Made default positions for almost all if not all furnitures.
-- Started weight loss program for Xui.
+- Started weight loss program for Xui..
 - Adjusted the pads like credit pads, ship upgrades and furniture unlockers to have an animation on use.
 - Cleaned up a bunch of code.
 - Fixed the issue of the ship boundary being expanded allowing more items to be easily collected with coderebirth installed.
@@ -69,13 +69,13 @@
 - Merchant completely revamped with a donation system, a reroll, new store layout ish, and a new way of paying. money, more ways to not accidently steal and now a new punishment for stealing.
 - Added hazard radar map icons to all our hazards (including crane).
 - Added stun animations and interactions for a few of our enemies.
-  - PeaceKeeper.
-  - Nancy.
-  - Driftwood Menace.
-  - Monarch.
-  - Janitor.
-  - Jimothy.
-  - Cutiefly.
+  - PeaceKeeper
+  - Nancy
+  - Driftwood Menace
+  - Monarch
+  - Janitor
+  - Jimothy
+  - Cutiefly
 
 - Nightshift disabled and removed for now and related achievement.
 - Added some DevItems that do not spawn by default and cannot be used unless a config is turned on.
@@ -85,6 +85,11 @@
   - Rare
   - Epic
   - Legendary
+
+- Reduced microwave scrap value and fixed their holding positions, Xu thought magnetic forks were cool or something
+- Terminal gal drew more sticky notes ;D
+- Made certain CR utility scraps count as defensive weapons
+- Nitro crate no longer does 999 dmg (Holy f-), does 20 dmg now
 
 ## v1.4.2
 
@@ -222,11 +227,11 @@
 ## v1.1.6
 
 - Some sort of incompatibility with fairai and cutieflys/monarchs so watch out.
-- Added some null checks tocutiefly.
+- Added some null checks to cutiefly.
 
 ## v1.1.5
 
-- Fixed the mod, blame rodrigo.
+- Fixed the mod, blame Rodrigo.
 
 ## v1.1.4
 
