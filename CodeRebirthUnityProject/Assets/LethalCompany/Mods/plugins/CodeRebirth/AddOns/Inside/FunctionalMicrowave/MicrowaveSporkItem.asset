@@ -19,7 +19,7 @@ MonoBehaviour:
   twoHandedAnimation: 0
   disableHandsOnWall: 0
   canBeGrabbedBeforeGameStart: 0
-  weight: 1.1
+  weight: 1.15
   itemIsTrigger: 0
   holdButtonUse: 0
   itemSpawnsOnGround: 1
@@ -57,7 +57,7 @@ MonoBehaviour:
   allowDroppingAheadOfPlayer: 1
   restingRotation: {x: 0, y: 0, z: 0}
   rotationOffset: {x: -180, y: 180, z: 0}
-  positionOffset: {x: 0.15, y: 0, z: 0}
+  positionOffset: {x: 0.15, y: 0.1, z: 0}
   meshOffset: 1
   meshVariants: []
   materialVariants: []
