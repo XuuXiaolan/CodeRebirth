@@ -11,6 +11,8 @@ using Dawn;
 namespace CodeRebirth.src.Content.Enemies;
 public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
 {
+    public ParticleSystem[] burnParticles = [];
+    public List<Material> CharredMaterials = new();
     public GameObject grabArea = null!;
     public AnimationClip spawnAnimation = null!;
     public AnimationClip chestBangingAnimation = null!;
@@ -97,6 +99,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     internal static readonly int GrabbedAnimation = Animator.StringToHash("Grabbed"); // Bool
     private static readonly int DeadAnimation = Animator.StringToHash("Dead"); // Bool
     private static readonly int StunnedAnimation = Animator.StringToHash("Stunned"); // Bool
+    private static readonly int RUNFUCKERRUNFloat = Animator.StringToHash("RUNFUCKERRUN"); // Float
 
     public enum DriftwoodState
     {
@@ -110,11 +113,13 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         RunningAway, // Running away
         Grabbed, // This stuff would be handled on redwood giant's end
         Death,
+        BurningGiant,
     }
 
     public override void Start()
     {
         base.Start();
+        creatureAnimator.SetFloat(RUNFUCKERRUNFloat, 1f);
         var enemyBlacklist = EnemyHandler.Instance.DriftwoodMenace.GetConfig<string>("Driftwood Menace | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
         foreach (string nameEntry in enemyBlacklist.ToList())
         {
@@ -267,6 +272,9 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
             case (int)DriftwoodState.Death:
                 DoDeath();
                 break;
+            case (int)DriftwoodState.BurningGiant:
+                DoBurningGiant();
+                break;
         }
     }
 
@@ -413,6 +421,22 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     public void DoDeath()
     {
         // Do nothing
+    }
+
+    private Vector3 randomPosition = Vector3.zero;
+    public void DoBurningGiant()
+    {
+        if (randomPosition == Vector3.zero)
+        {
+            randomPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadius(transform.position, 50f, default);
+        }
+
+        if (Vector3.Distance(transform.position, randomPosition) < agent.stoppingDistance + 3f)
+        {
+            randomPosition = RoundManager.Instance.GetRandomNavMeshPositionInRadius(transform.position, 50f, default);
+        }
+
+        smartAgentNavigator.DoPathingToDestination(randomPosition);
     }
 
     #endregion
@@ -660,7 +684,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         }
 
         float minimumAwareness = 0;
-        minimumAwareness += (RedwoodTitanAI.instanceNumbers > 0 ? 5 : 0);
+        minimumAwareness += (RedwoodTitanAI.instanceNumbers > 0 ? 5 * RedwoodTitanAI.instanceNumbers : 0);
         awarenessLevel = Mathf.Max(awarenessLevel, minimumAwareness);
         if (playerSeen != null)
         {
@@ -748,9 +772,46 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         player.SetFlingingAway(false);
     }
 
+    private Coroutine? _burnGiantRoutine = null;
+    [ServerRpc(RequireOwnership = false)]
+    private void BurnGiantServerRpc()
+    {
+        BurnGiantClientRpc();
+    }
+
+    [ClientRpc]
+    private void BurnGiantClientRpc()
+    {
+        _burnGiantRoutine = StartCoroutine(BurnGiant());
+    }
+
+    private IEnumerator BurnGiant()
+    {
+        agent.speed = 30f;
+        creatureAnimator.SetFloat(RUNFUCKERRUNFloat, 2f);
+        foreach (ParticleSystem particleSystem in burnParticles)
+        {
+            particleSystem.Play();
+        }
+
+        SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.BurningGiant);
+        yield return new WaitForSeconds(18f);
+        KillEnemy();
+        _burnGiantRoutine = null;
+    }
     #endregion
 
-    #region Zeekerss Callbacks
+    #region Call Backs
+    public override void HitFromExplosion(float distance)
+    {
+        base.HitFromExplosion(distance);
+        if (_burnGiantRoutine != null || isEnemyDead)
+        {
+            return;
+        }
+
+        BurnGiantServerRpc();
+    }
 
     public override void OnCollideWithEnemy(Collider other, EnemyAI collidedEnemy)
     {
@@ -792,6 +853,11 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         if (isEnemyDead)
         {
             return;
+        }
+
+        if (hitID == Plugin.BURN_HIT_ID && _burnGiantRoutine == null)
+        {
+            _burnGiantRoutine = StartCoroutine(BurnGiant());
         }
 
         enemyHP -= force;
@@ -838,6 +904,13 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     public override void KillEnemy(bool destroy = false)
     {
         base.KillEnemy(destroy);
+        if (_burnGiantRoutine != null)
+        {
+            StopCoroutine(_burnGiantRoutine);
+            _burnGiantRoutine = null;
+            skinnedMeshRenderers[0].SetSharedMaterials(CharredMaterials);
+            // apply charred material
+        }
         smartAgentNavigator.StopSearchRoutine();
         SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.Death);
 

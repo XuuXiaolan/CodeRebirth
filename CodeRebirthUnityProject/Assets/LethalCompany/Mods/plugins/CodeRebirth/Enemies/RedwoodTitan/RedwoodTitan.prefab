@@ -51743,9 +51743,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6424716300091283069}
-  - component: {fileID: 7731502813883594153}
-  - component: {fileID: 3179244126177304078}
-  - component: {fileID: 1404826885673833379}
   - component: {fileID: 8095783887917850014}
   m_Layer: 0
   m_Name: Foot.L_end
@@ -51773,61 +51770,6 @@ Transform:
   - {fileID: 7464892878562863884}
   m_Father: {fileID: 623468205687511884}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &7731502813883594153
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6129580063063455351}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 2147483639
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.57985085, y: 0.44956872, z: 1.4045538}
-  m_Center: {x: -0.54108435, y: -0.0070581357, z: -0.017306423}
---- !u!114 &3179244126177304078
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6129580063063455351}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -502015034, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mainscript: {fileID: 4537627090396360056}
---- !u!65 &1404826885673833379
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6129580063063455351}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.34247306, y: 0.25841776, z: 0.90250826}
-  m_Center: {x: -0.5229668, y: 0.003965699, z: -0.014538905}
 --- !u!114 &8095783887917850014
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54777,20 +54719,6 @@ MonoBehaviour:
     TransitionDuration: 0.5950918
     TriggerNameHash: -1468029814
     TransitionIndex: 2
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: -1701686356
-    DestinationState: -1326707811
-    TransitionDuration: 0.4099064
-    TriggerNameHash: 1182904180
-    TransitionIndex: 3
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: -1701686356
-    DestinationState: -380624004
-    TransitionDuration: 0.40579128
-    TriggerNameHash: -1608089
-    TransitionIndex: 4
   m_Animator: {fileID: 111922345862184124}
 --- !u!114 &6280165044034835773
 MonoBehaviour:

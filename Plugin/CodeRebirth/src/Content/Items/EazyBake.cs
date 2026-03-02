@@ -170,7 +170,10 @@ public class EazyBake : GrabbableObject
 
             foreach (EnemyAI enemyAI in hitEnemies)
             {
-                enemyAI.HitFromExplosion(4);
+                if (enemyAI.IsOwner)
+                {
+                    enemyAI.HitFromExplosion(4);
+                }
                 enemyAI.HitEnemy(1, playerWhoToggledOn, false, Plugin.BURN_HIT_ID);
             }
 

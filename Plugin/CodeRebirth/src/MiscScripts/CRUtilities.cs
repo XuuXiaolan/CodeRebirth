@@ -250,11 +250,22 @@ public class CRUtilities
             if (!enemy.mainScript.IsSpawned)
                 continue;
 
-            if (attacker != null && !attacker.IsLocalPlayer())
-                continue;
+            if (attacker != null)
+            {
+                if (attacker.IsLocalPlayer())
+                {
+                    enemy.mainScript.HitEnemyOnLocalClient(enemyAICollisionDetectToDamage[enemy].damage, playerWhoHit: attacker);
+                }
+            }
+            else if (enemy.mainScript.IsOwner)
+            {
+                enemy.mainScript.HitEnemyOnLocalClient(enemyAICollisionDetectToDamage[enemy].damage, playerWhoHit: attacker);
+            }
 
-            enemy.mainScript.HitEnemyOnLocalClient(enemyAICollisionDetectToDamage[enemy].damage, playerWhoHit: attacker);
-            enemy.mainScript.HitFromExplosion(enemyAICollisionDetectToDamage[enemy].distance);
+            if (enemy.mainScript.IsOwner)
+            {
+                enemy.mainScript.HitFromExplosion(enemyAICollisionDetectToDamage[enemy].distance);
+            }
         }
 
         foreach (Landmine landmine in landmineList)

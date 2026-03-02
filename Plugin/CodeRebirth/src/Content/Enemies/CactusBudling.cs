@@ -20,15 +20,13 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
 
     [Header("Animations")]
     [SerializeField]
-    private AnimationClip _spawnAnimation = null!;
-    [SerializeField]
     private AnimationClip _rootingEndAnimation = null!;
     [SerializeField]
     private AnimationClip _rollingStartAnimation = null!;
-    [SerializeField]
-    private AnimationClip _rollingEndAnimation = null!;
 
     [Header("Mechanics")]
+    [SerializeField]
+    private ParticleSystem[] _burnParticles = [];
     [SerializeField]
     private float _rollingDuration = 20f;
     [SerializeField]
@@ -395,12 +393,46 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
             destructibleObject._destroyCactiRoutine = destructibleObject.StartCoroutine(destructibleObject.DestroyObjectWithDelay(enemyRandom.NextFloat(30f, 45f), true));
         }
     }
+
+    private Coroutine? _burnGiantRoutine = null;
+    [ServerRpc(RequireOwnership = false)]
+    private void BurnGiantServerRpc()
+    {
+        BurnGiantClientRpc();
+    }
+
+    [ClientRpc]
+    private void BurnGiantClientRpc()
+    {
+        _burnGiantRoutine = StartCoroutine(BurnGiant());
+    }
+
+    private IEnumerator BurnGiant()
+    {
+        foreach (ParticleSystem particleSystem in _burnParticles)
+        {
+            particleSystem.Play();
+        }
+        yield return new WaitForSeconds(5f);
+        _burnGiantRoutine = null;
+    }
     #endregion
 
     #region Animation Events
     #endregion
 
     #region Call Backs
+    public override void HitFromExplosion(float distance)
+    {
+        base.HitFromExplosion(distance);
+        if (_burnGiantRoutine != null || isEnemyDead)
+        {
+            return;
+        }
+
+        BurnGiantServerRpc();
+    }
+
     public override void OnCollideWithPlayer(Collider other)
     {
         base.OnCollideWithPlayer(other);
@@ -422,6 +454,11 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
             return;
 
         enemyHP -= force;
+
+        if (hitID == Plugin.BURN_HIT_ID && _burnGiantRoutine == null)
+        {
+            _burnGiantRoutine = StartCoroutine(BurnGiant());
+        }
 
         if (enemyHP <= 0)
         {
