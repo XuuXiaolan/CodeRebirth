@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Linq;
 using Dawn;
@@ -20,6 +19,27 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
     private Animator _animator;
 
     [SerializeField]
+    private AudioSource _audioSource;
+
+    [SerializeField]
+    private AudioClip _onSpawnSound;
+
+    [SerializeField]
+    private AudioClip _onHitSound;
+
+    [SerializeField]
+    private AudioClip _onCoinGetSound;
+
+    [SerializeField]
+    private AudioClip _onOneWheelTurn;
+
+    [SerializeField]
+    private AudioClip _onTenWheelTurn;
+
+    [SerializeField]
+    private AudioClip _onHundredWheelTurn;
+
+    [SerializeField]
     private Transform HundredWheel;
     [SerializeField]
     private Transform TenWheel;
@@ -38,10 +58,14 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
     private NetworkVariable<int> _totalMoneyStored = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
     private static NamespacedKey _moneyKey = NamespacedKey.From("code_rebirth", "money_stored");
+    private static readonly int OnHitHash = Animator.StringToHash("hit"); // Trigger
+    private static readonly int CoinGetHash = Animator.StringToHash("coinGet"); // Trigger
 
     public override void OnNetworkPostSpawn()
     {
         base.OnNetworkPostSpawn();
+        _audioSource.PlayOneShot(_onSpawnSound);
+
         if (!IsServer)
         {
             return;
@@ -124,7 +148,8 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
 
         int oldValue = _totalMoneyStored.Value;
         _totalMoneyStored.Value += amount;
-        _networkAnimator.SetTrigger("coinGet");
+        _networkAnimator.SetTrigger(CoinGetHash);
+        PlaySoundServerRpc(1);
         UpdateVisuals(oldValue, _totalMoneyStored.Value);
     }
 
@@ -257,6 +282,8 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
                 }
                 else
                 {
+                    _audioSource.pitch = UnityEngine.Random.Range(0.9f, 1.1f);
+                    _audioSource.PlayOneShot(_onOneWheelTurn);
                     currentOne++;
                 }
 
@@ -269,11 +296,15 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
                     }
                     else
                     {
+                        _audioSource.pitch = UnityEngine.Random.Range(0.9f, 1.1f);
+                        _audioSource.PlayOneShot(_onTenWheelTurn);
                         currentTen++;
                     }
 
                     if (moveHundred)
                     {
+                        _audioSource.pitch = UnityEngine.Random.Range(0.9f, 1.1f);
+                        _audioSource.PlayOneShot(_onHundredWheelTurn);
                         currentHundred++;
                     }
                 }
@@ -397,13 +428,34 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
         }
 
         HitServerRpc(force);
+        PlaySoundServerRpc(0);
         return true;
     }
 
     [ServerRpc(RequireOwnership = false)]
     private void HitServerRpc(int force)
     {
-        _networkAnimator.SetTrigger("hit");
+        _networkAnimator.SetTrigger(OnHitHash);
         RemoveMoney(force);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void PlaySoundServerRpc(int index)
+    {
+        PlaySoundClientRpc(index);
+    }
+
+    [ClientRpc]
+    private void PlaySoundClientRpc(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                _audioSource.PlayOneShot(_onHitSound);
+                break;
+            case 1:
+                _audioSource.PlayOneShot(_onCoinGetSound);
+                break;
+        }
     }
 }
