@@ -5,6 +5,7 @@ using CodeRebirth.src.Util;
 using Unity.Netcode;
 using CodeRebirth.src.MiscScripts;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CodeRebirth.src.Content.Enemies;
 public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
@@ -443,16 +444,17 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         }
 
         yield return new WaitForSeconds(30f);
-        Plugin.ExtendedLogging($"Name: {skinnedMeshRenderers[0].sharedMaterials[3].name}");
         if (skinnedMeshRenderers[0].sharedMaterials[3].name == "AlbinoBody")
         {
-            Plugin.ExtendedLogging($"AlbinoCharredMaterial: {AlbinoCharredMaterial.name}");
-            skinnedMeshRenderers[0].sharedMaterials[3] = AlbinoCharredMaterial;
+            List<Material> materials = skinnedMeshRenderers[0].sharedMaterials.ToList();
+            materials[3] = AlbinoCharredMaterial;
+            skinnedMeshRenderers[0].SetSharedMaterials(materials);
         }
         else
         {
-            Plugin.ExtendedLogging($"NormalCharredMaterial: {NormalCharredMaterial.name}");
-            skinnedMeshRenderers[0].sharedMaterials[3] = NormalCharredMaterial;
+            List<Material> materials = skinnedMeshRenderers[0].sharedMaterials.ToList();
+            materials[3] = NormalCharredMaterial;
+            skinnedMeshRenderers[0].SetSharedMaterials(materials);
         }
         HitEnemy(20, null, false, -1);
         _burnGiantRoutine = null;
@@ -497,10 +499,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
             eatPosition = transform.position;
             eatingEnemy = true;
             collidedEnemy.agent.enabled = false;
-            foreach (Collider enemyCollider in collidedEnemy.GetComponents<Collider>())
-            {
-                enemyCollider.enabled = false;
-            }
+
             foreach (Collider enemyCollider in collidedEnemy.GetComponentsInChildren<Collider>())
             {
                 enemyCollider.enabled = false;

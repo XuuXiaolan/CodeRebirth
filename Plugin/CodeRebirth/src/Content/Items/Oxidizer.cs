@@ -79,6 +79,10 @@ public class Oxidizer : GrabbableObject
 
         foreach (EnemyAI enemyAI in _enemyAIList)
         {
+            if (enemyAI.IsOwner)
+            {
+                enemyAI.HitFromExplosion(Vector3.Distance(this.transform.position, enemyAI.transform.position));
+            }
             enemyAI.HitEnemy(damageToDeal, playerHeldBy, true, Plugin.BURN_HIT_ID);
         }
 
