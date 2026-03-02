@@ -146,6 +146,10 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
 
         int oldValue = _totalMoneyStored.Value;
         _totalMoneyStored.Value -= amount;
+        if (oldValue >= 0 && _totalMoneyStored.Value < 0)
+        {
+            _totalMoneyStored.Value -= 150;
+        }
         UpdateVisuals(oldValue, _totalMoneyStored.Value);
     }
 
@@ -153,10 +157,6 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
     {
         if (StartOfRound.Instance.inShipPhase)
         {
-            if (oldValue >= 0 && newValue < 0)
-            {
-                _totalMoneyStored.Value = -150;
-            }
             Plugin.ExtendedLogging($"Saving money to contract: {_totalMoneyStored.Value}");
             DawnLib.GetCurrentContract()?.Set(_moneyKey, _totalMoneyStored.Value);
         }
@@ -174,8 +174,7 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
             newValue = 0;
             GoToDebtMode();
         }
-
-        if (oldValue < 0 && newValue >= 0)
+        else if (oldValue < 0 && newValue >= 0)
         {
             LeaveDebt();
         }

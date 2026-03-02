@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using CodeRebirth.src.MiscScripts;
 using Dawn.Utils;
 using GameNetcodeStuff;
 using UnityEngine;
@@ -19,6 +20,7 @@ public class EazyBake : GrabbableObject
     private static readonly int FiringHash = Animator.StringToHash("Firing"); // Boolean
 
     private PlayerControllerB? playerWhoToggledOn = null;
+
     public override void ItemActivate(bool used, bool buttonDown = true)
     {
         base.ItemActivate(used, buttonDown);
@@ -59,20 +61,31 @@ public class EazyBake : GrabbableObject
     private List<PlayerControllerB> hitPlayers = new();
     private List<EnemyAI> hitEnemies = new();
     private List<IHittable> hitObjects = new();
+    private List<IExplodeable> hitExplodeables = new();
 
     public override void Update()
     {
         base.Update();
+
+        if (playerHeldBy != null && playerHeldBy.IsLocalPlayer() && playerHeldBy.isHoldingInteract && !isPocketed && playerHeldBy.hoveringOverTrigger != null && playerHeldBy.hoveringOverTrigger.animationString == "SA_ChargeItem" && playerHeldBy.isHoldingInteract)
+        {
+            playerHeldBy.hoveringOverTrigger.Interact(playerHeldBy.thisPlayerBody);
+        }
+
         if (timeSinceLastDamage < Time.realtimeSinceStartup)
         {
             List<PlayerControllerB> playersFromLastTime = new(hitPlayers);
             hitPlayers.Clear();
             hitEnemies.Clear();
             hitObjects.Clear();
+            hitExplodeables.Clear();
             timeSinceLastDamage = Time.realtimeSinceStartup + DamagerTimer;
             foreach (Collider collider in collidersInside)
             {
-                if (!collider.TryGetComponent(out IHittable hittable))
+                IHittable? hittable = collider.GetComponent<IHittable>();
+                IExplodeable? explodeable = collider.GetComponent<IExplodeable>();
+
+                if (explodeable == null && hittable == null)
                 {
                     continue;
                 }
@@ -82,28 +95,45 @@ public class EazyBake : GrabbableObject
                     continue;
                 }
 
-                if (hittable is PlayerControllerB player)
+                if (explodeable != null)
                 {
-                    if (hitPlayers.Contains(player) || player == playerHeldBy)
+                    if (hitExplodeables.Contains(explodeable))
                     {
                         continue;
                     }
 
-                    hitPlayers.Add(player);
+                    hitExplodeables.Add(explodeable);
                 }
-                else if (hittable is EnemyAICollisionDetect enemyAICollisionDetect)
+                else if (hittable != null)
                 {
-                    if (hitEnemies.Contains(enemyAICollisionDetect.mainScript))
+                    if (hittable is PlayerControllerB player)
                     {
+                        if (hitPlayers.Contains(player) || player == playerHeldBy)
+                        {
+                            continue;
+                        }
+
+                        hitPlayers.Add(player);
+                    }
+                    else if (hittable is EnemyAICollisionDetect enemyAICollisionDetect)
+                    {
+                        if (hitEnemies.Contains(enemyAICollisionDetect.mainScript))
+                        {
+                            continue;
+                        }
+
+                        hitEnemies.Add(enemyAICollisionDetect.mainScript);
+                    }
+                    else
+                    {
+                        if (hitObjects.Contains(hittable))
+                        {
+                            continue;
+                        }
+
+                        hitObjects.Add(hittable);
                         continue;
                     }
-
-                    hitEnemies.Add(enemyAICollisionDetect.mainScript);
-                }
-                else
-                {
-                    hitObjects.Add(hittable);
-                    continue;
                 }
             }
 
@@ -152,6 +182,11 @@ public class EazyBake : GrabbableObject
             foreach (IHittable hittable in hitObjects)
             {
                 hittable.Hit(1, -this.transform.forward, playerWhoToggledOn, false, Plugin.BURN_HIT_ID);
+            }
+
+            foreach (IExplodeable explodeable in hitExplodeables)
+            {
+                explodeable.OnExplosion(1, this.transform.position, 4f);
             }
         }
     }

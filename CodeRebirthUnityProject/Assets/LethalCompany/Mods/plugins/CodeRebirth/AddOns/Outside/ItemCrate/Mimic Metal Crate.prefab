@@ -3639,6 +3639,7 @@ GameObject:
   - component: {fileID: 8106247032455719781}
   - component: {fileID: 3404484357278531823}
   - component: {fileID: 6372862576182577146}
+  - component: {fileID: 7913139683782851613}
   m_Layer: 9
   m_Name: Mimic Metal Crate
   m_TagString: InteractTrigger
@@ -4477,6 +4478,33 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 89f309ad772ee1e49b6c1c3c39abc18f, type: 3}
     farAudioSource: {fileID: 0}
     farClips: []
+--- !u!54 &7913139683782851613
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2083264772084459009}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &2202360709505198388
 GameObject:
   m_ObjectHideFlags: 0
@@ -4968,7 +4996,7 @@ Transform:
   m_GameObject: {fileID: 3798010721040274521}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.92, z: 0}
+  m_LocalPosition: {x: 0, y: 3.92, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5007,7 +5035,7 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Radius: 2.3
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: -2, z: 0}
 --- !u!114 &8338841652519463787
 MonoBehaviour:
   m_ObjectHideFlags: 0

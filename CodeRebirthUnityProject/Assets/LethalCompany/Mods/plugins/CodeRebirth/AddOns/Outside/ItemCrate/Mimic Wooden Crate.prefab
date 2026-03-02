@@ -14245,6 +14245,7 @@ GameObject:
   - component: {fileID: 8293735956486222679}
   - component: {fileID: 8333012968473036941}
   - component: {fileID: 1220857379216713628}
+  - component: {fileID: 8788537485153106542}
   m_Layer: 9
   m_Name: Mimic Wooden Crate
   m_TagString: InteractTrigger
@@ -14761,6 +14762,33 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 89f309ad772ee1e49b6c1c3c39abc18f, type: 3}
     farAudioSource: {fileID: 0}
     farClips: []
+--- !u!54 &8788537485153106542
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7952619480326014836}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &7967646740812313434
 GameObject:
   m_ObjectHideFlags: 0
