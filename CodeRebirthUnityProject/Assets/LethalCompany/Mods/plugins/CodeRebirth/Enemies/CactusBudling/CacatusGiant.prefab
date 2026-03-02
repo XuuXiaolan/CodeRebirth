@@ -546,7 +546,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -3708,13 +3708,14 @@ MonoBehaviour:
   _hitBodySounds: []
   spawnSound: {fileID: 8300000, guid: af63250127ce0384b96f22093267c52a, type: 3}
   _rollingSource: {fileID: 5482134468942638221}
-  _spawnAnimation: {fileID: 7400000, guid: 4b655cc88e5710f44ac0e1544cc95e5e, type: 2}
   _rootingEndAnimation: {fileID: 7400000, guid: 978c729735aacba45b2d5fd4ab0b21df,
     type: 2}
   _rollingStartAnimation: {fileID: 7400000, guid: 5a6d84f5c78c16244b76e62cebaed10d,
     type: 2}
-  _rollingEndAnimation: {fileID: 7400000, guid: fff48f2871da86d47b0cfdba52f06851,
-    type: 2}
+  _burnParticles:
+  - {fileID: 7056613717970460460}
+  - {fileID: 8317514058517251068}
+  - {fileID: 3300436068160200412}
   _rollingDuration: 20
   _rootingDuration: 60
   _attackAmount: 6
@@ -3883,7 +3884,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -10049,7 +10050,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
