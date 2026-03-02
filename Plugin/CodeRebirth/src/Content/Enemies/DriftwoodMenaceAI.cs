@@ -795,7 +795,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
         }
 
         SwitchToBehaviourStateOnLocalClient((int)DriftwoodState.BurningGiant);
-        yield return new WaitForSeconds(18f);
+        yield return new WaitForSeconds(12f);
         KillEnemy();
         _burnGiantRoutine = null;
     }

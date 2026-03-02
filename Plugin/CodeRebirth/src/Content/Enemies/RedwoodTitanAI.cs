@@ -4,6 +4,7 @@ using UnityEngine;
 using CodeRebirth.src.Util;
 using Unity.Netcode;
 using CodeRebirth.src.MiscScripts;
+using System.Collections.Generic;
 
 namespace CodeRebirth.src.Content.Enemies;
 public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
@@ -321,11 +322,16 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         // Apply damage based on distance
         if (distanceFromEnemy <= 3f)
         {
-            enemy.HitEnemy(2, null, false, -1);
+            enemy.HitEnemy(2 * (_burnGiantRoutine != null ? 2 : 1), null, false, -1);
         }
         else if (distanceFromEnemy <= 10f)
         {
-            enemy.HitEnemy(1, null, false, -1);
+            enemy.HitEnemy(1 * (_burnGiantRoutine != null ? 2 : 1), null, false, -1);
+        }
+
+        if (_burnGiantRoutine != null)
+        {
+            enemy.HitFromExplosion(distanceFromEnemy);
         }
     }
 
@@ -435,13 +441,17 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         {
             particleSystem.Play();
         }
-        yield return new WaitForSeconds(35f);
+
+        yield return new WaitForSeconds(30f);
+        Plugin.ExtendedLogging($"Name: {skinnedMeshRenderers[0].sharedMaterials[3].name}");
         if (skinnedMeshRenderers[0].sharedMaterials[3].name == "AlbinoBody")
         {
+            Plugin.ExtendedLogging($"AlbinoCharredMaterial: {AlbinoCharredMaterial.name}");
             skinnedMeshRenderers[0].sharedMaterials[3] = AlbinoCharredMaterial;
         }
         else
         {
+            Plugin.ExtendedLogging($"NormalCharredMaterial: {NormalCharredMaterial.name}");
             skinnedMeshRenderers[0].sharedMaterials[3] = NormalCharredMaterial;
         }
         HitEnemy(20, null, false, -1);
@@ -465,12 +475,13 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         {
             return;
         }
+
         PlayerControllerB player = MeetsStandardPlayerCollisionConditions(other);
         if (player == null)
         {
             return;
         }
-        player.KillPlayer(player.velocityLastFrame, true, CauseOfDeath.Crushing, 0, default);
+        player.KillPlayer(player.velocityLastFrame, true, CauseOfDeath.Crushing, _burnGiantRoutine != null ? 6 : 0, default);
         // play player death particles.
     }
 
@@ -666,14 +677,14 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
             float distance = Vector3.Distance(foot.transform.position, player.transform.position);
             if (distance <= 10f)
             {
-                player.DamagePlayer(10, causeOfDeath: CauseOfDeath.Crushing);
+                player.DamagePlayer(10 * (_burnGiantRoutine != null ? 3 : 1), causeOfDeath: CauseOfDeath.Crushing);
             }
         }
-        var enemiesList = RoundManager.Instance.SpawnedEnemies;
+        List<EnemyAI> enemiesList = RoundManager.Instance.SpawnedEnemies;
         for (int i = enemiesList.Count - 1; i >= 0; i--)
         {
             if (enemiesList[i] == null || enemiesList[i].isEnemyDead || enemiesList[i] is RedwoodTitanAI) continue;
-            var FootDistance = Vector3.Distance(foot.transform.position, enemiesList[i].transform.position);
+            float FootDistance = Vector3.Distance(foot.transform.position, enemiesList[i].transform.position);
             if (FootDistance <= 7.5f)
             {
                 DealEnemyDamageFromShockwave(enemiesList[i], FootDistance);

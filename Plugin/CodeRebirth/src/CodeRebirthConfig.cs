@@ -318,12 +318,6 @@ public class CodeRebirthConfig
                                             true,
                                             "Whether the gal scales the heals and revives with player count.");
         #endregion
-        #region Farming
-        ConfigWoodenSeedTreeSpawnChance = configFile.Bind("Farming Options",
-                                            "Farming | Wooden Seed Tree Spawn Chance",
-                                            2,
-                                            "Chance of the wooden seed to spawn from a broken tree");
-        #endregion
         #region Tornado
         ConfigTornadoSpeed = configFile.Bind("Tornado Options",
                                             "Tornados | Speed",
