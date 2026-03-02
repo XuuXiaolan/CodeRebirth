@@ -116,6 +116,7 @@ public class CRUtilities
 
     private static Dictionary<PlayerControllerB, (float distance, int damage)> playerControllerBToDamage = new();
     private static Dictionary<EnemyAICollisionDetect, (float distance, int damage)> enemyAICollisionDetectToDamage = new();
+    private static Dictionary<IExplodeable, (float distance, int damage)> explodeablesToDamage = new();
     private static List<Landmine> landmineList = new();
     private static List<IHittable> hittablesList = new();
 
@@ -163,9 +164,6 @@ public class CRUtilities
         int numHits = Physics.OverlapSphereNonAlloc(explosionPosition, maxDamageRange, cachedColliders, MoreLayerMasks.PlayersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
-            if (!cachedColliders[i].TryGetComponent(out IHittable ihittable))
-                continue;
-
             Plugin.ExtendedLogging($"Explosion hit {cachedColliders[i].name}");
             float distanceOfObjectFromExplosion = Vector3.Distance(explosionPosition, cachedColliders[i].ClosestPoint(explosionPosition));
             if (distanceOfObjectFromExplosion > 4f && Physics.Linecast(explosionPosition, cachedColliders[i].transform.position + Vector3.up * 0.3f, out _, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
@@ -175,7 +173,11 @@ public class CRUtilities
 
             if (cachedColliders[i].gameObject.layer == 3 && cachedColliders[i].TryGetComponent(out PlayerControllerB player))
             {
-                if (!player.isPlayerControlled || player.isPlayerDead) continue;
+                if (!player.isPlayerControlled || player.isPlayerDead)
+                {
+                    continue;
+                }
+
                 int damageToDeal = (int)(damage * (1f - Mathf.Clamp01((distanceOfObjectFromExplosion - minDamageRange) / (maxDamageRange - minDamageRange))));
                 if (playerControllerBToDamage.ContainsKey(player) && playerControllerBToDamage[player].damage < damageToDeal)
                 {
@@ -210,7 +212,27 @@ public class CRUtilities
                 landmineList.Add(componentInChildren);
                 continue;
             }
-            hittablesList.Add(ihittable);
+
+            if (cachedColliders[i].TryGetComponent(out IExplodeable explodeable))
+            {
+                if (explodeablesToDamage.ContainsKey(explodeable) && explodeablesToDamage[explodeable].damage < enemyHitForce)
+                {
+                    explodeablesToDamage[explodeable] = (distanceOfObjectFromExplosion, enemyHitForce);
+                }
+                else if (!explodeablesToDamage.ContainsKey(explodeable))
+                {
+                    explodeablesToDamage.Add(explodeable, (distanceOfObjectFromExplosion, enemyHitForce));
+                }
+                continue;
+            }
+
+            if (cachedColliders[i].TryGetComponent(out IHittable ihittable))
+            {
+                if (hittablesList.Contains(ihittable))
+                    continue;
+
+                hittablesList.Add(ihittable);
+            }
         }
 
         foreach (PlayerControllerB player in playerControllerBToDamage.Keys)
@@ -248,10 +270,19 @@ public class CRUtilities
             hittable.Hit(5, explosionPosition, attacker, true, -1);
         }
 
+        foreach (IExplodeable explodeable in explodeablesToDamage.Keys)
+        {
+            if (!NetworkManager.Singleton.IsServer)
+                continue;
+
+            explodeable.OnExplosion(explodeablesToDamage[explodeable].damage, explosionPosition, explodeablesToDamage[explodeable].distance);
+        }
+
         playerControllerBToDamage.Clear();
         enemyAICollisionDetectToDamage.Clear();
         landmineList.Clear();
         hittablesList.Clear();
+        explodeablesToDamage.Clear();
     }
 
     public static void MakePlayerGrabObject(PlayerControllerB player, GrabbableObject grabbableObject)
