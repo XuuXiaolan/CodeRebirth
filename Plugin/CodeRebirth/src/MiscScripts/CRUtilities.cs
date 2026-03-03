@@ -235,15 +235,17 @@ public class CRUtilities
             }
         }
 
-        foreach (PlayerControllerB player in playerControllerBToDamage.Keys)
+        for (int i = playerControllerBToDamage.Count - 1; i >= 0; i--)
         {
+            PlayerControllerB player = playerControllerBToDamage.ElementAt(i).Key;
             Vector3 directionFromCenter = (player.transform.position - explosionPosition).normalized;
             player.DamagePlayer(playerControllerBToDamage[player].damage, true, true, CauseOfDeath.Burning, 6, false, directionFromCenter * pushForce * 5f);
             player.externalForceAutoFade += directionFromCenter * pushForce;
         }
 
-        foreach (EnemyAICollisionDetect enemy in enemyAICollisionDetectToDamage.Keys)
+        for (int i = enemyAICollisionDetectToDamage.Count - 1; i >= 0; i--)
         {
+            EnemyAICollisionDetect enemy = enemyAICollisionDetectToDamage.ElementAt(i).Key;
             if (enemy.mainScript == null)
                 continue;
 
@@ -268,24 +270,26 @@ public class CRUtilities
             }
         }
 
-        foreach (Landmine landmine in landmineList)
+        for (int i = landmineList.Count - 1; i >= 0; i--)
         {
-            landmine.StartCoroutine(landmine.TriggerOtherMineDelayed(landmine));
+            landmineList[i].StartCoroutine(landmineList[i].TriggerOtherMineDelayed(landmineList[i]));
         }
 
-        foreach (IHittable hittable in hittablesList)
+        for (int i = hittablesList.Count - 1; i >= 0; i--)
         {
+            IHittable hittable = hittablesList[i];
             if (!NetworkManager.Singleton.IsServer)
                 continue;
 
             hittable.Hit(5, explosionPosition, attacker, true, -1);
         }
 
-        foreach (IExplodeable explodeable in explodeablesToDamage.Keys)
+        for (int i = explodeablesToDamage.Count - 1; i >= 0; i--)
         {
             if (!NetworkManager.Singleton.IsServer)
                 continue;
 
+            IExplodeable explodeable = explodeablesToDamage.ElementAt(i).Key;
             explodeable.OnExplosion(explodeablesToDamage[explodeable].damage, explosionPosition, explodeablesToDamage[explodeable].distance);
         }
 

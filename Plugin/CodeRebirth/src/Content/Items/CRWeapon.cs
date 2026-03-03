@@ -304,7 +304,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
         _hitEnemies.Clear();
         _hitPlayers.Clear();
 
-        numHits = Physics.SphereCastNonAlloc(weaponTip.position, weaponRange, weaponTip.forward, cachedRaycastHits, 1.5f, MoreLayerMasks.PlayersAndEnemiesAndHazardMask, QueryTriggerInteraction.Collide);
+        numHits = Physics.SphereCastNonAlloc(weaponTip.position, weaponRange, weaponTip.forward, cachedRaycastHits, 1.5f, MoreLayerMasks.PlayersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
         objectsHit = cachedRaycastHits.Take(numHits).OrderBy(hit => hit.distance);
         foreach (RaycastHit hit in objectsHit)
         {

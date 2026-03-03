@@ -35,8 +35,8 @@ internal class CodeRebirthUtils : NetworkBehaviour
         base.OnNetworkSpawn();
         if (Plugin.ModConfig.ConfigDebugMode.Value && IsHost)
         {
-            NetworkObjectReference netObjRefDebugStick = SpawnScrap(LethalContent.Items[CodeRebirthItemKeys.DebugStick].Item, Vector3.zero);
             NetworkObjectReference netObjRefXuBucket = SpawnScrap(LethalContent.Items[CodeRebirthItemKeys.CrispXuBuck].Item, Vector3.zero);
+            NetworkObjectReference netObjRefDebugStick = SpawnScrap(LethalContent.Items[CodeRebirthItemKeys.DebugStick].Item, Vector3.zero);
             StartCoroutine(GiveItemsToPlayer(netObjRefDebugStick, netObjRefXuBucket));
         }
         Instance = this;
@@ -48,9 +48,9 @@ internal class CodeRebirthUtils : NetworkBehaviour
     private IEnumerator GiveItemsToPlayer(NetworkObjectReference netObjRefDebugStick, NetworkObjectReference netObjRefXuBucket)
     {
         yield return new WaitForSeconds(0.15f);
-        CRUtilities.MakePlayerGrabObject(GameNetworkManager.Instance.localPlayerController, ((GameObject)netObjRefDebugStick).GetComponent<GrabbableObject>());
-        yield return new WaitForSeconds(0.15f);
         CRUtilities.MakePlayerGrabObject(GameNetworkManager.Instance.localPlayerController, ((GameObject)netObjRefXuBucket).GetComponent<GrabbableObject>());
+        yield return new WaitForSeconds(0.15f);
+        CRUtilities.MakePlayerGrabObject(GameNetworkManager.Instance.localPlayerController, ((GameObject)netObjRefDebugStick).GetComponent<GrabbableObject>());
     }
 
     private void HandleEnemyDropRates()

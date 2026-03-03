@@ -1,5 +1,7 @@
+using System;
 using CodeRebirth.src.Content.Unlockables;
 using Dawn.Utils;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
@@ -8,6 +10,9 @@ public class Money : GrabbableObject
 {
     [SerializeField]
     private BoundedRange _valueRange = new(1, 1);
+
+    [SerializeField]
+    private ParticleSystem _moneyParticles;
 
     [SerializeField]
     private AudioSource _moneySource;
@@ -20,6 +25,7 @@ public class Money : GrabbableObject
 
     private int _value;
     private static int _coinsSpawned = 0;
+    private static readonly int FlipHash = Animator.StringToHash("flip"); // Trigger
 
     public void Awake()
     {
@@ -37,7 +43,7 @@ public class Money : GrabbableObject
             if (!IsOwner)
                 return;
 
-            _ownerNetworkAnimator.SetTrigger("flip");
+            _ownerNetworkAnimator.SetTrigger(FlipHash);
         }
         else
         {
@@ -53,6 +59,8 @@ public class Money : GrabbableObject
         if (MoneyCounter.Instance == null)
             return;
 
+        _moneyParticles.transform.SetParent(null, true);
+        _moneyParticles.Play();
         _moneySource.PlayOneShot(_collectSound);
 
         if (IsServer)
@@ -62,7 +70,20 @@ public class Money : GrabbableObject
 
         if (IsOwner)
         {
-            playerHeldBy.DespawnHeldObject();
+            if (playerHeldBy && (isHeld || isPocketed))
+            {
+                playerHeldBy.DestroyItemInSlotAndSync(Array.IndexOf(playerHeldBy.ItemSlots, this));
+            }
+            else
+            {
+                DespawnItemServerRpc();
+            }
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void DespawnItemServerRpc()
+    {
+        NetworkObject.Despawn();
     }
 }

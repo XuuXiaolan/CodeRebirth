@@ -61,8 +61,16 @@ public class ItemCrate : CRHittable
 
     private void Start()
     {
-        if (grabAndPullPlayerScript != null) grabAndPullPlayerScript.enabled = false;
-        if (grabAndLaunchPlayerScript != null) grabAndLaunchPlayerScript.enabled = false;
+        if (grabAndPullPlayerScript != null)
+        {
+            grabAndPullPlayerScript.enabled = false;
+        }
+
+        if (grabAndLaunchPlayerScript != null)
+        {
+            grabAndLaunchPlayerScript.enabled = false;
+        }
+
         crateRandom = new System.Random(StartOfRound.Instance.randomMapSeed + CodeRebirthUtils.Instance.CRRandom.Next(100000));
         digProgress = crateRandom.NextFloat(0.01f, 0.1f);
         transform.position = transform.position + transform.up * -0.6f;
