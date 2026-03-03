@@ -147,7 +147,7 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
         }
 
         int oldValue = _totalMoneyStored.Value;
-        _totalMoneyStored.Value += amount;
+        _totalMoneyStored.Value = Mathf.Clamp(amount + _totalMoneyStored.Value, -999, 999);
         _networkAnimator.SetTrigger(CoinGetHash);
         PlaySoundServerRpc(1);
         UpdateVisuals(oldValue, _totalMoneyStored.Value);
@@ -318,6 +318,8 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
                 }
                 else
                 {
+                    _audioSource.pitch = UnityEngine.Random.Range(0.9f, 1.1f);
+                    _audioSource.PlayOneShot(_onOneWheelTurn);
                     currentOne--;
                 }
 
@@ -330,11 +332,15 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
                     }
                     else
                     {
+                        _audioSource.pitch = UnityEngine.Random.Range(0.9f, 1.1f);
+                        _audioSource.PlayOneShot(_onTenWheelTurn);
                         currentTen--;
                     }
 
                     if (moveHundred)
                     {
+                        _audioSource.pitch = UnityEngine.Random.Range(0.9f, 1.1f);
+                        _audioSource.PlayOneShot(_onHundredWheelTurn);
                         currentHundred--;
                     }
                 }

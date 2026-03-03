@@ -436,6 +436,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         _burnGiantRoutine = StartCoroutine(BurnGiant());
     }
 
+    private bool burnedOnce = false;
     private IEnumerator BurnGiant()
     {
         foreach (ParticleSystem particleSystem in BurnParticles)
@@ -444,17 +445,21 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         }
 
         yield return new WaitForSeconds(30f);
-        if (skinnedMeshRenderers[0].sharedMaterials[3].name == "AlbinoBody")
+        if (!burnedOnce)
         {
-            List<Material> materials = skinnedMeshRenderers[0].sharedMaterials.ToList();
-            materials[3] = AlbinoCharredMaterial;
-            skinnedMeshRenderers[0].SetSharedMaterials(materials);
-        }
-        else
-        {
-            List<Material> materials = skinnedMeshRenderers[0].sharedMaterials.ToList();
-            materials[3] = NormalCharredMaterial;
-            skinnedMeshRenderers[0].SetSharedMaterials(materials);
+            if (skinnedMeshRenderers[0].sharedMaterials[3].name == "AlbinoBody")
+            {
+                List<Material> materials = skinnedMeshRenderers[0].sharedMaterials.ToList();
+                materials[3] = AlbinoCharredMaterial;
+                skinnedMeshRenderers[0].SetSharedMaterials(materials);
+            }
+            else
+            {
+                List<Material> materials = skinnedMeshRenderers[0].sharedMaterials.ToList();
+                materials[3] = NormalCharredMaterial;
+                skinnedMeshRenderers[0].SetSharedMaterials(materials);
+            }
+            burnedOnce = true;
         }
         HitEnemy(20, null, false, -1);
         _burnGiantRoutine = null;
