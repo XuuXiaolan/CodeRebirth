@@ -14245,7 +14245,6 @@ GameObject:
   - component: {fileID: 8293735956486222679}
   - component: {fileID: 8333012968473036941}
   - component: {fileID: 1220857379216713628}
-  - component: {fileID: 8788537485153106542}
   m_Layer: 9
   m_Name: Mimic Wooden Crate
   m_TagString: InteractTrigger
@@ -14290,7 +14289,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2841296487
+  GlobalObjectIdHash: 550745771
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -14311,7 +14310,6 @@ MonoBehaviour:
   m_Script: {fileID: -434338369, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keyHoverTip: 'Open : [LMB]'
   slowlyOpeningSFX: {fileID: 6992814719332117094}
   openSFX: {fileID: 850424377539253765}
   onBurn:
@@ -14477,7 +14475,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-  despawnOnPostBurn: 0
   trigger: {fileID: 0}
   pickable: {fileID: 0}
   animator: {fileID: 8557149345729840933}
@@ -14762,33 +14759,6 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 89f309ad772ee1e49b6c1c3c39abc18f, type: 3}
     farAudioSource: {fileID: 0}
     farClips: []
---- !u!54 &8788537485153106542
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7952619480326014836}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1 &7967646740812313434
 GameObject:
   m_ObjectHideFlags: 0

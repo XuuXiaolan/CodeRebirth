@@ -3639,7 +3639,6 @@ GameObject:
   - component: {fileID: 8106247032455719781}
   - component: {fileID: 3404484357278531823}
   - component: {fileID: 6372862576182577146}
-  - component: {fileID: 7913139683782851613}
   m_Layer: 9
   m_Name: Mimic Metal Crate
   m_TagString: InteractTrigger
@@ -3685,7 +3684,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3961513256
+  GlobalObjectIdHash: 693831367
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -3917,7 +3916,6 @@ MonoBehaviour:
   m_Script: {fileID: -434338369, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keyHoverTip: 'Open : [LMB]'
   slowlyOpeningSFX: {fileID: 971887808943341902}
   openSFX: {fileID: 6931942329036839841}
   onBurn:
@@ -4095,7 +4093,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-  despawnOnPostBurn: 0
   trigger: {fileID: 5216363493227153392}
   pickable: {fileID: 7892467125358745976}
   animator: {fileID: 3949561938320951568}
@@ -4478,33 +4475,6 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 89f309ad772ee1e49b6c1c3c39abc18f, type: 3}
     farAudioSource: {fileID: 0}
     farClips: []
---- !u!54 &7913139683782851613
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2083264772084459009}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1 &2202360709505198388
 GameObject:
   m_ObjectHideFlags: 0

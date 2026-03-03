@@ -8862,7 +8862,6 @@ GameObject:
   - component: {fileID: 4954358645330385402}
   - component: {fileID: 8557149345729840933}
   - component: {fileID: 5614013434402093431}
-  - component: {fileID: 769822910612432683}
   m_Layer: 9
   m_Name: Wooden Crate
   m_TagString: InteractTrigger
@@ -8906,7 +8905,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 4092093034
+  GlobalObjectIdHash: 1758033118
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -8927,7 +8926,6 @@ MonoBehaviour:
   m_Script: {fileID: -434338369, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keyHoverTip: 'Open : [LMB]'
   slowlyOpeningSFX: {fileID: 6992814719332117094}
   openSFX: {fileID: 850424377539253765}
   onBurn:
@@ -9057,7 +9055,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-  despawnOnPostBurn: 0
   trigger: {fileID: 0}
   pickable: {fileID: 0}
   animator: {fileID: 8557149345729840933}
@@ -9140,33 +9137,6 @@ MonoBehaviour:
   InLocalSpace: 1
   Interpolate: 1
   SlerpPosition: 0
---- !u!54 &769822910612432683
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7952619480326014836}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1 &7967646740812313434
 GameObject:
   m_ObjectHideFlags: 0

@@ -15,6 +15,10 @@ public class MerchantTipPad : NetworkBehaviour
     public InteractTrigger TipJarTrigger { get; private set; }
     [field: SerializeField]
     public GameObject[] ObjectsToEnableOnDonationAmounts { get; private set; } = [];
+    [field: SerializeField]
+    public AudioSource TippingSource { get; private set; }
+    [field: SerializeField]
+    public AudioClip TippingSound { get; private set; }
 
     private bool shopClosed = false;
     public static int _tippedAmount = 0;
@@ -91,6 +95,7 @@ public class MerchantTipPad : NetworkBehaviour
 
     public void ToggleDonationObjects()
     {
+        TippingSource.PlayOneShot(TippingSound);
         if (_tippedAmount <= 24)
         {
             ObjectsToEnableOnDonationAmounts[0].SetActive(true);
