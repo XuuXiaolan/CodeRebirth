@@ -59,6 +59,7 @@ public class Merchant : NetworkBehaviour
     private void RerollClientRpc()
     {
         bugleBoy.animator.SetBool(BugleBoy.ActivatedHash, true);
+        bugleBoy.bugleSource.PlayOneShot(bugleBoy.StartBugleSound);
         merchantAnimator.SetTrigger(RerollHash);
         if (IsServer)
         {

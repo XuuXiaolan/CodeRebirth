@@ -15,8 +15,17 @@ public class VendingMachine : NetworkBehaviour
 {
     [field: SerializeField]
     public List<SimplifiedItemWithRarityAndColor> PotentialItemsToSpawn { get; private set; } = new();
+
+    [field: SerializeField]
+    public AudioSource AudioSource { get; private set; }
+    [field: SerializeField]
+    public AudioClip PurchaseItemSound { get; private set; }
+    [field: SerializeField]
+    public AudioClip JamSound { get; private set; }
+
     [field: SerializeField]
     public Animator Animator { get; private set; }
+
     [field: SerializeField]
     public InteractTrigger SlotTrigger { get; private set; }
     [field: SerializeField]
@@ -95,6 +104,7 @@ public class VendingMachine : NetworkBehaviour
     [ClientRpc]
     private void StartSpawningAnimationsClientRpc()
     {
+        AudioSource.PlayOneShot(PurchaseItemSound);
         Animator.SetTrigger(UseAnimationHash);
     }
 
@@ -112,6 +122,7 @@ public class VendingMachine : NetworkBehaviour
     private void JamMachineClientRpc()
     {
         Animator.SetBool(JammedAnimationHash, true);
+        AudioSource.PlayOneShot(JamSound);
         SlotTrigger.interactable = false;
     }
 

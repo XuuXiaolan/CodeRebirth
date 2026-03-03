@@ -20,6 +20,9 @@ public class BugleBoy : MonoBehaviour
     [SerializeField]
     public AudioSource bugleSource = null!;
 
+    [field: SerializeField]
+    public AudioClip StartBugleSound { get; set; }
+
     [SerializeField]
     public AudioClip[] bugleClips = [];
 
