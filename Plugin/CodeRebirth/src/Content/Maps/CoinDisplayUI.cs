@@ -96,9 +96,15 @@ public class CoinDisplayUI : Singleton<CoinDisplayUI>
         int extraDigits = CoinTMP.text.Length - 1;
         ((RectTransform)CoinChangeTMP.transform).anchoredPosition3D = TMPChangeOriginalPosition + new Vector3(25f * extraDigits, 0f, 0f);
         CoinChangeTMP.text = changedAmount.ToString();
-        bool goSlowly = changedAmount <= 10;
+        bool goSlowly = Mathf.Abs(changedAmount) <= 10;
         while (changedAmount != 0)
         {
+            if (CoinTMP.color.a != 1)
+            {
+                CoinTMP.color = new Color(CoinTMP.color.r, CoinTMP.color.g, CoinTMP.color.b, 1);
+                Image.color = new Color(Image.color.r, Image.color.g, Image.color.b, 1);
+            }
+
             if (changedAmount > 0)
             {
                 CoinTMP.text = (int.Parse(CoinTMP.text) + 1).ToString();
