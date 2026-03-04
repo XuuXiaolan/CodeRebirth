@@ -20,6 +20,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     public ParticleSystem DustParticlesRight = null!;
     public ParticleSystem ForestKeeperParticles = null!;
     public ParticleSystem DriftwoodGiantParticles = null!;
+    public ParticleSystem CactusBudlingParticles = null!;
     public ParticleSystem OldBirdParticles = null!;
     public ParticleSystem DeathParticles = null!;
     public AudioSource creatureSFXFar = null!;
@@ -347,6 +348,10 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         {
             DriftwoodGiantParticles.Play();
         }
+        else if (targetEnemy is CactusBudling)
+        {
+            CactusBudlingParticles.Play();
+        }
         else if (targetEnemy is RadMechAI)
         {
             OldBirdParticles.Play();
@@ -362,7 +367,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
 
         foreach (EnemyAI enemy in RoundManager.Instance.SpawnedEnemies)
         {
-            if (enemy.isEnemyDead || (enemy is not DriftwoodMenaceAI && enemy is not ForestGiantAI))
+            if (enemy.isEnemyDead || (enemy is not DriftwoodMenaceAI && enemy is not ForestGiantAI && enemy is not CactusBudling))
                 continue;
 
             float distance = Vector3.Distance(transform.position, enemy.transform.position);
@@ -394,6 +399,13 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
             {
                 driftwoodMenaceAI.SwitchToBehaviourServerRpc((int)DriftwoodMenaceAI.DriftwoodState.Grabbed);
                 driftwoodMenaceAI.creatureAnimator.SetBool(DriftwoodMenaceAI.GrabbedAnimation, true);
+            }
+            else if (targetEnemy is CactusBudling cactusBudling)
+            {
+                cactusBudling.SwitchToBehaviourServerRpc((int)CactusBudling.CactusBudlingState.Grabbed);
+                cactusBudling.creatureAnimator.SetBool(CactusBudling.GrabbedAnimation, true);
+                cactusBudling.creatureAnimator.SetBool(CactusBudling.RollingAnimation, false);
+                cactusBudling.creatureAnimator.SetBool(CactusBudling.RootingAnimation, false);
             }
         }
         SwitchToBehaviourStateOnLocalClient((int)State.EatingTargetGiant);
@@ -587,6 +599,12 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
             {
                 driftwoodMenaceAI.SwitchToBehaviourServerRpc((int)DriftwoodMenaceAI.DriftwoodState.SearchingForPrey);
                 driftwoodMenaceAI.creatureAnimator.SetBool(DriftwoodMenaceAI.GrabbedAnimation, false);
+            }
+            else if (IsServer && targetEnemy is CactusBudling cactusBudling)
+            {
+                cactusBudling.SwitchToBehaviourServerRpc((int)CactusBudling.CactusBudlingState.Spawning);
+                cactusBudling.GetNextRootPosition();
+                cactusBudling.creatureAnimator.SetBool(CactusBudling.GrabbedAnimation, false);
             }
             targetEnemy.agent.enabled = true;
         }

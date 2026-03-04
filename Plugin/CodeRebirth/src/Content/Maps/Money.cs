@@ -1,5 +1,6 @@
 using System;
 using CodeRebirth.src.Content.Unlockables;
+using Dawn;
 using Dawn.Utils;
 using Unity.Netcode;
 using UnityEngine;
@@ -26,6 +27,17 @@ public class Money : GrabbableObject
     private int _value;
     private static int _coinsSpawned = 0;
     private static readonly int FlipHash = Animator.StringToHash("flip"); // Trigger
+    private static readonly NamespacedKey CoinMesageKey = NamespacedKey.From("code_rebirth", "coin_ever_flicked");
+
+    private static void DisplayCoinMessage()
+    {
+        bool flicked = Plugin.PersistentDataContainer.GetOrSetDefault(CoinMesageKey, false);
+        if (!flicked)
+        {
+            Plugin.PersistentDataContainer.Set(CoinMesageKey, true);
+            HUDManager.Instance.DisplayTip(new HUDDisplayTip("Error - TP Failed", "Denomination Analyser not located.\nPlease purchase one from the ship terminal to store currency.", HUDDisplayTip.AlertType.Hint));
+        }
+    }
 
     public void Awake()
     {
@@ -57,7 +69,10 @@ public class Money : GrabbableObject
         playerHeldBy.activatingItem = false;
 
         if (MoneyCounter.Instance == null)
+        {
+            DisplayCoinMessage();
             return;
+        }
 
         _moneyParticles.transform.SetParent(null, true);
         _moneyParticles.Play();

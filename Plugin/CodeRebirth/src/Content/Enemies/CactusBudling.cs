@@ -44,9 +44,10 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
     private Coroutine? _nextStateRoutine = null;
 
     private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
-    private static readonly int RollingAnimation = Animator.StringToHash("isRolling"); // Bool
-    private static readonly int RootingAnimation = Animator.StringToHash("isRooting"); // Bool
+    internal static readonly int RollingAnimation = Animator.StringToHash("isRolling"); // Bool
+    internal static readonly int RootingAnimation = Animator.StringToHash("isRooting"); // Bool
     private static readonly int DeadAnimation = Animator.StringToHash("isDead"); // Bool
+    internal static readonly int GrabbedAnimation = Animator.StringToHash("Grabbed"); // Bool
 
     #region ThreatType
     ThreatType IVisibleThreat.type => ThreatType.ForestGiant;
@@ -116,6 +117,7 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
         Rooted,
         Rolling,
         Dead,
+        Grabbed
     }
 
     #region Unity Lifecycles
@@ -140,6 +142,10 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
     public override void Update()
     {
         base.Update();
+        if (currentBehaviourStateIndex == (int)CactusBudlingState.Dead || currentBehaviourStateIndex == (int)CactusBudlingState.Grabbed)
+        {
+            return;
+        }
 
         _idleTimer -= Time.deltaTime;
         if (_idleTimer <= 0)
@@ -208,6 +214,9 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
                 break;
             case (int)CactusBudlingState.Dead:
                 DoDead();
+                break;
+            case (int)CactusBudlingState.Grabbed:
+                DoGrabbed();
                 break;
         }
     }
@@ -311,10 +320,15 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
     {
 
     }
+
+    private void DoGrabbed()
+    {
+
+    }
     #endregion
 
     #region Misc Functions
-    private void GetNextRootPosition()
+    internal void GetNextRootPosition()
     {
         List<(Vector3 position, Vector3 alsoPosition)> possiblePositions = new();
         for (int i = 0; i < 10; i++)
