@@ -47,6 +47,7 @@ public class VendingMachine : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+        CoinDisplayUI.PointsOfInterest.Add(this.transform);
         foreach (SimplifiedItemWithRarityAndColor itemWithRarityAndColor in PotentialItemsToSpawn)
         {
             if (itemWithRarityAndColor.itemName.Equals("vanilla", StringComparison.OrdinalIgnoreCase))
@@ -72,6 +73,12 @@ public class VendingMachine : NetworkBehaviour
         }
 
         currentItemToSpawn = CRUtilities.ChooseRandomWeightedType(possibleItemsToSpawn.Select(x => (x, x.rarity)))!;
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        CoinDisplayUI.PointsOfInterest.Remove(this.transform);
     }
 
     public void StartSpawningAnimation(PlayerControllerB playerControllerB)

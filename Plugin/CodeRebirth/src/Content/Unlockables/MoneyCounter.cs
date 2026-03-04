@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Linq;
+using CodeRebirth.src.Content.Maps;
 using Dawn;
 using Dawn.Utils;
 using GameNetcodeStuff;
@@ -190,10 +191,18 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
     }
 
     private Coroutine? _spinRoutine;
+    private Coroutine? editCoinAmountRoutine;
 
     [ClientRpc]
     private void UpdateVisualsClientRpc(int oldValue, int newValue)
     {
+        if (CoinDisplayUI.Instance.editCoinRoutine != null)
+        {
+            CoinDisplayUI.Instance.StopCoroutine(CoinDisplayUI.Instance.editCoinRoutine);
+            CoinDisplayUI.Instance.CoinTMP.text = oldValue.ToString();
+        }
+        CoinDisplayUI.Instance.editCoinRoutine = CoinDisplayUI.Instance.StartCoroutine(CoinDisplayUI.Instance.EditCoinAmount(newValue, oldValue));
+
         if (newValue < 0 && oldValue >= 0)
         {
             newValue = 0;

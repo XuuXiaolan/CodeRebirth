@@ -15,6 +15,7 @@ using MonoMod.Cil;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using CodeRebirth.src.Content.Maps;
 
 namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(PlayerControllerB))]
@@ -83,6 +84,7 @@ static class PlayerControllerBPatch
     public static void Init()
     {
         On.GameNetcodeStuff.PlayerControllerB.Awake += PlayerControllerB_Awake;
+        On.GameNetcodeStuff.PlayerControllerB.ConnectClientToPlayerObject += PlayerControllerB_ConnectClientToPlayerObject;
         IL.GameNetcodeStuff.PlayerControllerB.CheckConditionsForSinkingInQuicksand += PlayerControllerB_CheckConditionsForSinkingInQuicksand;
         On.GameNetcodeStuff.PlayerControllerB.SetItemInElevator += PlayerControllerB_SetItemInElevator;
         On.GameNetcodeStuff.PlayerControllerB.Update += PlayerControllerB_Update;
@@ -93,6 +95,16 @@ static class PlayerControllerBPatch
         On.GameNetcodeStuff.PlayerControllerB.Interact_performed += PlayerControllerB_Interact_performed;
         On.GameNetcodeStuff.PlayerControllerB.StopHoldInteractionOnTrigger += PlayerControllerB_StopHoldInteractionOnTrigger;
         On.GameNetcodeStuff.PlayerControllerB.PlayerHitGroundEffects += PlayerControllerB_PlayerHitGroundEffects;
+    }
+
+    private static void PlayerControllerB_ConnectClientToPlayerObject(On.GameNetcodeStuff.PlayerControllerB.orig_ConnectClientToPlayerObject orig, PlayerControllerB self)
+    {
+        orig(self);
+        if (MapObjectHandler.Instance.Merchant != null)
+        {
+            GameObject coinUI = GameObject.Instantiate(MapObjectHandler.Instance.Merchant.CoinUIPrefab);
+            coinUI.name = "CoinUI_" + self.playerUsername;
+        }
     }
 
     private static void PlayerControllerB_Awake(On.GameNetcodeStuff.PlayerControllerB.orig_Awake orig, PlayerControllerB self)

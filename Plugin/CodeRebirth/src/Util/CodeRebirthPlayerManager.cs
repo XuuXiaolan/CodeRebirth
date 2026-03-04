@@ -276,7 +276,7 @@ internal static class PlayerControllerBExtensions
     internal static void AddCRPlayerData(this PlayerControllerB player)
     {
         CodeRebirthPlayerManager.dataForPlayer.Add(player, new CRPlayerData());
-        player.GetCRPlayerData().playerColliders = new List<Collider>(player.GetComponentsInChildren<Collider>());
+        player.GetCRPlayerData().playerColliders = new(player.GetComponentsInChildren<Collider>());
         // player.GetCRPlayerData().animatorOverrideController = new AnimatorOverrideController(player.playerBodyAnimator.runtimeAnimatorController);
         // player.playerBodyAnimator.runtimeAnimatorController = player.GetCRPlayerData().animatorOverrideController;
     }
