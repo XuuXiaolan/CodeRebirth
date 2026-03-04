@@ -16,4 +16,14 @@ public class MerchantBarrel : MonoBehaviour
     public List<RealItemWithRarityAndColor> validItemsWithRarityAndColor = new();
     [HideInInspector]
     public GrabbableObject? currentlySpawnedGrabbableObject = null;
+
+    public void Start()
+    {
+        CoinDisplayUI.PointsOfInterest.Add(this.transform);
+    }
+
+    public void OnDestroy()
+    {
+        CoinDisplayUI.PointsOfInterest.Remove(this.transform);
+    }
 }

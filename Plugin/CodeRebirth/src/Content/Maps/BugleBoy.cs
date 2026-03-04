@@ -9,6 +9,8 @@ namespace CodeRebirth.src.Content.Maps;
 public class BugleBoy : MonoBehaviour
 {
     [SerializeField]
+    public int RerollPrice { get; private set; } = 2;
+    [SerializeField]
     public Animator animator = null!;
 
     [SerializeField]
@@ -38,6 +40,14 @@ public class BugleBoy : MonoBehaviour
         chosenClip = bugleClips[merchant.storeSeededRandom.Next(0, bugleClips.Length)];
         rerollTrigger.cooldownTime = chosenClip.length;
         rerollTrigger.onInteract.AddListener(Reroll);
+        CoinDisplayUI.PointsOfInterest.Add(this.transform);
+
+    }
+
+    public void OnDestroy()
+    {
+        CoinDisplayUI.PointsOfInterest.Remove(this.transform);
+        rerollTrigger.onInteract.RemoveListener(Reroll);
     }
 
     public void Update()
@@ -47,7 +57,7 @@ public class BugleBoy : MonoBehaviour
             return;
         }
 
-        if (MoneyCounter.Instance == null || MoneyCounter.Instance.MoneyStored() <= 2)
+        if (MoneyCounter.Instance == null || MoneyCounter.Instance.MoneyStored() <= RerollPrice)
         {
             rerollTrigger.interactable = false;
         }

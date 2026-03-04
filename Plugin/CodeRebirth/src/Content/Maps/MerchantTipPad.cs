@@ -71,6 +71,17 @@ public class MerchantTipPad : NetworkBehaviour
         ToggleDonationObjects();
     }
 
+    public void Start()
+    {
+        CoinDisplayUI.PointsOfInterest.Add(this.transform);
+    }
+
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+        CoinDisplayUI.PointsOfInterest.Remove(this.transform);
+    }
+
     public void CloseDonations()
     {
         shopClosed = true;
