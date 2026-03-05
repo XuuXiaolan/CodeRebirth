@@ -13,7 +13,6 @@ public class BillboardScript : MonoBehaviour
         camera = GameNetworkManager.Instance.localPlayerController.gameplayCamera;
         parentObject = transform.parent;
         transform.rotation = parentObject.rotation;
-
     }
 
     private void Update()

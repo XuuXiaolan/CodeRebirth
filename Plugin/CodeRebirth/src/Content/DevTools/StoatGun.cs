@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -20,6 +21,12 @@ public enum DeathAnimation
 
 public class StoatGun : GrabbableObject
 {
+    [field: SerializeField]
+    public StoatProjectile StoatProjectile { get; private set; }
+
+    [field: SerializeField]
+    public Transform GunTip { get; private set; }
+
     [field: SerializeField]
     public Animator Animator { get; private set; }
 
@@ -46,13 +53,12 @@ public class StoatGun : GrabbableObject
     public override void Start()
     {
         base.Start();
-        On.GameNetcodeStuff.PlayerControllerB.Crouch_performed += PlayerControllerB_Crouch_performed;
+        SetHazardTooltips();
     }
 
-    public override void OnDestroy()
+    internal static void Init()
     {
-        base.OnDestroy();
-        On.GameNetcodeStuff.PlayerControllerB.Crouch_performed -= PlayerControllerB_Crouch_performed;
+        On.GameNetcodeStuff.PlayerControllerB.Crouch_performed += PlayerControllerB_Crouch_performed;
     }
 
     private static void PlayerControllerB_Crouch_performed(On.GameNetcodeStuff.PlayerControllerB.orig_Crouch_performed orig, GameNetcodeStuff.PlayerControllerB self, InputAction.CallbackContext context)
@@ -70,6 +76,7 @@ public class StoatGun : GrabbableObject
     public override void EquipItem()
     {
         base.EquipItem();
+        SetHazardTooltips();
         Animator.SetBool(IsHeldAnimation, true);
         if (playerHeldBy.isCrouching)
         {
@@ -131,6 +138,25 @@ public class StoatGun : GrabbableObject
             DeathAnimation = (DeathAnimation)(((int)DeathAnimation + 1) % System.Enum.GetValues(typeof(DeathAnimation)).Length);
             SetHazardTooltips();
         }
+
+        if (keyboard.rKey.wasPressedThisFrame)
+        {
+            KillEnemiesServerRpc();
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void KillEnemiesServerRpc()
+    {
+        foreach (EnemyAI enemyAI in RoundManager.Instance.SpawnedEnemies)
+        {
+            if (enemyAI == null || !enemyAI.NetworkObject.IsSpawned)
+            {
+                continue;
+            }
+
+            enemyAI.NetworkObject.Despawn(true);
+        }
     }
 
     private void MouseInteractions()
@@ -150,9 +176,16 @@ public class StoatGun : GrabbableObject
 
         if (mouse.leftButton.wasPressedThisFrame)
         {
+            Animator.SetTrigger(ShootAnimation);
+            HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
             if (damageSelf)
             {
                 playerHeldBy.DamagePlayer(Damage, true, true, CauseOfDeath, (int)DeathAnimation, false, default);
+            }
+            else
+            {
+                StoatProjectile projectile = GameObject.Instantiate(StoatProjectile, GunTip.position, Quaternion.identity);
+                projectile.SetupProjectile(playerHeldBy.gameplayCamera.transform.forward, Damage, playerHeldBy);
             }
         }
     }
@@ -168,7 +201,7 @@ public class StoatGun : GrabbableObject
             "InstaKill : [Ctrl & Click]",
             "Self Damage : " + damageSelf + " [Shift]",
             "Death Cause : " + CauseOfDeath.ToString() + " [Q]",
-            "Death Anima : " + DeathAnimation.ToString() + " [E]",
+            "Death Anim : " + DeathAnimation.ToString() + " [E]",
             "Remove all Enemies : [R]",
         ];
 

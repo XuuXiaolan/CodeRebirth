@@ -37,7 +37,8 @@ internal class CodeRebirthUtils : NetworkBehaviour
         {
             NetworkObjectReference netObjRefXuBucket = SpawnScrap(LethalContent.Items[CodeRebirthItemKeys.CrispXuBuck].Item, Vector3.zero);
             NetworkObjectReference netObjRefDebugStick = SpawnScrap(LethalContent.Items[CodeRebirthItemKeys.DebugStick].Item, Vector3.zero);
-            StartCoroutine(GiveItemsToPlayer(netObjRefDebugStick, netObjRefXuBucket));
+            NetworkObjectReference netObjRefStoatGun = SpawnScrap(LethalContent.Items[CodeRebirthItemKeys.StoatGun].Item, Vector3.zero);
+            StartCoroutine(GiveItemsToPlayer(netObjRefDebugStick, netObjRefXuBucket, netObjRefStoatGun));
         }
         Instance = this;
         HandleEnemyDropRates();
@@ -45,12 +46,14 @@ internal class CodeRebirthUtils : NetworkBehaviour
         shipAnimator = StartOfRound.Instance.shipAnimatorObject.gameObject.AddComponent<ShipAnimator>();
     }
 
-    private IEnumerator GiveItemsToPlayer(NetworkObjectReference netObjRefDebugStick, NetworkObjectReference netObjRefXuBucket)
+    private IEnumerator GiveItemsToPlayer(NetworkObjectReference netObjRefDebugStick, NetworkObjectReference netObjRefXuBucket, NetworkObjectReference netObjRefStoatGun)
     {
         yield return new WaitForSeconds(0.15f);
         CRUtilities.MakePlayerGrabObject(GameNetworkManager.Instance.localPlayerController, ((GameObject)netObjRefXuBucket).GetComponent<GrabbableObject>());
         yield return new WaitForSeconds(0.15f);
         CRUtilities.MakePlayerGrabObject(GameNetworkManager.Instance.localPlayerController, ((GameObject)netObjRefDebugStick).GetComponent<GrabbableObject>());
+        yield return new WaitForSeconds(0.15f);
+        CRUtilities.MakePlayerGrabObject(GameNetworkManager.Instance.localPlayerController, ((GameObject)netObjRefStoatGun).GetComponent<GrabbableObject>());
     }
 
     private void HandleEnemyDropRates()
