@@ -27,6 +27,9 @@ public class VendingMachine : NetworkBehaviour
     public Animator Animator { get; private set; }
 
     [field: SerializeField]
+    public float Cooldown { get; private set; }
+
+    [field: SerializeField]
     public InteractTrigger SlotTrigger { get; private set; }
     [field: SerializeField]
     public Transform StartSpawnPosition { get; private set; }
@@ -40,6 +43,7 @@ public class VendingMachine : NetworkBehaviour
     private List<SimplifiedRealItemWithRarityAndColor> possibleItemsToSpawn = new();
     private SimplifiedRealItemWithRarityAndColor currentItemToSpawn;
     private float jammingProgress = 0f;
+    private float lastTimeUsed = 0f;
 
     private static readonly int JammedAnimationHash = Animator.StringToHash("jammed"); // Bool
     private static readonly int UseAnimationHash = Animator.StringToHash("use"); // Trigger
@@ -99,6 +103,12 @@ public class VendingMachine : NetworkBehaviour
             return;
         }
 
+        if (Time.time - lastTimeUsed < Cooldown)
+        {
+            return;
+        }
+
+        lastTimeUsed = Time.time;
         if (JammingCurve.Evaluate(jammingProgress) > UnityEngine.Random.Range(0f, 1f))
         {
             JamMachineClientRpc();

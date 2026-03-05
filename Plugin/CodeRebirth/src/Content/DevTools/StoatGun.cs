@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using Dawn.Utils;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -23,6 +21,9 @@ public enum DeathAnimation
 public class StoatGun : GrabbableObject
 {
     [field: SerializeField]
+    public Animator Animator { get; private set; }
+
+    [field: SerializeField]
     public int Damage { get; private set; }
 
     [field: SerializeField]
@@ -39,20 +40,24 @@ public class StoatGun : GrabbableObject
 
     private bool damageSelf = false;
 
+    private static readonly int IsHeldAnimation = Animator.StringToHash("IsHeld"); // Boolean
+    private static readonly int ShootAnimation = Animator.StringToHash("Shoot"); // Trigger
+
     public override void Start()
     {
         base.Start();
-        Init();
+        On.GameNetcodeStuff.PlayerControllerB.Crouch_performed += PlayerControllerB_Crouch_performed;
     }
 
-    private static void Init()
+    public override void OnDestroy()
     {
-        On.GameNetcodeStuff.PlayerControllerB.Crouch_performed += PlayerControllerB_Crouch_performed;
+        base.OnDestroy();
+        On.GameNetcodeStuff.PlayerControllerB.Crouch_performed -= PlayerControllerB_Crouch_performed;
     }
 
     private static void PlayerControllerB_Crouch_performed(On.GameNetcodeStuff.PlayerControllerB.orig_Crouch_performed orig, GameNetcodeStuff.PlayerControllerB self, InputAction.CallbackContext context)
     {
-        if (self.currentlyHeldObjectServer != null && self.currentlyHeldObjectServer is StoatGun stoatGun)
+        if (self.currentlyHeldObjectServer != null && self.currentlyHeldObjectServer is StoatGun)
         {
             return;
         }
@@ -61,6 +66,23 @@ public class StoatGun : GrabbableObject
     }
 
     private bool holdingCtrl = false;
+
+    public override void EquipItem()
+    {
+        base.EquipItem();
+        Animator.SetBool(IsHeldAnimation, true);
+        if (playerHeldBy.isCrouching)
+        {
+            playerHeldBy.Crouch(false);
+        }
+    }
+
+    public override void DiscardItem()
+    {
+        base.DiscardItem();
+        Animator.SetBool(IsHeldAnimation, false);
+    }
+
     public override void Update()
     {
         base.Update();
@@ -84,17 +106,18 @@ public class StoatGun : GrabbableObject
         if (keyboard.ctrlKey.IsPressed())
         {
             holdingCtrl = true;
-            playerHeldBy.inSpecialInteractAnimation = true;
+            playerHeldBy.twoHanded = true;
         }
         else
         {
             holdingCtrl = false;
-            playerHeldBy.inSpecialInteractAnimation = false;
+            playerHeldBy.twoHanded = false;
         }
 
         if (keyboard.shiftKey.wasPressedThisFrame)
         {
             damageSelf = !damageSelf;
+            SetHazardTooltips();
         }
 
         if (keyboard.qKey.wasPressedThisFrame)
