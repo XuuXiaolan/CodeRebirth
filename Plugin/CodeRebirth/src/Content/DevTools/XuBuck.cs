@@ -52,6 +52,10 @@ public class XuBuck : GrabbableObject
         }
         else if (keyboard.zKey.wasPressedThisFrame)
         {
+            if (MoneyCounter.Instance.MoneyStored() < 0)
+            {
+                return;
+            }
             MoneyCounter.Instance.RemoveMoney(MoneyCounter.Instance.MoneyStored() + 1);
         }
     }

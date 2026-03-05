@@ -33,7 +33,7 @@ public class Merchant : NetworkBehaviour
     private Dictionary<GrabbableObject, int> itemsOnSale = new();
 
     private static readonly int IdleRandomHash = Animator.StringToHash("idleRandom"); // Trigger
-    internal static readonly int RerollHash = Animator.StringToHash("reroll"); // Trigger
+    private static readonly int RerollHash = Animator.StringToHash("reroll"); // Trigger
     private static readonly int StealHash = Animator.StringToHash("steal"); // Trigger
     private static readonly int PurchaseHash = Animator.StringToHash("purchase"); // Trigger
     private static readonly int ActivatedHash = Animator.StringToHash("activated"); // Bool
@@ -41,6 +41,12 @@ public class Merchant : NetworkBehaviour
     public void Start()
     {
         storeSeededRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 37325);
+        if (MoneyCounter.Instance == null || MoneyCounter.Instance.MoneyStored() < 0)
+        {
+            DeclareShopClosed();
+            return;
+        }
+
         if (!IsServer)
         {
             return;
@@ -293,6 +299,11 @@ public class Merchant : NetworkBehaviour
     internal List<MerchantBarrel> existingMerchantBarrels = new();
     public void HandleSpawningMerchantItems(MerchantBarrel merchantBarrel)
     {
+        if (MoneyCounter.Instance == null || MoneyCounter.Instance.MoneyStored() < 0)
+        {
+            return;
+        }
+
         Vector3 spawnPosition = merchantBarrel.barrelSpawnPoint.position;
 
         if (merchantBarrel.validItemsWithRarityAndColor == null || merchantBarrel.validItemsWithRarityAndColor.Count == 0)
@@ -303,7 +314,7 @@ public class Merchant : NetworkBehaviour
 
         RealItemWithRarityAndColor selectedItem = CRUtilities.ChooseRandomWeightedType(merchantBarrel.validItemsWithRarityAndColor.Select(x => (x, x.rarity)))!;
 
-        if (selectedItem.item == null)
+        if (selectedItem.item == null) 
         {
             Plugin.ExtendedLogging("Item selection failed for barrel at " + spawnPosition + "Assuming Random item");
             Item item = GetRandomVanillaItem(false, storeSeededRandom);
@@ -361,5 +372,13 @@ public class Merchant : NetworkBehaviour
         {
             grabbableObject.customGrabTooltip = "You can buy this for " + itemCost + " coins.";
         }
+    }
+
+    public void DeclareShopClosed()
+    {
+        bugleBoy.DisableSelf();
+        tipPad.CloseDonations();
+        merchantAnimator.SetBool(ActivatedHash, true);
+        merchantAnimator.SetTrigger(StealHash);
     }
 }
