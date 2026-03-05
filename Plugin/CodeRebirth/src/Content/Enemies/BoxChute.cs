@@ -7,6 +7,8 @@ namespace CodeRebirth.src.Content.Enemies;
 public class BoxChute : MonoBehaviour
 {
     [field: SerializeField]
+    public Animator Animator { get; private set; }
+    [field: SerializeField]
     public float FallingSpeed { get; private set; } = 10f;
 
     [field: SerializeField]
@@ -22,6 +24,10 @@ public class BoxChute : MonoBehaviour
     public UnityEvent OnLanding { get; private set; } = new();
 
     private Vector3 landingPosition = Vector3.zero;
+
+    private static readonly int LandAnimation = Animator.StringToHash("land"); // Trigger
+    private static readonly int OpenAnimation = Animator.StringToHash("open"); // Trigger
+
     public void SetupBoxChute()
     {
         landingPosition = Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 500f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore) ? hit.point : transform.position;
@@ -61,6 +67,8 @@ public class BoxChute : MonoBehaviour
             OnLanding.Invoke();
             AudioSource.Stop();
             AudioSource.PlayOneShot(LandingSound);
+            Animator.SetTrigger(LandAnimation);
+            Animator.SetTrigger(OpenAnimation);
         }
 
         this.transform.position = Vector3.MoveTowards(this.transform.position, landingPosition, Time.deltaTime * FallingSpeed);

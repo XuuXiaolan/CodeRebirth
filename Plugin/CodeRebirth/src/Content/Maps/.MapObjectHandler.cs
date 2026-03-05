@@ -68,9 +68,6 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
         [LoadFromBundle("CoinUI.prefab")]
         public GameObject CoinUIPrefab { get; private set; } = null!;
-
-        [LoadFromBundle("DropPod.prefab")]
-        public GameObject BoxChutePrefab { get; private set; } = null!;
     }
 
     public class GunslingerGregAssets(DuskMod mod, string filePath) : AssetBundleLoader<GunslingerGregAssets>(mod, filePath)

@@ -9,6 +9,9 @@ namespace CodeRebirth.src.Content.Enemies;
 public class MiliaryPlane : NetworkBehaviour
 {
     [field: SerializeField]
+    public GameObject BoxChutePrefab { get; private set; } = null!;
+
+    [field: SerializeField]
     public float FlyingSpeed { get; private set; } = 25f;
 
     [field: SerializeField]
@@ -118,7 +121,7 @@ public class MiliaryPlane : NetworkBehaviour
         this.transform.position += this.transform.forward * Time.deltaTime * FlyingSpeed;
         if (!droppedBoxChute && Vector3.Distance(this.transform.position, DropPosition) <= 0.5f)
         {
-            GameObject boxChuteObject = GameObject.Instantiate(MapObjectHandler.Instance.Merchant.BoxChutePrefab, DropPosition, Quaternion.identity);
+            GameObject boxChuteObject = GameObject.Instantiate(BoxChutePrefab, DropPosition, Quaternion.identity);
             BoxChute boxChute = boxChuteObject.GetComponent<BoxChute>();
             boxChute.SetupBoxChute();
         }
