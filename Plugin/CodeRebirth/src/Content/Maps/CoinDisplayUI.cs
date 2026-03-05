@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using CodeRebirth.src.Content.Unlockables;
 using Dawn.Utils;
 using TMPro;
 using UnityEngine;
@@ -35,6 +36,11 @@ public class CoinDisplayUI : Singleton<CoinDisplayUI>
         if (fadingRoutine != null || editCoinRoutine != null)
         {
             return;
+        }
+
+        if (MoneyCounter.Instance != null)
+        {
+            CoinTMP.text = MoneyCounter.Instance.MoneyStored().ToString();
         }
 
         foreach (Transform point in PointsOfInterest)
@@ -104,7 +110,7 @@ public class CoinDisplayUI : Singleton<CoinDisplayUI>
                 CoinTMP.color = new Color(CoinTMP.color.r, CoinTMP.color.g, CoinTMP.color.b, 1);
                 Image.color = new Color(Image.color.r, Image.color.g, Image.color.b, 1);
             }
-
+            yield return new WaitForSeconds(0.05f * (goSlowly ? 5 : 1));
             if (changedAmount > 0)
             {
                 CoinTMP.text = (int.Parse(CoinTMP.text) + 1).ToString();
@@ -119,7 +125,6 @@ public class CoinDisplayUI : Singleton<CoinDisplayUI>
             }
             extraDigits = CoinTMP.text.Length - 1;
             ((RectTransform)CoinChangeTMP.transform).anchoredPosition3D = TMPChangeOriginalPosition + new Vector3(25f * extraDigits, 0f, 0f);
-            yield return new WaitForSeconds(0.05f * (goSlowly ? 5 : 1));
         }
 
         yield return new WaitForSeconds(0.25f);
