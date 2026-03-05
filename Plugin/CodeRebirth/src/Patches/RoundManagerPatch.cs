@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using CodeRebirth.src.Content.Unlockables;
 using Dawn;
+using Unity.Netcode;
 
 namespace CodeRebirth.src.Patches;
 [HarmonyPatch(typeof(RoundManager))]
@@ -21,6 +22,19 @@ static class RoundManagerPatch
         {
             SpawnFlora();
         }
+
+        if (MoneyCounter.Instance == null || MoneyCounter.Instance.MoneyStored() >= 0)
+        {
+            return;
+        }
+
+        if (!NetworkManager.Singleton.IsServer)
+        {
+            return;
+        }
+
+        GameObject militaryPlane = GameObject.Instantiate(LethalContent.MapObjects[CodeRebirthMapObjectKeys.MilitaryPlane].MapObject, Vector3.zero, Quaternion.identity);
+        militaryPlane.GetComponent<NetworkObject>().Spawn(true);
     }
 
     private static void SpawnFlora()

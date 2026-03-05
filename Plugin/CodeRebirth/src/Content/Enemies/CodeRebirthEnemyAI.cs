@@ -40,7 +40,9 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
         enemyRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 6699 + CodeRebirthUtils.Instance.CRRandom.Next(100000));
 
         if (spawnSound != null)
+        {
             creatureVoice.PlayOneShot(spawnSound);
+        }
 
         _idleTimer = enemyRandom.NextFloat(_idleAudioClips.minTime, _idleAudioClips.maxTime);
 
