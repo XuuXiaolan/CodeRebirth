@@ -10,6 +10,8 @@ namespace CodeRebirth.src.Content.DevTools;
 public class StoatProjectile : MonoBehaviour
 {
     [field: SerializeField]
+    public float Speed { get; private set; } = 12f;
+    [field: SerializeField]
     public SpriteRenderer SpriteRenderer { get; private set; } = null!;
 
     [field: SerializeField]
@@ -19,11 +21,17 @@ public class StoatProjectile : MonoBehaviour
 
     private int force = 0;
     private PlayerControllerB playerHeldBy = null!;
-    public void SetupProjectile(Vector3 direction, int force, PlayerControllerB playerHeldBy)
+    private bool instaKill = false;
+    private CauseOfDeath CauseOfDeath = CauseOfDeath.Gunshots;
+    private DeathAnimation DeathAnimation = DeathAnimation.Default;
+    public void SetupProjectile(Vector3 direction, int force, PlayerControllerB playerHeldBy, bool instaKill, CauseOfDeath causeOfDeath, DeathAnimation deathAnimation)
     {
         this.transform.forward = direction;
         this.force = force;
         this.playerHeldBy = playerHeldBy;
+        this.instaKill = instaKill;
+        this.CauseOfDeath = causeOfDeath;
+        this.DeathAnimation = deathAnimation;
 
         SpriteRenderer.sprite = Sprites[UnityEngine.Random.Range(0, Sprites.Count)];
     }
@@ -34,10 +42,18 @@ public class StoatProjectile : MonoBehaviour
     private List<EnemyAI> enemiesHit = new List<EnemyAI>();
     private List<IHittable> hittablesHit = new List<IHittable>();
     private List<IExplodeable> explodeablesHit = new List<IExplodeable>();
+    private float timer = 30f;
 
     public void Update()
     {
-        this.transform.position += this.transform.forward * Time.deltaTime * 6f;
+        timer -= Time.deltaTime;
+        if (timer <= 0f)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+
+        this.transform.position += this.transform.forward * Time.deltaTime * Speed;
 
         int numHits = Physics.OverlapSphereNonAlloc(this.transform.position, DetectionRadius, collidersHit, MoreLayerMasks.PlayersAndInteractableAndEnemiesAndPropsHazardMask | StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Collide);
         if (numHits <= 0)
@@ -102,21 +118,43 @@ public class StoatProjectile : MonoBehaviour
 
         foreach (PlayerControllerB playerControllerB in playersHit)
         {
-            playerControllerB.DamagePlayer(force, true, true, CauseOfDeath.Burning, 0, false, default);
+            if (instaKill)
+            {
+                playerControllerB.KillPlayer(Vector3.zero, true, CauseOfDeath, (int)DeathAnimation);
+                continue;
+            }
+            playerControllerB.DamagePlayer(force, true, true, CauseOfDeath, (int)DeathAnimation, false, default);
         }
 
         foreach (EnemyAI enemyAI in enemiesHit)
         {
+            if (instaKill)
+            {
+                enemyAI.KillEnemyServerRpc(false);
+                continue;
+            }
             enemyAI.HitEnemyOnLocalClient(force, this.transform.position);
         }
 
         foreach (IHittable hittable in hittablesHit)
         {
+            if (instaKill)
+            {
+                hittable.Hit(int.MaxValue, this.transform.position, playerHeldBy, true, -1);
+                continue;
+            }
+
             hittable.Hit(force, this.transform.position, playerHeldBy, true, -1);
         }
 
         foreach (IExplodeable explodeable in explodeablesHit)
         {
+            if (instaKill)
+            {
+                explodeable.OnExplosion(int.MaxValue, this.transform.position, DetectionRadius);
+                continue;
+            }
+
             explodeable.OnExplosion(force, this.transform.position, DetectionRadius);
         }
 

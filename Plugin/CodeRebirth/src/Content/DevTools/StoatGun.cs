@@ -121,7 +121,7 @@ public class StoatGun : GrabbableObject
             playerHeldBy.twoHanded = false;
         }
 
-        if (keyboard.shiftKey.wasPressedThisFrame)
+        if (keyboard.pKey.wasPressedThisFrame)
         {
             damageSelf = !damageSelf;
             SetHazardTooltips();
@@ -180,12 +180,19 @@ public class StoatGun : GrabbableObject
             HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
             if (damageSelf)
             {
-                playerHeldBy.DamagePlayer(Damage, true, true, CauseOfDeath, (int)DeathAnimation, false, default);
+                if (holdingCtrl)
+                {
+                    playerHeldBy.KillPlayer(Vector3.zero, true, CauseOfDeath, (int)DeathAnimation);
+                }
+                else
+                {
+                    playerHeldBy.DamagePlayer(Damage, true, true, CauseOfDeath, (int)DeathAnimation, false, default);
+                }
             }
             else
             {
                 StoatProjectile projectile = GameObject.Instantiate(StoatProjectile, GunTip.position, Quaternion.identity);
-                projectile.SetupProjectile(playerHeldBy.gameplayCamera.transform.forward, Damage, playerHeldBy);
+                projectile.SetupProjectile(playerHeldBy.gameplayCamera.transform.forward, Damage, playerHeldBy, holdingCtrl, CauseOfDeath, DeathAnimation);
             }
         }
     }
@@ -198,9 +205,9 @@ public class StoatGun : GrabbableObject
         [
             "Gugugugugugu others : [LMB]",
             "Damage : " + Damage + " [Ctrl & Scroll]",
-            "InstaKill : [Ctrl & Click]",
-            "Self Damage : " + damageSelf + " [Shift]",
-            "Death Cause : " + CauseOfDeath.ToString() + " [Q]",
+            "InstaKill : [Ctrl & LMB]",
+            "Self Damage : " + damageSelf + " [P]",
+            "CoDeath : " + CauseOfDeath.ToString() + " [Q]",
             "Death Anim : " + DeathAnimation.ToString() + " [E]",
             "Remove all Enemies : [R]",
         ];
