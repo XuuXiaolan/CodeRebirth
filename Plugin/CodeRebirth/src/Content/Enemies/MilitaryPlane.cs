@@ -1,12 +1,13 @@
 using UnityEngine;
 using Unity.Netcode;
 using Dawn.Utils;
-using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.MiscScripts;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CodeRebirth.src.Content.Enemies;
 
-public class MiliaryPlane : NetworkBehaviour
+public class MilitaryPlane : NetworkBehaviour
 {
     [field: SerializeField]
     public GameObject BoxChutePrefab { get; private set; } = null!;
@@ -16,6 +17,9 @@ public class MiliaryPlane : NetworkBehaviour
 
     [field: SerializeField]
     public AudioSource AudioSource { get; private set; } = null!;
+
+    [field: SerializeField]
+    public AudioSource EngineAudioSource { get; private set; } = null!;
     [field: SerializeField]
     public AudioClip AmbientFlyingSound { get; private set; } = null!;
     [field: SerializeField]
@@ -25,92 +29,58 @@ public class MiliaryPlane : NetworkBehaviour
     private Vector3 ExplodePosition = Vector3.zero;
     public void Start()
     {
-        AudioSource.clip = AmbientFlyingSound;
-        AudioSource.Play();
         AudioSource.PlayOneShot(WarningSirenSound);
+        EngineAudioSource.PlayOneShot(AmbientFlyingSound);
+
+        System.Random random = new(StartOfRound.Instance.randomMapSeed + 12345 + UnityEngine.Random.Range(0, 999999));
         if (RoundManager.Instance.outsideAINodes == null)
         {
             RoundManager.Instance.outsideAINodes = GameObject.FindGameObjectsWithTag("OutsideAINode");
         }
 
-        float furthestDistanceToShip = 0f;
-        GameObject? furthestAINode = null;
-        foreach (GameObject AINode in RoundManager.Instance.outsideAINodes)
-        {
-            float distanceToShip = Vector3.Distance(AINode.transform.position, StartOfRound.Instance.shipLandingPosition.position);
-            if (distanceToShip > furthestDistanceToShip)
-            {
-                furthestDistanceToShip = distanceToShip;
-                furthestAINode = AINode;
-            }
-        }
+        List<GameObject> orderedNodes = RoundManager.Instance.outsideAINodes.OrderBy(x => Vector3.Distance(x.transform.position, StartOfRound.Instance.shipLandingPosition.position)).ToList();
 
-        if (furthestAINode == null)
+        if (orderedNodes.Count == 0)
         {
             Plugin.Logger.LogError("No outside AI nodes found for military plane to spawn at!");
             return;
         }
 
-        Plugin.ExtendedLogging($"Spawning military plane at furthest outside AI node: {furthestAINode.name} at distance {furthestDistanceToShip} from ship");
+        List<GameObject> furthestNodes =
+        [
+            .. orderedNodes.Where(x => Vector3.Distance(x.transform.position, StartOfRound.Instance.shipLandingPosition.position) > 40f),
+        ];
+
+        GameObject furthestAINode = furthestNodes[random.Next(0, furthestNodes.Count)];
+
+        float furthestDistanceToShip = Vector3.Distance(furthestAINode.transform.position, StartOfRound.Instance.shipLandingPosition.position);
         this.transform.position = furthestAINode.transform.position + Vector3.up * 250f;
+        this.transform.position = new Vector3(this.transform.position.x, Mathf.Clamp(this.transform.position.y, int.MinValue, StartOfRound.Instance.shipLandingPosition.position.y + 250f), this.transform.position.z);
         this.transform.LookAt(StartOfRound.Instance.shipLandingPosition);
         this.transform.rotation = Quaternion.Euler(0, this.transform.rotation.eulerAngles.y, 0);
+        this.transform.position -= this.transform.forward * 100f;
 
-        GameObject? perfectNodeToFaceTowards = null;
-        float closestDot = float.MaxValue;
-        foreach (GameObject AINode in RoundManager.Instance.outsideAINodes)
-        {
-            float distanceToShip = Vector3.Distance(AINode.transform.position, StartOfRound.Instance.shipLandingPosition.position);
-            float distanceToFurthestNode = Vector3.Distance(AINode.transform.position, furthestAINode.transform.position);
-            if (distanceToShip <= 20f || distanceToFurthestNode <= furthestDistanceToShip)
-            {
-                continue;
-            }
-
-            Vector3 directionToNode = (AINode.transform.position - StartOfRound.Instance.shipLandingPosition.position).normalized;
-            float dot = Vector3.Dot(directionToNode, this.transform.forward);
-            if (dot < closestDot)
-            {
-                closestDot = dot;
-                perfectNodeToFaceTowards = AINode;
-            }
-        }
-
-        Vector3 centerOfFlightPath = StartOfRound.Instance.shipLandingPosition.position + Vector3.up * 250f;
-        if (perfectNodeToFaceTowards != null)
-        {
-            Plugin.ExtendedLogging($"Found perfect node for military plane to face towards: {perfectNodeToFaceTowards.name} with dot {closestDot}");
-            Vector3 centerOfNodes = (this.transform.position - perfectNodeToFaceTowards.transform.position) / 2;
-            centerOfFlightPath = new Vector3(centerOfNodes.x, this.transform.position.y, centerOfNodes.z);
-            this.transform.LookAt(perfectNodeToFaceTowards.transform);
-            this.transform.rotation = Quaternion.Euler(0, this.transform.rotation.eulerAngles.y, 0);
-        }
-        else
-        {
-            Plugin.Logger.LogWarning("No perfect node found for military plane to face towards, defaulting to facing ship");
-        }
-
-        if (Physics.Raycast(this.transform.position, this.transform.forward, out RaycastHit hit, 70f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+        Vector3 centerOfFlightPath = StartOfRound.Instance.shipLandingPosition.position;
+        centerOfFlightPath.y = this.transform.position.y;
+        if (Physics.Raycast(this.transform.position, this.transform.forward, out RaycastHit hit, furthestDistanceToShip, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
         {
             ExplodePosition = hit.point;
-            DropPosition = hit.point - (this.transform.forward * 20f);
-            Plugin.ExtendedLogging($"Calculated drop position for military plane: {DropPosition} based on raycast hit with {hit.collider.name}");
+            DropPosition = this.transform.position + this.transform.forward * (Vector3.Distance(hit.point, this.transform.position) / 2f);
+            Plugin.ExtendedLogging($"Calculated drop position for military plane: {DropPosition} based on raycast hit with {hit.collider.name} (Explosion related)");
         }
         else
         {
+            if (Physics.Raycast(this.transform.position, this.transform.forward, out hit, 300f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+            {
+                ExplodePosition = hit.point;
+                Plugin.ExtendedLogging($"Calculated explosion position for military plane: {ExplodePosition} based on raycast hit with {hit.collider.name} (Explosion related)");
+            }
             // Must be 20 to 30 units away from the ship
-            System.Random random = new System.Random(StartOfRound.Instance.randomMapSeed + 12345);
-            float requiredDistanceFromShip = random.NextFloat(20f, 30f) * random.NextSign();
+            float requiredDistanceFromShip = random.NextFloat(20, 30f) * random.NextSign();
             Vector3 directionFromCenter = (this.transform.position - centerOfFlightPath).normalized;
             DropPosition = centerOfFlightPath + directionFromCenter * requiredDistanceFromShip;
             Plugin.ExtendedLogging("Military plane failed to calculate drop position based on raycast, defaulting to ship landing position");
         }
-        // Spawn on a random node that's far from the ship
-        // do a vector3.dot between all ai nodes to see one that lines up from the direction of it looking towards the ship past the ship
-        // make that the flight path, from current node + like 250y in height to that node, crossing by the ship's position
-        // drop the boxchute down nearby the ship at a random point along the ship's length, but not too close to the edges
-        // precalculate the drop point
-        // if flightpath intersects with something after debt collector dropped, explode?
     }
 
     private bool exploded = false;
@@ -124,10 +94,12 @@ public class MiliaryPlane : NetworkBehaviour
             GameObject boxChuteObject = GameObject.Instantiate(BoxChutePrefab, DropPosition, Quaternion.identity);
             BoxChute boxChute = boxChuteObject.GetComponent<BoxChute>();
             boxChute.SetupBoxChute();
+            droppedBoxChute = true;
         }
 
         if (!exploded && Vector3.Distance(this.transform.position, ExplodePosition) <= 0.5f)
         {
+            exploded = true;
             CRUtilities.CreateExplosion(ExplodePosition, true, 100, 0f, 100f, 100, null, null, 200f);
             if (IsServer)
             {
