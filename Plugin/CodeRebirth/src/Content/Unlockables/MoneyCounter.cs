@@ -62,14 +62,15 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
     private static readonly int OnHitHash = Animator.StringToHash("hit"); // Trigger
     private static readonly int CoinGetHash = Animator.StringToHash("coinGet"); // Trigger
 
-    public override void OnNetworkPostSpawn()
+    public IEnumerator Start()
     {
-        base.OnNetworkPostSpawn();
+        yield return new WaitUntil(() => this.NetworkObject.IsSpawned);
+        yield return new WaitUntil(() => CoinDisplayUI.Instance != null);
         _audioSource.PlayOneShot(_onSpawnSound);
 
         if (!IsServer)
         {
-            return;
+            yield break;
         }
 
         PersistentDataContainer? contract = DawnLib.GetCurrentContract();
@@ -207,7 +208,6 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
     }
 
     private Coroutine? _spinRoutine;
-    private Coroutine? editCoinAmountRoutine;
 
     [ClientRpc]
     private void UpdateVisualsClientRpc(int oldValue, int newValue)
@@ -221,6 +221,7 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
 
         if (newValue < 0 && oldValue >= 0)
         {
+            Plugin.ExtendedLogging($"Going into debt mode");
             newValue = 0;
             GoToDebtMode();
         }

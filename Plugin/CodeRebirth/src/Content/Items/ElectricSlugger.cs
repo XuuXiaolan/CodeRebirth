@@ -1,7 +1,6 @@
 using System.Collections;
 using CodeRebirth.src.MiscScripts;
 using Dawn.Utils;
-
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -12,7 +11,7 @@ namespace CodeRebirth.src.Content.Items;
 public class ElectricSlugger : GrabbableObject
 {
     public SkinnedMeshRenderer skinnedMeshRenderer = null!;
-    public Transform weaponTip = null!;
+    public Transform weaponTip = null!; // Used on the VisualEffect
     public VisualEffect shootVFX = null!;
     [Header("Audio")]
     public AudioSource idleSource = null!;
@@ -24,11 +23,6 @@ public class ElectricSlugger : GrabbableObject
     private float pumpTimer = 0f;
     private int pumpCount = 0;
     private bool canFire = true;
-
-    public override void Start()
-    {
-        base.Start();
-    }
 
     public override void GrabItem()
     {
@@ -112,11 +106,12 @@ public class ElectricSlugger : GrabbableObject
         }
     }
 
+    private static int sluggerMask = LayerMask.GetMask("Default", "Player", "Room", "Props", "Enemies", "Terrain", "MapHazards", "Vehicle");
     public override void ItemActivate(bool used, bool buttonDown = true)
     {
         base.ItemActivate(used, buttonDown);
         if (!canFire || insertedBattery.empty || insertedBattery.charge <= 0) return;
-        int numHits = Physics.SphereCastNonAlloc(playerHeldBy.gameplayCamera.transform.position, 1, playerHeldBy.gameObject.transform.forward, cachedRaycastHits, 999, MoreLayerMasks.CollidersAndRoomAndPlayersAndEnemiesAndTerrainAndVehicleMask, QueryTriggerInteraction.Collide);
+        int numHits = Physics.SphereCastNonAlloc(playerHeldBy.gameplayCamera.transform.position, 1, playerHeldBy.gameObject.transform.forward, cachedRaycastHits, 999, sluggerMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
             CRUtilities.CreateExplosion(cachedRaycastHits[i].transform.position, true, 0, 0, 0, 0, playerHeldBy, null, 0);
@@ -133,7 +128,9 @@ public class ElectricSlugger : GrabbableObject
             }
 
             if (GameNetworkManager.Instance.localPlayerController == playerHeldBy)
+            {
                 iHittable.Hit(2 * (pumpCount + 1), playerHeldBy.gameplayCamera.transform.position, playerHeldBy, true, -1);
+            }
             // play sound and stuff prob
         }
         firingSource.PlayOneShot(fireSound);

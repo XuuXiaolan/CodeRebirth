@@ -1,4 +1,5 @@
 using Dawn;
+using Dawn.Utils;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
@@ -68,17 +69,26 @@ public class BoxChute : MonoBehaviour
         {
             this.transform.position = landingPosition;
             landingPosition = Vector3.zero;
-            OnLanding.Invoke();
             AudioSource.Stop();
             AudioSource.PlayOneShot(LandingSound);
             Animator.SetTrigger(LandAnimation);
             Animator.SetTrigger(OpenAnimation);
-            if (NetworkManager.Singleton.IsServer)
-            {
-                RoundManager.Instance.SpawnEnemyGameObject(Spawner != null ? Spawner.position : transform.position, -1, -1, LethalContent.Enemies[CodeRebirthEnemyKeys.PeaceKeeper].EnemyType);
-            }
         }
 
         this.transform.position = Vector3.MoveTowards(this.transform.position, landingPosition, Time.deltaTime * FallingSpeed);
+    }
+
+    public void OnLandingAnimEvent()
+    {
+        OnLanding.Invoke();
+        SpawnEnemy();
+    }
+
+    public void SpawnEnemy()
+    {
+        if (NetworkManager.Singleton.IsServer)
+        {
+            RoundManager.Instance.SpawnEnemyGameObject(Spawner.position, -1, -1, LethalContent.Enemies[CodeRebirthEnemyKeys.PeaceKeeper].EnemyType);
+        }
     }
 }
