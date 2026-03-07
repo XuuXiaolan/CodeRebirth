@@ -23,17 +23,17 @@ static class RoundManagerPatch
             SpawnFlora();
         }
 
-        if (MoneyCounter.Instance == null || MoneyCounter.Instance.MoneyStored() >= 0)
-        {
-            return;
-        }
-
         if (!NetworkManager.Singleton.IsServer)
         {
             return;
         }
 
-        GameObject militaryPlane = GameObject.Instantiate(LethalContent.MapObjects[CodeRebirthMapObjectKeys.MilitaryPlane].MapObject, Vector3.zero, Quaternion.identity);
+        if (MoneyCounter.ExpensiveMoneyStored() >= 0)
+        {
+            return;
+        }
+
+        GameObject militaryPlane = GameObject.Instantiate(LethalContent.MapObjects[CodeRebirthMapObjectKeys.MilitaryPlane].MapObject, Vector3.zero, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
         militaryPlane.GetComponent<NetworkObject>().Spawn(true);
     }
 

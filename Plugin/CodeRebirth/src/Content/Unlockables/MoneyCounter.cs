@@ -154,6 +154,22 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
         UpdateVisuals(oldValue, _totalMoneyStored.Value);
     }
 
+    public static int ExpensiveMoneyStored()
+    {
+        if (Instance != null)
+        {
+            return Instance.MoneyStored();
+        }
+
+        PersistentDataContainer? contract = DawnLib.GetCurrentContract();
+        if (contract != null && contract.TryGet(_moneyKey, out int value))
+        {
+            return value;
+        }
+
+        return 0;
+    }
+
     public int MoneyStored()
     {
         return _totalMoneyStored.Value;

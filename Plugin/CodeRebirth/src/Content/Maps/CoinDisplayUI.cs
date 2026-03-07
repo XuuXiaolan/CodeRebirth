@@ -29,6 +29,7 @@ public class CoinDisplayUI : Singleton<CoinDisplayUI>
     private void Start()
     {
         TMPChangeOriginalPosition = ((RectTransform)CoinChangeTMP.transform).anchoredPosition3D;
+        CoinTMP.text = MoneyCounter.ExpensiveMoneyStored().ToString();
     }
 
     private void Update()

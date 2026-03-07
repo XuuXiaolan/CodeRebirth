@@ -91,7 +91,7 @@ public class MilitaryPlane : NetworkBehaviour
         this.transform.position += this.transform.forward * Time.deltaTime * FlyingSpeed;
         if (!droppedBoxChute && Vector3.Distance(this.transform.position, DropPosition) <= 0.5f)
         {
-            GameObject boxChuteObject = GameObject.Instantiate(BoxChutePrefab, DropPosition, Quaternion.identity);
+            GameObject boxChuteObject = GameObject.Instantiate(BoxChutePrefab, DropPosition, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
             BoxChute boxChute = boxChuteObject.GetComponent<BoxChute>();
             boxChute.SetupBoxChute();
             droppedBoxChute = true;

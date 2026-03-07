@@ -41,7 +41,7 @@ public class Merchant : NetworkBehaviour
     public void Start()
     {
         storeSeededRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 37325);
-        if (MoneyCounter.Instance == null || MoneyCounter.Instance.MoneyStored() < 0)
+        if (MoneyCounter.ExpensiveMoneyStored() < 0)
         {
             DeclareShopClosed();
             return;

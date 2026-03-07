@@ -1,3 +1,5 @@
+using Dawn;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
@@ -6,6 +8,8 @@ namespace CodeRebirth.src.Content.Enemies;
 
 public class BoxChute : MonoBehaviour
 {
+    [field: SerializeField]
+    public Transform Spawner { get; private set; }
     [field: SerializeField]
     public Animator Animator { get; private set; }
     [field: SerializeField]
@@ -69,6 +73,10 @@ public class BoxChute : MonoBehaviour
             AudioSource.PlayOneShot(LandingSound);
             Animator.SetTrigger(LandAnimation);
             Animator.SetTrigger(OpenAnimation);
+            if (NetworkManager.Singleton.IsServer)
+            {
+                RoundManager.Instance.SpawnEnemyGameObject(Spawner != null ? Spawner.position : transform.position, -1, -1, LethalContent.Enemies[CodeRebirthEnemyKeys.PeaceKeeper].EnemyType);
+            }
         }
 
         this.transform.position = Vector3.MoveTowards(this.transform.position, landingPosition, Time.deltaTime * FallingSpeed);
