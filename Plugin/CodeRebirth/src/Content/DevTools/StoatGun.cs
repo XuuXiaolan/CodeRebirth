@@ -34,12 +34,6 @@ public class StoatGun : GrabbableObject
     public int Damage { get; private set; }
 
     [field: SerializeField]
-    public float Range { get; private set; }
-
-    [field: SerializeField]
-    public float Ammo { get; private set; }
-
-    [field: SerializeField]
     public DeathAnimation DeathAnimation { get; private set; }
 
     [field: SerializeField]
