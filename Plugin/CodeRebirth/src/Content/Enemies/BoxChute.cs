@@ -1,5 +1,4 @@
 using Dawn;
-using Dawn.Utils;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
@@ -26,12 +25,14 @@ public class BoxChute : MonoBehaviour
     public AudioClip LandingSound { get; private set; }
 
     [field: SerializeField]
+    public AudioClip OpenSound { get; private set; }
+
+    [field: SerializeField]
     public UnityEvent OnLanding { get; private set; } = new();
 
     private Vector3 landingPosition = Vector3.zero;
 
     private static readonly int LandAnimation = Animator.StringToHash("land"); // Trigger
-    private static readonly int OpenAnimation = Animator.StringToHash("open"); // Trigger
 
     public void SetupBoxChute()
     {
@@ -72,7 +73,6 @@ public class BoxChute : MonoBehaviour
             AudioSource.Stop();
             AudioSource.PlayOneShot(LandingSound);
             Animator.SetTrigger(LandAnimation);
-            Animator.SetTrigger(OpenAnimation);
         }
 
         this.transform.position = Vector3.MoveTowards(this.transform.position, landingPosition, Time.deltaTime * FallingSpeed);
@@ -82,6 +82,11 @@ public class BoxChute : MonoBehaviour
     {
         OnLanding.Invoke();
         SpawnEnemy();
+    }
+
+    public void PlayOpenSound()
+    {
+        AudioSource.PlayOneShot(OpenSound);
     }
 
     public void SpawnEnemy()
