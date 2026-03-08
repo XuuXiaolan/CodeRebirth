@@ -44,7 +44,6 @@ public class Merchant : NetworkBehaviour
         if (MoneyCounter.ExpensiveMoneyStored() < 0)
         {
             DeclareShopClosed();
-            return;
         }
 
         if (!IsServer)
@@ -225,7 +224,7 @@ public class Merchant : NetworkBehaviour
         merchantAnimator.SetTrigger(StealHash);
         if (IsServer)
         {
-            MoneyCounter.Instance!.RemoveMoney(999);
+            MoneyCounter.Instance!.RemoveMoney(Mathf.Abs(MoneyCounter.Instance.MoneyStored() - 1));
         }
     }
 
@@ -299,7 +298,7 @@ public class Merchant : NetworkBehaviour
     internal List<MerchantBarrel> existingMerchantBarrels = new();
     public void HandleSpawningMerchantItems(MerchantBarrel merchantBarrel)
     {
-        if (MoneyCounter.Instance == null || MoneyCounter.Instance.MoneyStored() < 0)
+        if (MoneyCounter.ExpensiveMoneyStored() < 0)
         {
             return;
         }

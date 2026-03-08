@@ -35,6 +35,11 @@ public class TrashCan : NetworkBehaviour
             NetworkObject.Despawn(true);
         }
 
+        if (!RoundManager.Instance.currentLevel.spawnEnemiesAndScrap)
+        {
+            return;
+        }
+
         List<Tile> allDeadendTiles = RoundManager.Instance.dungeonGenerator.Generator.CurrentDungeon.AllTiles.Where(x => x.UsedDoorways.Count == 1).ToList();
 
         if (allDeadendTiles.Count > 0)
