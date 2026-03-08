@@ -57,7 +57,7 @@ public class TMPTimer : MonoBehaviour
         TimeSpan time = TimeSpan.FromSeconds(_currentTime);
         TimerText.text = time.ToString(@"mm\:ss\:fff");
 
-        if (time < TimeSpan.FromSeconds(TimeToPlaySource) && !AudioSource.isPlaying)
+        if (_canPlaySound && time < TimeSpan.FromSeconds(TimeToPlaySource) && !AudioSource.isPlaying)
         {
             _canPlaySound = false;
             AudioSource.Play();
