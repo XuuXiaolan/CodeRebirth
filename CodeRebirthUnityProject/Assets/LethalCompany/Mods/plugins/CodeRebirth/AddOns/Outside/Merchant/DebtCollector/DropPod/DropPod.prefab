@@ -127,9 +127,12 @@ MonoBehaviour:
   <Animator>k__BackingField: {fileID: 1169223490310334588}
   <FallingSpeed>k__BackingField: 10
   <AudioSource>k__BackingField: {fileID: 5652572887963417835}
-  <AmbientDroppingSound>k__BackingField: {fileID: 0}
-  <LandingSound>k__BackingField: {fileID: 0}
-  <OpenSound>k__BackingField: {fileID: 0}
+  <AmbientDroppingSound>k__BackingField: {fileID: 8300000, guid: 3a546fe22566024458fdf21588d391af,
+    type: 3}
+  <LandingSound>k__BackingField: {fileID: 8300000, guid: 45230e603a119ed419be0b6136f74514,
+    type: 3}
+  <OpenSound>k__BackingField: {fileID: 8300000, guid: a5d0fb76f99a12d499bbf3e0f40f5957,
+    type: 3}
   <OnLanding>k__BackingField:
     m_PersistentCalls:
       m_Calls:
@@ -198,7 +201,7 @@ AudioSource:
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -1137,7 +1140,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: eb82b80d6f938584d95c85951eb6cdee, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1148,7 +1151,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 30
+  MaxDistance: 60
   Pan2D: 0
   rolloffMode: 2
   BypassEffects: 0
