@@ -341,6 +341,10 @@ public abstract class QuestMasterAI : CodeRebirthEnemyAI
         if (reason == QuestCompletion.Completed)
         {
             redoTimer = UnityEngine.Random.Range(180, 301);
+            if (!StartOfRound.Instance.currentLevel.spawnEnemiesAndScrap)
+            {
+                redoTimer = int.MaxValue;
+            }
         }
         StartCoroutine(RestartEnemy(redoTimer));
         smartAgentNavigator.StartSearchRoutine(40);

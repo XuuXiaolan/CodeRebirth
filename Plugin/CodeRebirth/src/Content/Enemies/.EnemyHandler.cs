@@ -113,7 +113,7 @@ public class EnemyHandler : ContentHandler<EnemyHandler>
 
         RegisterContent("redwoodtitanassets", out RedwoodTitan);
 
-        RegisterContent("carnivorousplantassets", out CarnivorousPlant);
+        // RegisterContent("carnivorousplantassets", out CarnivorousPlant);
 
         RegisterContent("snailcatassets", out SnailCat);
 

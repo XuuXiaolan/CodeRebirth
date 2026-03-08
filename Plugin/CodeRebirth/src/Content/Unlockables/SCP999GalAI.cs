@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
+using Dawn;
+using Dawn.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -19,7 +21,6 @@ public class SCP999GalAI : NetworkBehaviour
 
     [NonSerialized] public float boomboxTimer = 0f;
     [NonSerialized] public NetworkVariable<int> boomboxPlaying = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    private List<GameObject> particlesSpawned = new();
     private bool currentlyHealing = false;
     private NetworkVariable<float> cooldownTimer = new(5f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     private static readonly int playerIsNearby = Animator.StringToHash("playerIsNearby"); // bool
@@ -33,10 +34,25 @@ public class SCP999GalAI : NetworkBehaviour
 
     public static List<SCP999GalAI> Instances = new();
 
-    public void Start()
+    private static readonly NamespacedKey NancyHealReviveCount = NamespacedKey.From("code_rebirth", "nancy_heal_revive_count");
+    public IEnumerator Start()
     {
+        yield return new WaitUntil(() => GameNetworkManager.Instance.localPlayerController != null || NetworkObject.IsSpawned);
+        if (IsServer)
+        {
+            if (!GameNetworkManager.Instance.gameHasStarted)
+            {
+                Vector2 reviveHealCount = DawnLib.GetCurrentContract().GetOrSetDefault(NancyHealReviveCount, new Vector2(0, 0));
+                reviveChargeCount.Value = (int)reviveHealCount.x;
+                healChargeCount.Value = (int)reviveHealCount.y;
+            }
+            else
+            {
+                RechargeGalHealsAndRevivesServerRpc(true, true);
+            }
+        }
         Instances.Add(this);
-        UpdatePlayerHealths();
+        UpdatePlayerHealthForSelf();
         QualitySettings.skinWeights = SkinWeights.FourBones;
         if (IsServer)
         {
@@ -46,6 +62,16 @@ public class SCP999GalAI : NetworkBehaviour
         }
         _SCP999GalNoiseListener._onNoiseDetected.AddListener(DetectNoise);
         HealTrigger.onInteract.AddListener(HealPlayerInteraction);
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        if (IsServer)
+        {
+            DawnLib.GetCurrentContract().Set(NancyHealReviveCount, new Vector2(reviveChargeCount.Value, healChargeCount.Value));
+        }
+        Instances.Remove(this);
     }
 
     public void Update()
@@ -98,19 +124,21 @@ public class SCP999GalAI : NetworkBehaviour
         }
     }
 
-    public void UpdatePlayerHealths()
+    public void UpdatePlayerHealthForSelf()
     {
-        playerMaxHealthDict.Clear();
-        foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
-        {
-            int maxHealth = GrabMaxHealthForPlayer(player);
-            playerMaxHealthDict.Add(player, maxHealth);
-        }
+        PlayerControllerB localPlayer = GameNetworkManager.Instance.localPlayerController;
+        InformOtherClientsOfMaxHealthRpc(localPlayer, GrabMaxHealthForPlayer(localPlayer));
     }
 
     public int GrabMaxHealthForPlayer(PlayerControllerB player)
     {
-        return 100;
+        return Mathf.Max(player.health, 100);
+    }
+
+    [Rpc(SendTo.Everyone, DeferLocal = true)]
+    private void InformOtherClientsOfMaxHealthRpc(PlayerControllerReference player, int maxHealth)
+    {
+        playerMaxHealthDict.Add(player, maxHealth);
     }
 
     private IEnumerator DetectingNearbyPlayer()
@@ -235,53 +263,39 @@ public class SCP999GalAI : NetworkBehaviour
         }
         currentlyHealing = true;
 
-        // Instantiate the particle system at the player's position.
         var newParticles = GameObject.Instantiate(particleSystemGameObject, player.transform.position, Quaternion.identity);
         newParticles.SetActive(true);
-        particlesSpawned.Add(newParticles);
 
         int totalHealthToHeal = healAmount;
         int healthHealed = 0;
 
-        // This variable will track the time passed and calculate health to heal over time.
         float timeElapsed = 0f;
-
-        // While we haven't healed the full amount yet.
         while (healthHealed < totalHealthToHeal && player.health < playerMaxHealthDict[player])
         {
-            // Accumulate time.
             timeElapsed += Time.deltaTime;
 
-            // Calculate how much health to heal based on the elapsed time and healingSpeed.
             int healthThisFrame = Mathf.FloorToInt(healAmount * (timeElapsed / healingSpeed)) - healthHealed;
 
-            // Heal the player (ensure we don't exceed the total amount).
             if (healthThisFrame > 0)
             {
                 healthHealed += healthThisFrame;
-                if (GameNetworkManager.Instance.localPlayerController == player)
+                if (player.IsLocalPlayer())
                 {
                     TellHostAboutNewHealthServerRpc(healthThisFrame);
                 }
                 player.health += healthThisFrame;
                 SetVisualChangesToPlayer(player);
             }
-            // Wait for the next frame.
             yield return null;
         }
 
-        // Ensure we do not heal more than the target amount.
         if (healthHealed < totalHealthToHeal && player.health < playerMaxHealthDict[player])
         {
             player.health += (totalHealthToHeal - healthHealed);
             SetVisualChangesToPlayer(player);
         }
 
-        // Done healing.
         currentlyHealing = false;
-
-        // Clean up the particles.
-        particlesSpawned.Remove(newParticles);
         Destroy(newParticles);
     }
 
@@ -470,11 +484,5 @@ public class SCP999GalAI : NetworkBehaviour
         boomboxTimer = 0f;
         boomboxPlaying.Value = 1;
         animator.SetBool(isDancing, true);
-    }
-
-    public override void OnNetworkDespawn()
-    {
-        base.OnNetworkDespawn();
-        Instances.Remove(this);
     }
 }
