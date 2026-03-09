@@ -19,35 +19,17 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 1.3830577
-      outSlope: 1.3830577
+      inSlope: 0
+      outSlope: 0
       tangentMode: 34
       weightedMode: 0
       inWeight: 0
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.36053485
-      value: 0.4986405
-      inSlope: 1.8174765
-      outSlope: 1.8174765
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.6455386
-      value: 0.98876464
-      inSlope: 0.004759138
-      outSlope: 0.004759138
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.56810015
-    - serializedVersion: 3
       time: 1
-      value: 0.5
-      inSlope: -1.378894
-      outSlope: -1.378894
+      value: 0
+      inSlope: 0
+      outSlope: 0
       tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
@@ -55,7 +37,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  spawningDisabled: 0
+  spawningDisabled: 1
   spawnFromWeeds: 0
   numberSpawnedFalloff:
     serializedVersion: 2
@@ -78,7 +60,7 @@ MonoBehaviour:
   normalizedTimeInDayToLeave: 0
   stunTimeMultiplier: 1
   doorSpeedMultiplier: 1
-  stunGameDifficultyMultiplier: 0
+  stunGameDifficultyMultiplier: 1
   canBeStunned: 1
   canDie: 1
   canBeDestroyed: 1
@@ -86,7 +68,7 @@ MonoBehaviour:
   canSeeThroughFog: 1
   pushPlayerForce: 3
   pushPlayerDistance: 3
-  SizeLimit: 1
+  SizeLimit: 0
   EnemySize: 2
   timeToPlayAudio: 0
   loudnessMultiplier: 0

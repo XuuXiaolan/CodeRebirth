@@ -90,6 +90,11 @@ public class CoinDisplayUI : Singleton<CoinDisplayUI>
             yield return StartCoroutine(FadeIn(true));
         }
 
+        RectTransform coinChangeTMPRectTransform = (RectTransform)CoinChangeTMP.transform;
+
+        int extraDigits = CoinTMP.text.Length - 1;
+        coinChangeTMPRectTransform.anchoredPosition3D = TMPChangeOriginalPosition + new Vector3(25f * extraDigits, 0f, 0f);
+
         int changedAmount = newValue - oldValue;
         if (changedAmount > 0)
         {
@@ -100,9 +105,15 @@ public class CoinDisplayUI : Singleton<CoinDisplayUI>
             CoinChangeTMP.color = Color.red;
         }
 
-        int extraDigits = CoinTMP.text.Length - 1;
-        ((RectTransform)CoinChangeTMP.transform).anchoredPosition3D = TMPChangeOriginalPosition + new Vector3(25f * extraDigits, 0f, 0f);
-        CoinChangeTMP.text = changedAmount.ToString();
+        if (changedAmount > 0)
+        {
+            CoinChangeTMP.text = "+" + changedAmount.ToString();
+        }
+        else
+        {
+            CoinChangeTMP.text = changedAmount.ToString();
+        }
+
         bool goSlowly = Mathf.Abs(changedAmount) <= 10;
         while (changedAmount != 0)
         {
@@ -125,7 +136,7 @@ public class CoinDisplayUI : Singleton<CoinDisplayUI>
                 changedAmount++;
             }
             extraDigits = CoinTMP.text.Length - 1;
-            ((RectTransform)CoinChangeTMP.transform).anchoredPosition3D = TMPChangeOriginalPosition + new Vector3(25f * extraDigits, 0f, 0f);
+            coinChangeTMPRectTransform.anchoredPosition3D = TMPChangeOriginalPosition + new Vector3(25f * extraDigits, 0f, 0f);
         }
 
         yield return new WaitForSeconds(0.25f);
@@ -139,11 +150,12 @@ public class CoinDisplayUI : Singleton<CoinDisplayUI>
             decreasingHeight += Time.deltaTime * 60f * 4f;
             alpha -= Time.deltaTime * 4f;
             CoinChangeTMP.color = new Color(CoinChangeTMP.color.r, CoinChangeTMP.color.g, CoinChangeTMP.color.b, alpha);
-            ((RectTransform)CoinChangeTMP.transform).anchoredPosition3D = TMPChangeOriginalPosition + new Vector3(25f * extraDigits, -decreasingHeight, 0f);
+            coinChangeTMPRectTransform.anchoredPosition3D = TMPChangeOriginalPosition + new Vector3(25f * extraDigits, -decreasingHeight, 0f);
             duration -= Time.deltaTime;
             yield return null;
         }
         CoinChangeTMP.color = new Color(CoinChangeTMP.color.r, CoinChangeTMP.color.g, CoinChangeTMP.color.b, 0);
+        coinChangeTMPRectTransform.anchoredPosition3D = TMPChangeOriginalPosition + new Vector3(25f * extraDigits, 0f, 0f);
         editCoinRoutine = null;
     }
 

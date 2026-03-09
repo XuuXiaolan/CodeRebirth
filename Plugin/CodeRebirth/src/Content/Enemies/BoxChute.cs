@@ -93,7 +93,7 @@ public class BoxChute : MonoBehaviour
     {
         if (NetworkManager.Singleton.IsServer)
         {
-            RoundManager.Instance.SpawnEnemyGameObject(Spawner.position, -1, -1, LethalContent.Enemies[CodeRebirthEnemyKeys.PeaceKeeper].EnemyType);
+            RoundManager.Instance.SpawnEnemyGameObject(Spawner.position, -1, -1, LethalContent.Enemies[CodeRebirthEnemyKeys.DebtCollector].EnemyType);
         }
     }
 }

@@ -59,7 +59,8 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
     private static readonly int RunSpeedFloat = Animator.StringToHash("RunSpeed"); // Float
     private static readonly int BitchSlapAnimation = Animator.StringToHash("bitchSlap"); // Trigger
     private static readonly int StunAnimation = Animator.StringToHash("stun"); // Trigger
-    private static readonly int ScrollSpeedID = Shader.PropertyToID("_ScrollSpeed"); // Vector3
+
+    internal static readonly int ScrollSpeedID = Shader.PropertyToID("_ScrollSpeed"); // Vector3
 
     #region IVisibleThreat
     public ThreatType type => ThreatType.RadMech;
