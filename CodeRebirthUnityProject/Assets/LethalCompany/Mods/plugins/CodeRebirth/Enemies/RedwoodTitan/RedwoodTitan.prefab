@@ -49146,7 +49146,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2734524585
+  GlobalObjectIdHash: 4021387472
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -49319,6 +49319,7 @@ MonoBehaviour:
   DustParticlesRight: {fileID: 6063470682010448738}
   ForestKeeperParticles: {fileID: 884865709688485176}
   DriftwoodGiantParticles: {fileID: 3585898533275905388}
+  CactusBudlingParticles: {fileID: 0}
   OldBirdParticles: {fileID: 8832098546574815876}
   DeathParticles: {fileID: 7968070030579549643}
   creatureSFXFar: {fileID: 6109531878674377141}
@@ -49463,6 +49464,7 @@ MonoBehaviour:
   OnEnableOrDisableAgent:
     m_PersistentCalls:
       m_Calls: []
+  CanTryToFlyToDestination: 0
   lastUsedEntranceTeleport: {fileID: 0}
   agent: {fileID: 0}
   _nodeRemovalPrecision: 5

@@ -625,7 +625,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 6304825348187553974}
   animator: {fileID: 4269174617254375689}
-  networkAnimator: {fileID: 0}
   renderer: {fileID: 2660046018500339588}
   materialVariants:
   - {fileID: 2100000, guid: 01e465efa8eabab40ac9aeff767bf91f, type: 2}
@@ -915,6 +914,7 @@ MonoBehaviour:
   OnEnableOrDisableAgent:
     m_PersistentCalls:
       m_Calls: []
+  CanTryToFlyToDestination: 0
   lastUsedEntranceTeleport: {fileID: 0}
   agent: {fileID: 0}
   _nodeRemovalPrecision: 5

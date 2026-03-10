@@ -1,4 +1,28 @@
-# v0.8.4
+# v0.8.9
+
+- Added `TryDoPathingToDestination` to `SmartAgentNavigator` for better info to caller when trying to path to a position.
+- Added `CanTryToFlyToDestination` to `SmartAgentNavigator` to allow for a custom check to see if the agent can fly to a position if it cannot path to it.
+- Improved `EnemyAI`'s handling with the FlyToDestination parts of `SmartAgentNavigator`.
+
+## v0.8.8
+
+- Added DungeonGenerationPlus compat!
+- Fixed compat with mods like TwoRadarMap.
+- Fixed compat related to terminal issues with having terminalevents and store items with similar names.
+
+## v0.8.7
+
+- Fixed an issue with negative weights being read as `--` hence a positive (basically -999 was being read as a substraction operation with a value of -999, hence --999).
+
+## v0.8.6
+
+- Added better LethalConfig compatibility from No-Code/Editor based mods (They used to not show up with no-code/editor based mods but now they do).
+
+## v0.8.5
+
+- Updated to add better compat with LunarConfig MapObject weights.
+
+## v0.8.4
 
 - Fixed issue where extra scan events wouldn't run.
 - Improved terminal writing space for the display text to be bigger.
@@ -453,7 +477,7 @@ Not entirely sure how those happened but they did ig.
 
 - Added MaterialPropertiesReplacement to EntityReplacements.
 - Added ScanNodeReplacement to EntityReplacements.
-- Gave devs support to NetworkVariable<bool> and NetworkVariable<float>.
+- Gave devs support to `NetworkVariable<bool>` and `NetworkVariable<float>`.
 - Added tag: `#dawn_lib:has_buying_percent` to make your moon have the buying percentage similar to company.
 - Fixed some lag issues in the Editor.dll.
 - Fixed replacing blank SO's of all the ones that LLL replaced (and more) in DawnLib content.

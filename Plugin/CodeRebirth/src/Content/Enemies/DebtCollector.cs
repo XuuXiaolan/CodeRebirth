@@ -4,6 +4,7 @@ using CodeRebirth.src.MiscScripts;
 using Dawn.Utils;
 using GameNetcodeStuff;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace CodeRebirth.src.Content.Enemies;
 
@@ -18,6 +19,9 @@ public class DebtCollector : CodeRebirthEnemyAI
     private List<Material> _treadMaterials = new();
     private Vector3 _lastPosition = Vector3.zero;
     private float _teleportIdleTimer = 3f;
+    private float _checkForPlayersTimer = 1.5f;
+    private float _lostPlayerTimer = 2f;
+
     public enum DebtCollectorState
     {
         Spawning,
@@ -42,8 +46,8 @@ public class DebtCollector : CodeRebirthEnemyAI
         base.Start();
         SwitchToBehaviourStateOnLocalClient((int)DebtCollectorState.Spawning);
         _lastPosition = this.transform.position;
-        _treadMaterials.Add(skinnedMeshRenderers[0].materials[2]); // Left Tread
-        _treadMaterials.Add(skinnedMeshRenderers[0].materials[3]); // Right Tread
+        _treadMaterials.Add(skinnedMeshRenderers[1].materials[2]); // Left Tread
+        _treadMaterials.Add(skinnedMeshRenderers[1].materials[3]); // Right Tread
 
         if (!IsServer)
         {
@@ -138,6 +142,14 @@ public class DebtCollector : CodeRebirthEnemyAI
 
     private void DoIdle()
     {
+        _checkForPlayersTimer -= AIIntervalTime;
+        if (_checkForPlayersTimer <= 0f)
+        {
+            _checkForPlayersTimer = TeleportIdleTimerRange.GetRandomInRange(new System.Random(UnityEngine.Random.Range(0, 999999))) / 4f;
+            FindRandomPlayerViaAsyncPathfinding();
+            return;
+        }
+
         _teleportIdleTimer -= AIIntervalTime;
         if (_teleportIdleTimer <= 0f)
         {
@@ -163,7 +175,23 @@ public class DebtCollector : CodeRebirthEnemyAI
             return;
         }
 
-        smartAgentNavigator.DoPathingToDestination(targetPlayer.transform.position);
+        smartAgentNavigator.TryDoPathingToDestination(targetPlayer.transform.position, out SmartAgentNavigator.GoToDestinationResult result);
+
+        if (result == SmartAgentNavigator.GoToDestinationResult.Failure)
+        {
+            _lostPlayerTimer -= AIIntervalTime;
+            if (_lostPlayerTimer <= 0f)
+            {
+                _lostPlayerTimer = 2f;
+                SwitchToBehaviourServerRpc((int)DebtCollectorState.Teleporting);
+                creatureNetworkAnimator.SetTrigger(TeleportAnimationHash);
+                return;
+            }
+        }
+        else
+        {
+            _lostPlayerTimer = Mathf.Min(_lostPlayerTimer + AIIntervalTime, 2f);
+        }
     }
 
     private void DoDeath()
@@ -184,6 +212,13 @@ public class DebtCollector : CodeRebirthEnemyAI
             return;
         }
 
+        if (targetPlayer != null && !targetPlayer.isPlayerDead)
+        {
+            CRUtilities.TeleportEnemy(this, RoundManager.Instance.GetRandomNavMeshPositionInRadius(targetPlayer.transform.position, 20f, default));
+            SwitchToBehaviourServerRpc((int)DebtCollectorState.ChasingTargetPlayer);
+            return;
+        }
+
         List<Vector3> randomPositions = new();
         if (RoundManager.Instance.insideAINodes != null && RoundManager.Instance.insideAINodes.Length > 0)
         {
@@ -201,10 +236,7 @@ public class DebtCollector : CodeRebirthEnemyAI
         }
 
         CRUtilities.TeleportEnemy(this, randomPositions[UnityEngine.Random.Range(0, randomPositions.Count)]);
-        if (currentBehaviourStateIndex == (int)DebtCollectorState.Spawning || currentBehaviourStateIndex == (int)DebtCollectorState.Idle)
-        {
-            FindRandomPlayerViaAsyncPathfinding();
-        }
+        FindRandomPlayerViaAsyncPathfinding();
     }
     #endregion
 
