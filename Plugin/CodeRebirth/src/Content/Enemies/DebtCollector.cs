@@ -3,13 +3,27 @@ using System.Linq;
 using CodeRebirth.src.MiscScripts;
 using Dawn.Utils;
 using GameNetcodeStuff;
+using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace CodeRebirth.src.Content.Enemies;
 
 public class DebtCollector : CodeRebirthEnemyAI
 {
+    [field: SerializeField]
+    public Transform SliceArmStart { get; private set; }
+    [field: SerializeField]
+    public Transform SliceArmEnd { get; private set; }
+
+    [field: SerializeField]
+    public Transform GrabHand { get; private set; }
+
+    [field: SerializeField]
+    public BoundedRange GrabAttackTimer { get; private set; } = new(10f, 15f);
+
+    [field: SerializeField, Range(0f, 100f)]
+    public float ChanceToGoForGrabAttack { get; private set; } = 50f;
+
     [field: SerializeField]
     public AudioSource TreadSource { get; private set; }
 
@@ -21,6 +35,9 @@ public class DebtCollector : CodeRebirthEnemyAI
     private float _teleportIdleTimer = 3f;
     private float _checkForPlayersTimer = 1.5f;
     private float _lostPlayerTimer = 2f;
+    private float _grabAttackTimer = 10f;
+    private bool _playerIsGrabbed = false;
+    private static Collider[] _cachedColliders = new Collider[24];
 
     public enum DebtCollectorState
     {
@@ -28,6 +45,7 @@ public class DebtCollector : CodeRebirthEnemyAI
         Idle,
         Teleporting,
         ChasingTargetPlayer,
+        AttackingPlayer,
         Death,
     }
 
@@ -35,7 +53,6 @@ public class DebtCollector : CodeRebirthEnemyAI
     private static readonly int SliceAnimationHash = Animator.StringToHash("Slice"); // Trigger
     private static readonly int GrabAnimationHash = Animator.StringToHash("Grab"); // Trigger
     private static readonly int SuccessAnimationHash = Animator.StringToHash("Success"); // Trigger
-    private static readonly int FailAnimationHash = Animator.StringToHash("Fail"); // Trigger
     private static readonly int PryOpenAnimationHash = Animator.StringToHash("PryOpen"); // Trigger
     private static readonly int TeleportAnimationHash = Animator.StringToHash("Teleport"); // Trigger
     private static readonly int IsDeadAnimationHash = Animator.StringToHash("IsDead"); // Bool
@@ -57,33 +74,6 @@ public class DebtCollector : CodeRebirthEnemyAI
         FindRandomPlayerViaAsyncPathfinding();
     }
 
-    private void FindRandomPlayerViaAsyncPathfinding()
-    {
-        IEnumerable<(PlayerControllerB player, Vector3 position)> candidateObjects = StartOfRound.Instance.allPlayerScripts
-            .Where(kv => kv != null && !kv.isPlayerDead && kv.isPlayerControlled)
-            .Select(kv => (kv, kv.transform.position));
-
-        smartAgentNavigator.CheckPaths(candidateObjects, CheckIfNeedToChangeState);
-    }
-
-    public void CheckIfNeedToChangeState(List<GenericPath<PlayerControllerB>> args)
-    {
-        int totalAmount = args.Count;
-        if (totalAmount > 0)
-        {
-            Plugin.ExtendedLogging($"DebtCollector: Found {totalAmount} targets");
-            SetPlayerTargetServerRpc(args[UnityEngine.Random.Range(0, totalAmount)].Generic);
-            smartAgentNavigator.StopSearchRoutine();
-            SwitchToBehaviourServerRpc((int)DebtCollectorState.ChasingTargetPlayer);
-        }
-        else
-        {
-            SwitchToBehaviourServerRpc((int)DebtCollectorState.Idle);
-            smartAgentNavigator.StartSearchRoutine(20);
-            Plugin.ExtendedLogging($"DebtCollector: Going idle temporarily");
-        }
-    }
-
     public override void Update()
     {
         base.Update();
@@ -100,6 +90,38 @@ public class DebtCollector : CodeRebirthEnemyAI
             TreadSource.volume = 0f;
         }
         _lastPosition = this.transform.position;
+
+        if (targetPlayer != null && currentBehaviourStateIndex == (int)DebtCollectorState.AttackingPlayer)
+        {
+            RotateToPlayer(targetPlayer);
+        }
+    }
+
+    public void LateUpdate()
+    {
+        if (targetPlayer == null)
+        {
+            return;
+        }
+
+        if (!_playerIsGrabbed)
+        {
+            return;
+        }
+
+        targetPlayer.transform.position = GrabHand.position + Vector3.down * 2.43f;
+        Quaternion baseRotation = GrabHand.rotation * Quaternion.Euler(0, -180f, 0);
+
+        float baseYaw = baseRotation.eulerAngles.y;
+        float currentYaw = targetPlayer.transform.eulerAngles.y;
+
+        float clampedOffset = Mathf.Clamp(
+            Mathf.DeltaAngle(baseYaw, currentYaw),
+            -90f,
+            90f
+        );
+
+        targetPlayer.transform.rotation = Quaternion.Euler(0, baseYaw + clampedOffset, 0);
     }
     #endregion
 
@@ -128,6 +150,9 @@ public class DebtCollector : CodeRebirthEnemyAI
                 break;
             case (int)DebtCollectorState.ChasingTargetPlayer:
                 DoChasingTargetPlayer();
+                break;
+            case (int)DebtCollectorState.AttackingPlayer:
+                DoAttackingPlayer();
                 break;
             case (int)DebtCollectorState.Death:
                 DoDeath();
@@ -192,6 +217,29 @@ public class DebtCollector : CodeRebirthEnemyAI
         {
             _lostPlayerTimer = Mathf.Min(_lostPlayerTimer + AIIntervalTime, 2f);
         }
+
+        _grabAttackTimer -= AIIntervalTime;
+        if (Vector3.Distance(this.transform.position, targetPlayer.transform.position) < agent.stoppingDistance + 0.5f)
+        {
+            if (_grabAttackTimer <= 0f && UnityEngine.Random.Range(0f, 100f) < ChanceToGoForGrabAttack)
+            {
+                SwitchToBehaviourServerRpc((int)DebtCollectorState.AttackingPlayer);
+                _grabAttackTimer = GrabAttackTimer.GetRandomInRange(new System.Random(UnityEngine.Random.Range(0, 999999)));
+                creatureNetworkAnimator.SetTrigger(GrabAnimationHash);
+                return;
+            }
+            else
+            {
+                SwitchToBehaviourServerRpc((int)DebtCollectorState.AttackingPlayer);
+                creatureNetworkAnimator.SetTrigger(SliceAnimationHash);
+                // go for a slice attack
+            }
+        }
+    }
+
+    private void DoAttackingPlayer()
+    {
+
     }
 
     private void DoDeath()
@@ -201,6 +249,51 @@ public class DebtCollector : CodeRebirthEnemyAI
     #endregion
 
     #region  Misc Functions
+
+    private void FindRandomPlayerViaAsyncPathfinding()
+    {
+        IEnumerable<(PlayerControllerB player, Vector3 position)> candidateObjects = StartOfRound.Instance.allPlayerScripts
+            .Where(kv => kv != null && !kv.isPlayerDead && kv.isPlayerControlled)
+            .Select(kv => (kv, kv.transform.position));
+
+        smartAgentNavigator.CheckPaths(candidateObjects, CheckIfNeedToChangeState);
+    }
+
+    public void CheckIfNeedToChangeState(List<GenericPath<PlayerControllerB>> args)
+    {
+        int totalAmount = args.Count;
+        if (totalAmount > 0)
+        {
+            Plugin.ExtendedLogging($"DebtCollector: Found {totalAmount} targets");
+            SetPlayerTargetServerRpc(args[UnityEngine.Random.Range(0, totalAmount)].Generic);
+            smartAgentNavigator.StopSearchRoutine();
+            SwitchToBehaviourServerRpc((int)DebtCollectorState.ChasingTargetPlayer);
+        }
+        else
+        {
+            SwitchToBehaviourServerRpc((int)DebtCollectorState.Idle);
+            smartAgentNavigator.StartSearchRoutine(20);
+            Plugin.ExtendedLogging($"DebtCollector: Going idle temporarily");
+        }
+    }
+
+    private void RotateToPlayer(PlayerControllerB player)
+    {
+        Vector3 direction = player.transform.position - transform.position;
+        direction.y = 0;
+
+        Quaternion targetRotation = Quaternion.LookRotation(direction.normalized);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
+    }
+
+    [Rpc(SendTo.Everyone, RequireOwnership = false, DeferLocal = true)]
+    private void SetPlayerAsGrabbedRpc()
+    {
+        _playerIsGrabbed = true;
+        targetPlayer.disableMoveInput = true;
+        targetPlayer.inAnimationWithEnemy = this;
+        creatureAnimator.SetTrigger(SuccessAnimationHash);
+    }
     #endregion
 
     #region Animation Events
@@ -238,6 +331,81 @@ public class DebtCollector : CodeRebirthEnemyAI
         CRUtilities.TeleportEnemy(this, randomPositions[UnityEngine.Random.Range(0, randomPositions.Count)]);
         FindRandomPlayerViaAsyncPathfinding();
     }
+
+    public void TryGrabPlayer()
+    {
+        if (targetPlayer != null && !targetPlayer.isPlayerDead && targetPlayer.IsLocalPlayer())
+        {
+            if (Physics.Raycast(GrabHand.position, targetPlayer.transform.position - GrabHand.position, out RaycastHit hit, 5f, StartOfRound.Instance.playersMask, QueryTriggerInteraction.Collide))
+            {
+                if (Vector3.Distance(hit.collider.ClosestPoint(GrabHand.position), GrabHand.position) < 2f)
+                {
+                    GameObject.Find("Systems/Rendering/PlayerHUDHelmetModel").SetActive(false);
+                    targetPlayer.DamagePlayer(targetPlayer.health - 1, true, true);
+                    SetPlayerAsGrabbedRpc();
+                }
+            }
+        }
+    }
+
+    public void KillTargetPlayer()
+    {
+        if (targetPlayer != null && !targetPlayer.isPlayerDead)
+        {
+            if (targetPlayer.IsLocalPlayer())
+            {
+                GameObject.Find("Systems/Rendering/PlayerHUDHelmetModel").SetActive(true);
+            }
+            targetPlayer.disableMoveInput = false;
+            targetPlayer.inAnimationWithEnemy = null;
+            targetPlayer.KillPlayer(Vector3.zero, true, CauseOfDeath.Snipped, 8, default);
+            ClearPlayerTarget();
+        }
+        _playerIsGrabbed = false;
+    }
+
+    public void EndAttackAnimation()
+    {
+        Plugin.ExtendedLogging($"DebtCollector: EndAttackAnimation");
+        _playerIsGrabbed = false;
+        SwitchToBehaviourStateOnLocalClient((int)DebtCollectorState.ChasingTargetPlayer);
+    }
+
+    public void DoSlashAttack()
+    {
+        int numHits = Physics.OverlapCapsuleNonAlloc(SliceArmStart.position, SliceArmEnd.position, 2f, _cachedColliders, MoreLayerMasks.PlayersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
+        for (int i = 0; i < numHits; i++)
+        {
+            Collider collider = _cachedColliders[i];
+            Plugin.ExtendedLogging($"Bitch Slap hit {collider.name}");
+            if (!collider.TryGetComponent(out IHittable iHittable))
+                continue;
+
+            if (iHittable is PlayerControllerB player)
+            {
+                Vector3 directionVector = (player.transform.position - this.transform.position).normalized * 20f;
+                player.DamagePlayer(40, true, true, CauseOfDeath.Bludgeoning, 0, false, directionVector);
+                player.externalForceAutoFade += directionVector;
+            }
+            else if (iHittable is EnemyAICollisionDetect enemyAICollisionDetect)
+            {
+                if (!IsServer)
+                    continue;
+
+                if (enemyAICollisionDetect.mainScript.gameObject == gameObject)
+                    continue;
+
+                enemyAICollisionDetect.mainScript.HitEnemyOnLocalClient(2, this.transform.position, null, true, 1921);
+            }
+            else
+            {
+                if (!IsServer)
+                    continue;
+
+                iHittable.Hit(2, this.transform.position, null, true, 1921);
+            }
+        }
+    }
     #endregion
 
     #region Call Backs
@@ -245,7 +413,9 @@ public class DebtCollector : CodeRebirthEnemyAI
     {
         base.HitEnemy(force, playerWhoHit, playHitSFX, hitID);
         if (isEnemyDead)
+        {
             return;
+        }
 
         enemyHP -= force;
 

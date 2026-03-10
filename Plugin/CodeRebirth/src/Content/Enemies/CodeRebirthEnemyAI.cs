@@ -237,6 +237,11 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     [ClientRpc]
     public void ClearPlayerTargetClientRpc()
     {
+        ClearPlayerTarget();
+    }
+
+    public void ClearPlayerTarget()
+    {
         targetPlayer = null;
         PlayerSetAsTarget(null);
     }
@@ -249,6 +254,11 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
 
     [ClientRpc]
     public void SetPlayerTargetClientRpc(PlayerControllerReference playerControllerReference)
+    {
+        SetPlayerTarget(playerControllerReference);
+    }
+
+    public void SetPlayerTarget(PlayerControllerReference playerControllerReference)
     {
         PlayerControllerB player = playerControllerReference;
         previousTargetPlayer = targetPlayer;
@@ -266,6 +276,11 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     [ClientRpc]
     public void ClearEnemyTargetClientRpc()
     {
+        ClearEnemyTarget();
+    }
+
+    public void ClearEnemyTarget()
+    {
         targetEnemy = null;
         EnemySetAsTarget(null);
     }
@@ -279,7 +294,12 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
     [ClientRpc]
     public void SetEnemyTargetClientRpc(NetworkBehaviourReference networkBehaviourReference)
     {
-        targetEnemy = (EnemyAI)networkBehaviourReference;
+        SetEnemyTarget(networkBehaviourReference);
+    }
+
+    public void SetEnemyTarget(NetworkBehaviourReference networkBehaviourReference)
+    {
+        targetEnemy = (EnemyAI)(NetworkBehaviour)networkBehaviourReference;
         Plugin.ExtendedLogging($"{this} setting target to: {targetEnemy.enemyType.enemyName}");
         EnemySetAsTarget(targetEnemy);
     }
