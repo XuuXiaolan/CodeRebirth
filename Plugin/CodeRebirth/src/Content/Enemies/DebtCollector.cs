@@ -11,6 +11,12 @@ namespace CodeRebirth.src.Content.Enemies;
 public class DebtCollector : CodeRebirthEnemyAI
 {
     [field: SerializeField]
+    public float WanderingSpeed { get; private set; } = 3.5f;
+    [field: SerializeField]
+    public float ChasingSpeed { get; private set; } = 5f;
+    [field: SerializeField]
+    public float AttackingSpeed { get; private set; } = 2f;
+    [field: SerializeField]
     public Transform SliceArmStart { get; private set; }
     [field: SerializeField]
     public Transform SliceArmEnd { get; private set; }
@@ -61,6 +67,7 @@ public class DebtCollector : CodeRebirthEnemyAI
     public override void Start()
     {
         base.Start();
+        agent.speed = WanderingSpeed;
         SwitchToBehaviourStateOnLocalClient((int)DebtCollectorState.Spawning);
         _lastPosition = this.transform.position;
         _treadMaterials.Add(skinnedMeshRenderers[1].materials[2]); // Left Tread
@@ -179,6 +186,7 @@ public class DebtCollector : CodeRebirthEnemyAI
         if (_teleportIdleTimer <= 0f)
         {
             smartAgentNavigator.StopSearchRoutine();
+            agent.speed = 0f;
             SwitchToBehaviourServerRpc((int)DebtCollectorState.Teleporting);
             creatureNetworkAnimator.SetTrigger(TeleportAnimationHash);
             _teleportIdleTimer = TeleportIdleTimerRange.GetRandomInRange(new System.Random(UnityEngine.Random.Range(0, 999999)));
@@ -196,6 +204,7 @@ public class DebtCollector : CodeRebirthEnemyAI
         {
             smartAgentNavigator.StartSearchRoutine(20f);
             ClearPlayerTargetServerRpc();
+            agent.speed = WanderingSpeed;
             SwitchToBehaviourServerRpc((int)DebtCollectorState.Idle);
             return;
         }
@@ -208,6 +217,7 @@ public class DebtCollector : CodeRebirthEnemyAI
             if (_lostPlayerTimer <= 0f)
             {
                 _lostPlayerTimer = 2f;
+                agent.speed = 0f;
                 SwitchToBehaviourServerRpc((int)DebtCollectorState.Teleporting);
                 creatureNetworkAnimator.SetTrigger(TeleportAnimationHash);
                 return;
@@ -221,16 +231,16 @@ public class DebtCollector : CodeRebirthEnemyAI
         _grabAttackTimer -= AIIntervalTime;
         if (Vector3.Distance(this.transform.position, targetPlayer.transform.position) < agent.stoppingDistance + 0.5f)
         {
+            agent.speed = AttackingSpeed;
+            SwitchToBehaviourServerRpc((int)DebtCollectorState.AttackingPlayer);
             if (_grabAttackTimer <= 0f && UnityEngine.Random.Range(0f, 100f) < ChanceToGoForGrabAttack)
             {
-                SwitchToBehaviourServerRpc((int)DebtCollectorState.AttackingPlayer);
                 _grabAttackTimer = GrabAttackTimer.GetRandomInRange(new System.Random(UnityEngine.Random.Range(0, 999999)));
                 creatureNetworkAnimator.SetTrigger(GrabAnimationHash);
                 return;
             }
             else
             {
-                SwitchToBehaviourServerRpc((int)DebtCollectorState.AttackingPlayer);
                 creatureNetworkAnimator.SetTrigger(SliceAnimationHash);
                 // go for a slice attack
             }
@@ -239,7 +249,12 @@ public class DebtCollector : CodeRebirthEnemyAI
 
     private void DoAttackingPlayer()
     {
+        if (targetPlayer == null || targetPlayer.isPlayerDead)
+        {
+            return;
+        }
 
+        smartAgentNavigator.DoPathingToDestination(targetPlayer.transform.position);
     }
 
     private void DoDeath()
@@ -267,10 +282,12 @@ public class DebtCollector : CodeRebirthEnemyAI
             Plugin.ExtendedLogging($"DebtCollector: Found {totalAmount} targets");
             SetPlayerTargetServerRpc(args[UnityEngine.Random.Range(0, totalAmount)].Generic);
             smartAgentNavigator.StopSearchRoutine();
+            agent.speed = ChasingSpeed;
             SwitchToBehaviourServerRpc((int)DebtCollectorState.ChasingTargetPlayer);
         }
         else
         {
+            agent.speed = WanderingSpeed;
             SwitchToBehaviourServerRpc((int)DebtCollectorState.Idle);
             smartAgentNavigator.StartSearchRoutine(20);
             Plugin.ExtendedLogging($"DebtCollector: Going idle temporarily");
@@ -308,6 +325,7 @@ public class DebtCollector : CodeRebirthEnemyAI
         if (targetPlayer != null && !targetPlayer.isPlayerDead)
         {
             CRUtilities.TeleportEnemy(this, RoundManager.Instance.GetRandomNavMeshPositionInRadius(targetPlayer.transform.position, 20f, default));
+            agent.speed = ChasingSpeed;
             SwitchToBehaviourServerRpc((int)DebtCollectorState.ChasingTargetPlayer);
             return;
         }
@@ -368,6 +386,7 @@ public class DebtCollector : CodeRebirthEnemyAI
     {
         Plugin.ExtendedLogging($"DebtCollector: EndAttackAnimation");
         _playerIsGrabbed = false;
+        agent.speed = ChasingSpeed;
         SwitchToBehaviourStateOnLocalClient((int)DebtCollectorState.ChasingTargetPlayer);
     }
 
@@ -433,6 +452,7 @@ public class DebtCollector : CodeRebirthEnemyAI
     {
         base.KillEnemy(destroy);
         creatureAnimator.SetBool(IsDeadAnimationHash, true);
+        agent.speed = 0f;
         SwitchToBehaviourStateOnLocalClient((int)DebtCollectorState.Death);
     }
     #endregion
