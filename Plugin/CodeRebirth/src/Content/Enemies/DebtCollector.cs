@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.MiscScripts;
+using CodeRebirth.src.Patches;
+using Dawn;
 using Dawn.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -236,7 +238,7 @@ public class DebtCollector : CodeRebirthEnemyAI
             if (_grabAttackTimer <= 0f && UnityEngine.Random.Range(0f, 100f) < ChanceToGoForGrabAttack)
             {
                 _grabAttackTimer = GrabAttackTimer.GetRandomInRange(new System.Random(UnityEngine.Random.Range(0, 999999)));
-                agent.speed = AttackingSpeed * 1.5f;
+                agent.speed = AttackingSpeed * 3f;
                 agent.acceleration = 100f;
                 creatureNetworkAnimator.SetTrigger(GrabAnimationHash);
                 return;
@@ -358,7 +360,7 @@ public class DebtCollector : CodeRebirthEnemyAI
         {
             if (Physics.Raycast(GrabHand.position, targetPlayer.transform.position - GrabHand.position, out RaycastHit hit, 5f, StartOfRound.Instance.playersMask, QueryTriggerInteraction.Collide))
             {
-                if (Vector3.Distance(hit.collider.ClosestPoint(GrabHand.position), GrabHand.position) < 2f)
+                if (Vector3.Distance(hit.collider.ClosestPoint(GrabHand.position), GrabHand.position) < 3f)
                 {
                     GameObject.Find("Systems/Rendering/PlayerHUDHelmetModel").SetActive(false);
                     targetPlayer.DamagePlayer(targetPlayer.health - 1, true, true);
@@ -406,7 +408,7 @@ public class DebtCollector : CodeRebirthEnemyAI
             if (iHittable is PlayerControllerB player)
             {
                 Vector3 directionVector = (player.transform.position - this.transform.position).normalized * 20f;
-                player.DamagePlayer(40, true, true, CauseOfDeath.Bludgeoning, 0, false, directionVector);
+                player.DamagePlayer(20, true, true, CauseOfDeath.Snipped, 7, false, directionVector);
                 player.externalForceAutoFade += directionVector;
             }
             else if (iHittable is EnemyAICollisionDetect enemyAICollisionDetect)
@@ -459,6 +461,10 @@ public class DebtCollector : CodeRebirthEnemyAI
     public override void KillEnemy(bool destroy = false)
     {
         base.KillEnemy(destroy);
+        if (!StartOfRound.Instance.shipIsLeaving)
+        {
+            DawnLib.GetCurrentContract()!.Set(RoundManagerPatch.MilitaryAmountKey, DawnLib.GetCurrentContract()!.GetOrCreateDefault<int>(RoundManagerPatch.MilitaryAmountKey) + 1);
+        }
         creatureAnimator.SetBool(IsDeadAnimationHash, true);
         agent.speed = 0f;
         SwitchToBehaviourStateOnLocalClient((int)DebtCollectorState.Death);

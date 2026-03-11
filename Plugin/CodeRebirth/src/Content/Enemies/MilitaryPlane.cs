@@ -27,6 +27,7 @@ public class MilitaryPlane : NetworkBehaviour
 
     private Vector3 DropPosition = Vector3.zero;
     private Vector3 ExplodePosition = Vector3.zero;
+
     public void Start()
     {
         AudioSource.PlayOneShot(WarningSirenSound);
@@ -54,7 +55,7 @@ public class MilitaryPlane : NetworkBehaviour
         GameObject furthestAINode = furthestNodes[random.Next(0, furthestNodes.Count)];
 
         float furthestDistanceToShip = Vector3.Distance(furthestAINode.transform.position, StartOfRound.Instance.shipLandingPosition.position);
-        this.transform.position = furthestAINode.transform.position + Vector3.up * 250f;
+        this.transform.position = furthestAINode.transform.position + Vector3.up * random.NextFloat(200f, 250f);
         this.transform.position = new Vector3(this.transform.position.x, Mathf.Clamp(this.transform.position.y, int.MinValue, StartOfRound.Instance.shipLandingPosition.position.y + 250f), this.transform.position.z);
         this.transform.LookAt(StartOfRound.Instance.shipLandingPosition);
         this.transform.rotation = Quaternion.Euler(0, this.transform.rotation.eulerAngles.y, 0);

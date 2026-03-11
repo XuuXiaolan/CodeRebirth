@@ -15,6 +15,8 @@ static class RoundManagerPatch
     internal static List<SpawnableFlora> spawnableFlora = [];
     internal static List<GrabbableObject> plushiesCollectedToday = new();
 
+    internal static readonly NamespacedKey MilitaryAmountKey = NamespacedKey.From("code_rebirth", "military_plane_coverage");
+
     [HarmonyPatch(nameof(RoundManager.SpawnOutsideHazards)), HarmonyPrefix]
     private static void SpawnOutsideMapObjects()
     {
@@ -33,8 +35,12 @@ static class RoundManagerPatch
             return;
         }
 
-        GameObject militaryPlane = GameObject.Instantiate(LethalContent.MapObjects[CodeRebirthMapObjectKeys.MilitaryPlane].MapObject, Vector3.zero, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
-        militaryPlane.GetComponent<NetworkObject>().Spawn(true);
+        PersistentDataContainer contract = DawnLib.GetCurrentContract()!;
+        for (int i = 0; i < contract.GetOrSetDefault(MilitaryAmountKey, 1); i++)
+        {
+            GameObject militaryPlane = GameObject.Instantiate(LethalContent.MapObjects[CodeRebirthMapObjectKeys.MilitaryPlane].MapObject, Vector3.zero, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
+            militaryPlane.GetComponent<NetworkObject>().Spawn(true);
+        }
     }
 
     private static void SpawnFlora()
