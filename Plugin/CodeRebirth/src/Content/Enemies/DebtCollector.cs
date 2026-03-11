@@ -439,6 +439,11 @@ public class DebtCollector : CodeRebirthEnemyAI
             return;
         }
 
+        if (force > 5)
+        {
+            force = 5;
+        }
+
         enemyHP -= force;
 
         if (enemyHP <= 0)
