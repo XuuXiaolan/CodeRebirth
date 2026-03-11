@@ -81,7 +81,6 @@ public class BoxChute : MonoBehaviour
     public void OnLandingAnimEvent()
     {
         OnLanding.Invoke();
-        SpawnEnemy();
     }
 
     public void PlayOpenSound()

@@ -98,7 +98,7 @@ public class DebtCollector : CodeRebirthEnemyAI
         }
         _lastPosition = this.transform.position;
 
-        if (targetPlayer != null && currentBehaviourStateIndex == (int)DebtCollectorState.AttackingPlayer)
+        if (!_playerIsGrabbed && targetPlayer != null && currentBehaviourStateIndex == (int)DebtCollectorState.AttackingPlayer)
         {
             RotateToPlayer(targetPlayer);
         }
@@ -236,6 +236,8 @@ public class DebtCollector : CodeRebirthEnemyAI
             if (_grabAttackTimer <= 0f && UnityEngine.Random.Range(0f, 100f) < ChanceToGoForGrabAttack)
             {
                 _grabAttackTimer = GrabAttackTimer.GetRandomInRange(new System.Random(UnityEngine.Random.Range(0, 999999)));
+                agent.speed = AttackingSpeed * 1.5f;
+                agent.acceleration = 100f;
                 creatureNetworkAnimator.SetTrigger(GrabAnimationHash);
                 return;
             }
@@ -387,6 +389,7 @@ public class DebtCollector : CodeRebirthEnemyAI
         Plugin.ExtendedLogging($"DebtCollector: EndAttackAnimation");
         _playerIsGrabbed = false;
         agent.speed = ChasingSpeed;
+        agent.acceleration = 16f;
         SwitchToBehaviourStateOnLocalClient((int)DebtCollectorState.ChasingTargetPlayer);
     }
 
