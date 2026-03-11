@@ -45,6 +45,8 @@ public class DebtCollector : CodeRebirthEnemyAI
     private float _lostPlayerTimer = 2f;
     private float _grabAttackTimer = 10f;
     private bool _playerIsGrabbed = false;
+    private bool _breakingDoorOpen = false;
+    private HangarShipDoor _shipDoor = null!;
     private static Collider[] _cachedColliders = new Collider[24];
 
     public enum DebtCollectorState
@@ -81,12 +83,18 @@ public class DebtCollector : CodeRebirthEnemyAI
         }
 
         FindRandomPlayerViaAsyncPathfinding();
+        _shipDoor = FindFirstObjectByType<HangarShipDoor>();
     }
 
     public override void Update()
     {
         base.Update();
 
+        if (_breakingDoorOpen)
+        {
+            transform.position = Vector3.Lerp(this.transform.position, _shipDoor.outsideDoorPoint.transform.position, agent.speed * Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(this.transform.rotation, _shipDoor.outsideDoorPoint.transform.rotation, agent.speed * Time.deltaTime);
+        }
         float velocity = (_lastPosition - this.transform.position).magnitude;
         _treadMaterials[0].SetVector(PeaceKeeper.ScrollSpeedID, new Vector3(0, -velocity, 0)); // Left Tread
         _treadMaterials[1].SetVector(PeaceKeeper.ScrollSpeedID, new Vector3(0, velocity, 0)); // Right Tread
@@ -230,6 +238,11 @@ public class DebtCollector : CodeRebirthEnemyAI
             _lostPlayerTimer = Mathf.Min(_lostPlayerTimer + AIIntervalTime, 2f);
         }
 
+        if (_breakingDoorOpen)
+        {
+            return;
+        }
+
         _grabAttackTimer -= AIIntervalTime;
         if (Vector3.Distance(this.transform.position, targetPlayer.transform.position) < agent.stoppingDistance + 0.5f)
         {
@@ -246,8 +259,14 @@ public class DebtCollector : CodeRebirthEnemyAI
             else
             {
                 creatureNetworkAnimator.SetTrigger(SliceAnimationHash);
-                // go for a slice attack
             }
+            return;
+        }
+
+        if (CanBreakDownDoor())
+        {
+            _breakingDoorOpen = true;
+            creatureNetworkAnimator.SetTrigger(PryOpenAnimationHash);
         }
     }
 
@@ -268,6 +287,26 @@ public class DebtCollector : CodeRebirthEnemyAI
     #endregion
 
     #region  Misc Functions
+
+    private bool CanBreakDownDoor()
+    {
+        if (_shipDoor == null)
+        {
+            return false;
+        }
+
+        if (targetPlayer == null)
+        {
+            return false;
+        }
+
+        if (!StartOfRound.Instance.hangarDoorsClosed || !StartOfRound.Instance.shipStrictInnerRoomBounds.bounds.Contains(targetPlayer.transform.position) || Vector3.Distance(this.transform.position, _shipDoor.outsideDoorPoint.position) > 4f)
+        {
+            return false;
+        }
+
+        return true;
+    }
 
     private void FindRandomPlayerViaAsyncPathfinding()
     {
@@ -319,6 +358,20 @@ public class DebtCollector : CodeRebirthEnemyAI
 
     #region Animation Events
 
+	public void FinishPryOpenDoor(int cancelledEarly)
+	{
+		if (cancelledEarly != 1)
+		{
+			_shipDoor.shipDoorsAnimator.SetBool("Closed", false);
+			StartOfRound.Instance.SetShipDoorsClosed(false);
+			StartOfRound.Instance.SetShipDoorsOverheatLocalClient();
+			_shipDoor.doorPower = 0f;
+		}
+		_breakingDoorOpen = false;
+		inSpecialAnimation = false;
+		_shipDoor.shipDoorsAnimator.SetBool("PryingOpenDoor", false);
+	}
+
     public void TeleportSomewhereRandom()
     {
         if (!IsServer)
@@ -356,6 +409,7 @@ public class DebtCollector : CodeRebirthEnemyAI
 
     public void TryGrabPlayer()
     {
+        agent.speed = ChasingSpeed;
         if (targetPlayer != null && !targetPlayer.isPlayerDead && targetPlayer.IsLocalPlayer())
         {
             if (Physics.Raycast(GrabHand.position, targetPlayer.transform.position - GrabHand.position, out RaycastHit hit, 5f, StartOfRound.Instance.playersMask, QueryTriggerInteraction.Collide))
@@ -464,6 +518,11 @@ public class DebtCollector : CodeRebirthEnemyAI
         if (!StartOfRound.Instance.shipIsLeaving)
         {
             DawnLib.GetCurrentContract()!.Set(RoundManagerPatch.MilitaryAmountKey, DawnLib.GetCurrentContract()!.GetOrCreateDefault<int>(RoundManagerPatch.MilitaryAmountKey) + 1);
+        }
+
+        if (_breakingDoorOpen)
+        {
+            FinishPryOpenDoor(1);
         }
         creatureAnimator.SetBool(IsDeadAnimationHash, true);
         agent.speed = 0f;

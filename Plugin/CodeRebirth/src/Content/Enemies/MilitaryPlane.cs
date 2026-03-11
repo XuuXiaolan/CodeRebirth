@@ -28,12 +28,14 @@ public class MilitaryPlane : NetworkBehaviour
     private Vector3 DropPosition = Vector3.zero;
     private Vector3 ExplodePosition = Vector3.zero;
 
+    private static int militaryPlaneCount = 0;
     public void Start()
     {
+        militaryPlaneCount++;
         AudioSource.PlayOneShot(WarningSirenSound);
         EngineAudioSource.PlayOneShot(AmbientFlyingSound);
 
-        System.Random random = new(StartOfRound.Instance.randomMapSeed + 12345 + UnityEngine.Random.Range(0, 999999));
+        System.Random random = new(StartOfRound.Instance.randomMapSeed + 12345 + militaryPlaneCount);
         if (RoundManager.Instance.outsideAINodes == null)
         {
             RoundManager.Instance.outsideAINodes = GameObject.FindGameObjectsWithTag("OutsideAINode");
@@ -82,6 +84,12 @@ public class MilitaryPlane : NetworkBehaviour
             DropPosition = centerOfFlightPath + directionFromCenter * requiredDistanceFromShip;
             Plugin.ExtendedLogging("Military plane failed to calculate drop position based on raycast, defaulting to ship landing position");
         }
+    }
+
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+        militaryPlaneCount--;
     }
 
     private bool exploded = false;
