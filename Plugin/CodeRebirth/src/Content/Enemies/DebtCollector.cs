@@ -49,6 +49,9 @@ public class DebtCollector : CodeRebirthEnemyAI
     public AudioSource HookScrapingSource { get; private set; }
 
     [field: SerializeField]
+    public AudioClip TeleportSound { get; private set; }
+
+    [field: SerializeField]
     public AudioClip PryOpenDoorSound { get; private set; }
 
     [field: SerializeField]
@@ -434,6 +437,7 @@ public class DebtCollector : CodeRebirthEnemyAI
 
         if (targetPlayer != null && !targetPlayer.isPlayerDead)
         {
+            NetworkAudioSource.PlayOneShot(TeleportSound);
             CRUtilities.TeleportEnemy(this, RoundManager.Instance.GetRandomNavMeshPositionInRadius(targetPlayer.transform.position, 20f, default));
             agent.speed = ChasingSpeed;
             SwitchToBehaviourServerRpc((int)DebtCollectorState.ChasingTargetPlayer);
@@ -456,6 +460,7 @@ public class DebtCollector : CodeRebirthEnemyAI
             return;
         }
 
+        NetworkAudioSource.PlayOneShot(TeleportSound);
         CRUtilities.TeleportEnemy(this, randomPositions[UnityEngine.Random.Range(0, randomPositions.Count)]);
         FindRandomPlayerViaAsyncPathfinding();
     }
@@ -594,6 +599,7 @@ public class DebtCollector : CodeRebirthEnemyAI
     public override void KillEnemy(bool destroy = false)
     {
         base.KillEnemy(destroy);
+        AudioSource.PlayOneShot(dieSFX);
         if (targetPlayer != null)
         {
             if (targetPlayer.IsLocalPlayer())
