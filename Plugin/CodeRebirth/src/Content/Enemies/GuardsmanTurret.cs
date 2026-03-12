@@ -82,7 +82,7 @@ public class GuardsmanTurret : MonoBehaviour
     {
         foreach (EnemyAI enemy in RoundManager.Instance.SpawnedEnemies)
         {
-            if (enemy is Guardsman)
+            if (enemy == null || enemy.isEnemyDead || enemy is Guardsman || enemy is SandWormAI || enemy is DebtCollector)
                 continue;
 
             if (GuardsmanOwner.targetEnemy == enemy)

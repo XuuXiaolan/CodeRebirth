@@ -208,7 +208,7 @@ public class Oxidizer : GrabbableObject
         superCharged = true;
         oxidizerSource.PlayOneShot(bigBlastClip);
         float fuelLeft = 100 - skinnedMeshRenderer.GetBlendShapeWeight(0);
-        int damageToDeal = Mathf.FloorToInt(fuelLeft / 7f);
+        int damageToDeal = Mathf.FloorToInt(fuelLeft / 5f);
         Plugin.ExtendedLogging($"Oxidizer: {damageToDeal} damage dealt.");
         DoHitStuff(damageToDeal);
         foreach (var ps in flameStreamParticleSystems)

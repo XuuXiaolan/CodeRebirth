@@ -108,7 +108,7 @@ public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
     public override void Start()
     {
         base.Start();
-        List<string> enemyBlacklistArray = MapObjectHandler.Instance.Merchant.GetConfig<string>("Guardsman | Enemy Blacklist").Value.Split(',').Select(s => s.Trim()).ToList();
+        List<string> enemyBlacklistArray = MapObjectHandler.Instance.Merchant!.GetConfig<string>("Guardsman | Enemy Blacklist").Value.Split(',').Select(s => s.Trim()).ToList();
         foreach (string nameEntry in enemyBlacklistArray)
         {
             _internalEnemyBlacklist.UnionWith(LethalContent.Enemies.Values.Where(et => et.EnemyType.enemyName.Equals(nameEntry, StringComparison.OrdinalIgnoreCase)).Select(et => et.EnemyType.enemyName));
@@ -179,7 +179,7 @@ public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
     {
         foreach (var enemy in RoundManager.Instance.SpawnedEnemies)
         {
-            if (enemy == null || enemy.isEnemyDead || enemy is Guardsman || enemy is SandWormAI)
+            if (enemy == null || enemy.isEnemyDead || enemy is Guardsman || enemy is SandWormAI || enemy is DebtCollector)
                 continue;
 
             if (_internalEnemyBlacklist.Contains(enemy.enemyType.enemyName))
