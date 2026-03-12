@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
 using Dawn.Utils;
 using GameNetcodeStuff;
@@ -13,13 +14,14 @@ public class ElectricSlugger : GrabbableObject
     public SkinnedMeshRenderer skinnedMeshRenderer = null!;
     public Transform weaponTip = null!; // Used on the VisualEffect
     public VisualEffect shootVFX = null!;
+    public List<Light> lights = new List<Light>();
     [Header("Audio")]
     public AudioSource idleSource = null!;
     public AudioSource firingSource = null!;
     public AudioClip fireSound = null!;
     public AudioClip chargeSound = null!;
 
-    private RaycastHit[] cachedRaycastHits = new RaycastHit[100];
+    private RaycastHit[] cachedRaycastHits = new RaycastHit[16];
     private float pumpTimer = 0f;
     private int pumpCount = 0;
     private bool canFire = true;
@@ -28,6 +30,24 @@ public class ElectricSlugger : GrabbableObject
     {
         base.GrabItem();
         Plugin.InputActionsInstance.PumpSlugger.performed += OnPumpDone;
+    }
+
+    public override void EquipItem()
+    {
+        base.EquipItem();
+        foreach (Light light in lights)
+        {
+            light.enabled = true;
+        }
+    }
+
+    public override void PocketItem()
+    {
+        base.PocketItem();
+        foreach (Light light in lights)
+        {
+            light.enabled = false;
+        }
     }
 
     public override void DiscardItem()
