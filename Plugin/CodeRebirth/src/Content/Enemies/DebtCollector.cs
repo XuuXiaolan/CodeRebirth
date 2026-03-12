@@ -33,10 +33,35 @@ public class DebtCollector : CodeRebirthEnemyAI
     public float ChanceToGoForGrabAttack { get; private set; } = 50f;
 
     [field: SerializeField]
+    public BoundedRange TeleportIdleTimerRange { get; private set; } = new(5f, 10f);
+
+    [field: SerializeField]
+    public ParticleSystem HookScrappingParticles { get; private set; }
+    [field: Header("Audio")]
+    [field: SerializeField]
+    public NetworkAudioSource NetworkAudioSource { get; private set; }
+    [field: SerializeField]
+    public AudioSource AudioSource { get; private set; }
+    [field: SerializeField]
     public AudioSource TreadSource { get; private set; }
 
     [field: SerializeField]
-    public BoundedRange TeleportIdleTimerRange { get; private set; } = new(5f, 10f);
+    public AudioSource HookScrapingSource { get; private set; }
+
+    [field: SerializeField]
+    public AudioClip PryOpenDoorSound { get; private set; }
+
+    [field: SerializeField]
+    public AudioClip GrabSound { get; private set; }
+
+    [field: SerializeField]
+    public AudioClip GrabSucceedSound { get; private set; }
+
+    [field: SerializeField]
+    public AudioClip BitchSliceSound { get; private set; }
+
+    [field: SerializeField]
+    public AudioClip BitchSliceHit { get; private set; }
 
     private List<Material> _treadMaterials = new();
     private Vector3 _lastPosition = Vector3.zero;
@@ -90,11 +115,29 @@ public class DebtCollector : CodeRebirthEnemyAI
     {
         base.Update();
 
+        if (Physics.Raycast(HookScrapingSource.transform.position, Vector3.down, out RaycastHit _, 0.5f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+        {
+            if (!HookScrappingParticles.isPlaying)
+            {
+                HookScrappingParticles.Play();
+            }
+            HookScrapingSource.volume = 1f;
+        }
+        else
+        {
+            if (HookScrappingParticles.isPlaying)
+            {
+                HookScrappingParticles.Play();
+            }
+            HookScrapingSource.volume = 0f;
+        }
+
         if (_breakingDoorOpen)
         {
             transform.position = Vector3.Lerp(this.transform.position, _shipDoor.outsideDoorPoint.transform.position, agent.speed * Time.deltaTime);
             transform.rotation = Quaternion.Lerp(this.transform.rotation, _shipDoor.outsideDoorPoint.transform.rotation, agent.speed * Time.deltaTime);
         }
+
         float velocity = (_lastPosition - this.transform.position).magnitude;
         _treadMaterials[0].SetVector(PeaceKeeper.ScrollSpeedID, new Vector3(0, -velocity, 0)); // Left Tread
         _treadMaterials[1].SetVector(PeaceKeeper.ScrollSpeedID, new Vector3(0, velocity, 0)); // Right Tread
@@ -253,11 +296,13 @@ public class DebtCollector : CodeRebirthEnemyAI
                 _grabAttackTimer = GrabAttackTimer.GetRandomInRange(new System.Random(UnityEngine.Random.Range(0, 999999)));
                 agent.speed = AttackingSpeed * 3f;
                 agent.acceleration = 100f;
+                NetworkAudioSource.PlayOneShot(GrabSound);
                 creatureNetworkAnimator.SetTrigger(GrabAnimationHash);
                 return;
             }
             else
             {
+                NetworkAudioSource.PlayOneShot(BitchSliceSound);
                 creatureNetworkAnimator.SetTrigger(SliceAnimationHash);
             }
             return;
@@ -265,7 +310,7 @@ public class DebtCollector : CodeRebirthEnemyAI
 
         if (CanBreakDownDoor())
         {
-            _breakingDoorOpen = true;
+            BreakOpenDoorStartRpc();
             creatureNetworkAnimator.SetTrigger(PryOpenAnimationHash);
         }
     }
@@ -287,6 +332,13 @@ public class DebtCollector : CodeRebirthEnemyAI
     #endregion
 
     #region  Misc Functions
+
+    [Rpc(SendTo.Everyone)]
+    private void BreakOpenDoorStartRpc()
+    {
+        _breakingDoorOpen = true;
+        AudioSource.PlayOneShot(PryOpenDoorSound);
+    }
 
     private bool CanBreakDownDoor()
     {
@@ -349,6 +401,7 @@ public class DebtCollector : CodeRebirthEnemyAI
     [Rpc(SendTo.Everyone, RequireOwnership = false, DeferLocal = true)]
     private void SetPlayerAsGrabbedRpc()
     {
+        AudioSource.PlayOneShot(GrabSucceedSound);
         _playerIsGrabbed = true;
         targetPlayer.disableMoveInput = true;
         targetPlayer.inAnimationWithEnemy = this;
@@ -473,6 +526,7 @@ public class DebtCollector : CodeRebirthEnemyAI
 
                 _playersHit.Add(player);
                 Vector3 directionVector = (player.transform.position - this.transform.position).normalized * 20f;
+                NetworkAudioSource.PlayOneShot(BitchSliceHit);
                 player.DamagePlayer(20, true, true, CauseOfDeath.Snipped, 7, false, directionVector);
                 player.externalForceAutoFade += directionVector;
             }
@@ -488,6 +542,7 @@ public class DebtCollector : CodeRebirthEnemyAI
                     continue;
 
                 _enemiesHit.Add(enemyAICollisionDetect.mainScript);
+                NetworkAudioSource.PlayOneShot(BitchSliceHit);
                 enemyAICollisionDetect.mainScript.HitEnemyOnLocalClient(2, this.transform.position, null, true, 1921);
             }
             else
@@ -499,6 +554,7 @@ public class DebtCollector : CodeRebirthEnemyAI
                     continue;
 
                 _hittablesHit.Add(iHittable);
+                NetworkAudioSource.PlayOneShot(BitchSliceHit);
                 iHittable.Hit(2, this.transform.position, null, true, 1921);
             }
         }
