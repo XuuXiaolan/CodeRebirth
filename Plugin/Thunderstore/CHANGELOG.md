@@ -90,6 +90,10 @@
 - Terminal gal drew more sticky notes ;D
 - Made certain CR utility scraps count as defensive weapons
 - Nitro crate no longer does 999 dmg (Holy f-), does 20 dmg now
+- Huge nerf to oxidiser, lasts only 2 seconds now.
+- Adjusted lights on peacekeeper and janitor.
+- Fixed Sapsucker omelette sounds.
+- Got rid of unused assetbundles from the mod.
 
 ## v1.4.2
 

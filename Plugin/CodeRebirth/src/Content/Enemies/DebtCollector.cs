@@ -449,6 +449,10 @@ public class DebtCollector : CodeRebirthEnemyAI
         SwitchToBehaviourStateOnLocalClient((int)DebtCollectorState.ChasingTargetPlayer);
     }
 
+    private List<PlayerControllerB> _playersHit = new List<PlayerControllerB>();
+    private List<EnemyAI> _enemiesHit = new List<EnemyAI>();
+    private List<IHittable> _hittablesHit = new List<IHittable>();
+
     public void DoSlashAttack()
     {
         int numHits = Physics.OverlapCapsuleNonAlloc(SliceArmStart.position, SliceArmEnd.position, 2f, _cachedColliders, MoreLayerMasks.PlayersAndInteractableAndEnemiesAndPropsHazardMask, QueryTriggerInteraction.Collide);
@@ -461,28 +465,47 @@ public class DebtCollector : CodeRebirthEnemyAI
 
             if (iHittable is PlayerControllerB player)
             {
+                if (_playersHit.Contains(player))
+                    continue;
+
+                if (!player.IsOwner)
+                    continue;
+
+                _playersHit.Add(player);
                 Vector3 directionVector = (player.transform.position - this.transform.position).normalized * 20f;
                 player.DamagePlayer(20, true, true, CauseOfDeath.Snipped, 7, false, directionVector);
                 player.externalForceAutoFade += directionVector;
             }
             else if (iHittable is EnemyAICollisionDetect enemyAICollisionDetect)
             {
+                if (_enemiesHit.Contains(enemyAICollisionDetect.mainScript))
+                    continue;
+
                 if (!IsServer)
                     continue;
 
                 if (enemyAICollisionDetect.mainScript.gameObject == gameObject)
                     continue;
 
+                _enemiesHit.Add(enemyAICollisionDetect.mainScript);
                 enemyAICollisionDetect.mainScript.HitEnemyOnLocalClient(2, this.transform.position, null, true, 1921);
             }
             else
             {
+                if (_hittablesHit.Contains(iHittable))
+                    continue;
+
                 if (!IsServer)
                     continue;
 
+                _hittablesHit.Add(iHittable);
                 iHittable.Hit(2, this.transform.position, null, true, 1921);
             }
         }
+
+        _playersHit.Clear();
+        _enemiesHit.Clear();
+        _hittablesHit.Clear();
     }
     #endregion
 
@@ -515,6 +538,17 @@ public class DebtCollector : CodeRebirthEnemyAI
     public override void KillEnemy(bool destroy = false)
     {
         base.KillEnemy(destroy);
+        if (targetPlayer != null)
+        {
+            if (targetPlayer.IsLocalPlayer())
+            {
+                GameObject.Find("Systems/Rendering/PlayerHUDHelmetModel").SetActive(true);
+            }
+            targetPlayer.disableMoveInput = false;
+            targetPlayer.inAnimationWithEnemy = null;
+        }
+        _playerIsGrabbed = false;
+        ClearPlayerTarget();
         if (!StartOfRound.Instance.shipIsLeaving)
         {
             DawnLib.GetCurrentContract()!.Set(RoundManagerPatch.MilitaryAmountKey, DawnLib.GetCurrentContract()!.GetOrCreateDefault<int>(RoundManagerPatch.MilitaryAmountKey) + 1);
