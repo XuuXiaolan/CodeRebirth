@@ -43,6 +43,7 @@ public class LogCommandDetails : ScriptableObject
         }
 
         HashSet<NamespacedKey> savedKeys = save.GetOrCreateDefault<HashSet<NamespacedKey>>(Dawn.Utils.ExtraScanEvents._dataKey);
+        savedKeys.UnionWith(save.GetOrCreateDefault<HashSet<NamespacedKey>>(CommitKeyToSave.CodeRebirthLoreKey));
         for (int i = 0; i < InputKeywords.Count; i++)
         {
             if (!savedKeys.Contains(SavedResultKeys[i]))
