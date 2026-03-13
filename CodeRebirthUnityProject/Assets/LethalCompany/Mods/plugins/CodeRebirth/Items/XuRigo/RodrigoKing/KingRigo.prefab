@@ -302,7 +302,6 @@ GameObject:
   - component: {fileID: 9039561797952468807}
   - component: {fileID: 7359584655016680273}
   - component: {fileID: 3061159440050764173}
-  - component: {fileID: 7788663794656268385}
   m_Layer: 22
   m_Name: ScanNode
   m_TagString: Untagged
@@ -366,24 +365,3 @@ MonoBehaviour:
   scrapValue: 0
   creatureScanID: -1
   nodeType: 2
---- !u!114 &7788663794656268385
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7388302208371077974}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1417248434, guid: b821795baeb020545a00803c13a7b7c0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _onScan:
-    m_PersistentCalls:
-      m_Calls: []
-  _saveId:
-    _namespace: code_rebirth
-    _key: kingrigo_scan
-  _onFirstScan:
-    m_PersistentCalls:
-      m_Calls: []

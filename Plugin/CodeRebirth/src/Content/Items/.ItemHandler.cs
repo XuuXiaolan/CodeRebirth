@@ -47,14 +47,14 @@ public class ItemHandler : ContentHandler<ItemHandler>
 
     public class OxydeLoreAssets(DuskMod mod, string filePath) : AssetBundleLoader<OxydeLoreAssets>(mod, filePath)
     {
-        [LoadFromBundle("745LogCommandDetails.asset")]
+        /*[LoadFromBundle("745LogCommandDetails.asset")]
         public LogCommandDetails SevenFourFiveLogCommandDetails { get; private set; } = null!;
 
         [LoadFromBundle("906LogCommandDetails.asset")]
         public LogCommandDetails NineZeroSixLogCommandDetails { get; private set; } = null!;
 
         [LoadFromBundle("ArchiveLogCommandDetails.asset")]
-        public LogCommandDetails ArchiveLogCommandDetails { get; private set; } = null!;
+        public LogCommandDetails ArchiveLogCommandDetails { get; private set; } = null!;*/
     }
 
     public class CodeRebirthPlushiesAssets(DuskMod mod, string filePath) : AssetBundleLoader<CodeRebirthPlushiesAssets>(mod, filePath)
@@ -76,7 +76,7 @@ public class ItemHandler : ContentHandler<ItemHandler>
     public ItemHandler(DuskMod mod) : base(mod)
     {
         RegisterContent("oxydeloreassets", out OxydeLore);
-        if (OxydeLore != null)
+        /*if (OxydeLore != null)
         {
             DawnLib.DefineTerminalCommand(OxydeLore.SevenFourFiveLogCommandDetails.NamespacedKey, OxydeLore.SevenFourFiveLogCommandDetails.CommandBasicInformation, builder =>
             {
@@ -104,7 +104,7 @@ public class ItemHandler : ContentHandler<ItemHandler>
                     inputCommandBuilder.SetResultDisplayText(OxydeLore.ArchiveLogCommandDetails.ResultDisplayText);
                 });
             });
-        }
+        }*/
 
         RegisterContent("moonunlockerassets", out MoonUnlocker);
 

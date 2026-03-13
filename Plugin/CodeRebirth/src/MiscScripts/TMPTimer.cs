@@ -15,6 +15,8 @@ public class TMPTimer : MonoBehaviour
     [field: SerializeField]
     public AudioSource AudioSource { get; private set; }
     [field: SerializeField]
+    public AudioClip SecondPassSound { get; private set; }
+    [field: SerializeField]
     public float TimeToPlaySource { get; private set; }
     [field: SerializeField]
     public UnityEvent OnTimerEnd { get; private set; }
@@ -22,6 +24,7 @@ public class TMPTimer : MonoBehaviour
     private bool _timerIsActive = true;
     private float _currentTime;
     private bool _canPlaySound = true;
+    private int _currentSecond = 0;
 
     private void Start()
     {
@@ -33,6 +36,7 @@ public class TMPTimer : MonoBehaviour
         {
             _timerIsActive = false;
         }
+        _currentSecond = TotalSeconds;
         _currentTime = TotalSeconds;
     }
 
@@ -55,13 +59,18 @@ public class TMPTimer : MonoBehaviour
         }
 
         TimeSpan time = TimeSpan.FromSeconds(_currentTime);
-        TimerText.text = time.ToString(@"mm\:ss\:fff");
+        if (time.Seconds < _currentSecond)
+        {
+            // second has passed
+            AudioSource.PlayOneShot(SecondPassSound);
+            _currentSecond = time.Seconds;
+        }
+        TimerText.text = time.ToString(@"mm\:ss\:ff");
 
         if (_canPlaySound && time < TimeSpan.FromSeconds(TimeToPlaySource) && !AudioSource.isPlaying)
         {
             _canPlaySound = false;
             AudioSource.Play();
         }
-        // _timerText.text = time.Minutes.ToString() + " : " + time.Seconds.ToString() + " : " + time.Milliseconds.ToString();
     }
 }
