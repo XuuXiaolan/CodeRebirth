@@ -289,6 +289,10 @@ MonoBehaviour:
   skinnedMeshRenderer: {fileID: 3560938563223285182}
   weaponTip: {fileID: 3361662970384125776}
   shootVFX: {fileID: 2159683547169772138}
+  lights:
+  - {fileID: 422720924517482087}
+  - {fileID: 6117946630453934042}
+  - {fileID: 3063480043758470968}
   idleSource: {fileID: 3460553245864983987}
   firingSource: {fileID: -5835546687973521565}
   fireSound: {fileID: 8300000, guid: 86e10b339ce549443bc6bbd00f684e5a, type: 3}
@@ -587,7 +591,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8148578674356012381
 Transform:
   m_ObjectHideFlags: 0
