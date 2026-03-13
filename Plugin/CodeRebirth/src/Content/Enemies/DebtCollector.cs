@@ -117,9 +117,14 @@ public class DebtCollector : CodeRebirthEnemyAI
     public override void Update()
     {
         base.Update();
-
-        if (Physics.Raycast(HookScrapingSource.transform.position, Vector3.down, out RaycastHit _, 0.5f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+        if (isEnemyDead)
         {
+            return;
+        }
+
+        if (Physics.Raycast(HookScrapingSource.transform.position, Vector3.down, out RaycastHit raycastHit, 0.5f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+        {
+            Plugin.ExtendedLogging($"Hook scrapping hit: {raycastHit.collider.name}");
             if (!HookScrappingParticles.isPlaying)
             {
                 HookScrappingParticles.Play();
@@ -244,6 +249,7 @@ public class DebtCollector : CodeRebirthEnemyAI
             smartAgentNavigator.StopSearchRoutine();
             agent.speed = 0f;
             SwitchToBehaviourServerRpc((int)DebtCollectorState.Teleporting);
+            NetworkAudioSource.PlayOneShot(TeleportSound);
             creatureNetworkAnimator.SetTrigger(TeleportAnimationHash);
             _teleportIdleTimer = TeleportIdleTimerRange.GetRandomInRange(new System.Random(UnityEngine.Random.Range(0, 999999)));
         }
@@ -275,6 +281,7 @@ public class DebtCollector : CodeRebirthEnemyAI
                 _lostPlayerTimer = 2f;
                 agent.speed = 0f;
                 SwitchToBehaviourServerRpc((int)DebtCollectorState.Teleporting);
+                NetworkAudioSource.PlayOneShot(TeleportSound);
                 creatureNetworkAnimator.SetTrigger(TeleportAnimationHash);
                 return;
             }
@@ -301,7 +308,6 @@ public class DebtCollector : CodeRebirthEnemyAI
                 agent.acceleration = 100f;
                 NetworkAudioSource.PlayOneShot(GrabSound);
                 creatureNetworkAnimator.SetTrigger(GrabAnimationHash);
-                return;
             }
             else
             {
@@ -437,7 +443,6 @@ public class DebtCollector : CodeRebirthEnemyAI
 
         if (targetPlayer != null && !targetPlayer.isPlayerDead)
         {
-            NetworkAudioSource.PlayOneShot(TeleportSound);
             CRUtilities.TeleportEnemy(this, RoundManager.Instance.GetRandomNavMeshPositionInRadius(targetPlayer.transform.position, 20f, default));
             agent.speed = ChasingSpeed;
             SwitchToBehaviourServerRpc((int)DebtCollectorState.ChasingTargetPlayer);
@@ -460,7 +465,6 @@ public class DebtCollector : CodeRebirthEnemyAI
             return;
         }
 
-        NetworkAudioSource.PlayOneShot(TeleportSound);
         CRUtilities.TeleportEnemy(this, randomPositions[UnityEngine.Random.Range(0, randomPositions.Count)]);
         FindRandomPlayerViaAsyncPathfinding();
     }
@@ -599,6 +603,9 @@ public class DebtCollector : CodeRebirthEnemyAI
     public override void KillEnemy(bool destroy = false)
     {
         base.KillEnemy(destroy);
+        TreadSource.Stop();
+        HookScrapingSource.Stop();
+        HookScrappingParticles.Stop();
         AudioSource.PlayOneShot(dieSFX);
         if (targetPlayer != null)
         {
