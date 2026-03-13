@@ -302,7 +302,9 @@ public class MarrowSplitter : GrabbableObject
                 _idleSource.Stop();
 
                 if (IsOwner)
+                {
                     _marrowSplitterAnimator.SetBool(AttackingAnimation, false);
+                }
                 return;
             }
         }

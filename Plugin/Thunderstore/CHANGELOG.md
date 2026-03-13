@@ -1,5 +1,7 @@
 # v1.5.0
 
+- Beware the Merchant.
+
 - Added compat with Lategame Upgrades and FasterItemDropship on Oxyde.
 - Added compat with Lategame Upgrades and Oxyde's sell percentage.
 - Fixed mistress plushie.
@@ -94,6 +96,7 @@
 - Adjusted lights on peacekeeper and janitor.
 - Fixed Sapsucker omelette sounds.
 - Got rid of unused assetbundles from the mod.
+- Guardsman
 
 ## v1.4.2
 

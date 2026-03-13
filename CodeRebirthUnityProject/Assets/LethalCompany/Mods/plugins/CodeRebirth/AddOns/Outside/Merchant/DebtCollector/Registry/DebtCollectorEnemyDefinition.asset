@@ -19,15 +19,25 @@ MonoBehaviour:
     _key: debt_collector
   <EnemyType>k__BackingField: {fileID: 11400000, guid: 325d1402d1239994f9ca66841c583495,
     type: 2}
-  <SpawnTable>k__BackingField: 1
+  <SpawnTable>k__BackingField: 2
   <BestiaryNodeText>k__BackingField: DO NOT STEAL
   <BestiaryWordOverride>k__BackingField: 
-  <MoonSpawnWeightsConfig>k__BackingField: []
+  <MoonSpawnWeightsConfig>k__BackingField:
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: vanilla
+    MathOperation: 2
+    Weight: 0
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: custom
+    MathOperation: 2
+    Weight: 0
   <InteriorSpawnWeightsConfig>k__BackingField: []
   <WeatherSpawnWeightsConfig>k__BackingField: []
   <GenerateSpawnWeightsConfig>k__BackingField: 0
   <GeneratePowerLevelConfig>k__BackingField: 0
   <GenerateMaxSpawnCountConfig>k__BackingField: 0
-  <MoonSpawnWeights>k__BackingField: Vanilla=+0, Custom=+0
+  <MoonSpawnWeights>k__BackingField: 
   <InteriorSpawnWeights>k__BackingField: 
   <WeatherSpawnWeights>k__BackingField: 
