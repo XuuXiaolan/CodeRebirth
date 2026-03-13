@@ -13,6 +13,9 @@ namespace CodeRebirth.src.Content.Enemies;
 public class DebtCollector : CodeRebirthEnemyAI
 {
     [field: SerializeField]
+    public AnimationClip PryOpenAnimation { get; private set; }
+
+    [field: SerializeField]
     public float WanderingSpeed { get; private set; } = 3.5f;
     [field: SerializeField]
     public float ChasingSpeed { get; private set; } = 5f;
@@ -72,6 +75,7 @@ public class DebtCollector : CodeRebirthEnemyAI
     private float _checkForPlayersTimer = 1.5f;
     private float _lostPlayerTimer = 2f;
     private float _grabAttackTimer = 10f;
+    private float _pryingDoorOpenTimer = 0f;
     private bool _playerIsGrabbed = false;
     private bool _breakingDoorOpen = false;
     private HangarShipDoor _shipDoor = null!;
@@ -94,6 +98,8 @@ public class DebtCollector : CodeRebirthEnemyAI
     private static readonly int PryOpenAnimationHash = Animator.StringToHash("PryOpen"); // Trigger
     private static readonly int TeleportAnimationHash = Animator.StringToHash("Teleport"); // Trigger
     private static readonly int IsDeadAnimationHash = Animator.StringToHash("IsDead"); // Bool
+    private static readonly int PryOpenDoorAnimationHash = Animator.StringToHash("pryOpenDoor"); // Float
+    private static readonly int PryingOpenDoorAnimationHash = Animator.StringToHash("PryingOpenDoor"); // Bool
 
     #region Unity Lifecycles
     public override void Start()
@@ -122,25 +128,11 @@ public class DebtCollector : CodeRebirthEnemyAI
             return;
         }
 
-        if (Physics.Raycast(HookScrapingSource.transform.position, Vector3.down, out RaycastHit raycastHit, 0.5f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
-        {
-            if (!HookScrappingParticles.isPlaying)
-            {
-                HookScrappingParticles.Play();
-            }
-            HookScrapingSource.volume = 1f;
-        }
-        else
-        {
-            if (HookScrappingParticles.isPlaying)
-            {
-                HookScrappingParticles.Stop();
-            }
-            HookScrapingSource.volume = 0f;
-        }
-
         if (_breakingDoorOpen)
         {
+            _pryingDoorOpenTimer += Time.deltaTime / 2.4f;
+            _shipDoor.shipDoorsAnimator.SetFloat(PryOpenDoorAnimationHash, _pryingDoorOpenTimer);
+            smartAgentNavigator.DoPathingToDestination(_shipDoor.outsideDoorPoint.transform.position);
             transform.position = Vector3.Lerp(this.transform.position, _shipDoor.outsideDoorPoint.transform.position, agent.speed * Time.deltaTime);
             transform.rotation = Quaternion.Lerp(this.transform.rotation, _shipDoor.outsideDoorPoint.transform.rotation, agent.speed * Time.deltaTime);
         }
@@ -151,10 +143,31 @@ public class DebtCollector : CodeRebirthEnemyAI
         if (velocity > 0)
         {
             TreadSource.volume = 1f;
+            if (Physics.Raycast(HookScrapingSource.transform.position, Vector3.down, out _, 0.5f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+            {
+                if (!HookScrappingParticles.isPlaying)
+                {
+                    HookScrappingParticles.Play();
+                }
+                HookScrapingSource.volume = 1f;
+            }
+            else
+            {
+                if (HookScrappingParticles.isPlaying)
+                {
+                    HookScrappingParticles.Stop();
+                }
+                HookScrapingSource.volume = 0f;
+            }
         }
         else
         {
             TreadSource.volume = 0f;
+            if (HookScrappingParticles.isPlaying)
+            {
+                HookScrappingParticles.Stop();
+            }
+            HookScrapingSource.volume = 0f;
         }
         _lastPosition = this.transform.position;
 
@@ -344,8 +357,12 @@ public class DebtCollector : CodeRebirthEnemyAI
     [Rpc(SendTo.Everyone)]
     private void BreakOpenDoorStartRpc()
     {
+        Plugin.ExtendedLogging($"Starting breaking down door");
         _breakingDoorOpen = true;
+        _pryingDoorOpenTimer = 0f;
         AudioSource.PlayOneShot(PryOpenDoorSound);
+        _shipDoor.shipDoorsAnimator.SetBool(PryingOpenDoorAnimationHash, true);
+        _shipDoor.shipDoorsAnimator.SetFloat(PryOpenDoorAnimationHash, _pryingDoorOpenTimer);
     }
 
     private bool CanBreakDownDoor()
@@ -421,6 +438,7 @@ public class DebtCollector : CodeRebirthEnemyAI
 
 	public void FinishPryOpenDoor(int cancelledEarly)
 	{
+        Plugin.ExtendedLogging($"Finishing pry open door with {cancelledEarly}");
 		if (cancelledEarly != 1)
 		{
 			_shipDoor.shipDoorsAnimator.SetBool("Closed", false);
@@ -430,7 +448,7 @@ public class DebtCollector : CodeRebirthEnemyAI
 		}
 		_breakingDoorOpen = false;
 		inSpecialAnimation = false;
-		_shipDoor.shipDoorsAnimator.SetBool("PryingOpenDoor", false);
+		_shipDoor.shipDoorsAnimator.SetBool(PryingOpenDoorAnimationHash, false);
 	}
 
     public void TeleportSomewhereRandom()

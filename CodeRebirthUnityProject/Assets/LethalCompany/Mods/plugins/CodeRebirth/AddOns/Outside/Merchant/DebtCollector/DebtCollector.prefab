@@ -8470,7 +8470,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3495860591
+  GlobalObjectIdHash: 3552567082
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -8564,6 +8564,13 @@ MonoBehaviour:
     TransitionDuration: 0.22192049
     TriggerNameHash: -1347921612
     TransitionIndex: 2
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 918536503
+    DestinationState: -1966975472
+    TransitionDuration: 0.22498882
+    TriggerNameHash: 697822011
+    TransitionIndex: 3
   m_Animator: {fileID: 7272238091772721116}
 --- !u!65 &8570127935238796176
 BoxCollider:
@@ -8767,6 +8774,8 @@ MonoBehaviour:
     maxTime: 0
   _hitBodySounds: []
   spawnSound: {fileID: 8300000, guid: 26690ac839169f048a0f53ac549d1333, type: 3}
+  <PryOpenAnimation>k__BackingField: {fileID: 7400000, guid: 7dbfa6afa96db3a46941973349b287ce,
+    type: 2}
   <WanderingSpeed>k__BackingField: 3.5
   <ChasingSpeed>k__BackingField: 5
   <AttackingSpeed>k__BackingField: 2
