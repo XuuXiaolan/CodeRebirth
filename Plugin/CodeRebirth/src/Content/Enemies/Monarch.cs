@@ -241,14 +241,14 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
     private void DoAttackingGroundUpdate()
     {
         PlayerControllerB? closestPlayer = GetClosestPlayerToMonarch(out float distanceToClosestPlayer);
-        if (closestPlayer == null && !isAttacking)
+        if ((closestPlayer == null || (closestPlayer.isInHangarShipRoom && StartOfRound.Instance.hangarDoorsClosed)) && !isAttacking)
         {
             smartAgentNavigator.StartSearchRoutine(50);
             agent.stoppingDistance = 1f;
             SwitchToBehaviourServerRpc((int)MonarchState.Idle);
             return;
         }
-        else if (distanceToClosestPlayer > 10 && !isAttacking && !closestPlayer!.isInHangarShipRoom)
+        else if (distanceToClosestPlayer > 10 && !isAttacking && closestPlayer != null && !closestPlayer.isInHangarShipRoom)
         {
             agent.speed = 10f;
             creatureAnimator.SetBool(IsFlyingAnimation, true);
@@ -281,7 +281,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
     private void DoAttackingAirUpdate()
     {
         PlayerControllerB? closestPlayer = GetClosestPlayerToMonarch(out float distanceToClosestPlayer);
-        if (closestPlayer == null && !isAttacking)
+        if ((closestPlayer == null || (closestPlayer.isInHangarShipRoom && StartOfRound.Instance.hangarDoorsClosed)) && !isAttacking)
         {
             smartAgentNavigator.StartSearchRoutine(50);
             agent.stoppingDistance = 1f;
