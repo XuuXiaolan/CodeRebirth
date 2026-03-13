@@ -296,7 +296,7 @@ public class DebtCollector : CodeRebirthEnemyAI
         }
 
         _grabAttackTimer -= AIIntervalTime;
-        if (Vector3.Distance(this.transform.position, targetPlayer.transform.position) < agent.stoppingDistance + 0.5f)
+        if (Vector3.Distance(this.transform.position, targetPlayer.transform.position) < agent.stoppingDistance + 1.5f)
         {
             agent.speed = AttackingSpeed;
             SwitchToBehaviourServerRpc((int)DebtCollectorState.AttackingPlayer);
