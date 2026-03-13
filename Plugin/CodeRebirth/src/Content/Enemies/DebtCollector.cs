@@ -124,7 +124,6 @@ public class DebtCollector : CodeRebirthEnemyAI
 
         if (Physics.Raycast(HookScrapingSource.transform.position, Vector3.down, out RaycastHit raycastHit, 0.5f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
         {
-            Plugin.ExtendedLogging($"Hook scrapping hit: {raycastHit.collider.name}");
             if (!HookScrappingParticles.isPlaying)
             {
                 HookScrappingParticles.Play();
@@ -135,7 +134,7 @@ public class DebtCollector : CodeRebirthEnemyAI
         {
             if (HookScrappingParticles.isPlaying)
             {
-                HookScrappingParticles.Play();
+                HookScrappingParticles.Stop();
             }
             HookScrapingSource.volume = 0f;
         }
