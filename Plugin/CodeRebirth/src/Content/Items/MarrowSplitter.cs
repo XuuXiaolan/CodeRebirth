@@ -233,10 +233,10 @@ public class MarrowSplitter : GrabbableObject
         {
             _bloodParticles.Play(true);
             _idleSource.PlayOneShot(_hitEnemySounds[UnityEngine.Random.Range(0, _hitEnemySounds.Length)]);
-            _hitTimer = 0.4f;
+            _hitTimer = 0.8f;
             if (canRaiseBlood)
             {
-                insertedBattery.charge -= 0.05f;
+                insertedBattery.charge -= 0.1f;
                 float currentAmount = _skinnedMeshRenderer.GetBlendShapeWeight(0);
                 float newAmount = Mathf.Clamp(currentAmount + _increaseAmount, 0, 100);
                 if (newAmount > currentAmount && canRaiseBlood)
