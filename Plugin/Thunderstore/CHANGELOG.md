@@ -96,7 +96,7 @@
 - Adjusted lights on peacekeeper and janitor.
 - Fixed Sapsucker omelette sounds.
 - Got rid of unused assetbundles from the mod.
-- Guardsman
+- Guardsman enemy config updated to include spark tower.
 
 ## v1.4.2
 
