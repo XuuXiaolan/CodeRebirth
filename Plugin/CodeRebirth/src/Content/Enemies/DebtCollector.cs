@@ -622,6 +622,14 @@ public class DebtCollector : CodeRebirthEnemyAI
 
     public override void KillEnemy(bool destroy = false)
     {
+        if (enemyHP > 0)
+        {
+            enemyHP -= 10;
+            if (enemyHP > 0)
+            {
+                return;
+            }
+        }
         base.KillEnemy(destroy);
         TreadSource.Stop();
         HookScrapingSource.Stop();

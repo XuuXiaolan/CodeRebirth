@@ -223,7 +223,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
     {
         foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
         {
-            if (player.isPlayerDead || !player.isPlayerControlled || player.IsPseudoDead() || player.isInHangarShipRoom)
+            if (player.isPlayerDead || !player.isPlayerControlled || player.IsPseudoDead() || (player.isInHangarShipRoom && !isInsidePlayerShip))
                 continue;
 
             float dot = Vector3.Dot(transform.forward, (player.transform.position - transform.position).normalized);
@@ -245,7 +245,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
     private void DoAttackingGroundUpdate()
     {
         PlayerControllerB? closestPlayer = GetClosestPlayerToMonarch(out float distanceToClosestPlayer);
-        if ((closestPlayer == null || (closestPlayer.isInHangarShipRoom && StartOfRound.Instance.hangarDoorsClosed)) && !isAttacking)
+        if ((closestPlayer == null || (closestPlayer.isInHangarShipRoom && StartOfRound.Instance.hangarDoorsClosed && !isInsidePlayerShip)) && !isAttacking)
         {
             ClearPlayerTargetServerRpc();
             smartAgentNavigator.StartSearchRoutine(50);
@@ -286,7 +286,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
     private void DoAttackingAirUpdate()
     {
         PlayerControllerB? closestPlayer = GetClosestPlayerToMonarch(out float distanceToClosestPlayer);
-        if ((closestPlayer == null || (closestPlayer.isInHangarShipRoom && StartOfRound.Instance.hangarDoorsClosed)) && !isAttacking)
+        if ((closestPlayer == null || (closestPlayer.isInHangarShipRoom && StartOfRound.Instance.hangarDoorsClosed && !isInsidePlayerShip)) && !isAttacking)
         {
             ClearPlayerTargetServerRpc();
             smartAgentNavigator.StartSearchRoutine(50);
