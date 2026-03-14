@@ -77,6 +77,7 @@ public class DebtCollector : CodeRebirthEnemyAI
     private float _grabAttackTimer = 10f;
     private float _pryingDoorOpenTimer = 0f;
     private bool _playerIsGrabbed = false;
+    private Vector3 _overrideNextTeleportPosition = Vector3.zero;
     private bool _breakingDoorOpen = false;
     private HangarShipDoor _shipDoor = null!;
     private static Collider[] _cachedColliders = new Collider[24];
@@ -410,10 +411,23 @@ public class DebtCollector : CodeRebirthEnemyAI
         }
         else
         {
-            agent.speed = WanderingSpeed;
-            SwitchToBehaviourServerRpc((int)DebtCollectorState.Idle);
-            smartAgentNavigator.StartSearchRoutine(20);
-            Plugin.ExtendedLogging($"DebtCollector: Going idle temporarily");
+            // TODO: implement a teleport to be around a player and wander around them?
+            List<PlayerControllerB> alivePlayers = StartOfRound.Instance.allPlayerScripts.Where(kv => kv != null && !kv.isPlayerDead && kv.isPlayerControlled).ToList();
+            if (alivePlayers.Count <= 0)
+            {
+                agent.speed = WanderingSpeed;
+                SwitchToBehaviourServerRpc((int)DebtCollectorState.Idle);
+                smartAgentNavigator.StartSearchRoutine(20);
+                Plugin.ExtendedLogging($"DebtCollector: Going idle temporarily");
+                return;
+            }
+
+            PlayerControllerB randomAlivePlayer = alivePlayers[UnityEngine.Random.Range(0, alivePlayers.Count)];
+            agent.speed = 0f;
+            SwitchToBehaviourServerRpc((int)DebtCollectorState.Teleporting);
+            NetworkAudioSource.PlayOneShot(TeleportSound);
+            creatureNetworkAnimator.SetTrigger(TeleportAnimationHash);
+            _overrideNextTeleportPosition = randomAlivePlayer.transform.position;
         }
     }
 
@@ -461,7 +475,7 @@ public class DebtCollector : CodeRebirthEnemyAI
             return;
         }
 
-        if (targetPlayer != null && !targetPlayer.isPlayerDead)
+        if (targetPlayer != null && !targetPlayer.isPlayerDead && smartAgentNavigator.CanPathToPoint(agent.transform.position, targetPlayer.transform.position) != -1)
         {
             CRUtilities.TeleportEnemy(this, RoundManager.Instance.GetRandomNavMeshPositionInRadius(targetPlayer.transform.position, 20f, default));
             agent.speed = ChasingSpeed;
@@ -479,13 +493,19 @@ public class DebtCollector : CodeRebirthEnemyAI
             randomPositions.AddRange(RoundManager.Instance.outsideAINodes.Select(node => node.transform.position));
         }
 
-        if (randomPositions.Count == 0)
+        if (randomPositions.Count == 0 && _overrideNextTeleportPosition == Vector3.zero)
         {
             Plugin.ExtendedLogging($"DebtCollector: No nodes to teleport to");
             return;
         }
 
-        CRUtilities.TeleportEnemy(this, randomPositions[UnityEngine.Random.Range(0, randomPositions.Count)]);
+        if (_overrideNextTeleportPosition == Vector3.zero)
+        {
+            _overrideNextTeleportPosition = randomPositions[UnityEngine.Random.Range(0, randomPositions.Count)];
+        }
+
+        CRUtilities.TeleportEnemy(this, _overrideNextTeleportPosition);
+        _overrideNextTeleportPosition = Vector3.zero;
         FindRandomPlayerViaAsyncPathfinding();
     }
 
@@ -613,8 +633,20 @@ public class DebtCollector : CodeRebirthEnemyAI
             force = 5;
         }
 
-        enemyHP -= force;
+        if (playerWhoHit != null && playerWhoHit != targetPlayer)
+        {
+            SetPlayerTarget(playerWhoHit);
+            smartAgentNavigator.StopSearchRoutine();
+            agent.speed = ChasingSpeed;
+            SwitchToBehaviourStateOnLocalClient((int)DebtCollectorState.ChasingTargetPlayer);
+        }
+        else if (playerWhoHit == null)
+        {
+            AudioSource.PlayOneShot(BitchSliceSound);
+            creatureAnimator.SetTrigger(SliceAnimationHash);
+        }
 
+        enemyHP -= force;
         if (enemyHP <= 0)
         {
             if (IsOwner)
