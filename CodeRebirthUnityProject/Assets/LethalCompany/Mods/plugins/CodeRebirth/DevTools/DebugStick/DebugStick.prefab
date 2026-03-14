@@ -110,7 +110,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7152080037956612362}
-  - {fileID: 5944099533687354973}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8482634705524384199
@@ -175,7 +174,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 4097496198
+  GlobalObjectIdHash: 168771209
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -355,102 +354,3 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!1 &7819855244967489531
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5944099533687354973}
-  - component: {fileID: 2016929007572383265}
-  - component: {fileID: 3523899179670145541}
-  m_Layer: 0
-  m_Name: PokeBox
-  m_TagString: DoNotSet
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &5944099533687354973
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7819855244967489531}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: -0, z: 0, w: 0.7071067}
-  m_LocalPosition: {x: -0.098255396, y: 0.31182158, z: 0.8313829}
-  m_LocalScale: {x: 1, y: 1.0000001, z: 1.0000001}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2441986354123686639}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &2016929007572383265
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7819855244967489531}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.44788826, y: 0.57362276, z: 0.41949373}
-  m_Center: {x: 0.0809384, y: 0.5323141, z: 0.28113797}
---- !u!114 &3523899179670145541
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7819855244967489531}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1835421178, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enabledScript: 1
-  deathAnimation: 0
-  forceDirection: 1
-  forceMagnitudeAfterDamage: 10
-  forceMagnitudeAfterDeath: 0
-  forceDirectionFromThisObject: 1
-  causeOfDeath: 0
-  triggerForPlayers: 1
-  triggerForEnemies: 0
-  canThingExit: 1
-  sharedCooldown: 0
-  playDefaultPlayerDamageSFX: 0
-  soundAttractsDogs: 0
-  enemyMainScript: {fileID: 0}
-  damageDuration: 0
-  damageToDealForPlayers: 0
-  damageToDealForEnemies: 0
-  damageIntervalForPlayers: 0.25
-  damageIntervalForEnemies: 0.25
-  damageClips: []
-  damageAudioSources: []
-  deathPrefabForPlayer: {fileID: 0}
-  deathPrefabForEnemy: {fileID: 0}
-  useParticleSystems: 0
-  teleportParticles: 0
-  deathParticlesForPlayer: []
-  damageParticlesForPlayer: []
-  deathParticlesForEnemy: []
-  damageParticlesForEnemy: []
-  displayMessage: 0
-  headerText: Damage Dealt!
-  message: Damage dealt!
-  messageInterval: 10

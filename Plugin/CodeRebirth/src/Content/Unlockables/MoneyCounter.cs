@@ -208,7 +208,12 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
     [ClientRpc]
     private void UpdateVisualsClientRpc(int oldValue, int newValue)
     {
-        Plugin.ExtendedLogging($"UpdateVisualsClientRpc({oldValue}, {newValue})");
+        if (CoinDisplayUI.Instance == null)
+        {
+            Plugin.Logger.LogError($"CoinDisplayUI.Instance is null somehow");
+            return;
+        }
+
         if (CoinDisplayUI.Instance.editCoinRoutine != null)
         {
             CoinDisplayUI.Instance.StopCoroutine(CoinDisplayUI.Instance.editCoinRoutine);
@@ -219,7 +224,6 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
         if (newValue < 0 && oldValue >= 0)
         {
             Plugin.ExtendedLogging($"Going into debt mode");
-            newValue = 0;
             GoToDebtMode();
         }
         else if (oldValue < 0 && newValue >= 0)
@@ -227,9 +231,11 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
             LeaveDebt();
         }
 
-        int hundreds = newValue / 100;
-        int tens = (newValue % 100) / 10;
-        int ones = newValue % 10;
+        int visualNewValue = Mathf.Abs(newValue);
+
+        int hundreds = visualNewValue / 100;
+        int tens = (visualNewValue % 100) / 10;
+        int ones = visualNewValue % 10;
 
         if (_spinRoutine != null)
         {

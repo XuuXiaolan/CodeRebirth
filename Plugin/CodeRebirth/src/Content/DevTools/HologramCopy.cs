@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Dawn;
 using Unity.Netcode;
 using UnityEngine;
@@ -20,37 +22,20 @@ public class HologramCopy
         HologramObject = GameObject.Instantiate(gameObject, Vector3.zero, Quaternion.identity);
         HologramObject.name = gameObject.name + " - HologramCopy";
         List<Component> components = [.. HologramObject.GetComponentsInChildren<Component>()];
-        HashSet<Renderer> renderers = new();
+        List<Component> removable = new();
         foreach (Component component in components)
         {
-            if (component is Transform or MeshFilter)
+            if (component is Transform or MeshFilter or Renderer or ProBuilderMesh)
             {
                 continue;
             }
 
-            if (component is Renderer renderer)
-            {
-                renderers.Add(renderer);
-                continue;
-            }
+            removable.Add(component);
+        }
 
-            if (component is ProBuilderMesh proBuilderMesh)
-            {
-                renderers.Add(proBuilderMesh.renderer);
-                continue;
-            }
-
-            try
-            {
-                Component.Destroy(component);
-            }
-            catch
-            {
-                if (component is MonoBehaviour monoBehaviour)
-                {
-                    monoBehaviour.enabled = false;
-                }
-            }
+        foreach (Component component in removable)
+        {
+            UnityEngine.Object.Destroy(component);
         }
 
         HologramObject.SetActive(false);
