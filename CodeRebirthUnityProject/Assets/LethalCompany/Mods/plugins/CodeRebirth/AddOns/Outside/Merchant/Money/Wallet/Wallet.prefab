@@ -2688,6 +2688,7 @@ GameObject:
   - component: {fileID: 2043339414943163616}
   - component: {fileID: 5967244827687194067}
   - component: {fileID: 2325750744923300847}
+  - component: {fileID: 4746644069187615126}
   m_Layer: 22
   m_Name: ScanNode
   m_TagString: Untagged
@@ -2751,6 +2752,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4746644069187615126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5902236826406273354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -94287379, guid: b821795baeb020545a00803c13a7b7c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grabbableObject: {fileID: 2207640554100795282}
+  borderColor: {r: 0.745283, g: 0.5555119, b: 0, a: 1}
+  textColor: {r: 1, g: 0.7614651, b: 0, a: 1}
+  scanNodeProperties: {fileID: 5967244827687194067}
 --- !u!1 &7061639821370852276
 GameObject:
   m_ObjectHideFlags: 0

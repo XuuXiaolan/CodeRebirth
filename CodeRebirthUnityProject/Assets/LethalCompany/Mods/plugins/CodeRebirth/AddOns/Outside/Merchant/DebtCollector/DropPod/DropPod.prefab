@@ -127,11 +127,11 @@ MonoBehaviour:
   <Animator>k__BackingField: {fileID: 1169223490310334588}
   <FallingSpeed>k__BackingField: 10
   <AudioSource>k__BackingField: {fileID: 5652572887963417835}
-  <AmbientDroppingSound>k__BackingField: {fileID: 8300000, guid: 3a546fe22566024458fdf21588d391af,
+  <AmbientDroppingSound>k__BackingField: {fileID: 8300000, guid: b0633b9a376c7fe49ad656b3406b9fc0,
     type: 3}
-  <LandingSound>k__BackingField: {fileID: 8300000, guid: 45230e603a119ed419be0b6136f74514,
+  <LandingSound>k__BackingField: {fileID: 8300000, guid: ef6fd404b7a001e4191337337e1f3699,
     type: 3}
-  <OpenSound>k__BackingField: {fileID: 8300000, guid: a5d0fb76f99a12d499bbf3e0f40f5957,
+  <OpenSound>k__BackingField: {fileID: 8300000, guid: 1cd0159c6418df94ea8f9c062b90f3b4,
     type: 3}
   <OnLanding>k__BackingField:
     m_PersistentCalls:
@@ -1103,6 +1103,8 @@ MonoBehaviour:
   <TotalSeconds>k__BackingField: 180
   <StartOnAwake>k__BackingField: 0
   <AudioSource>k__BackingField: {fileID: 3971318253122122237}
+  <SecondPassSound>k__BackingField: {fileID: 8300000, guid: 9cb8733df689c18479b08cc7fab65bae,
+    type: 3}
   <TimeToPlaySource>k__BackingField: 3
   <OnTimerEnd>k__BackingField:
     m_PersistentCalls:
@@ -1153,7 +1155,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: eb82b80d6f938584d95c85951eb6cdee, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 2f49bdd53bb1b874aafa29965f5e9b03, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
