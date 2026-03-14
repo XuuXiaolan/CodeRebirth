@@ -223,7 +223,11 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
     {
         foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
         {
-            if (player.isPlayerDead || !player.isPlayerControlled || player.IsPseudoDead())
+            if (player.isPlayerDead || !player.isPlayerControlled || player.IsPseudoDead() || player.isInHangarShipRoom)
+                continue;
+
+            float dot = Vector3.Dot(transform.forward, (player.transform.position - transform.position).normalized);
+            if (dot < 0.2f)
                 continue;
 
             if (Vector3.Distance(transform.position, player.transform.position) > 40)
@@ -243,6 +247,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
         PlayerControllerB? closestPlayer = GetClosestPlayerToMonarch(out float distanceToClosestPlayer);
         if ((closestPlayer == null || (closestPlayer.isInHangarShipRoom && StartOfRound.Instance.hangarDoorsClosed)) && !isAttacking)
         {
+            ClearPlayerTargetServerRpc();
             smartAgentNavigator.StartSearchRoutine(50);
             agent.stoppingDistance = 1f;
             SwitchToBehaviourServerRpc((int)MonarchState.Idle);
@@ -283,6 +288,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
         PlayerControllerB? closestPlayer = GetClosestPlayerToMonarch(out float distanceToClosestPlayer);
         if ((closestPlayer == null || (closestPlayer.isInHangarShipRoom && StartOfRound.Instance.hangarDoorsClosed)) && !isAttacking)
         {
+            ClearPlayerTargetServerRpc();
             smartAgentNavigator.StartSearchRoutine(50);
             agent.stoppingDistance = 1f;
             SwitchToBehaviourServerRpc((int)MonarchState.Idle);
@@ -340,13 +346,19 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
         {
             Destroy(BeamController._monarchParticle.gameObject);
         }
+
         smartAgentNavigator.StopSearchRoutine();
+
         if (IsServer)
+        {
             creatureAnimator.SetBool(IsDeadAnimation, true);
+        }
 
         SwitchToBehaviourStateOnLocalClient((int)MonarchState.Death);
         if (Monarchs.Contains(this))
+        {
             Monarchs.Remove(this);
+        }
     }
 
     public override void OnNetworkDespawn()
