@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
@@ -13,12 +14,22 @@ public class RotateToDirection : MonoBehaviour
     {
         if (RotateOnAwake)
         {
-            Rotate();
+            StartCoroutine(EnsureRotationIsForced());
         }
     }
 
     public void Rotate()
     {
         transform.rotation = Quaternion.Euler(Direction);
+    }
+
+    private IEnumerator EnsureRotationIsForced()
+    {
+        yield return null;
+        Rotate();
+        yield return null;
+        Rotate();
+        yield return null;
+        Rotate();
     }
 }
