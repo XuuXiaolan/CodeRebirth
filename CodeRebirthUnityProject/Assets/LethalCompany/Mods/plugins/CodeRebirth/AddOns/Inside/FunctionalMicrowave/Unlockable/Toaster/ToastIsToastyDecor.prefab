@@ -93,7 +93,7 @@ Transform:
   m_GameObject: {fileID: 1261995094576373866}
   serializedVersion: 2
   m_LocalRotation: {x: -0.5000328, y: 0.49996728, z: 0.49996737, w: 0.50003266}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.17, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -120,7 +120,7 @@ MonoBehaviour:
   placeObjectCollider: {fileID: 6274578857270191234}
   yOffset: 0
   overrideWallOffset: 0
-  wallOffset: 0
+  wallOffset: 0.17
   collisionPointCheck: {x: 0, y: 0, z: 0}
   doCollisionPointCheck: 0
   AllowPlacementOnWalls: 0
@@ -244,7 +244,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 0.47457218, y: 0.6026306, z: 0.44726163}
-  m_Center: {x: 0.0022076666, y: 0.017669916, z: 0.23714867}
+  m_Center: {x: 0.0022076666, y: 0.01766992, z: 0.0671487}
 --- !u!1 &1483265984802450253
 GameObject:
   m_ObjectHideFlags: 0
@@ -523,8 +523,8 @@ MonoBehaviour:
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 1
   SpawnWithObservers: 1
-  DontDestroyWithOwner: 1
-  AutoObjectParentSync: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!114 &7031366887117684894
 MonoBehaviour:
   m_ObjectHideFlags: 0
