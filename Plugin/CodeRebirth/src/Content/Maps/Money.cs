@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using CodeRebirth.src.Content.Unlockables;
 using Dawn;
 using Dawn.Utils;
@@ -48,7 +49,6 @@ public class Money : GrabbableObject
     public override void ItemActivate(bool used, bool buttonDown = true)
     {
         base.ItemActivate(used, buttonDown);
-        this.itemProperties.twoHanded = true;
         playerHeldBy.activatingItem = true;
         if (_ownerNetworkAnimator != null)
         {
@@ -65,7 +65,6 @@ public class Money : GrabbableObject
 
     public void TryCollectCoin()
     {
-        this.itemProperties.twoHanded = false;
         playerHeldBy.activatingItem = false;
 
         if (MoneyCounter.Instance == null)
@@ -85,14 +84,20 @@ public class Money : GrabbableObject
 
         if (IsOwner)
         {
-            if (playerHeldBy && (isHeld || isPocketed))
-            {
-                playerHeldBy.DestroyItemInSlotAndSync(Array.IndexOf(playerHeldBy.ItemSlots, this));
-            }
-            else
-            {
-                DespawnItemServerRpc();
-            }
+            StartCoroutine(DestroyItemAfterDelay());
+        }
+    }
+
+    private IEnumerator DestroyItemAfterDelay()
+    {
+        yield return new WaitForSeconds(0.1f);
+        if (playerHeldBy && (isHeld || isPocketed))
+        {
+            playerHeldBy.DestroyItemInSlotAndSync(Array.IndexOf(playerHeldBy.ItemSlots, this));
+        }
+        else
+        {
+            DespawnItemServerRpc();
         }
     }
 
