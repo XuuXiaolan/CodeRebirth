@@ -9,6 +9,7 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Maps;
 public class OxydeCrane : NetworkBehaviour
 {
+    public InteractTrigger LadderInteract = null!;
     public GameObject shipNavColliders = null!;
     public Vector3 endPosition = Vector3.zero;
     public Quaternion endRotation = Quaternion.identity;
@@ -75,6 +76,10 @@ public class OxydeCrane : NetworkBehaviour
         dropButton.interactable = false;
         StartMatchLeverRefs.Instance.triggerScript.disabledHoverTip = previousDisabledTriggerMessage;
         StartMatchLeverRefs.Instance.triggerScript.interactable = true;
+        if (GameNetworkManager.Instance.localPlayerController.isClimbingLadder && GameNetworkManager.Instance.localPlayerController.currentTriggerInAnimationWith == LadderInteract)
+        {
+            LadderInteract.CancelLadderAnimation();
+        }
         leverAnimator.SetTrigger(PullLeverAnimation);
         float timeElapsed = 0f;
         List<(GameObject gameObject, Vector3 startPos, Quaternion startRot)> objectsToDrop = [(shipNavColliders, shipNavColliders.transform.position, shipNavColliders.transform.rotation), (StartOfRound.Instance.shipAnimatorObject.gameObject, StartOfRound.Instance.shipAnimatorObject.transform.position, StartOfRound.Instance.shipAnimatorObject.transform.rotation)];
