@@ -121,8 +121,8 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
             return;
         }
 
-        Plugin.ExtendedLogging($"Applying 40 coin max penalty on all team wipe");
-        RemoveMoney(40);
+        Plugin.ExtendedLogging($"Applying {playersDead * 5} coin max penalty on all team wipe");
+        RemoveMoney(playersDead * 5);
     }
 
     private void SaveMoneyToContract(On.StartOfRound.orig_AutoSaveShipData orig, StartOfRound self)
@@ -189,10 +189,6 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
 
         int oldValue = _totalMoneyStored.Value;
         _totalMoneyStored.Value -= amount;
-        if (oldValue >= 0 && _totalMoneyStored.Value < 0)
-        {
-            _totalMoneyStored.Value -= 150;
-        }
         UpdateVisuals(oldValue, _totalMoneyStored.Value);
     }
 
@@ -212,6 +208,7 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
     [ClientRpc]
     private void UpdateVisualsClientRpc(int oldValue, int newValue)
     {
+        Plugin.ExtendedLogging($"UpdateVisualsClientRpc({oldValue}, {newValue})");
         if (CoinDisplayUI.Instance.editCoinRoutine != null)
         {
             CoinDisplayUI.Instance.StopCoroutine(CoinDisplayUI.Instance.editCoinRoutine);

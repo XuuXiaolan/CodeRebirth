@@ -170,7 +170,7 @@ public class Merchant : NetworkBehaviour
                 }
                 else
                 {
-                    Steal();
+                    Steal(price);
                 }
             }
         }
@@ -212,7 +212,7 @@ public class Merchant : NetworkBehaviour
         }
     }
 
-    private void Steal()
+    private void Steal(int priceOfStolenItem)
     {
         foreach (GrabbableObject grabbableObject in itemsOnSale.Keys)
         {
@@ -224,7 +224,7 @@ public class Merchant : NetworkBehaviour
         merchantAnimator.SetTrigger(StealHash);
         if (IsServer)
         {
-            MoneyCounter.Instance!.RemoveMoney(Mathf.Abs(MoneyCounter.Instance.MoneyStored() - 1));
+            MoneyCounter.Instance!.RemoveMoney(priceOfStolenItem * 2);
         }
     }
 

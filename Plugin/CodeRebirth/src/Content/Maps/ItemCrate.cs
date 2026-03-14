@@ -360,30 +360,33 @@ public class ItemCrate : CRHittable
         yield return new WaitForSeconds(12f);
         animator.SetBool(BurningHash, false);
 
-        if (crateType == CrateType.MetalMimic || crateType == CrateType.WoodenMimic)
+        if (IsServer)
         {
-            NamespacedKey<DawnItemInfo> burnedScrapToSpawn = CodeRebirthItemKeys.BurntFleshArm;
-            switch (randomMimicScrapToSpawn)
+            if (crateType == CrateType.MetalMimic || crateType == CrateType.WoodenMimic)
             {
-                case 0:
-                    burnedScrapToSpawn = CodeRebirthItemKeys.BurntFleshArm;
-                    break;
-                case 1:
-                    burnedScrapToSpawn = CodeRebirthItemKeys.BurntFleshEye;
-                    break;
-                case 2:
-                    burnedScrapToSpawn = CodeRebirthItemKeys.BurntFleshTeeth;
-                    break;
-                case 3:
-                    burnedScrapToSpawn = CodeRebirthItemKeys.BurntFleshTongue;
-                    break;
-            }
+                NamespacedKey<DawnItemInfo> burnedScrapToSpawn = CodeRebirthItemKeys.BurntFleshArm;
+                switch (randomMimicScrapToSpawn)
+                {
+                    case 0:
+                        burnedScrapToSpawn = CodeRebirthItemKeys.BurntFleshArm;
+                        break;
+                    case 1:
+                        burnedScrapToSpawn = CodeRebirthItemKeys.BurntFleshEye;
+                        break;
+                    case 2:
+                        burnedScrapToSpawn = CodeRebirthItemKeys.BurntFleshTeeth;
+                        break;
+                    case 3:
+                        burnedScrapToSpawn = CodeRebirthItemKeys.BurntFleshTongue;
+                        break;
+                }
 
-            CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[burnedScrapToSpawn].Item, transform.position + Vector3.up + Vector3.right * crateRandom.NextFloat(-0.25f, 0.25f) + Vector3.forward * crateRandom.NextFloat(-0.25f, 0.25f), false, true, 0);
-        }
-        else
-        {
-            CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[CodeRebirthItemKeys.BurntRubble].Item, transform.position + Vector3.up + Vector3.right * crateRandom.NextFloat(-0.25f, 0.25f) + Vector3.forward * crateRandom.NextFloat(-0.25f, 0.25f), false, true, 0);
+                CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[burnedScrapToSpawn].Item, transform.position + Vector3.up + Vector3.right * crateRandom.NextFloat(-0.25f, 0.25f) + Vector3.forward * crateRandom.NextFloat(-0.25f, 0.25f), false, true, 0);
+            }
+            else
+            {
+                CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[CodeRebirthItemKeys.BurntRubble].Item, transform.position + Vector3.up + Vector3.right * crateRandom.NextFloat(-0.25f, 0.25f) + Vector3.forward * crateRandom.NextFloat(-0.25f, 0.25f), false, true, 0);
+            }
         }
         isBurning = false;
         postBurn.Invoke();

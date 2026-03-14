@@ -15,12 +15,13 @@ public class WeatherController : MonoBehaviour
 
     public void Start()
     {
-        string weatherName = WeatherRegistry.WeatherManager.GetCurrentLevelWeather().name.ToLowerInvariant();
+        WeatherRegistry.WeatherController.SetWeatherEffects(LevelWeatherType.None);
+        /*string weatherName = WeatherRegistry.WeatherManager.GetCurrentLevelWeather().name.ToLowerInvariant();
         Plugin.ExtendedLogging($"Weather: {weatherName}");
         if (weatherName != "none")
         {
             StartCoroutine(HandleDarkness());
-        }
+        }*/
     }
 
     private IEnumerator HandleDarkness()

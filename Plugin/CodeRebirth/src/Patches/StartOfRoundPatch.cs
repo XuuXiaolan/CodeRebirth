@@ -4,12 +4,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using CodeRebirth.src.Util;
 using Dawn.Utils;
-using System.Diagnostics;
 using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Content.Enemies;
-using CodeRebirth.src.Content.Maps;
-using Dawn;
-using UnityEngine.InputSystem.Utilities;
 using CodeRebirth.src.ModCompats;
 
 namespace CodeRebirth.src.Patches;
