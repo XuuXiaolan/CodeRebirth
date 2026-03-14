@@ -39,6 +39,51 @@ MonoBehaviour:
   <InsideMoonCurveSpawnWeights>k__BackingField:
   - <Key>k__BackingField:
       _namespace: lethal_company
+      _key: custom
+    <Curve>k__BackingField:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0.0014152527
+        value: 0.5235901
+        inSlope: 5.490636
+        outSlope: 5.490636
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.14725494
+        value: 1.3243427
+        inSlope: 2.5291367
+        outSlope: 2.5291367
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.14031142
+      - serializedVersion: 3
+        time: 0.51228285
+        value: 1.6747453
+        inSlope: 0.3761569
+        outSlope: 0.3761569
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.17044005
+        outWeight: 0.20998184
+      - serializedVersion: 3
+        time: 1
+        value: 2
+        inSlope: 0.66689205
+        outSlope: 0.66689205
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+  - <Key>k__BackingField:
+      _namespace: lethal_company
       _key: vanilla
     <Curve>k__BackingField:
       serializedVersion: 2
@@ -84,7 +129,7 @@ MonoBehaviour:
       m_RotationOrder: 0
   - <Key>k__BackingField:
       _namespace: lethal_company
-      _key: custom
+      _key: experimentation
     <Curve>k__BackingField:
       serializedVersion: 2
       m_Curve:
@@ -120,6 +165,456 @@ MonoBehaviour:
         value: 2
         inSlope: 1.1063223
         outSlope: 1.1063223
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+  - <Key>k__BackingField:
+      _namespace: lethal_company
+      _key: vow
+    <Curve>k__BackingField:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0.0014152527
+        value: 0.5235901
+        inSlope: 0.848826
+        outSlope: 0.848826
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.10614776
+        value: 0.61248976
+        inSlope: 0.7470927
+        outSlope: 0.7470927
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.05559486
+      - serializedVersion: 3
+        time: 0.6549378
+        value: 1.61825
+        inSlope: 1.6092833
+        outSlope: 1.6092833
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.20998184
+      - serializedVersion: 3
+        time: 1
+        value: 2
+        inSlope: 1.1063223
+        outSlope: 1.1063223
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+  - <Key>k__BackingField:
+      _namespace: lethal_company
+      _key: march
+    <Curve>k__BackingField:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0.0014152527
+        value: 0.5235901
+        inSlope: 0.848826
+        outSlope: 0.848826
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.10614776
+        value: 0.61248976
+        inSlope: 0.7470927
+        outSlope: 0.7470927
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.05559486
+      - serializedVersion: 3
+        time: 0.6549378
+        value: 1.61825
+        inSlope: 1.6092833
+        outSlope: 1.6092833
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.20998184
+      - serializedVersion: 3
+        time: 1
+        value: 2
+        inSlope: 1.1063223
+        outSlope: 1.1063223
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+  - <Key>k__BackingField:
+      _namespace: lethal_company
+      _key: assurance
+    <Curve>k__BackingField:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0.5
+        inSlope: 13.510768
+        outSlope: 13.510768
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.12793952
+        value: 2.2285612
+        inSlope: 5.1753917
+        outSlope: 5.1753917
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.1261925
+      - serializedVersion: 3
+        time: 0.54355764
+        value: 3.1003928
+        inSlope: 1.6092833
+        outSlope: 1.6092833
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.20998184
+      - serializedVersion: 3
+        time: 1
+        value: 4
+        inSlope: 1.9709108
+        outSlope: 1.9709108
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+  - <Key>k__BackingField:
+      _namespace: lethal_company
+      _key: offense
+    <Curve>k__BackingField:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0.5
+        inSlope: 13.510768
+        outSlope: 13.510768
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.12793952
+        value: 2.2285612
+        inSlope: 5.1753917
+        outSlope: 5.1753917
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.1261925
+      - serializedVersion: 3
+        time: 0.54355764
+        value: 3.1003928
+        inSlope: 1.6092833
+        outSlope: 1.6092833
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.20998184
+      - serializedVersion: 3
+        time: 1
+        value: 4
+        inSlope: 1.9709108
+        outSlope: 1.9709108
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+  - <Key>k__BackingField:
+      _namespace: lethal_company
+      _key: adamance
+    <Curve>k__BackingField:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 2
+        inSlope: 6.7214518
+        outSlope: 6.7214518
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.12793952
+        value: 2.8599393
+        inSlope: 5.1753917
+        outSlope: 5.1753917
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.1261925
+      - serializedVersion: 3
+        time: 0.5132842
+        value: 4.3350883
+        inSlope: 1.6092833
+        outSlope: 1.6092833
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.20998184
+      - serializedVersion: 3
+        time: 1
+        value: 6
+        inSlope: 3.4207063
+        outSlope: 3.4207063
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+  - <Key>k__BackingField:
+      _namespace: lethal_company
+      _key: embrion
+    <Curve>k__BackingField:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 3
+        inSlope: 15.223915
+        outSlope: 15.223915
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.08798866
+        value: 4.339532
+        inSlope: 5.1753917
+        outSlope: 5.1753917
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.1261925
+      - serializedVersion: 3
+        time: 0.45881033
+        value: 5.2126365
+        inSlope: 1.6092833
+        outSlope: 1.6092833
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.20998184
+      - serializedVersion: 3
+        time: 1
+        value: 6
+        inSlope: 1.4548753
+        outSlope: 1.4548753
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+  - <Key>k__BackingField:
+      _namespace: lethal_company
+      _key: rend
+    <Curve>k__BackingField:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 4
+        inSlope: 3.8588142
+        outSlope: 3.8588142
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.08798866
+        value: 4.339532
+        inSlope: 9.787347
+        outSlope: 9.787347
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.10416619
+      - serializedVersion: 3
+        time: 0.81714773
+        value: 6.9065146
+        inSlope: 1.6092833
+        outSlope: 1.6092833
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.20998184
+      - serializedVersion: 3
+        time: 1
+        value: 8
+        inSlope: 5.9801574
+        outSlope: 5.9801574
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+  - <Key>k__BackingField:
+      _namespace: lethal_company
+      _key: dine
+    <Curve>k__BackingField:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 4
+        inSlope: 3.8588142
+        outSlope: 3.8588142
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.08798866
+        value: 4.339532
+        inSlope: 9.787347
+        outSlope: 9.787347
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.10416619
+      - serializedVersion: 3
+        time: 0.81714773
+        value: 6.9065146
+        inSlope: 1.6092833
+        outSlope: 1.6092833
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.20998184
+      - serializedVersion: 3
+        time: 1
+        value: 8
+        inSlope: 5.9801574
+        outSlope: 5.9801574
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+  - <Key>k__BackingField:
+      _namespace: lethal_company
+      _key: titan
+    <Curve>k__BackingField:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 5
+        inSlope: 14.395713
+        outSlope: 14.395713
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.033509243
+        value: 5.4823895
+        inSlope: 5.346426
+        outSlope: 5.346426
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.09429557
+      - serializedVersion: 3
+        time: 0.80866385
+        value: 7.4269156
+        inSlope: 1.6092833
+        outSlope: 1.6092833
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.20998184
+      - serializedVersion: 3
+        time: 1
+        value: 8
+        inSlope: 2.99517
+        outSlope: 2.99517
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+  - <Key>k__BackingField:
+      _namespace: lethal_company
+      _key: artifice
+    <Curve>k__BackingField:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 6
+        inSlope: 16.638103
+        outSlope: 16.638103
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.05045839
+        value: 6.839532
+        inSlope: 9.787347
+        outSlope: 9.787347
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.10416619
+      - serializedVersion: 3
+        time: 0.90430546
+        value: 9.102037
+        inSlope: 1.6092833
+        outSlope: 1.6092833
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.20998184
+      - serializedVersion: 3
+        time: 1
+        value: 10
+        inSlope: 9.383635
+        outSlope: 9.383635
         tangentMode: 34
         weightedMode: 0
         inWeight: 0.33333334

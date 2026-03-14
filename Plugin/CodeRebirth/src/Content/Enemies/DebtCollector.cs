@@ -491,7 +491,12 @@ public class DebtCollector : CodeRebirthEnemyAI
 
     public void TryGrabPlayer()
     {
-        agent.speed = ChasingSpeed;
+        if (IsServer)
+        {
+            smartAgentNavigator.StopAgent();
+            agent.speed = ChasingSpeed;
+        }
+
         if (targetPlayer != null && !targetPlayer.isPlayerDead && targetPlayer.IsLocalPlayer())
         {
             if (Physics.Raycast(GrabHand.position, targetPlayer.transform.position - GrabHand.position, out RaycastHit hit, 5f, StartOfRound.Instance.playersMask, QueryTriggerInteraction.Collide))
