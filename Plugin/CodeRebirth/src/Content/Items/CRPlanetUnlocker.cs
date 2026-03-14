@@ -73,6 +73,7 @@ public class CRPlanetUnlocker : GrabbableObject
             }
 
             progressive.Unlock(_showDisplayTip ? _displayTip : null);
+            progressive._isHidden = false;
             return true;
         }
         else

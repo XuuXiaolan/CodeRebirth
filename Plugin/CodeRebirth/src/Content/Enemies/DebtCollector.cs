@@ -132,9 +132,12 @@ public class DebtCollector : CodeRebirthEnemyAI
         {
             _pryingDoorOpenTimer += Time.deltaTime / 2.4f;
             _shipDoor.shipDoorsAnimator.SetFloat(PryOpenDoorAnimationHash, _pryingDoorOpenTimer);
-            smartAgentNavigator.DoPathingToDestination(_shipDoor.outsideDoorPoint.transform.position);
-            transform.position = Vector3.Lerp(this.transform.position, _shipDoor.outsideDoorPoint.transform.position, agent.speed * Time.deltaTime);
-            transform.rotation = Quaternion.Lerp(this.transform.rotation, _shipDoor.outsideDoorPoint.transform.rotation, agent.speed * Time.deltaTime);
+            if (IsServer)
+            {
+                smartAgentNavigator.DoPathingToDestination(_shipDoor.outsideDoorPoint.transform.position);
+                transform.position = Vector3.Lerp(this.transform.position, _shipDoor.outsideDoorPoint.transform.position, agent.speed * Time.deltaTime);
+                transform.rotation = Quaternion.Lerp(this.transform.rotation, _shipDoor.outsideDoorPoint.transform.rotation, agent.speed * Time.deltaTime);
+            }
         }
 
         float velocity = (_lastPosition - this.transform.position).magnitude;
@@ -283,6 +286,11 @@ public class DebtCollector : CodeRebirthEnemyAI
             return;
         }
 
+        if (_breakingDoorOpen)
+        {
+            return;
+        }
+
         smartAgentNavigator.TryDoPathingToDestination(targetPlayer.transform.position, out SmartAgentNavigator.GoToDestinationResult result);
 
         if (result == SmartAgentNavigator.GoToDestinationResult.Failure)
@@ -301,11 +309,6 @@ public class DebtCollector : CodeRebirthEnemyAI
         else
         {
             _lostPlayerTimer = Mathf.Min(_lostPlayerTimer + AIIntervalTime, 2f);
-        }
-
-        if (_breakingDoorOpen)
-        {
-            return;
         }
 
         _grabAttackTimer -= AIIntervalTime;
