@@ -80,6 +80,7 @@ public class DebtCollector : CodeRebirthEnemyAI
     private Vector3 _overrideNextTeleportPosition = Vector3.zero;
     private bool _breakingDoorOpen = false;
     private HangarShipDoor _shipDoor = null!;
+    private float _hitCooldown = 0.20f;
     private static Collider[] _cachedColliders = new Collider[24];
 
     public enum DebtCollectorState
@@ -128,6 +129,8 @@ public class DebtCollector : CodeRebirthEnemyAI
         {
             return;
         }
+
+        _hitCooldown -= Time.deltaTime;
 
         HandleIdleSoundTimer();
 
@@ -460,6 +463,7 @@ public class DebtCollector : CodeRebirthEnemyAI
         _playerIsGrabbed = true;
         targetPlayer.disableMoveInput = true;
         targetPlayer.inAnimationWithEnemy = this;
+        enemyHP += 20;
         creatureAnimator.SetTrigger(SuccessAnimationHash);
     }
     #endregion
@@ -588,10 +592,11 @@ public class DebtCollector : CodeRebirthEnemyAI
                 if (_playersHit.Contains(player))
                     continue;
 
+                _playersHit.Add(player);
+
                 if (!player.IsOwner)
                     continue;
 
-                _playersHit.Add(player);
                 Vector3 directionVector = (player.transform.position - this.transform.position).normalized * 20f;
                 NetworkAudioSource.PlayOneShot(BitchSliceHit);
                 player.DamagePlayer(20, true, true, CauseOfDeath.Snipped, 7, false, directionVector);
@@ -602,13 +607,14 @@ public class DebtCollector : CodeRebirthEnemyAI
                 if (_enemiesHit.Contains(enemyAICollisionDetect.mainScript))
                     continue;
 
+                _enemiesHit.Add(enemyAICollisionDetect.mainScript);
+
                 if (!IsServer)
                     continue;
 
                 if (enemyAICollisionDetect.mainScript.gameObject == gameObject)
                     continue;
 
-                _enemiesHit.Add(enemyAICollisionDetect.mainScript);
                 NetworkAudioSource.PlayOneShot(BitchSliceHit);
                 enemyAICollisionDetect.mainScript.HitEnemyOnLocalClient(2, this.transform.position, null, true, 1921);
             }
@@ -617,13 +623,19 @@ public class DebtCollector : CodeRebirthEnemyAI
                 if (_hittablesHit.Contains(iHittable))
                     continue;
 
+                _hittablesHit.Add(iHittable);
+
                 if (!IsServer)
                     continue;
 
-                _hittablesHit.Add(iHittable);
                 NetworkAudioSource.PlayOneShot(BitchSliceHit);
                 iHittable.Hit(2, this.transform.position, null, true, 1921);
             }
+        }
+
+        if (_playersHit.Count > 0)
+        {
+            enemyHP += 5 * _playersHit.Count;
         }
 
         _playersHit.Clear();
@@ -640,6 +652,12 @@ public class DebtCollector : CodeRebirthEnemyAI
         {
             return;
         }
+
+        if (_hitCooldown > 0)
+        {
+            return;
+        }
+        _hitCooldown = 0.20f;
 
         if (force > 5)
         {

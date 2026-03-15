@@ -13,6 +13,10 @@ public class TomaHop : CRWeapon
     [SerializeField]
     private AudioClip _launchUpSound = null!;
 
+    private int hitsInSuccession = 0;
+
+    private float hitTimer = 1.5f;
+
     public override void GrabItem()
     {
         base.GrabItem();
@@ -56,6 +60,12 @@ public class TomaHop : CRWeapon
     {
         base.Update();
         _groundLaunchTimer -= Time.deltaTime;
+        hitTimer -= Time.deltaTime;
+        if (hitTimer <= 0)
+        {
+            hitsInSuccession--;
+            hitTimer = 2f;
+        }
     }
 
     public void OnEnemyHitEvent(EnemyAI enemyAI)
@@ -67,8 +77,11 @@ public class TomaHop : CRWeapon
         float newFallValue = previousPlayerHeldBy.fallValue * -1;
         previousPlayerHeldBy.ResetFallGravity();
         Vector3 randomDirectionOffset = new Vector3(UnityEngine.Random.Range(-1f, 1f), 0f, UnityEngine.Random.Range(-1f, 1f)).normalized * 4f;
-        previousPlayerHeldBy.externalForces = Vector3.up * newFallValue + randomDirectionOffset;
-        previousPlayerHeldBy.externalForceAutoFade += Vector3.up * newFallValue + randomDirectionOffset;
+        Vector3 pushValue = Vector3.up * newFallValue + randomDirectionOffset * Mathf.Clamp(hitsInSuccession, 0, 10f);
+        previousPlayerHeldBy.externalForces = pushValue;
+        previousPlayerHeldBy.externalForceAutoFade += pushValue;
         enemyAI.HitEnemyOnLocalClient(Math.Clamp((int)(newFallValue / 10) - 1, 0, 10), transform.position, previousPlayerHeldBy, true, -1);
+        hitsInSuccession++;
+        hitTimer = 2f;
     }
 }

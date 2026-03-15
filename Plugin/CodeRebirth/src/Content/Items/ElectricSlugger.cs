@@ -26,6 +26,15 @@ public class ElectricSlugger : GrabbableObject
     private int pumpCount = 0;
     private bool canFire = true;
 
+    public override void Start()
+    {
+        base.Start();
+        foreach (Light light in lights)
+        {
+            light.enabled = false;
+        }
+    }
+
     public override void GrabItem()
     {
         base.GrabItem();
@@ -54,6 +63,10 @@ public class ElectricSlugger : GrabbableObject
     {
         base.DiscardItem();
         Plugin.InputActionsInstance.PumpSlugger.performed -= OnPumpDone;
+        foreach (Light light in lights)
+        {
+            light.enabled = false;
+        }
     }
 
     public void OnPumpDone(UnityEngine.InputSystem.InputAction.CallbackContext context)
@@ -156,6 +169,13 @@ public class ElectricSlugger : GrabbableObject
         firingSource.PlayOneShot(fireSound);
         shootVFX.Play();
         insertedBattery.charge -= 0.1f * (pumpCount + 1);
+        if (insertedBattery.charge <= 0)
+        {
+            foreach (Light light in lights)
+            {
+                light.enabled = false;
+            }
+        }
         if (playerHeldBy.IsLocalPlayer()) HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
         playerHeldBy.externalForceAutoFade += (-playerHeldBy.gameplayCamera.transform.forward) * (pumpCount + 1) * 5f * (playerHeldBy.isCrouching ? 0.25f : 1f);
         float intensity = (pumpCount + 1) * 2;
