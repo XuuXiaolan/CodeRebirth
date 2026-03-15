@@ -129,6 +129,8 @@ public class DebtCollector : CodeRebirthEnemyAI
             return;
         }
 
+        HandleIdleSoundTimer();
+
         if (_breakingDoorOpen)
         {
             _pryingDoorOpenTimer += Time.deltaTime / 2.4f;
@@ -357,6 +359,17 @@ public class DebtCollector : CodeRebirthEnemyAI
     #endregion
 
     #region  Misc Functions
+
+    private void HandleIdleSoundTimer()
+    {
+        _idleTimer -= Time.deltaTime;
+        if (_idleTimer > 0)
+            return;
+
+        _idleTimer = enemyRandom.NextFloat(_idleAudioClips.minTime, _idleAudioClips.maxTime);
+        AudioClip clip = _idleAudioClips.audioClips[enemyRandom.Next(_idleAudioClips.audioClips.Length)];
+        creatureVoice.PlayOneShot(clip);
+    }
 
     [Rpc(SendTo.Everyone)]
     private void BreakOpenDoorStartRpc()
