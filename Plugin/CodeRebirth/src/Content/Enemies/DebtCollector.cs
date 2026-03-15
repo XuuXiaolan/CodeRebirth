@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.MiscScripts;
@@ -363,6 +364,19 @@ public class DebtCollector : CodeRebirthEnemyAI
 
     #region  Misc Functions
 
+    private IEnumerator HandleTeleportDelay(DebtCollectorState state, float delay, float speed, bool hasTargetPlayer)
+    {
+        yield return new WaitForSeconds(delay);
+        if (!hasTargetPlayer)
+        {
+            FindRandomPlayerViaAsyncPathfinding();
+            yield break;
+        }
+
+        agent.speed = speed;
+        SwitchToBehaviourServerRpc((int)state);
+    }
+
     private void HandleIdleSoundTimer()
     {
         _idleTimer -= Time.deltaTime;
@@ -463,7 +477,7 @@ public class DebtCollector : CodeRebirthEnemyAI
         _playerIsGrabbed = true;
         targetPlayer.disableMoveInput = true;
         targetPlayer.inAnimationWithEnemy = this;
-        enemyHP += 20;
+        enemyHP = Mathf.Clamp(enemyHP + 20, 0, 50);
         creatureAnimator.SetTrigger(SuccessAnimationHash);
     }
     #endregion
@@ -495,8 +509,7 @@ public class DebtCollector : CodeRebirthEnemyAI
         if (targetPlayer != null && !targetPlayer.isPlayerDead && smartAgentNavigator.CanPathToPoint(agent.transform.position, targetPlayer.transform.position) != -1)
         {
             CRUtilities.TeleportEnemy(this, RoundManager.Instance.GetRandomNavMeshPositionInRadius(targetPlayer.transform.position, 20f, default));
-            agent.speed = ChasingSpeed;
-            SwitchToBehaviourServerRpc((int)DebtCollectorState.ChasingTargetPlayer);
+            StartCoroutine(HandleTeleportDelay(DebtCollectorState.ChasingTargetPlayer, 4f, ChasingSpeed, targetPlayer != null));
             return;
         }
 
@@ -523,7 +536,7 @@ public class DebtCollector : CodeRebirthEnemyAI
 
         CRUtilities.TeleportEnemy(this, _overrideNextTeleportPosition);
         _overrideNextTeleportPosition = Vector3.zero;
-        FindRandomPlayerViaAsyncPathfinding();
+        StartCoroutine(HandleTeleportDelay(DebtCollectorState.ChasingTargetPlayer, 4f, ChasingSpeed, targetPlayer != null));
     }
 
     public void TryGrabPlayer()
@@ -635,7 +648,7 @@ public class DebtCollector : CodeRebirthEnemyAI
 
         if (_playersHit.Count > 0)
         {
-            enemyHP += 5 * _playersHit.Count;
+            enemyHP = Mathf.Clamp(enemyHP + 5 * _playersHit.Count, 0, 50);
         }
 
         _playersHit.Clear();
@@ -673,7 +686,7 @@ public class DebtCollector : CodeRebirthEnemyAI
         }
         else if (playerWhoHit == null)
         {
-            AudioSource.PlayOneShot(BitchSliceSound);
+            creatureAnimator.ResetTrigger(SliceAnimationHash);
             creatureAnimator.SetTrigger(SliceAnimationHash);
         }
 
