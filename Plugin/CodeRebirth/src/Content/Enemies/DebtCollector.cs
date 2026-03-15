@@ -686,6 +686,7 @@ public class DebtCollector : CodeRebirthEnemyAI
         }
         else if (playerWhoHit == null)
         {
+            AudioSource.PlayOneShot(BitchSliceSound);
             creatureAnimator.ResetTrigger(SliceAnimationHash);
             creatureAnimator.SetTrigger(SliceAnimationHash);
         }
