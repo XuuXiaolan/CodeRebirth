@@ -59,11 +59,11 @@ public class TMPTimer : MonoBehaviour
         }
 
         TimeSpan time = TimeSpan.FromSeconds(_currentTime);
-        if (time.Seconds < _currentSecond)
+        if (Mathf.ClampToInt((long)time.TotalSeconds) < _currentSecond)
         {
             // second has passed
             AudioSource.PlayOneShot(SecondPassSound);
-            _currentSecond = time.Seconds;
+            _currentSecond = Mathf.ClampToInt((long)time.TotalSeconds);
         }
         TimerText.text = time.ToString(@"mm\:ss\:ff");
 
