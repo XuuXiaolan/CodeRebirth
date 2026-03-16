@@ -323,7 +323,7 @@ public class Merchant : NetworkBehaviour
         // Spawn the selected item.
         GameObject itemGO = (GameObject)CodeRebirthUtils.Instance.SpawnScrap(selectedItem.item, spawnPosition, false, true, 0);
         GrabbableObject grabbableObject = itemGO.GetComponent<GrabbableObject>();
-        SyncGrabbableObjectScanStuffServerRpc(new NetworkBehaviourReference(grabbableObject), existingMerchantBarrels.IndexOf(merchantBarrel), UnityEngine.Random.Range(selectedItem.minPrice, selectedItem.maxPrice + 1), selectedItem.borderColor.r, selectedItem.borderColor.g, selectedItem.borderColor.b, selectedItem.textColor.r, selectedItem.textColor.g, selectedItem.textColor.b);
+        SyncGrabbableObjectScanStuffServerRpc(new NetworkBehaviourReference(grabbableObject), new NetworkBehaviourReference(merchantBarrel), UnityEngine.Random.Range(selectedItem.minPrice, selectedItem.maxPrice + 1), selectedItem.borderColor.r, selectedItem.borderColor.g, selectedItem.borderColor.b, selectedItem.textColor.r, selectedItem.textColor.g, selectedItem.textColor.b);
     }
 
     public static Item GetRandomVanillaItem(bool excludeShopItems, System.Random? storeSeededRandom = null)
@@ -339,19 +339,19 @@ public class Merchant : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void SyncGrabbableObjectScanStuffServerRpc(NetworkBehaviourReference grabbableObject, int barrelRef, int price, float borderColorR, float borderColorG, float borderColorB, float textColorR, float textColorG, float textColorB)
+    public void SyncGrabbableObjectScanStuffServerRpc(NetworkBehaviourReference grabbableObject, NetworkBehaviourReference barrelRef, int price, float borderColorR, float borderColorG, float borderColorB, float textColorR, float textColorG, float textColorB)
     {
         SyncGrabbableObjectScanStuffClientRpc(grabbableObject, barrelRef, price, borderColorR, borderColorG, borderColorB, textColorR, textColorG, textColorB);
     }
 
     [ClientRpc]
-    public void SyncGrabbableObjectScanStuffClientRpc(NetworkBehaviourReference grabbableObjectRef, int barrelRef, int price, float borderColorR, float borderColorG, float borderColorB, float textColorR, float textColorG, float textColorB)
+    public void SyncGrabbableObjectScanStuffClientRpc(NetworkBehaviourReference grabbableObjectRef, NetworkBehaviourReference barrelRef, int price, float borderColorR, float borderColorG, float borderColorB, float textColorR, float textColorG, float textColorB)
     {
-        GrabbableObject grabbableObject = (GrabbableObject)grabbableObjectRef;
+        GrabbableObject grabbableObject = (GrabbableObject)(NetworkBehaviour)grabbableObjectRef;
         grabbableObject.grabbable = true;
         SetupGrabbableTooltip(grabbableObject, price);
         itemsOnSale.Add(grabbableObject, price);
-        MerchantBarrel barrel = existingMerchantBarrels[barrelRef];
+        MerchantBarrel barrel = (MerchantBarrel)(NetworkBehaviour)barrelRef;
         barrel.currentlySpawnedGrabbableObject = grabbableObject;
         barrel.textMeshPro1.text = price.ToString();
         barrel.textMeshPro2.text = price.ToString();

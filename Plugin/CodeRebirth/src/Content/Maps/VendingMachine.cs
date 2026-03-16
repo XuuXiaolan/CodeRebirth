@@ -99,7 +99,8 @@ public class VendingMachine : NetworkBehaviour
 
         if (MoneyCounter.Instance == null)
         {
-            if (Plugin.PersistentDataContainer.TryGet(_firstVendingUsage, out bool hasUsedVendingMachineBefore) && !hasUsedVendingMachineBefore)
+            bool hasUsedVendingMachineBefore = Plugin.PersistentDataContainer.GetOrCreateDefault<bool>(_firstVendingUsage);
+            if (!hasUsedVendingMachineBefore)
             {
                 Plugin.PersistentDataContainer.Set(_firstVendingUsage, true);
                 HUDManager.Instance.DisplayTip(FirstInteractionTipWithoutCounter);

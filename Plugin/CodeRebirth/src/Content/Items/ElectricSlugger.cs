@@ -29,6 +29,11 @@ public class ElectricSlugger : GrabbableObject
     public override void Start()
     {
         base.Start();
+        if (sluggerMask == 0)
+        {
+            sluggerMask = LayerMask.GetMask("Default", "Player", "Room", "Props", "Enemies", "Terrain", "MapHazards", "Vehicle");
+        }
+
         foreach (Light light in lights)
         {
             light.enabled = false;
@@ -139,7 +144,7 @@ public class ElectricSlugger : GrabbableObject
         }
     }
 
-    private static int sluggerMask = LayerMask.GetMask("Default", "Player", "Room", "Props", "Enemies", "Terrain", "MapHazards", "Vehicle");
+    private static int sluggerMask = 0;
     public override void ItemActivate(bool used, bool buttonDown = true)
     {
         base.ItemActivate(used, buttonDown);

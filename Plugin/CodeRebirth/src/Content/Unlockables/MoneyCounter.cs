@@ -195,7 +195,8 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
         _totalMoneyStored.Value -= amount;
         if (_totalMoneyStored.Value < 0)
         {
-            if (DawnLib.GetCurrentSave()!.TryGet(_debtKey, out bool wentToDebtOnce) && !wentToDebtOnce)
+            bool wentToDebtOnce = DawnLib.GetCurrentSave()!.GetOrCreateDefault<bool>(_debtKey);
+            if (!wentToDebtOnce)
             {
                 DawnLib.GetCurrentSave()!.Set(_debtKey, true);
                 _totalMoneyStored.Value = 0;

@@ -208,7 +208,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
     {
         if (!LethalContent.Items.TryGetValue(itemKey, out var itemInfo))
         {
-            Plugin.Logger.LogError($"'{itemKey.ToString()}' either isn't a CodeRebirth scrap or not registered! This method only handles CodeRebirth scrap!");
+            Plugin.Logger.LogError($"'{itemKey}' either isn't a CodeRebirth scrap or not registered! This method only handles CodeRebirth scrap!");
             return;
         }
         SpawnScrap(itemInfo.Item, position, isQuest, defaultRotation, valueIncrease);
@@ -221,34 +221,19 @@ internal class CodeRebirthUtils : NetworkBehaviour
             return default;
         }
 
-        Transform? parent = null;
-        if (parent == null)
-        {
-            parent = StartOfRound.Instance.propsContainer;
-        }
-
         Vector3 spawnPosition = position;
         if (Physics.Raycast(position + Vector3.up * 1f, Vector3.down, out RaycastHit hit, 100f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
         {
             spawnPosition = hit.point + Vector3.up * item.verticalOffset;
         }
 
-        GameObject go = Instantiate(item.spawnPrefab, spawnPosition + Vector3.up * 0.2f, Quaternion.identity, parent);
+        GameObject go = Instantiate(item.spawnPrefab, spawnPosition + Vector3.up * 0.25f, Quaternion.identity, null);
         GrabbableObject grabbableObject = go.GetComponent<GrabbableObject>();
         NetworkObject networkObject = grabbableObject.NetworkObject;
-        grabbableObject.fallTime = 0;
-        networkObject.Spawn();
-        UpdateParentAndRotationsServerRpc(new NetworkObjectReference(go), defaultRotation ? Quaternion.Euler(item.restingRotation) : rotation);
+        networkObject.Spawn(false);
 
         int value = (int)(UnityEngine.Random.Range(item.minValue, item.maxValue) * RoundManager.Instance.scrapValueMultiplier) + valueIncrease;
-        ScanNodeProperties? scanNodeProperties = go.GetComponentInChildren<ScanNodeProperties>();
-        if (scanNodeProperties != null)
-        {
-            scanNodeProperties.scrapValue = value;
-            scanNodeProperties.subText = $"Value: ${value}";
-            grabbableObject.scrapValue = value;
-            UpdateScanNodeServerRpc(new NetworkObjectReference(networkObject), value);
-        }
+        SyncScanNodeParentRotationsAndFallRpc(new NetworkBehaviourReference(grabbableObject), spawnPosition, defaultRotation ? Quaternion.Euler(item.restingRotation) : rotation, value);
 
         if (isQuest)
         {
@@ -257,29 +242,66 @@ internal class CodeRebirthUtils : NetworkBehaviour
         return new NetworkObjectReference(go);
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void UpdateParentAndRotationsServerRpc(NetworkObjectReference go, Quaternion rotation)
+    [Rpc(SendTo.Everyone, DeferLocal = true)]
+    private void SyncScanNodeParentRotationsAndFallRpc(NetworkBehaviourReference grabbableObjectReference, Vector3 spawnPosition, Quaternion rotation, int value)
     {
-        UpdateParentAndRotationsClientRpc(go, rotation);
+        StartCoroutine(SyncScanNodeParentRotationsAndFall((GrabbableObject)(NetworkBehaviour)grabbableObjectReference, spawnPosition, rotation, value));
     }
 
-    [ClientRpc]
-    public void UpdateParentAndRotationsClientRpc(NetworkObjectReference go, Quaternion rotation)
+    private void ModifiedFallToGround(GrabbableObject grabbableObject, Vector3 spawnPosition)
     {
-        go.TryGet(out NetworkObject netObj);
-        if (netObj != null)
+        grabbableObject.startFallingPosition = spawnPosition;
+        if (grabbableObject.transform.parent != null)
         {
-            if (netObj.AutoObjectParentSync && IsServer)
-            {
-                netObj.transform.parent = StartOfRound.Instance.propsContainer; // only the server can reparent network objects error?
-            }
-            else if (!netObj.AutoObjectParentSync)
-            {
-                netObj.transform.parent = StartOfRound.Instance.propsContainer;
-            }
-            Plugin.ExtendedLogging($"This object just spawned: {netObj.gameObject.name}");
-            StartCoroutine(ForceRotationForABit(netObj.gameObject, rotation));
+            grabbableObject.startFallingPosition = grabbableObject.transform.parent.InverseTransformPoint(spawnPosition);
         }
+        if (Physics.Raycast(spawnPosition, Vector3.down, out RaycastHit raycastHit, 80f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+        {
+            Plugin.ExtendedLogging($"Raycast hit: {raycastHit.point}");
+            grabbableObject.targetFloorPosition = raycastHit.point + grabbableObject.itemProperties.verticalOffset * Vector3.up;
+            if (grabbableObject.transform.parent != null)
+            {
+                grabbableObject.targetFloorPosition = grabbableObject.transform.parent.InverseTransformPoint(grabbableObject.targetFloorPosition);
+            }
+        }
+        else
+        {
+            grabbableObject.targetFloorPosition = grabbableObject.transform.localPosition;
+        }
+		grabbableObject.InitializeAfterPositioning();
+    }
+
+    private IEnumerator SyncScanNodeParentRotationsAndFall(GrabbableObject grabbableObject, Vector3 spawnPosition, Quaternion rotation, int value)
+    {
+        NetworkObject netObj = grabbableObject.NetworkObject;
+        yield return new WaitUntil(() => netObj.IsSpawned);
+
+        grabbableObject.SetScrapValue(value);
+
+        if (netObj.AutoObjectParentSync && IsServer)
+        {
+            netObj.transform.SetParent(StartOfRound.Instance.propsContainer, true); // only the server can reparent network objects error?
+        }
+        else if (!netObj.AutoObjectParentSync)
+        {
+            netObj.transform.SetParent(StartOfRound.Instance.propsContainer, true);
+        }
+
+        Plugin.ExtendedLogging($"This object just spawned: {netObj.gameObject.name}");
+        StartCoroutine(ForceRotationForABit(netObj.gameObject, rotation));
+
+        ScanNodeProperties? scanNodeProperties = grabbableObject.GetComponentInChildren<ScanNodeProperties>();
+        if (scanNodeProperties != null)
+        {
+            scanNodeProperties.scrapValue = value;
+            scanNodeProperties.subText = $"Value: ${value}";
+            grabbableObject.scrapValue = value;
+        }
+
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        RoundManager.Instance.totalScrapValueInLevel += grabbableObject.scrapValue;
+        ModifiedFallToGround(grabbableObject, spawnPosition);
     }
 
     private IEnumerator ForceRotationForABit(GameObject go, Quaternion rotation)
@@ -294,25 +316,6 @@ internal class CodeRebirthUtils : NetworkBehaviour
         }
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void UpdateScanNodeServerRpc(NetworkObjectReference go, int value)
-    {
-        UpdateScanNodeClientRpc(go, value);
-    }
-
-    [ClientRpc]
-    public void UpdateScanNodeClientRpc(NetworkObjectReference go, int value)
-    {
-        go.TryGet(out NetworkObject netObj);
-        if (netObj != null)
-        {
-            if (netObj.gameObject.TryGetComponent(out GrabbableObject grabbableObject))
-            {
-                grabbableObject.SetScrapValue(value);
-                Plugin.ExtendedLogging($"Scrap Value: {value}");
-            }
-        }
-    }
 
     [ServerRpc(RequireOwnership = false)]
     public void StartUIForItemServerRpc(NetworkObjectReference go)

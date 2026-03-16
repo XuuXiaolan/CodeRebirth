@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
-public class MerchantBarrel : MonoBehaviour
+public class MerchantBarrel : NetworkBehaviour
 {
     [SerializeField]
     public List<ItemWithRarityAndColor> itemNamesWithRarityAndColor = new();
@@ -22,8 +23,9 @@ public class MerchantBarrel : MonoBehaviour
         CoinDisplayUI.PointsOfInterest.Add(this.transform);
     }
 
-    public void OnDestroy()
+    public override void OnDestroy()
     {
+        base.OnDestroy();
         CoinDisplayUI.PointsOfInterest.Remove(this.transform);
     }
 }

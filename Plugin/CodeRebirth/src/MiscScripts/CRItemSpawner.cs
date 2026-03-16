@@ -42,7 +42,9 @@ public class CRItemSpawner : MonoBehaviour
     public void Start()
     {
         if (spawnSpots.Count == 0)
+        {
             spawnSpots.Add(transform);
+        }
 
         if (!_spawnOnStart)
             return;
@@ -63,6 +65,9 @@ public class CRItemSpawner : MonoBehaviour
 
     public void DoVanillaItemSpawn()
     {
+        if (!NetworkManager.Singleton.IsServer)
+            return;
+
         if (UnityEngine.Random.Range(0, 100) >= spawnChance)
             return;
 
@@ -82,7 +87,7 @@ public class CRItemSpawner : MonoBehaviour
         List<(Item item, float rarity)> specialItems = new();
         foreach (var itemNamesWithRarity in specialItemNamesWithRarity)
         {
-            Item? itemToAdd = StartOfRound.Instance.allItemsList.itemsList.Where(x => x.itemName == itemNamesWithRarity.Name).FirstOrDefault();
+            Item? itemToAdd = StartOfRound.Instance.allItemsList.itemsList.FirstOrDefault(x => x.itemName == itemNamesWithRarity.Name);
             if (itemToAdd == null)
             {
                 Plugin.Logger.LogWarning("Item not found: " + itemNamesWithRarity.Name);

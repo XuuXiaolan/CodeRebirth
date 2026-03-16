@@ -103,6 +103,7 @@ public class DebtCollector : CodeRebirthEnemyAI
     private static readonly int IsDeadAnimationHash = Animator.StringToHash("IsDead"); // Bool
     private static readonly int PryOpenDoorAnimationHash = Animator.StringToHash("pryOpenDoor"); // Float
     private static readonly int PryingOpenDoorAnimationHash = Animator.StringToHash("PryingOpenDoor"); // Bool
+    private static readonly int ClosedDoorAnimationHash = Animator.StringToHash("Closed"); // Bool
 
     #region Unity Lifecycles
     public override void Start()
@@ -489,7 +490,7 @@ public class DebtCollector : CodeRebirthEnemyAI
         Plugin.ExtendedLogging($"Finishing pry open door with {cancelledEarly}");
 		if (cancelledEarly != 1)
 		{
-			_shipDoor.shipDoorsAnimator.SetBool("Closed", false);
+			_shipDoor.shipDoorsAnimator.SetBool(ClosedDoorAnimationHash, false);
 			StartOfRound.Instance.SetShipDoorsClosed(false);
 			StartOfRound.Instance.SetShipDoorsOverheatLocalClient();
 			_shipDoor.doorPower = 0f;
