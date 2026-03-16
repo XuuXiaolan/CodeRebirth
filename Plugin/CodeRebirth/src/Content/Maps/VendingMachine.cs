@@ -4,6 +4,7 @@ using System.Linq;
 using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
+using Dawn;
 using Dawn.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -13,6 +14,8 @@ namespace CodeRebirth.src.Content.Maps;
 
 public class VendingMachine : NetworkBehaviour
 {
+    [field: SerializeField]
+    public HUDDisplayTip FirstInteractionTipWithoutCounter { get; private set; }
     [field: SerializeField]
     public List<SimplifiedItemWithRarityAndColor> PotentialItemsToSpawn { get; private set; } = new();
 
@@ -44,6 +47,8 @@ public class VendingMachine : NetworkBehaviour
     private SimplifiedRealItemWithRarityAndColor currentItemToSpawn;
     private float jammingProgress = 0f;
     private float lastTimeUsed = 0f;
+
+    private static readonly NamespacedKey _firstVendingUsage = NamespacedKey.From("code_rebirth", "first_vending_usage");
 
     private static readonly int JammedAnimationHash = Animator.StringToHash("jammed"); // Bool
     private static readonly int UseAnimationHash = Animator.StringToHash("use"); // Trigger
@@ -92,17 +97,26 @@ public class VendingMachine : NetworkBehaviour
             return;
         }
 
+        if (MoneyCounter.Instance == null)
+        {
+            if (Plugin.PersistentDataContainer.TryGet(_firstVendingUsage, out bool hasUsedVendingMachineBefore) && !hasUsedVendingMachineBefore)
+            {
+                Plugin.PersistentDataContainer.Set(_firstVendingUsage, true);
+                HUDManager.Instance.DisplayTip(FirstInteractionTipWithoutCounter);
+            }
+            return;
+        }
+
+        if (MoneyCounter.Instance.MoneyStored() < PayPrice)
+        {
+            return;
+        }
         StartSpawningAnimationServerRpc();
     }
 
     [ServerRpc(RequireOwnership = false)]
     private void StartSpawningAnimationServerRpc()
     {
-        if (MoneyCounter.Instance == null || MoneyCounter.Instance.MoneyStored() < PayPrice)
-        {
-            return;
-        }
-
         if (Time.time - lastTimeUsed < Cooldown)
         {
             return;
@@ -146,7 +160,7 @@ public class VendingMachine : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     private void SpawnRandomItemServerRpc()
     {
-        MoneyCounter.Instance.RemoveMoney(PayPrice);
+        MoneyCounter.Instance!.RemoveMoney(PayPrice);
         jammingProgress += 0.1f;
         Vector3 position = StartSpawnPosition.position + UnityEngine.Random.Range(0f, 1f) * (EndSpawnPosition.position - StartSpawnPosition.position).normalized;
         if (currentItemToSpawn.item == null)

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Linq;
 using CodeRebirth.src.Content.Maps;
 using Dawn;
+using Dawn.Internal;
 using Dawn.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -13,6 +14,8 @@ namespace CodeRebirth.src.Content.Unlockables;
 
 public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
 {
+    [SerializeField]
+    private HUDDisplayTip _firstDebtDisplayTip;
     [SerializeField]
     private NetworkAnimator _networkAnimator;
 
@@ -59,6 +62,7 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
     private NetworkVariable<int> _totalMoneyStored = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
     private static NamespacedKey _moneyKey = NamespacedKey.From("code_rebirth", "money_stored");
+    private static NamespacedKey _debtKey = NamespacedKey.From("code_rebirth", "went_to_debt_once");
     private static readonly int OnHitHash = Animator.StringToHash("hit"); // Trigger
     private static readonly int CoinGetHash = Animator.StringToHash("coinGet"); // Trigger
 
@@ -189,6 +193,15 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
 
         int oldValue = _totalMoneyStored.Value;
         _totalMoneyStored.Value -= amount;
+        if (_totalMoneyStored.Value < 0)
+        {
+            if (DawnLib.GetCurrentSave()!.TryGet(_debtKey, out bool wentToDebtOnce) && !wentToDebtOnce)
+            {
+                DawnLib.GetCurrentSave()!.Set(_debtKey, true);
+                _totalMoneyStored.Value = 0;
+                DawnNetworker.Instance!.BroadcastDisplayTipServerRpc(_firstDebtDisplayTip);
+            }
+        }
         UpdateVisuals(oldValue, _totalMoneyStored.Value);
     }
 

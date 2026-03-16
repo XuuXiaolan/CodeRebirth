@@ -13,6 +13,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     public Material AlbinoCharredMaterial = null!;
     public Material NormalCharredMaterial = null!;
     public ParticleSystem[] BurnParticles = [];
+    public AudioClip BurningSound = null!;
     public Collider[] DeathColliders = null!;
     public Collider CollisionFootR = null!;
     public Collider CollisionFootL = null!;
@@ -456,7 +457,12 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
             particleSystem.Play();
         }
 
+        creatureSFX.clip = BurningSound;
+        creatureSFX.loop = true;
+        creatureSFX.Play();
+
         yield return new WaitForSeconds(30f);
+        creatureSFX.Stop();
         if (!burnedOnce)
         {
             if (skinnedMeshRenderers[0].sharedMaterials[3].name == "AlbinoBody")

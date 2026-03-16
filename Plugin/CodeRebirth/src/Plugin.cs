@@ -12,6 +12,7 @@ using Dawn;
 using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.Content.DevTools;
 using CodeRebirth.src.MiscScripts;
+using CodeRebirth.src.Content.Unlockables;
 
 namespace CodeRebirth.src;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
@@ -83,6 +84,7 @@ public class Plugin : BaseUnityPlugin
         MerchantTipPad.Init();
         StoatGun.Init();
         CommitKeyToSave.Init();
+        HauntedTeddyBear.Init();
 
         // This should be ran before Network Prefabs are registered.
         InputActionsInstance = new IngameKeybinds();

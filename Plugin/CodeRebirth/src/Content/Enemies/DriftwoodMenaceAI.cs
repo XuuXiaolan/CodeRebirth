@@ -11,6 +11,7 @@ using Dawn;
 namespace CodeRebirth.src.Content.Enemies;
 public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
 {
+    public AudioClip BurningSound = null!;
     public ParticleSystem[] burnParticles = [];
     public List<Material> CharredMaterials = new();
     public GameObject grabArea = null!;
@@ -789,6 +790,9 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     {
         agent.speed = 30f;
         creatureAnimator.SetFloat(RUNFUCKERRUNFloat, 2f);
+        creatureVoice.clip = BurningSound;
+        creatureVoice.loop = true;
+        creatureVoice.Play();
         foreach (ParticleSystem particleSystem in burnParticles)
         {
             particleSystem.Play();
@@ -904,6 +908,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     public override void KillEnemy(bool destroy = false)
     {
         base.KillEnemy(destroy);
+        creatureVoice.Stop();
         if (_burnGiantRoutine != null)
         {
             StopCoroutine(_burnGiantRoutine);

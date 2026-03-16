@@ -16,6 +16,8 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
 {
     [Header("Audio")]
     [SerializeField]
+    private AudioClip _burnSound = null!;
+    [SerializeField]
     private AudioSource _rollingSource = null!;
 
     [Header("Animations")]
@@ -427,6 +429,7 @@ public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
         {
             particleSystem.Play();
         }
+        creatureSFX.PlayOneShot(_burnSound);
         yield return new WaitForSeconds(5f);
         _burnGiantRoutine = null;
     }

@@ -136,7 +136,7 @@ static class PlayerControllerBPatch
             return;
         }
 
-        if (gObject is PlushieItem || gObject is Xui || gObject is GoldRigo)
+        if (gObject is PlushieItem or Xui or GoldRigo)
         {
             DuskModContent.Achievements.TryDiscoverMoreProgressAchievement(CodeRebirthAchievementKeys.CompanyCertified, gObject.itemProperties.itemName);
             DuskModContent.Achievements.TryDiscoverMoreProgressAchievement(CodeRebirthAchievementKeys.SomeAssemblyRequired, gObject.itemProperties.itemName);
