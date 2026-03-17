@@ -54,7 +54,18 @@ public class Magic8Ball : GrabbableObject
     {
         SpriteRenderer.sprite = DefaultSprite;
         yield return new WaitForSeconds(TimeToDisplayResult);
+        SpriteRenderer.color = new Color(SpriteRenderer.color.r, SpriteRenderer.color.g, SpriteRenderer.color.b, 0f);
         DisplayMagic8BallResult();
+
+        float duration = 0;
+        while (duration < 1)
+        {
+            SpriteRenderer.color = new Color(SpriteRenderer.color.r, SpriteRenderer.color.g, SpriteRenderer.color.b, duration);
+            duration += Time.deltaTime * 4f;
+            yield return null;
+        }
+
+        SpriteRenderer.color = new Color(SpriteRenderer.color.r, SpriteRenderer.color.g, SpriteRenderer.color.b, 1f);
         _displayRoutine = null;
     }
 
