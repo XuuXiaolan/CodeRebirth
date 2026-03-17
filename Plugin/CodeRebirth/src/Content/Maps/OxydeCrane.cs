@@ -9,7 +9,6 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Maps;
 public class OxydeCrane : NetworkBehaviour
 {
-    public InteractTrigger LadderInteract = null!;
     public GameObject shipNavColliders = null!;
     public Vector3 endPosition = Vector3.zero;
     public Quaternion endRotation = Quaternion.identity;
@@ -22,11 +21,9 @@ public class OxydeCrane : NetworkBehaviour
     private static readonly int StartAnimation = Animator.StringToHash("startAnimation"); // Trigger
     private static readonly int MoveBackAnimation = Animator.StringToHash("MoveBack");
     private static readonly int PullLeverAnimation = Animator.StringToHash("pullLever");
-    [HideInInspector] public static OxydeCrane? Instance = null;
 
     public void Awake()
     {
-        Instance = this;
         StartMatchLeverRefs.Instance.triggerScript.interactable = false;
         previousDisabledTriggerMessage = StartMatchLeverRefs.Instance.triggerScript.disabledHoverTip;
         StartMatchLeverRefs.Instance.triggerScript.disabledHoverTip = "Ship needs to be un-attached from the magnet.";
@@ -76,10 +73,6 @@ public class OxydeCrane : NetworkBehaviour
         dropButton.interactable = false;
         StartMatchLeverRefs.Instance.triggerScript.disabledHoverTip = previousDisabledTriggerMessage;
         StartMatchLeverRefs.Instance.triggerScript.interactable = true;
-        if (GameNetworkManager.Instance.localPlayerController.isClimbingLadder && GameNetworkManager.Instance.localPlayerController.currentTriggerInAnimationWith == LadderInteract)
-        {
-            LadderInteract.CancelLadderAnimation();
-        }
         leverAnimator.SetTrigger(PullLeverAnimation);
         float timeElapsed = 0f;
         List<(GameObject gameObject, Vector3 startPos, Quaternion startRot)> objectsToDrop = [(shipNavColliders, shipNavColliders.transform.position, shipNavColliders.transform.rotation), (StartOfRound.Instance.shipAnimatorObject.gameObject, StartOfRound.Instance.shipAnimatorObject.transform.position, StartOfRound.Instance.shipAnimatorObject.transform.rotation)];
@@ -106,6 +99,5 @@ public class OxydeCrane : NetworkBehaviour
             StartMatchLeverRefs.Instance.triggerScript.disabledHoverTip = previousDisabledTriggerMessage;
             StartMatchLeverRefs.Instance.triggerScript.interactable = true;
         }
-        Instance = null;
     }
 }
