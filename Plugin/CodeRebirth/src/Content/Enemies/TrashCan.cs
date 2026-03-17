@@ -56,6 +56,11 @@ public class TrashCan : NetworkBehaviour
             SyncPositionRpc(randomNavMeshPositionInBoxPredictable);
             Plugin.ExtendedLogging($"Moved trash can to {randomNavMeshPositionInBoxPredictable}");
         }
+
+        if (meshFilter != null && Vector3.Distance(this.transform.position, RoundManager.FindMainEntrancePosition(true, false)) <= 5f)
+        {
+            meshFilter.gameObject.SetActive(false);
+        }
     }
 
     [Rpc(SendTo.NotMe)]
