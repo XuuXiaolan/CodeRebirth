@@ -70,6 +70,7 @@ public class OxydeCrane : NetworkBehaviour
 
     public IEnumerator TryDropShipFromCrane()
     {
+        alreadyDropped = true;
         dropButton.interactable = false;
         StartMatchLeverRefs.Instance.triggerScript.disabledHoverTip = previousDisabledTriggerMessage;
         StartMatchLeverRefs.Instance.triggerScript.interactable = true;
