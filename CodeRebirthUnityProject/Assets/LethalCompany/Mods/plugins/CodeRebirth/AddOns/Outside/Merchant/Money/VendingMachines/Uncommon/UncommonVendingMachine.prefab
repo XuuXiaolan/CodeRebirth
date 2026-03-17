@@ -1389,7 +1389,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2842735442
+  GlobalObjectIdHash: 910450481
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -1410,6 +1410,11 @@ MonoBehaviour:
   m_Script: {fileID: 1795929651, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <FirstInteractionTipWithoutCounter>k__BackingField:
+    _alertType: 0
+    _header: Error - Transaction Failed
+    _body: Denomination Analyser not located. Please purchase one from the ship terminal
+      to store currency.
   <PotentialItemsToSpawn>k__BackingField:
   - itemName: Vanilla
     rarity: 5

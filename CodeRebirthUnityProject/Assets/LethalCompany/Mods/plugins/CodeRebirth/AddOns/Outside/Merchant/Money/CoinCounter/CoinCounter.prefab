@@ -864,7 +864,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1287040713
+  GlobalObjectIdHash: 606915821
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -885,6 +885,11 @@ MonoBehaviour:
   m_Script: {fileID: -1851506680, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _firstDebtDisplayTip:
+    _alertType: 1
+    _header: ///WARNING - COIN BALANCE LOW///
+    _body: Penalty fee exceeds coin balance. More losses will result in debt and
+      DISCIPLINARY ACTION...
   _networkAnimator: {fileID: 8732459579067053756}
   _animator: {fileID: 2757213301001511512}
   _audioSource: {fileID: 3607370738657835003}
