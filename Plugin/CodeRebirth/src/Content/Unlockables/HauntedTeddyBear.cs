@@ -7,6 +7,9 @@ using UnityEngine;
 namespace CodeRebirth.src.Content.Unlockables;
 public class HauntedTeddyBear : MonoBehaviour
 {
+    [field: SerializeField, Range(0, 100)]
+    public float SpawnChance { get; private set; }
+
     [field: SerializeField]
     public AutoParentToShip AutoParentToShip { get; private set; }
 
@@ -42,7 +45,24 @@ public class HauntedTeddyBear : MonoBehaviour
             return;
         }
 
-        StartOfRound.Instance.UnlockShipObject(indexInList);
+        float chance = teddyUnlockable.prefabObject.GetComponent<HauntedTeddyBear>().SpawnChance;
+        if (UnityEngine.Random.Range(0, 100) > chance)
+        {
+            return;
+        }
+
+        if (teddyUnlockable.inStorage)
+        {
+            StartOfRound.Instance.ReturnUnlockableFromStorageServerRpc(indexInList);
+        }
+        else if (teddyUnlockable.alreadyUnlocked || teddyUnlockable.hasBeenUnlockedByPlayer)
+        {
+            StartOfRound.Instance.SpawnedShipUnlockables[indexInList].GetComponent<HauntedTeddyBear>().ChangePosition();
+        }
+        else
+        {
+            StartOfRound.Instance.UnlockShipObject(indexInList);
+        }
     }
 
     public void Start()

@@ -224,16 +224,22 @@ internal class CodeRebirthUtils : NetworkBehaviour
         Vector3 spawnPosition = position;
         if (Physics.Raycast(position + Vector3.up * 1f, Vector3.down, out RaycastHit hit, 100f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
         {
-            spawnPosition = hit.point + Vector3.up * item.verticalOffset;
+            spawnPosition = hit.point + Vector3.up * item.verticalOffset + Vector3.up * 0.25f;
         }
 
-        GameObject go = Instantiate(item.spawnPrefab, spawnPosition + Vector3.up * 0.25f, Quaternion.identity, null);
+        GameObject go = Instantiate(item.spawnPrefab, spawnPosition, Quaternion.identity, null);
         GrabbableObject grabbableObject = go.GetComponent<GrabbableObject>();
         NetworkObject networkObject = grabbableObject.NetworkObject;
         networkObject.Spawn(false);
 
         int value = (int)(UnityEngine.Random.Range(item.minValue, item.maxValue) * RoundManager.Instance.scrapValueMultiplier) + valueIncrease;
-        SyncScanNodeParentRotationsAndFallRpc(new NetworkBehaviourReference(grabbableObject), spawnPosition, defaultRotation ? Quaternion.Euler(item.restingRotation) : rotation, value);
+        Vector3 targetPosition = grabbableObject.transform.localPosition;
+        if (Physics.Raycast(spawnPosition, Vector3.down, out RaycastHit raycastHit, 80f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
+        {
+            targetPosition = raycastHit.point + grabbableObject.itemProperties.verticalOffset * Vector3.up;
+        }
+
+        SyncScanNodeParentRotationsAndFallRpc(new NetworkBehaviourReference(grabbableObject), spawnPosition, targetPosition, defaultRotation ? Quaternion.Euler(item.restingRotation) : rotation, value);
 
         if (isQuest)
         {
@@ -243,35 +249,12 @@ internal class CodeRebirthUtils : NetworkBehaviour
     }
 
     [Rpc(SendTo.Everyone, DeferLocal = true)]
-    private void SyncScanNodeParentRotationsAndFallRpc(NetworkBehaviourReference grabbableObjectReference, Vector3 spawnPosition, Quaternion rotation, int value)
+    private void SyncScanNodeParentRotationsAndFallRpc(NetworkBehaviourReference grabbableObjectReference, Vector3 spawnPosition, Vector3 targetPosition, Quaternion rotation, int value)
     {
-        StartCoroutine(SyncScanNodeParentRotationsAndFall((GrabbableObject)(NetworkBehaviour)grabbableObjectReference, spawnPosition, rotation, value));
+        StartCoroutine(SyncScanNodeParentRotationsAndFall((GrabbableObject)(NetworkBehaviour)grabbableObjectReference, spawnPosition, targetPosition, rotation, value));
     }
 
-    private void ModifiedFallToGround(GrabbableObject grabbableObject, Vector3 spawnPosition)
-    {
-        grabbableObject.startFallingPosition = spawnPosition;
-        if (grabbableObject.transform.parent != null)
-        {
-            grabbableObject.startFallingPosition = grabbableObject.transform.parent.InverseTransformPoint(spawnPosition);
-        }
-        if (Physics.Raycast(spawnPosition, Vector3.down, out RaycastHit raycastHit, 80f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
-        {
-            Plugin.ExtendedLogging($"Raycast hit: {raycastHit.point}");
-            grabbableObject.targetFloorPosition = raycastHit.point + grabbableObject.itemProperties.verticalOffset * Vector3.up;
-            if (grabbableObject.transform.parent != null)
-            {
-                grabbableObject.targetFloorPosition = grabbableObject.transform.parent.InverseTransformPoint(grabbableObject.targetFloorPosition);
-            }
-        }
-        else
-        {
-            grabbableObject.targetFloorPosition = grabbableObject.transform.localPosition;
-        }
-		grabbableObject.InitializeAfterPositioning();
-    }
-
-    private IEnumerator SyncScanNodeParentRotationsAndFall(GrabbableObject grabbableObject, Vector3 spawnPosition, Quaternion rotation, int value)
+    private IEnumerator SyncScanNodeParentRotationsAndFall(GrabbableObject grabbableObject, Vector3 spawnPosition, Vector3 targetPosition, Quaternion rotation, int value)
     {
         NetworkObject netObj = grabbableObject.NetworkObject;
         yield return new WaitUntil(() => netObj.IsSpawned);
@@ -301,7 +284,9 @@ internal class CodeRebirthUtils : NetworkBehaviour
         yield return new WaitForEndOfFrame();
         yield return new WaitForEndOfFrame();
         RoundManager.Instance.totalScrapValueInLevel += grabbableObject.scrapValue;
-        ModifiedFallToGround(grabbableObject, spawnPosition);
+        grabbableObject.startFallingPosition = StartOfRound.Instance.propsContainer.InverseTransformPoint(spawnPosition);
+        grabbableObject.targetFloorPosition = StartOfRound.Instance.propsContainer.InverseTransformPoint(targetPosition);
+		grabbableObject.InitializeAfterPositioning();
     }
 
     private IEnumerator ForceRotationForABit(GameObject go, Quaternion rotation)

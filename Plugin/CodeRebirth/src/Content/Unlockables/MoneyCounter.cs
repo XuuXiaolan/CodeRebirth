@@ -97,6 +97,11 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
         _hundredBase = HundredWheel.localRotation;
         _tenBase = TenWheel.localRotation;
         _oneBase = OneWheel.localRotation;
+        GameObject? helmet = GameObject.Find("HangarShip/ScavengerModelSuitParts/Circle.001");
+        if (helmet != null)
+        {
+            helmet.SetActive(false);
+        }
     }
 
     public override void OnNetworkDespawn()
