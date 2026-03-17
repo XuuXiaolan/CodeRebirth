@@ -1,5 +1,89 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4269883807722903394
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1905614599336925322}
+  - component: {fileID: 2587250853039208743}
+  m_Layer: 0
+  m_Name: AnswerSpriteRenderer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1905614599336925322
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4269883807722903394}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0.0026016235, y: -0.114, z: 0.184}
+  m_LocalScale: {x: 0.064656205, y: 0.064656205, z: 0.064656205}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 6938636153871159723}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!212 &2587250853039208743
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4269883807722903394}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 257
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 0}
+  m_Color: {r: 0.86415094, g: 0.86415094, b: 0.86415094, a: 1}
+  m_FlipX: 1
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 2.56, y: 2.56}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 0
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
 --- !u!1 &4734657855044778180
 GameObject:
   m_ObjectHideFlags: 0
@@ -12,9 +96,9 @@ GameObject:
   - component: {fileID: 3454216451997837422}
   - component: {fileID: 7043605764496510602}
   - component: {fileID: 1936592467853826979}
-  - component: {fileID: 7055533012228795357}
   - component: {fileID: 8112705111020006525}
   - component: {fileID: 6782346617131228164}
+  - component: {fileID: 8382341354230615314}
   m_Layer: 6
   m_Name: Magic8Ball
   m_TagString: PhysicsProp
@@ -36,6 +120,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7397679177460715126}
+  - {fileID: 1905614599336925322}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3454216451997837422
@@ -110,56 +195,6 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 1
   AutoObjectParentSync: 0
---- !u!114 &7055533012228795357
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4734657855044778180}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d0cf24d2ccc3b7eab72048d0f57c437, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  grabbable: 1
-  isHeld: 0
-  isHeldByEnemy: 0
-  deactivated: 0
-  parentObject: {fileID: 0}
-  targetFloorPosition: {x: 0, y: 0, z: 0}
-  startFallingPosition: {x: 0, y: 0, z: 0}
-  floorYRot: 0
-  fallTime: 0
-  hasHitGround: 0
-  scrapValue: 0
-  itemUsedUp: 0
-  playerHeldBy: {fileID: 0}
-  isPocketed: 0
-  isBeingUsed: 0
-  isInElevator: 0
-  isInShipRoom: 0
-  isInFactory: 1
-  useCooldown: 0
-  currentUseCooldown: 0
-  itemProperties: {fileID: 11400000, guid: 798cc68febec37242b869cffafb23504, type: 2}
-  insertedBattery:
-    empty: 0
-    charge: 0
-  customGrabTooltip: 
-  propBody: {fileID: 0}
-  propColliders: []
-  originalScale: {x: 0, y: 0, z: 0}
-  wasOwnerLastFrame: 0
-  mainObjectRenderer: {fileID: 0}
-  isSendingItemRPC: 0
-  scrapPersistedThroughRounds: 0
-  heldByPlayerOnServer: 0
-  radarIcon: {fileID: 0}
-  reachedFloorTarget: 0
-  grabbableToEnemies: 1
-  hasBeenHeld: 0
-  rotateObject: 0
 --- !u!65 &8112705111020006525
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -277,6 +312,84 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &8382341354230615314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4734657855044778180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -779301274, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grabbable: 1
+  isHeld: 0
+  isHeldByEnemy: 0
+  deactivated: 0
+  parentObject: {fileID: 0}
+  targetFloorPosition: {x: 0, y: 0, z: 0}
+  startFallingPosition: {x: 0, y: 0, z: 0}
+  floorYRot: 0
+  fallTime: 0
+  hasHitGround: 0
+  scrapValue: 0
+  itemUsedUp: 0
+  playerHeldBy: {fileID: 0}
+  isPocketed: 0
+  isBeingUsed: 0
+  isInElevator: 0
+  isInShipRoom: 0
+  isInFactory: 1
+  useCooldown: 0
+  currentUseCooldown: 0
+  itemProperties: {fileID: 11400000, guid: 798cc68febec37242b869cffafb23504, type: 2}
+  insertedBattery:
+    empty: 0
+    charge: 0
+  customGrabTooltip: 
+  propBody: {fileID: 0}
+  propColliders: []
+  originalScale: {x: 0, y: 0, z: 0}
+  wasOwnerLastFrame: 0
+  mainObjectRenderer: {fileID: 0}
+  isSendingItemRPC: 0
+  scrapPersistedThroughRounds: 0
+  heldByPlayerOnServer: 0
+  radarIcon: {fileID: 0}
+  reachedFloorTarget: 0
+  grabbableToEnemies: 1
+  hasBeenHeld: 0
+  rotateObject: 0
+  <SpriteRenderer>k__BackingField: {fileID: 2587250853039208743}
+  <DefaultSprite>k__BackingField: {fileID: 0}
+  <PossibleSprites>k__BackingField:
+  - {fileID: 21300000, guid: 99a638c129cbe76439415e7b326a1ff6, type: 3}
+  - {fileID: 21300000, guid: 8340be1f587e80e4e91c802b6bbdc730, type: 3}
+  - {fileID: 21300000, guid: 5a0f307a3eb02db41b5fd78ebf4fcd85, type: 3}
+  - {fileID: 21300000, guid: 3c46bfa94ac97fd4894451710fcbc528, type: 3}
+  - {fileID: 21300000, guid: 1ee00f66463557145bc596c4f0af09bc, type: 3}
+  - {fileID: 21300000, guid: d774f83430b2b5f4091ea2319589f96e, type: 3}
+  - {fileID: 21300000, guid: 43255067451b5c54fbe76a92256231c5, type: 3}
+  - {fileID: 21300000, guid: 40281433b77d7b94394cfd3efa183953, type: 3}
+  - {fileID: 21300000, guid: e7de3d9ef9a09e8439bc4245c3d73c10, type: 3}
+  - {fileID: 21300000, guid: 833e6029596db5a47ae56024a55979f5, type: 3}
+  - {fileID: 21300000, guid: da6cb9d4b273d2c44a2d00e2efa93469, type: 3}
+  - {fileID: 21300000, guid: cc3b95a6584ed2d439fe3ae86bad7f10, type: 3}
+  - {fileID: 21300000, guid: 160b2460b02a29f4bbf9ffd23cbf7904, type: 3}
+  - {fileID: 21300000, guid: f1fb317e5daecee4cb9d8bbcd3e6ed66, type: 3}
+  - {fileID: 21300000, guid: 14c3ade7e7da5544fac811baab5a9649, type: 3}
+  - {fileID: 21300000, guid: 329f0a740951758478f540ee8a586c9d, type: 3}
+  - {fileID: 21300000, guid: 448b1abc908e5fe44943234dba74ee9a, type: 3}
+  - {fileID: 21300000, guid: 295689f2e4324644fa84fc23fbfa1013, type: 3}
+  - {fileID: 21300000, guid: 618ffe29a4e4f784b8d7ad00c82260d0, type: 3}
+  - {fileID: 21300000, guid: e6610fb284c3b7e45b63e2702732ad8a, type: 3}
+  - {fileID: 21300000, guid: eadd238f2ddea1a40bb9e45942a5f60a, type: 3}
+  - {fileID: 21300000, guid: 0feedb14649759f4eaed12f492ee09e3, type: 3}
+  - {fileID: 21300000, guid: f39e6a073c576f74d84e10d8611b44ac, type: 3}
+  - {fileID: 21300000, guid: be2e6fc355ef1434fb63c9a525a48e9a, type: 3}
+  - {fileID: 21300000, guid: 58c307049ed0f0b41aad23b24aa7e1e9, type: 3}
 --- !u!1 &7782388273792999995
 GameObject:
   m_ObjectHideFlags: 0
