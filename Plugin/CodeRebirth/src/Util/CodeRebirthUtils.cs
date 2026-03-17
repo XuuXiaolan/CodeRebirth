@@ -151,6 +151,16 @@ internal class CodeRebirthUtils : NetworkBehaviour
         enemyAI.KillEnemyOnOwnerClient(overrideDestroy);
     }
 
+    public void SpawnFakeSnailCat(PlayerControllerB lastOwner, Vector3 originalScale, string currentName, float shiftHash)
+    {
+        NetworkObjectReference netObjRef = CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[CodeRebirthItemKeys.FakeSnailCat].Item, this.transform.position, false, true, 0);
+        FakeSnailCat fakeSnailCat = ((NetworkObject)netObjRef).GetComponent<FakeSnailCat>();
+        fakeSnailCat.lastOwner = lastOwner;
+        fakeSnailCat.localScale = originalScale;
+        fakeSnailCat.snailCatName = currentName;
+        fakeSnailCat.shiftHash = shiftHash;
+    }
+
     [ServerRpc(RequireOwnership = false)]
     public void ReactToVehicleCollisionServerRpc(int obstacleId)
     {

@@ -113,7 +113,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
         propScript.originalScale = scale;
         currentName = name;
         scanNodeProperties.headerText = currentName;
-        isWiWiWiii = currentName == "Wiwiwii";
+        isWiWiWiii = (currentName == "Wiwiwii");
         _specialRenderer!.materials[0].SetFloat(ShiftHash, magicalHashNumber);
         detectLightInSurroundings = this.gameObject.AddComponent<DetectLightInSurroundings>();
         detectLightInSurroundings.OnLightValueChange.AddListener(OnLightValueChange);
@@ -409,12 +409,11 @@ public class SnailCatAI : CodeRebirthEnemyAI
         if (!StartOfRound.Instance.shipInnerRoomBounds.bounds.Contains(this.transform.position))
             return;
 
-        NetworkObjectReference netObjRef = CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[CodeRebirthItemKeys.FakeSnailCat].Item, this.transform.position, false, true, 0);
-        FakeSnailCat fakeSnailCat = ((NetworkObject)netObjRef).GetComponent<FakeSnailCat>();
-        fakeSnailCat.lastOwner = propScript.playerHeldBy;
-        fakeSnailCat.localScale = propScript.originalScale;
-        fakeSnailCat.snailCatName = currentName;
-        fakeSnailCat.shiftHash = _specialRenderer!.materials[0].GetFloat(ShiftHash);
-        // CRUtilities.CreateExplosion(this.transform.position, true, 99999, 0, 15, 999, null, null, 1000f);
+        if (propScript.playerHeldBy == null)
+        {
+            return;
+        }
+
+        CodeRebirthUtils.Instance.SpawnFakeSnailCat(propScript.playerHeldBy, propScript.originalScale, currentName, _specialRenderer.materials[0].GetFloat(ShiftHash));
     }
 }

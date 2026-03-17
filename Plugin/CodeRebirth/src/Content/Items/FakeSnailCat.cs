@@ -1,3 +1,4 @@
+using System.Collections;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.MiscScripts;
 using Dawn;
@@ -26,33 +27,39 @@ public class FakeSnailCat : GrabbableObject
     {
         base.OnNetworkSpawn();
         if (!IsServer)
+        {
             return;
+        }
 
-        DelayForBit();
+        StartCoroutine(DelayForBit());
     }
 
-    private void DelayForBit()
+    private IEnumerator DelayForBit()
     {
+        yield return null;
+        yield return null;
         InitaliseFakeSnailCatServerRpc();
     }
 
     [ServerRpc(RequireOwnership = false)]
     private void InitaliseFakeSnailCatServerRpc()
     {
-        InitaliseFakeSnailCatClientRpc(localScale, snailCatName, shiftHash);
+        InitaliseFakeSnailCatClientRpc(lastOwner, localScale, snailCatName, shiftHash);
     }
 
     [ClientRpc]
-    private void InitaliseFakeSnailCatClientRpc(Vector3 scale, string name, float magicalHashNumber)
+    private void InitaliseFakeSnailCatClientRpc(PlayerControllerReference currentOwner, Vector3 scale, string name, float magicalHashNumber)
     {
-        InitaliseFakeSnailCat(scale, name, magicalHashNumber);
+        StartCoroutine(InitaliseFakeSnailCat(currentOwner, scale, name, magicalHashNumber));
     }
 
-    public void InitaliseFakeSnailCat(Vector3 scale, string name, float magicalHashNumber)
+    public IEnumerator InitaliseFakeSnailCat(PlayerControllerB currentOwner, Vector3 scale, string name, float magicalHashNumber)
     {
+        yield return new WaitForEndOfFrame();
         this.transform.position = StartOfRound.Instance.shipInnerRoomBounds.bounds.center;
         GameNetworkManager.Instance.localPlayerController.SetItemInElevator(true, true, this);
 
+        lastOwner = currentOwner;
         if (lastOwner.IsLocalPlayer())
         {
             CRUtilities.MakePlayerGrabObject(lastOwner, this);
@@ -79,14 +86,17 @@ public class FakeSnailCat : GrabbableObject
         _animator.SetBool(SnailCatPhysicsProp.SittingAnimation, true);
     }
 
+    private bool destroyed = false;
     public override void Update()
     {
         base.Update();
-        if (!IsServer)
+        if (!IsServer || destroyed)
             return;
 
         if (StartOfRound.Instance.inShipPhase || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.shipIsLeaving)
             return;
+
+        destroyed = true;
 
         EnemyType enemyType = LethalContent.Enemies[CodeRebirthEnemyKeys.RealEnemySnailCat].EnemyType;
         NetworkObjectReference netObjRef = RoundManager.Instance.SpawnEnemyGameObject(this.transform.position, -1, -1, enemyType);
