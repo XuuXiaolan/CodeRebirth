@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
@@ -7,6 +6,10 @@ public class Magic8Ball : GrabbableObject
 {
     [field: SerializeField]
     public float TimeToDisplayResult { get; private set; } = 1.167f;
+    [field: SerializeField]
+    public AudioSource AudioSource { get; private set; }
+    [field: SerializeField]
+    public AudioClip ShakeSound { get; private set; }
     [field: SerializeField]
     public SpriteRenderer SpriteRenderer { get; private set; }
     [field: SerializeField]
@@ -46,6 +49,7 @@ public class Magic8Ball : GrabbableObject
             return;
         }
 
+        AudioSource.PlayOneShot(ShakeSound);
         playerHeldBy.playerBodyAnimator.SetTrigger(ShakeItemAnimationHash);
         _displayRoutine = StartCoroutine(WaitForAnimationEnd());
     }

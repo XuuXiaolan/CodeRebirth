@@ -8,6 +8,12 @@ namespace CodeRebirth.src.Content.Items;
 
 public class OldBooze : GrabbableObject
 {
+    [field: SerializeField]
+    public AudioSource AudioSource { get; private set; }
+
+    [field: SerializeField]
+    public AudioClip DrinkingClip { get; private set; }
+
     private bool drinking = false;
 
     public override void Update()
@@ -50,11 +56,12 @@ public class OldBooze : GrabbableObject
     private IEnumerator DrinkBooze()
     {
         PlayerControllerB playerDrunk = playerHeldBy;
-        float duration = 1f;
-        while (duration > 0)
+        AudioSource.PlayOneShot(DrinkingClip);
+        float duration = playerDrunk.drunkness;
+        while (duration <= 1)
         {
-            duration -= Time.deltaTime;
-            playerDrunk.drunknessInertia = Mathf.Clamp(playerDrunk.drunknessInertia + Time.deltaTime * 3f * playerDrunk.drunknessSpeed, 0.1f, 3f);
+            duration += Time.deltaTime;
+            playerDrunk.drunkness = duration;
             playerDrunk.increasingDrunknessThisFrame = true;
             yield return null;
         }
