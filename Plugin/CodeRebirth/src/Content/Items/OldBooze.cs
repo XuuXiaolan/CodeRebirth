@@ -15,6 +15,7 @@ public class OldBooze : GrabbableObject
     public AudioClip DrinkingClip { get; private set; }
 
     private bool drinking = false;
+    private static readonly int UseTZPItemAnimationHash = Animator.StringToHash("useTZPItem");
 
     public override void Update()
     {
@@ -58,6 +59,7 @@ public class OldBooze : GrabbableObject
         PlayerControllerB playerDrunk = playerHeldBy;
         AudioSource.PlayOneShot(DrinkingClip);
         float duration = playerDrunk.drunkness;
+        playerDrunk.playerBodyAnimator.SetBool(UseTZPItemAnimationHash, true);
         while (duration <= 1)
         {
             duration += Time.deltaTime;
@@ -66,6 +68,7 @@ public class OldBooze : GrabbableObject
             yield return null;
         }
 
+        playerDrunk.playerBodyAnimator.SetBool(UseTZPItemAnimationHash, false);
         if (playerDrunk.isPlayerDead)
         {
             grabbable = false;
