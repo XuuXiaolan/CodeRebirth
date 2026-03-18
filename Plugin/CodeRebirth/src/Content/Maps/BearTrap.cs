@@ -3,8 +3,10 @@ using System.Collections;
 using Dawn;
 using Dawn.Utils;
 using GameNetcodeStuff;
+using Unity.AI.Navigation;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace CodeRebirth.src.Content.Maps;
 
@@ -26,7 +28,6 @@ public class BearTrap : CodeRebirthHazard, IHittable
     private bool isTriggered = false;
     private bool canTrigger = true;
     [NonSerialized] public bool byProduct = false;
-    private Coroutine? releaseCoroutine = null;
     private static readonly int IsTrapTriggered = Animator.StringToHash("isTrapTriggered");
     private static readonly int IsTrapResetting = Animator.StringToHash("isTrapResetting");
 
@@ -134,7 +135,10 @@ public class BearTrap : CodeRebirthHazard, IHittable
 
     private void OnTriggerEnter(Collider other)
     {
-        if (isTriggered || !canTrigger) return;
+        if (isTriggered || !canTrigger)
+        {
+            return;
+        }
 
         if (other.gameObject.layer == 30 && other.TryGetComponent(out WheelCollider wheel))
         {
@@ -143,37 +147,47 @@ public class BearTrap : CodeRebirthHazard, IHittable
         }
         else if (other.gameObject.layer == 3 && other.TryGetComponent(out PlayerControllerB player) && player.IsLocalPlayer())
         {
-            TriggerTrapServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player));
+            TriggerTrapServerRpc(player);
         }
-        else if (other.gameObject.layer == 19 && other.TryGetComponent(out EnemyAI enemy))
+        else if (other.gameObject.layer == 19 && other.TryGetComponent(out EnemyAICollisionDetect enemyAICollisionDetect))
         {
-            TriggerTrap(enemy);
+            if (enemyAICollisionDetect.mainScript.enemyType.EnemySize == EnemySize.Giant)
+            {
+                return;
+            }
+
+            TriggerTrap(enemyAICollisionDetect.mainScript);
         }
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void TriggerTrapServerRpc(int index)
+    private void TriggerTrapServerRpc(PlayerControllerReference playerControllerReference)
     {
-        TriggerTrapClientRpc(index);
+        TriggerTrapClientRpc(playerControllerReference);
     }
 
     [ClientRpc]
-    private void TriggerTrapClientRpc(int index)
+    private void TriggerTrapClientRpc(PlayerControllerReference playerControllerReference)
     {
-        if (index == -1) return;
-        TriggerTrap(StartOfRound.Instance.allPlayerScripts[index]);
+        TriggerTrap(playerControllerReference);
     }
 
     public virtual void TriggerTrap(PlayerControllerB player)
+    {
+        playerCaught = player;
+        playerCaught.disableMoveInput = true;
+        playerCaught.DamagePlayer(25, true, true, CauseOfDeath.Crushing, 0, false, default);
+        caughtPosition = playerCaught.transform.position;
+
+        TriggerTrap();
+    }
+
+    public virtual void TriggerTrap()
     {
         trapAudioSource.Stop();
         trapAudioSource.clip = triggerSound;
         trapAudioSource.Play();
         isTriggered = true;
-        playerCaught = player;
-        playerCaught.disableMoveInput = true;
-        playerCaught.DamagePlayer(25, true, true, CauseOfDeath.Crushing, 0, false, default);
-        caughtPosition = playerCaught.transform.position;
         trapAnimator.SetBool(IsTrapTriggered, true);
         StartCoroutine(ResetBooleanAfterDelay(IsTrapTriggered, 0.5f));
         trapCollider.enabled = false;
@@ -182,29 +196,17 @@ public class BearTrap : CodeRebirthHazard, IHittable
     public virtual void TriggerTrap(EnemyAI enemy)
     {
         enemyCaught = enemy;
-        enemyCaught.HitEnemy(1, null, false, -1);
+        enemyCaught.HitEnemy(0, null, false, -1);
 
         TriggerTrap();
-        trapAudioSource.Stop();
-        trapAudioSource.clip = triggerSound;
-        trapAudioSource.Play();
-        isTriggered = true;
-        trapAnimator.SetBool(IsTrapTriggered, true);
-        StartCoroutine(ResetBooleanAfterDelay(IsTrapTriggered, 0.5f));
-        trapCollider.enabled = false;
 
-        if (releaseCoroutine != null)
-        {
-            StopCoroutine(releaseCoroutine);
-        }
-        releaseCoroutine = StartCoroutine(DelayReleasingEnemy());
+        StartCoroutine(DelayReleasingEnemy(enemy));
     }
 
-    private IEnumerator DelayReleasingEnemy()
+    private IEnumerator DelayReleasingEnemy(EnemyAI enemy)
     {
-        yield return new WaitForSeconds(12f);
+        yield return new WaitForSeconds(10f * (enemy.enemyType.EnemySize == EnemySize.Medium ? 0.5f : 1f) * enemy.enemyType.stunTimeMultiplier);
         DoReleaseTrap();
-        releaseCoroutine = null;
     }
 
     public void ReleaseTrapEarly()
@@ -254,10 +256,11 @@ public class BearTrap : CodeRebirthHazard, IHittable
 
     public void ReleaseTrap(PlayerControllerB player)
     {
-        if (GameNetworkManager.Instance.localPlayerController != player)
+        if (!player.IsLocalPlayer())
         {
             return;
         }
+
         Plugin.ExtendedLogging("release trap");
         DoReleaseTrapServerRpc();
     }
@@ -298,10 +301,7 @@ public class BearTrap : CodeRebirthHazard, IHittable
         StartCoroutine(DelayForReuse());
 
         // Reset `isTrapTriggered` if it hasn't been reset properly before
-        if (trapAnimator.GetBool(IsTrapTriggered))
-        {
-            trapAnimator.SetBool(IsTrapTriggered, false);
-        }
+        trapAnimator.SetBool(IsTrapTriggered, false);
 
         StartCoroutine(ResetBooleanAfterDelay(IsTrapResetting, 0.5f));
     }
@@ -325,8 +325,8 @@ public class BearTrap : CodeRebirthHazard, IHittable
         trapTrigger.timeToHold = resetTime;
     }
 
-    public bool Hit(int force, Vector3 hitDirection, PlayerControllerB playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
+    public bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
-        
+        return true;
     }
 }

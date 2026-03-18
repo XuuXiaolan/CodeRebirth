@@ -18,7 +18,10 @@ public class BoomTrap : BearTrap
     public override void TriggerTrap(PlayerControllerB player)
     {
         base.TriggerTrap(player);
-        if (triggeredOnce) return;
+        if (triggeredOnce)
+        {
+            return;
+        }
         triggeredOnce = true;
         StartCoroutine(StartExplosionCountdown(player));
     }
@@ -36,14 +39,20 @@ public class BoomTrap : BearTrap
         }
 
         DoReleaseTrap();
-        if (!IsServer) yield break;
+        if (!IsServer)
+        {
+            yield break;
+        }
         this.NetworkObject.Despawn();
     }
 
     public override void TriggerTrap(EnemyAI enemy)
     {
         base.TriggerTrap(enemy);
-        if (triggeredOnce) return;
+        if (triggeredOnce)
+        {
+            return;
+        }
         triggeredOnce = true;
         StartExplosionCountdown(null);
     }
