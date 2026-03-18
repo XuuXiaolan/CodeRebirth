@@ -66,6 +66,9 @@ public class AutonomousCrane : NetworkBehaviour
     private bool _craneIsActive = true;
     private Vector3 _targetPosition = Vector3.zero;
     private CraneState _currentState = CraneState.Idle;
+    private BoundedRange _deactivationLengthRange = new(15f, 25f);
+    private System.Random _craneRandomiser;
+    private Coroutine? _reenableCraneRoutine = null;
     private Collider[] _cachedColliders = new Collider[32];
 
     public enum CraneState
@@ -82,6 +85,8 @@ public class AutonomousCrane : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+        _craneRandomiser = new System.Random(StartOfRound.Instance.randomMapSeed + 33333);
+        _deactivationLengthRange = MapObjectHandler.Instance.AutonomousCrane!.GetConfig<BoundedRange>("Autonomous Crane | Deactivation Length").Value;
         float distanceToShip = Vector3.Distance(this.transform.position, StartOfRound.Instance.shipLandingPosition.position);
         Plugin.ExtendedLogging($"Distance to ship: {distanceToShip}");
         if (distanceToShip <= 30f)
@@ -97,7 +102,7 @@ public class AutonomousCrane : NetworkBehaviour
         {
             StartCoroutine(LandingCondition());
         }
-        _disableInteract.onInteract.AddListener(DeactivateCraneTrigger);
+        _disableInteract.onInteract.AddListener(EditCraneStateTrigger);
     }
 
     private IEnumerator LandingCondition()
@@ -121,28 +126,31 @@ public class AutonomousCrane : NetworkBehaviour
         NetworkObject.Despawn(true);
     }
 
-    private void DeactivateCraneTrigger(PlayerControllerB player)
+    private void EditCraneStateTrigger(PlayerControllerB player)
     {
-        if (!_craneIsActive)
-            return;
-
         if (!player.IsLocalPlayer())
             return;
 
-        DisableCraneServerRpc();
+        if (!_craneIsActive)
+        {
+            EnableCraneServerRpc();
+        }
+        else
+        {
+            DisableCraneServerRpc();
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
     private void DisableCraneServerRpc()
     {
-        _leverNetworkAnimator.SetTrigger(PullLeverAnimation);
         DisableCraneClientRpc();
     }
 
     [ClientRpc]
     private void DisableCraneClientRpc()
     {
-        StartCoroutine(ReEnableCraneAfterDelay());
+        _reenableCraneRoutine = StartCoroutine(ReEnableCraneAfterDelay());
     }
 
     public void Update()
@@ -478,23 +486,43 @@ public class AutonomousCrane : NetworkBehaviour
 
     private IEnumerator ReEnableCraneAfterDelay()
     {
-        bool wasPlaying = _audioSource.isPlaying;
+        DisableCrane();
+        yield return new WaitForSeconds(_deactivationLengthRange.GetRandomInRange(_craneRandomiser));
+        EnableCrane();
+        _reenableCraneRoutine = null;
+    }
+
+    private void DisableCrane()
+    {
+        _leverAnimator.SetTrigger(PullLeverAnimation);
         _audioSource.Stop();
         _craneIsActive = false;
         _onDeactivateCrane.Invoke();
+    }
 
-        yield return new WaitForSeconds(MapObjectHandler.Instance.AutonomousCrane.GetConfig<BoundedRange>("Autonomous Crane | Deactivation Length").Value.GetRandomInRange(CodeRebirthUtils.Instance.CRRandom));
+    [ServerRpc(RequireOwnership = false)]
+    private void EnableCraneServerRpc()
+    {
+        EnableCraneClientRpc();
+    }
+
+    [ClientRpc]
+    private void EnableCraneClientRpc()
+    {
+        if (_reenableCraneRoutine != null)
+        {
+            StopCoroutine(_reenableCraneRoutine);
+            _reenableCraneRoutine = null;
+        }
+
+        EnableCrane();
+    }
+
+    private void EnableCrane()
+    {
         _craneIsActive = true;
         _onActivateCrane.Invoke();
-        if (wasPlaying && _audioSource.clip != null)
-        {
-            _audioSource.Play();
-        }
-
-        if (IsServer)
-        {
-            _leverNetworkAnimator.SetTrigger(UnpullLeverAnimation);
-        }
+        _leverAnimator.SetTrigger(UnpullLeverAnimation);
     }
 
     [ServerRpc]

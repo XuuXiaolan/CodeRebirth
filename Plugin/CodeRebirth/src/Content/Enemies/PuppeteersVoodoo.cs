@@ -235,7 +235,10 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         hitTimer = Time.realtimeSinceStartup;
 
         Vector3 destination = GetKickDestination(hitFromPosition);
-        if (destination == Vector3.zero) return;
+        if (destination == Vector3.zero)
+        {
+            return;
+        }
 
         KickDollLocalClient(destination);
         Vector3 position = destination;
