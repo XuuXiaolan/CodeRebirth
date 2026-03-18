@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
 
-public class BearTrap : CodeRebirthHazard
+public class BearTrap : CodeRebirthHazard, IHittable
 {
     public Animator trapAnimator = null!;
     public Collider trapCollider = null!;
@@ -181,12 +181,14 @@ public class BearTrap : CodeRebirthHazard
 
     public virtual void TriggerTrap(EnemyAI enemy)
     {
+        enemyCaught = enemy;
+        enemyCaught.HitEnemy(1, null, false, -1);
+
+        TriggerTrap();
         trapAudioSource.Stop();
         trapAudioSource.clip = triggerSound;
         trapAudioSource.Play();
         isTriggered = true;
-        enemyCaught = enemy;
-        enemyCaught.HitEnemy(1, null, false, -1);
         trapAnimator.SetBool(IsTrapTriggered, true);
         StartCoroutine(ResetBooleanAfterDelay(IsTrapTriggered, 0.5f));
         trapCollider.enabled = false;
@@ -242,14 +244,20 @@ public class BearTrap : CodeRebirthHazard
     [ClientRpc]
     public void DoOnCancelReleaseTrapClientRpc()
     {
-        if (!isTriggered || playerCaught == null) return;
+        if (!isTriggered || playerCaught == null)
+        {
+            return;
+        }
 
         TriggerTrap(playerCaught);
     }
 
     public void ReleaseTrap(PlayerControllerB player)
     {
-        if (GameNetworkManager.Instance.localPlayerController != player) return;
+        if (GameNetworkManager.Instance.localPlayerController != player)
+        {
+            return;
+        }
         Plugin.ExtendedLogging("release trap");
         DoReleaseTrapServerRpc();
     }
@@ -315,5 +323,10 @@ public class BearTrap : CodeRebirthHazard
     private void SyncRandomResetTrapTimeClientRpc(float resetTime)
     {
         trapTrigger.timeToHold = resetTime;
+    }
+
+    public bool Hit(int force, Vector3 hitDirection, PlayerControllerB playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
+    {
+        
     }
 }
