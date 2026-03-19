@@ -194,9 +194,9 @@ public class SellingSally : NetworkBehaviour
             return;
         }
 
-        foreach (var sellableScrap in _sellableScraps)
+        foreach (GrabbableObject sellableScrap in _sellableScraps)
         {
-            sellableScrap.SetScrapValue(Mathf.RoundToInt(sellableScrap.scrapValue * 3f * LateGameUpgradesCompat.GetSellableScrapMultiplier() * StartOfRound.Instance.companyBuyingRate));
+            sellableScrap.SetScrapValue(Mathf.RoundToInt(sellableScrap.scrapValue * LateGameUpgradesCompat.GetSellableScrapMultiplier() * StartOfRound.Instance.companyBuyingRate * (TimeOfDay.Instance.daysUntilDeadline <= 0 ? 3 : 1)));
             scrapValueToMake += sellableScrap.scrapValue;
         }
 
@@ -219,7 +219,7 @@ public class SellingSally : NetworkBehaviour
         }
 
         DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.Internship);
-        if (WeatherRegistry.WeatherManager.GetCurrentLevelWeather().name.ToLowerInvariant().Trim() == "night shift")
+        if (WeatherRegistry.WeatherManager.GetCurrentLevelWeather().Name.ToLowerInvariant().Trim() == "night shift")
         {
             DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.GraveyardShift);
         }
@@ -228,10 +228,12 @@ public class SellingSally : NetworkBehaviour
         TimeOfDay.Instance.quotaFulfilled += profit;
         HUDManager.Instance.DisplayCreditsEarning(profit, _sellableScraps.ToArray(), terminal.groupCredits);
 
-        foreach (var sellableScrap in _sellableScraps)
+        foreach (GrabbableObject sellableScrap in _sellableScraps)
         {
             if (IsServer)
+            {
                 sellableScrap.NetworkObject.Despawn();
+            }
         }
         _sellableScraps.Clear();
         TimeOfDay.Instance.UpdateProfitQuotaCurrentTime();

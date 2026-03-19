@@ -52,14 +52,14 @@ public class ItemCrate : CRHittable
     {
         base.OnNetworkSpawn();
         Instances.Add(this);
-        Transporter.objectsToTransport.Add(gameObject);
+        Transporter.objectsWithPriorityToTransport.Add(new GameObjectWithPriority(gameObject, 5));
     }
 
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
         Instances.Remove(this);
-        Transporter.objectsToTransport.Remove(gameObject);
+        Transporter.objectsWithPriorityToTransport.Remove(new GameObjectWithPriority(gameObject, 5));
     }
 
     private void Start()

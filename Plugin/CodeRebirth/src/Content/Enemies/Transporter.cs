@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,14 @@ using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
 namespace CodeRebirth.src.Content.Enemies;
+
+[Serializable]
+public class GameObjectWithPriority(GameObject gameObject, int priority)
+{
+    public GameObject gameObject = gameObject;
+    public int priority = priority;
+}
+
 public class Transporter : CodeRebirthEnemyAI
 {
     public PlayerPhysicsRegion PhysicsRegion = null!;
@@ -21,10 +30,10 @@ public class Transporter : CodeRebirthEnemyAI
     public Transform palletTransform = null!;
     public Transform jimothyTransform = null!;
 
-    [HideInInspector] public static List<GameObject> objectsToTransport = new();
+    [HideInInspector] public static List<GameObjectWithPriority> objectsWithPriorityToTransport = new();
 
     private Coroutine? onHitRoutine = null;
-    private GameObject? transportTarget = null;
+    private GameObjectWithPriority? transportTarget = null;
     private Scene previousSceneOfTransportTarget = new();
     private bool droppingObject = false;
     private NavMeshHit currentEndHit = new();
@@ -58,14 +67,14 @@ public class Transporter : CodeRebirthEnemyAI
         base.OnNetworkDespawn();
         if (transportTarget != null && currentBehaviourStateIndex == (int)TransporterStates.Repositioning)
         {
-            var networkObject = transportTarget.GetComponent<NetworkObject>();
+            var networkObject = transportTarget.gameObject.GetComponent<NetworkObject>();
             if (networkObject.IsSpawned)
             {
                 if (IsServer) networkObject.Despawn();
             }
             else
             {
-                Destroy(transportTarget);
+                Destroy(transportTarget.gameObject);
             }
         }
         transporters.Remove(this);
@@ -216,7 +225,7 @@ public class Transporter : CodeRebirthEnemyAI
 
     private void DoIdle()
     {
-        if (objectsToTransport.Count == 0)
+        if (objectsWithPriorityToTransport.Count == 0)
         {
             transportTarget = null;
             return;
@@ -226,22 +235,22 @@ public class Transporter : CodeRebirthEnemyAI
     private void TryFindAnyTransportableObjectViaAsyncPathfinding()
     {
         // Gather all valid objects
-        Plugin.ExtendedLogging($"Transporter: Transporting {objectsToTransport.Count} objects");
-        IEnumerable<(GameObject obj, Vector3 position)> candidateObjects = objectsToTransport
-            .Where(kv => kv != null)
-            .Select(kv => (kv, kv.transform.position));
+        Plugin.ExtendedLogging($"Transporter: Transporting {objectsWithPriorityToTransport.Count} objects");
+        IEnumerable<(GameObjectWithPriority, Vector3 position)> candidateObjects = objectsWithPriorityToTransport
+            .Where(kv => kv.gameObject != null)
+            .Select(kv => (kv, kv.gameObject.transform.position));
 
         smartAgentNavigator.CheckPaths(candidateObjects, CheckIfNeedToChangeState);
     }
 
-    public void CheckIfNeedToChangeState(List<GenericPath<GameObject>> args)
+    public void CheckIfNeedToChangeState(List<GenericPath<GameObjectWithPriority>> args)
     {
         int totalAmount = args.Count;
         if (totalAmount > 0)
         {
             Plugin.ExtendedLogging($"Transporter: Found {totalAmount} objects");
             transportTarget = args[UnityEngine.Random.Range(0, totalAmount)].Generic;
-            objectsToTransport.Remove(transportTarget);
+            objectsWithPriorityToTransport.Remove(transportTarget);
             smartAgentNavigator.StopSearchRoutine();
             SwitchToBehaviourServerRpc((int)TransporterStates.Transporting);
         }
@@ -265,10 +274,10 @@ public class Transporter : CodeRebirthEnemyAI
         }
         // Plugin.ExtendedLogging($"Transporter: Transporting to {transportTarget.name}");
 
-        float dist = Vector3.Distance(transportTarget.transform.position, transform.position);
+        float dist = Vector3.Distance(transportTarget.gameObject.transform.position, transform.position);
 
         // Path to the object's position
-        smartAgentNavigator.DoPathingToDestination(transportTarget.transform.position);
+        smartAgentNavigator.DoPathingToDestination(transportTarget.gameObject.transform.position);
 
         if (dist <= agent.stoppingDistance)
         {
@@ -283,9 +292,9 @@ public class Transporter : CodeRebirthEnemyAI
                 .Where(kv => kv != null).Select(kv => (kv, kv.transform.position));
 
             creatureNetworkAnimator.SetTrigger(PickUpObjectAnimation);
-            previousSceneOfTransportTarget = transportTarget.scene;
-            transportTarget.transform.SetParent(palletTransform, true);
-            SyncPositionRotationOfTransportTargetServerRpc(new NetworkObjectReference(transportTarget));
+            previousSceneOfTransportTarget = transportTarget.gameObject.scene;
+            transportTarget.gameObject.transform.SetParent(palletTransform, true);
+            SyncPositionRotationOfTransportTargetServerRpc(new NetworkObjectReference(transportTarget.gameObject));
             smartAgentNavigator.StopAgent();
             smartAgentNavigator.CheckPaths(candidateObjects, CheckIfCanReposition);
         }
@@ -440,17 +449,17 @@ public class Transporter : CodeRebirthEnemyAI
             return;
         }
 
-        transportTarget.transform.SetParent(null, true);
-        SceneManager.MoveGameObjectToScene(transportTarget, previousSceneOfTransportTarget);
+        transportTarget.gameObject.transform.SetParent(null, true);
+        SceneManager.MoveGameObjectToScene(transportTarget.gameObject, previousSceneOfTransportTarget);
 
-        transportTarget.transform.position = currentEndHit.position;
-        transportTarget.transform.up = currentEndHit.normal;
+        transportTarget.gameObject.transform.position = currentEndHit.position;
+        transportTarget.gameObject.transform.up = currentEndHit.normal;
         droppingObject = false;
 
         SwitchToBehaviourStateOnLocalClient((int)TransporterStates.Idle);
 
         if (!IsServer) return;
-        objectsToTransport.Add(transportTarget);
+        objectsWithPriorityToTransport.Add(transportTarget);
         transportTarget = null;
         TryFindAnyTransportableObjectViaAsyncPathfinding();
     }

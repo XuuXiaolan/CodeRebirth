@@ -1,3 +1,4 @@
+using System.Linq;
 using CodeRebirth.src.Content.Enemies;
 using HarmonyLib;
 using Unity.Netcode;
@@ -12,7 +13,12 @@ static class NetworkBehaviourPatch
         if (!__instance.NetworkObject.IsSpawned || __instance.NetworkObject.gameObject.layer != 21 || __instance.NetworkObject.CompareTag("DoNotSet"))
             return;
 
-        Transporter.objectsToTransport.Add(__instance.NetworkObject.gameObject);
+        int priority = 5;
+        if (__instance.NetworkObject.gameObject.name.EndsWith("BearTrap"))
+        {
+            priority = 1;
+        }
+        Transporter.objectsWithPriorityToTransport.Add(new GameObjectWithPriority(__instance.NetworkObject.gameObject, priority));
     }
 
     [HarmonyPatch(nameof(NetworkBehaviour.OnNetworkDespawn)), HarmonyPostfix]
@@ -21,6 +27,7 @@ static class NetworkBehaviourPatch
         if (__instance.NetworkObject.gameObject.layer != 21 || __instance.NetworkObject.CompareTag("DoNotSet"))
             return;
 
-        Transporter.objectsToTransport.Remove(__instance.NetworkObject.gameObject);
+        GameObjectWithPriority gameObjectWithPriority = Transporter.objectsWithPriorityToTransport.FirstOrDefault(kv => kv.gameObject == __instance.NetworkObject.gameObject);
+        Transporter.objectsWithPriorityToTransport.Remove(gameObjectWithPriority);
     }
 }
