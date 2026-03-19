@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Dawn.Utils;
-
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -12,6 +11,7 @@ using UnityEngine.SceneManagement;
 namespace CodeRebirth.src.Content.Enemies;
 public class Transporter : CodeRebirthEnemyAI
 {
+    public PlayerPhysicsRegion PhysicsRegion = null!;
     public AudioSource StunSource = null!;
     public AudioClip[] engineAndIdleSounds = null!;
     public AudioClip dumpHazardSound = null!;
@@ -99,14 +99,30 @@ public class Transporter : CodeRebirthEnemyAI
             grabbableObject.EnablePhysics(true);
         }
 
-        foreach (var player in StartOfRound.Instance.allPlayerScripts)
+        this.transform.position = smartAgentNavigator.lastUsedEntranceTeleport!.exitPoint.position;
+        if (GameNetworkManager.Instance.localPlayerController.transform.parent != this.transform)
         {
-            if (GameNetworkManager.Instance.localPlayerController != player || player.transform.parent != this.transform)
-                continue;
-
-            smartAgentNavigator.lastUsedEntranceTeleport.TeleportPlayer();
-            player.transform.position = smartAgentNavigator.lastUsedEntranceTeleport.exitPoint.position;
+            return;
         }
+
+        PhysicsRegion.disablePhysicsRegion = true;
+        StartCoroutine(ReEnableRegion());
+
+        if (StartOfRound.Instance.CurrentPlayerPhysicsRegions.Contains(PhysicsRegion))
+        {
+            StartOfRound.Instance.CurrentPlayerPhysicsRegions.Remove(PhysicsRegion);
+        }
+
+        smartAgentNavigator.lastUsedEntranceTeleport.TeleportPlayer();
+    }
+
+    private IEnumerator ReEnableRegion()
+    {
+        yield return null;
+        smartAgentNavigator.lastUsedEntranceTeleport!.TeleportPlayer();
+        yield return new WaitForSeconds(0.2f);
+        smartAgentNavigator.lastUsedEntranceTeleport!.TeleportPlayer();
+        PhysicsRegion.disablePhysicsRegion = false;
     }
 
     [ServerRpc(RequireOwnership = false)]
