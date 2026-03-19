@@ -1,7 +1,6 @@
 # v1.5.0
 
 - Beware the Merchant.
-
 - Added compat with Lategame Upgrades and FasterItemDropship on Oxyde.
 - Added compat with Lategame Upgrades and Oxyde's sell percentage.
 - Fixed mistress plushie.
@@ -92,11 +91,35 @@
 - Terminal gal drew more sticky notes ;D
 - Made certain CR utility scraps count as defensive weapons
 - Nitro crate no longer does 999 dmg (Holy f-), does 20 dmg now
-- Huge nerf to oxidiser, lasts only 2 seconds now.
-- Adjusted lights on peacekeeper and janitor.
-- Fixed Sapsucker omelette sounds.
-- Got rid of unused assetbundles from the mod.
-- Guardsman enemy config updated to include spark tower.
+- Huge nerf to oxidiser, lasts only 4 seconds now
+- Adjusted lights on peacekeeper and janitor
+- Fixed Sapsucker omelette sounds
+- Got rid of unused assetbundles from the mod
+- Guardsman enemy config updated to include spark tower
+- Added a laser sight to rail slugger
+- Monarch will no longer target players out of LoS, won't try to target players in the ship, and will lose aggro if a target player is inside a __closed__ ship
+- Added OldBooze, Magic8Ball, and likely other special items
+- Marrow splitter blood collection buffed
+- Bunch of 2d audio fixes
+- Microwave scrap values rebalanced
+- Glow/lights fixed on various plushies
+- Rebalanced oxyde to be worth as much as normal company moon during non final day to account for no nightshift
+- Oxyde crane carries you if you're on the ladder while it's moving
+- Allowed Autonomous crane to be toggleable in state whether it's activated or disabled
+- Buffed Jimothy Core spawns to be around the spawn point of the ship on oxyde
+- SnailCat can go to orbit again.
+- SnailCat can now warn for mimic crates
+- SnailCat new enemy warning sound added + made it louder and increased the interval for occuring
+- Straightened landed ship on oxyde to avoid conflicts with rotated enemies, items, etc
+- The giants can now burn (the cactus budling does not car)
+- Adjusted some default weights to a bunch of hazards, enemies
+- BearTrap can now trigger and stun enemies, stun length depends on the stun multiplier of the enemy and their "Size"
+- Jimothy can now carry non hosts across Main entrance and fire exits safely, please try not to get pushed out of the map though that might still happen occasionally
+- Added a buying percentage to Oxyde to show the sale %
+- Made it so unlocking oxyde also unhides it from the terminal rather than just unlocking
+- Removed flight from a bunch of enemies that really shouldn't be doing that
+- Jimothy hazards have different priorities now, all have the same priority but beartraps have /5 less priority to be picked
+- Likely more stuff We've forgotten
 
 ## v1.4.2
 
