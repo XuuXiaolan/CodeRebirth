@@ -10,6 +10,9 @@ namespace CodeRebirth.src.Content.Enemies;
 public class MilitaryPlane : NetworkBehaviour
 {
     [field: SerializeField]
+    public GameObject ExplosionPrefab { get; private set; } = null!;
+
+    [field: SerializeField]
     public GameObject BoxChutePrefab { get; private set; } = null!;
 
     [field: SerializeField]
@@ -109,7 +112,7 @@ public class MilitaryPlane : NetworkBehaviour
         if (!exploded && Vector3.Distance(this.transform.position, ExplodePosition) <= 0.5f)
         {
             exploded = true;
-            CRUtilities.CreateExplosion(ExplodePosition, true, 100, 0f, 100f, 100, null, null, 200f);
+            CRUtilities.CreateExplosion(ExplodePosition, true, 100, 0f, 100f, 100, null, ExplosionPrefab, 200f);
             if (IsServer)
             {
                 NetworkObject.Despawn(true);
