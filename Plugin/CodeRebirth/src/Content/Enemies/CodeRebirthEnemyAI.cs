@@ -4,7 +4,6 @@ using UnityEngine;
 using System.Linq;
 using Unity.Netcode.Components;
 using Dawn.Utils;
-using CodeRebirth.src.Util;
 
 namespace CodeRebirth.src.Content.Enemies;
 [RequireComponent(typeof(SmartAgentNavigator))]
@@ -33,11 +32,17 @@ public abstract class CodeRebirthEnemyAI : EnemyAI
 
     internal float _idleTimer = 1f;
     internal System.Random enemyRandom = new();
+    internal System.Random enemyHostRandom = new();
 
     public override void Start()
     {
         base.Start();
-        enemyRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 6699 + CodeRebirthUtils.Instance.CRRandom.Next(100000));
+        if (IsServer)
+        {
+            enemyHostRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 69);
+        }
+
+        enemyRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 73);
 
         if (spawnSound != null)
         {

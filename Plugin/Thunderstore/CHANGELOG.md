@@ -107,7 +107,7 @@
 - Oxyde crane carries you if you're on the ladder while it's moving
 - Allowed Autonomous crane to be toggleable in state whether it's activated or disabled
 - Buffed Jimothy Core spawns to be around the spawn point of the ship on oxyde
-- SnailCat can go to orbit again.
+- SnailCat can go to orbit again
 - SnailCat can now warn for mimic crates
 - SnailCat new enemy warning sound added + made it louder and increased the interval for occuring
 - Straightened landed ship on oxyde to avoid conflicts with rotated enemies, items, etc

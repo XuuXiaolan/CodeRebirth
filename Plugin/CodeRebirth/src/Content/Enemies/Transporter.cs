@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Dawn;
 using Dawn.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -12,10 +13,15 @@ using UnityEngine.SceneManagement;
 namespace CodeRebirth.src.Content.Enemies;
 
 [Serializable]
-public class GameObjectWithPriority(GameObject gameObject, int priority)
+public class GameObjectWithPriority(GameObject gameObject, int priority) : IWeighted
 {
     public GameObject gameObject = gameObject;
     public int priority = priority;
+
+    public int GetWeight()
+    {
+        return priority;
+    }
 }
 
 public class Transporter : CodeRebirthEnemyAI
@@ -249,7 +255,9 @@ public class Transporter : CodeRebirthEnemyAI
         if (totalAmount > 0)
         {
             Plugin.ExtendedLogging($"Transporter: Found {totalAmount} objects");
-            transportTarget = args[UnityEngine.Random.Range(0, totalAmount)].Generic;
+            List<GameObjectWithPriority> transportableTargets = args.Select(x => x.Generic).ToList();
+
+            transportTarget = enemyHostRandom.NextWeighted(transportableTargets);
             objectsWithPriorityToTransport.Remove(transportTarget);
             smartAgentNavigator.StopSearchRoutine();
             SwitchToBehaviourServerRpc((int)TransporterStates.Transporting);
