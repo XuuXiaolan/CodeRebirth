@@ -200,12 +200,12 @@ public class BearTrap : CodeRebirthHazard, IHittable
 
         TriggerTrap();
 
-        StartCoroutine(DelayReleasingEnemy(enemy));
+        StartCoroutine(DelayReleasingTrap(10f * (enemy.enemyType.EnemySize == EnemySize.Medium ? 0.5f : 1f) * enemy.enemyType.stunTimeMultiplier));
     }
 
-    private IEnumerator DelayReleasingEnemy(EnemyAI enemy)
+    private IEnumerator DelayReleasingTrap(float timer)
     {
-        yield return new WaitForSeconds(10f * (enemy.enemyType.EnemySize == EnemySize.Medium ? 0.5f : 1f) * enemy.enemyType.stunTimeMultiplier);
+        yield return new WaitForSeconds(timer);
         DoReleaseTrap();
     }
 
@@ -327,6 +327,13 @@ public class BearTrap : CodeRebirthHazard, IHittable
 
     public bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
+        if (isTriggered)
+        {
+            return false;
+        }
+
+        TriggerTrap();
+        StartCoroutine(DelayReleasingTrap(5f));
         return true;
     }
 }

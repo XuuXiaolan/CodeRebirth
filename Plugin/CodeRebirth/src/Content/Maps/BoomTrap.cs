@@ -53,6 +53,7 @@ public class BoomTrap : BearTrap
         {
             return;
         }
+
         triggeredOnce = true;
         StartExplosionCountdown(null);
     }
