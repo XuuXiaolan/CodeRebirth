@@ -3,10 +3,8 @@ using System.Collections;
 using Dawn;
 using Dawn.Utils;
 using GameNetcodeStuff;
-using Unity.AI.Navigation;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace CodeRebirth.src.Content.Maps;
 
@@ -100,14 +98,21 @@ public class BearTrap : CodeRebirthHazard, IHittable
             }
             playerCaught.transform.position = Vector3.Lerp(playerCaught.transform.position, caughtPosition, 5f * Time.deltaTime);
         }
-        if (enemyCaught == null) return;
+        if (enemyCaught == null)
+        {
+            return;
+        }
 
         enemyCaught.agent.velocity = Vector3.zero;
     }
 
     public void SetWheelFriction(GameObject wheelHitGameObject)
     {
-        if (!Plugin.ModConfig.ConfigBearTrapsPopTires.Value) return;
+        if (!Plugin.ModConfig.ConfigBearTrapsPopTires.Value)
+        {
+            return;
+        }
+
         WheelCollider wheelCollider = wheelHitGameObject.GetComponent<WheelCollider>();
 
         WheelFrictionCurve sidewaysFriction = wheelCollider.sidewaysFriction;
@@ -205,7 +210,12 @@ public class BearTrap : CodeRebirthHazard, IHittable
 
     private IEnumerator DelayReleasingTrap(float timer)
     {
+        trapTrigger.gameObject.SetActive(false);
         yield return new WaitForSeconds(timer);
+
+        DoReleaseTrapEarly();
+        yield return new WaitForSeconds(trapTrigger.timeToHold);
+        trapTrigger.gameObject.SetActive(true);
         DoReleaseTrap();
     }
 
@@ -223,6 +233,11 @@ public class BearTrap : CodeRebirthHazard, IHittable
 
     [ClientRpc]
     private void DoReleaseTrapEarlyClientRpc()
+    {
+        DoReleaseTrapEarly();
+    }
+
+    public void DoReleaseTrapEarly()
     {
         trapAnimator.SetBool(IsTrapResetting, true);
         trapAudioSource.Stop();
@@ -333,7 +348,12 @@ public class BearTrap : CodeRebirthHazard, IHittable
         }
 
         TriggerTrap();
-        StartCoroutine(DelayReleasingTrap(5f));
+
+        if (this is not BoomTrap)
+        {
+            StartCoroutine(DelayReleasingTrap(60f));
+        }
+
         return true;
     }
 }

@@ -22,8 +22,22 @@ public class BoomTrap : BearTrap
         {
             return;
         }
+
         triggeredOnce = true;
         StartCoroutine(StartExplosionCountdown(player));
+    }
+
+    public override void TriggerTrap()
+    {
+        base.TriggerTrap();
+        if (triggeredOnce)
+        {
+            return;
+        }
+
+        triggeredOnce = true;
+        trapTrigger.gameObject.SetActive(false);
+        StartCoroutine(StartExplosionCountdown(null));
     }
 
     private IEnumerator StartExplosionCountdown(PlayerControllerB? playerSnapped)
