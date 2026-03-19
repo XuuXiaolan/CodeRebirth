@@ -1265,7 +1265,7 @@ MonoBehaviour:
   _craneArmEnd: {fileID: 3395568646734061799}
   _magnet: {fileID: 968843961768655257}
   _leverAnimator: {fileID: 3939411310800624979}
-  _leverNetworkAnimator: {fileID: 7364236184348094428}
+  _leverNetworkAnimator: {fileID: 0}
   _disableInteract: {fileID: 903419754823951601}
   _rotationSpeed: 12.5
 --- !u!114 &3139885552426168380
@@ -2218,7 +2218,7 @@ MonoBehaviour:
   disabledHoverTip: Lever jammed.
   interactable: 1
   oneHandedItemAllowed: 1
-  twoHandedItemAllowed: 0
+  twoHandedItemAllowed: 1
   holdInteraction: 0
   timeToHold: 0.5
   timeToHoldSpeedMultiplier: 1
@@ -2230,7 +2230,7 @@ MonoBehaviour:
   touchTrigger: 0
   triggerOnce: 0
   interactCooldown: 1
-  cooldownTime: 15
+  cooldownTime: 1
   currentCooldownValue: 0
   disableTriggerMesh: 1
   RandomChanceTrigger: 0
@@ -2287,9 +2287,9 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -4450,7 +4450,6 @@ GameObject:
   m_Component:
   - component: {fileID: 48607640073981850}
   - component: {fileID: 3939411310800624979}
-  - component: {fileID: 7364236184348094428}
   m_Layer: 0
   m_Name: Lever
   m_TagString: Untagged
@@ -4496,34 +4495,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &7364236184348094428
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5256549387237368274}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TransitionStateInfoList:
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: 1945445641
-    DestinationState: 1332037378
-    TransitionDuration: 0.25
-    TriggerNameHash: 1810491238
-    TransitionIndex: 0
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: 1332037378
-    DestinationState: 1945445641
-    TransitionDuration: 0.25
-    TriggerNameHash: -1505982378
-    TransitionIndex: 0
-  m_Animator: {fileID: 3939411310800624979}
 --- !u!1 &5341495881714584110
 GameObject:
   m_ObjectHideFlags: 0

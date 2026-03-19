@@ -54,8 +54,6 @@ public class AutonomousCrane : NetworkBehaviour
     [SerializeField]
     private Animator _leverAnimator = null!;
     [SerializeField]
-    private NetworkAnimator _leverNetworkAnimator = null!;
-    [SerializeField]
     private InteractTrigger _disableInteract = null!;
     [SerializeField]
     private float _rotationSpeed = 12.5f;
@@ -80,8 +78,8 @@ public class AutonomousCrane : NetworkBehaviour
         DropMagnet
     }
 
-    private static readonly int PullLeverAnimation = Animator.StringToHash("pullLever");
-    private static readonly int UnpullLeverAnimation = Animator.StringToHash("unpullLever");
+    private static readonly int PullLeverAnimation = Animator.StringToHash("pullLever"); // Trigger
+    private static readonly int UnpullLeverAnimation = Animator.StringToHash("unpullLever"); // Trigger
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -133,10 +131,12 @@ public class AutonomousCrane : NetworkBehaviour
 
         if (!_craneIsActive)
         {
+            Plugin.ExtendedLogging($"Activating crane");
             EnableCraneServerRpc();
         }
         else
         {
+            Plugin.ExtendedLogging($"Deactivating crane");
             DisableCraneServerRpc();
         }
     }
