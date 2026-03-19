@@ -2,11 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.ModCompats;
-using CodeRebirth.src.Util;
-using Dawn;
 using Dusk;
 using Dawn.Utils;
-
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -199,7 +196,7 @@ public class SellingSally : NetworkBehaviour
 
         foreach (var sellableScrap in _sellableScraps)
         {
-            sellableScrap.SetScrapValue(Mathf.RoundToInt(sellableScrap.scrapValue * 3f * LateGameUpgradesCompat.GetSellableScrapMultiplier()));
+            sellableScrap.SetScrapValue(Mathf.RoundToInt(sellableScrap.scrapValue * 3f * LateGameUpgradesCompat.GetSellableScrapMultiplier() * StartOfRound.Instance.companyBuyingRate));
             scrapValueToMake += sellableScrap.scrapValue;
         }
 
