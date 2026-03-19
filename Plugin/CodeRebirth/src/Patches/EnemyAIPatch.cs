@@ -56,37 +56,31 @@ static class EnemyAIPatch
 
     private static void EnemyAI_OnCollideWithPlayer(On.EnemyAI.orig_OnCollideWithPlayer orig, EnemyAI self, Collider other)
     {
-        if (other.gameObject.layer == 19 && other.TryGetComponent(out PuppeteersVoodoo puppet))
+        if (other.gameObject.layer != 19 || self.isEnemyDead || !self.IsServer || self is Puppeteer || !self.TryGetComponent(out PuppeteersVoodoo puppet))
         {
-            if (self.isEnemyDead)
-            {
-                return;
-            }
-
-            if (!self.IsServer)
-            {
-                return;
-            }
-
-            if (puppet.lastTimeTakenDamageFromEnemy <= 1f)
-            {
-                return;
-            }
-
-            if (self is Puppeteer)
-            {
-                return;
-            }
-
-            if (self.enemyType.enemyName.Contains("SCP-999"))
-            {
-                puppet.Hit(-1, self.transform.position, null, false, -1);
-                return;
-            }
-            puppet.Hit(1, self.transform.position, null, false, -1);
+            orig(self, other);
             return;
         }
-        orig(self, other);
+
+        if (puppet.lastTimeTakenDamageFromEnemy <= 1f)
+        {
+            return;
+        }
+
+        foreach (string enemyNameBlacklisted in puppet.blacklistedEnemies)
+        {
+            if (self.enemyType.enemyName.ToLowerInvariant().Equals(enemyNameBlacklisted))
+            {
+                return;
+            }
+        }
+
+        if (self.enemyType.enemyName.Contains("SCP-999"))
+        {
+            puppet.Hit(-1, self.transform.position, null, false, -1);
+            return;
+        }
+        puppet.Hit(1, self.transform.position, null, false, -1);
     }
 
     private static void EnemyAI_Start(On.EnemyAI.orig_Start orig, EnemyAI self)
@@ -97,7 +91,7 @@ static class EnemyAIPatch
             self.gameObject.transform.Find("BabyMeshContainer").Find("BabyManeaterMesh").gameObject.layer = 19;
         }
 
-        if (RoundManager.Instance.currentLevel.sceneName != "Oxyde" || StartOfRound.Instance.inShipPhase)
+        if (StartOfRound.Instance.inShipPhase || !RoundManager.Instance.currentLevel.sceneName.Equals("Oxyde"))
             return;
 
         self.SetEnemyOutside(true);
@@ -119,7 +113,7 @@ static class EnemyAIPatch
 
     private static void EnemyAI_HitEnemy(On.EnemyAI.orig_HitEnemy orig, EnemyAI self, int force, PlayerControllerB? playerWhoHit, bool playHitSFX, int hitID)
     {
-        if (playerWhoHit != null && playerWhoHit.currentlyHeldObjectServer != null && playerWhoHit.currentlyHeldObjectServer.itemProperties != null && playerWhoHit.currentlyHeldObjectServer is Mountaineer mountaineer)
+        if (playerWhoHit != null && playerWhoHit.currentlyHeldObjectServer != null && playerWhoHit.currentlyHeldObjectServer.itemProperties != null && playerWhoHit.currentlyHeldObjectServer.itemProperties.isDefensiveWeapon && playerWhoHit.currentlyHeldObjectServer is Mountaineer mountaineer)
         {
             if (CodeRebirthUtils.Instance.CRRandom.NextFloat(0, 100) <= mountaineer.FreezePercentile)
             {

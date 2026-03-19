@@ -44,18 +44,21 @@ public class ItemCrate : CRHittable
     public Collider mainCollider = null!;
     public GrabAndPullPlayer? grabAndPullPlayerScript = null;
     public GrabAndLaunchPlayer? grabAndLaunchPlayerScript = null;
+    public static List<ItemCrate> Instances = new();
 
     private bool openedOnce = false;
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+        Instances.Add(this);
         Transporter.objectsToTransport.Add(gameObject);
     }
 
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
+        Instances.Remove(this);
         Transporter.objectsToTransport.Remove(gameObject);
     }
 

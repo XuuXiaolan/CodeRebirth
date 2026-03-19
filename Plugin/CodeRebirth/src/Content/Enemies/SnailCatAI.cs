@@ -2,10 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CodeRebirth.src.Content.Items;
+using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
-using Dawn;
 using Dawn.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -18,7 +17,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
 {
     public SnailCatPhysicsProp propScript = null!;
     public ScanNodeProperties scanNodeProperties = null!;
-    public AudioClip enemyDetectSound = null!;
+    public AudioClip[] enemyDetectSounds = [];
     public AudioClip[] wiwiwiiiSound = [];
     [SerializeField]
     internal Renderer _specialRenderer = null!;
@@ -159,7 +158,11 @@ public class SnailCatAI : CodeRebirthEnemyAI
     public override void Update()
     {
         base.Update();
-        if (isEnemyDead || StartOfRound.Instance.allPlayersDead) return;
+        if (isEnemyDead || StartOfRound.Instance.allPlayersDead)
+        {
+            return;
+        }
+
         _idleTimer -= Time.deltaTime;
         if (_idleTimer <= 0)
         {
@@ -174,24 +177,44 @@ public class SnailCatAI : CodeRebirthEnemyAI
             }
         }
 
-        if (currentBehaviourStateIndex != (int)State.Grabbed && currentBehaviourStateIndex != (int)State.Following) return;
+        if (currentBehaviourStateIndex != (int)State.Grabbed && currentBehaviourStateIndex != (int)State.Following)
+        {
+            return;
+        }
+
         detectEnemyInterval -= Time.deltaTime;
         if (detectEnemyInterval <= 0)
         {
-            detectEnemyInterval = enemyRandom.NextFloat(7.5f, 15.5f);
-            bool enemyNearby = false;
-            foreach (var enemy in RoundManager.Instance.SpawnedEnemies)
+            detectEnemyInterval = enemyRandom.NextFloat(4f, 8f);
+            foreach (ItemCrate itemCrate in ItemCrate.Instances)
             {
-                if (enemy is SnailCatAI) continue;
+                if (itemCrate.crateType == ItemCrate.CrateType.Wooden || itemCrate.crateType == ItemCrate.CrateType.Metal)
+                {
+                    continue;
+                }
+
+                float distance = Vector3.Distance(transform.position, itemCrate.transform.position);
+                if (distance < 7f)
+                {
+                    creatureVoice.PlayOneShot(enemyDetectSounds[UnityEngine.Random.Range(0, enemyDetectSounds.Length)], 1.2f);
+                    return;
+                }
+            }
+
+            foreach (EnemyAI enemy in RoundManager.Instance.SpawnedEnemies)
+            {
+                if (enemy.enemyType == this.enemyType)
+                {
+                    continue;
+                }
+
                 float distance = Vector3.Distance(transform.position, enemy.transform.position);
                 if (distance < 15)
                 {
-                    enemyNearby = true;
-                    break;
+                    creatureVoice.PlayOneShot(enemyDetectSounds[UnityEngine.Random.Range(0, enemyDetectSounds.Length)], 1.2f);
+                    return;
                 }
             }
-            if (!enemyNearby) return;
-            creatureVoice.PlayOneShot(enemyDetectSound);
         }
     }
 

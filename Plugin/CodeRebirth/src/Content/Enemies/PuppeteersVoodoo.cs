@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using CodeRebirth.src.Util;
 using Dawn;
 using Dawn.Utils;
@@ -40,7 +41,7 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
     public AudioClip[] ballHitFloorSFX = [];
     public AudioSource dollAudio = null!;
 
-    [HideInInspector] public Coroutine? breakDollRoutine = null;
+    internal Coroutine? breakDollRoutine = null;
     private Ray dollRay;
     private RaycastHit dollHit;
     private float hitTimer;
@@ -49,9 +50,10 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
     private Vector3 startFallingPosition;
     private Vector3 targetFloorPosition;
     private int damageTransferMultiplier = 20; // 20-30 as described
-    [HideInInspector] public float lastTimeTakenDamageFromEnemy = 0f;
-    [HideInInspector] public Puppeteer puppeteerCreatedBy = null!;
-    [HideInInspector] public PlayerControllerB? playerControlled = null;
+    internal float lastTimeTakenDamageFromEnemy = 0f;
+    internal Puppeteer puppeteerCreatedBy = null!;
+    internal PlayerControllerB? playerControlled = null;
+    internal HashSet<string> blacklistedEnemies = new();
 
     private static readonly int OnHitAnimation = Animator.StringToHash("onHit"); // Triger
     private static readonly int IsKickedAnimation = Animator.StringToHash("isKicked"); // Bool
@@ -75,6 +77,14 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
 
     public void Start()
     {
+        string blacklistEnemies = EnemyHandler.Instance.ManorLord!.GetConfig<string>("Lord Of The Manor | Puppet Enemy Blacklist").Value;
+        if (!string.IsNullOrEmpty(blacklistEnemies))
+        {
+            foreach (string nameEntry in blacklistEnemies.Split(',').Select(s => s.Trim().ToLowerInvariant()))
+            {
+                blacklistedEnemies.Add(nameEntry);
+            }
+        }
         hitTimer = Time.realtimeSinceStartup + 3;
         smartAgentNavigator.SetAllValues(puppeteerCreatedBy.isOutside);
         puppetRandom = new System.Random(StartOfRound.Instance.randomMapSeed + puppeteerList.Count);
@@ -224,7 +234,33 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         if (!IsOwner)
             return;
 
-        if (other.tag.StartsWith("PlayerBody") || other.CompareTag("Enemy"))
+        if (other.tag.StartsWith("Enemy"))
+        {
+            foreach (string enemyNameBlacklisted in blacklistedEnemies)
+            {
+                EnemyAI? enemyAI = null;
+                if (other.TryGetComponent(out EnemyAICollisionDetect enemyAICollisionDetect))
+                {
+                    enemyAI = enemyAICollisionDetect.mainScript;
+                }
+                else if (other.TryGetComponent(out EnemyAI self))
+                {
+                    enemyAI = self;
+                }
+                else
+                {
+                    break;
+                }
+
+                if (enemyAI.enemyType.enemyName.ToLowerInvariant().Equals(enemyNameBlacklisted))
+                {
+                    return;
+                }
+            }
+
+            BeginKickDoll(other.transform.position + Vector3.up);
+        }
+        else if (other.tag.StartsWith("PlayerBody"))
         {
             BeginKickDoll(other.transform.position + Vector3.up);
         }
