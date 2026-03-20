@@ -210,7 +210,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3101460097
+  GlobalObjectIdHash: 1293940917
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -481,7 +481,8 @@ MonoBehaviour:
   spawnSound: {fileID: 0}
   propScript: {fileID: 4180001964916081428}
   scanNodeProperties: {fileID: 2181669798328249144}
-  enemyDetectSound: {fileID: 8300000, guid: be67c13828194f144918ffc5744be20d, type: 3}
+  enemyDetectSounds:
+  - {fileID: 8300000, guid: be67c13828194f144918ffc5744be20d, type: 3}
   wiwiwiiiSound:
   - {fileID: 8300000, guid: 501dd0624b38d8148998aed253d5ab02, type: 3}
   - {fileID: 8300000, guid: 99139c9555744b54f936e78661190010, type: 3}
