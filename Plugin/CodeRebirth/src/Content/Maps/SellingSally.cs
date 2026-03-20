@@ -219,10 +219,6 @@ public class SellingSally : NetworkBehaviour
         }
 
         DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.Internship);
-        if (WeatherRegistry.WeatherManager.GetCurrentLevelWeather().Name.ToLowerInvariant().Trim() == "night shift")
-        {
-            DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.GraveyardShift);
-        }
         terminal.groupCredits += profit;
         StartOfRound.Instance.gameStats.scrapValueCollected += profit;
         TimeOfDay.Instance.quotaFulfilled += profit;

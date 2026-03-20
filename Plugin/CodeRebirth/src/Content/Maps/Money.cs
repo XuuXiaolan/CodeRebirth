@@ -3,6 +3,7 @@ using System.Collections;
 using CodeRebirth.src.Content.Unlockables;
 using Dawn;
 using Dawn.Utils;
+using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -25,6 +26,7 @@ public class Money : GrabbableObject
     [SerializeField]
     private OwnerNetworkAnimator? _ownerNetworkAnimator;
 
+    private PlayerControllerB previouslyHeldByPlayer;
     private int _value;
     private static int _coinsSpawned = 0;
     private static readonly int FlipHash = Animator.StringToHash("flip"); // Trigger
@@ -50,6 +52,7 @@ public class Money : GrabbableObject
     {
         base.ItemActivate(used, buttonDown);
         playerHeldBy.activatingItem = true;
+        previouslyHeldByPlayer = playerHeldBy;
         if (_ownerNetworkAnimator != null)
         {
             if (!IsOwner)
@@ -65,7 +68,7 @@ public class Money : GrabbableObject
 
     public void TryCollectCoin()
     {
-        playerHeldBy.activatingItem = false;
+        previouslyHeldByPlayer.activatingItem = false;
 
         if (MoneyCounter.Instance == null)
         {
