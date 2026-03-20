@@ -8,29 +8,34 @@ You've been selected to join Project Rebirth, only the best of the best are sele
 
 If you're interested in helping with the development of the mod or have issues or questions, feel free to reach out to [@xuxiaolan](https://discord.com/channels/1168655651455639582/1241786100201160784) on the Lethal Modding Discord!
 
-Oxyde Update V1.0.0 Trailer : https://www.youtube.com/watch?v=2DDisD9TF_Y
+### Oxyde Update V1.0.0 Trailer : https://www.youtube.com/watch?v=2DDisD9TF_Y
 
-![GoodJob](https://i.postimg.cc/9Mr5sSZj/image.png)
+![V1.0.0](https://i.postimg.cc/BnMkbQjC/Oxyde-Update-Banner-(1).png)
 
-### Remember, a good job starts with you!
+### Nursed to Health Update V.1.5.0 : https://www.youtube.com/watch?v=he-WLhpW0Z8
 
-*-Jimothy, Employee of the millennium*
+![V1.5.0](https://i.postimg.cc/76LRSvTK/QOLUpdate-Banner.png)
+
+### More to come...
+
+![VX](https://i.postimg.cc/RF0YwrnT/Unknown-Update-Banner.png)
 
 ## Current Additions
 
-- 1 Moon and lore
-- 12 Unique Hazards
-- 8 Inside enemies
-- 6 Outside Enemies
-- 2 Ambient Enemies
-- 3 Custom Weathers with variations
+- 1 Moon and an ongoing story
+- A special item merchant, unique currency and vending machines
 - Equipment Crates and Item Safes
-- 8 Unlockable Ship Upgrades
+- 8 Inside enemies
+- 8 Outside Enemies
+- 1 Ambient Enemy
+- 10 Unique Hazards
+- 100+ Scraps
+- 11 Weapons
+- 6 Unlockable Ship Upgrades
 - 160+ Plant types!!!
-- 5 Ship Decorations
-- 2 Shop Items
-- 19 Scrap with unique effects
-- 9 Weapons
+- 13 Ship Decorations
+- 1 Shop Item
+- 2 Custom Weathers
 - 1 [Redacted]
 
 ![Enemies](https://i.postimg.cc/RCwmPk6z/image.png)
@@ -408,59 +413,61 @@ Add lush foliage to any moon. Flora adjusts its coloration to the ground type.
 
 # Credits
 
-- [Xu Xiaolan](https://www.youtube.com/shorts/gOS-SWIFDW8) : Coding, Moon work,
+- [Xu Xiaolan](https://www.youtube.com/shorts/gOS-SWIFDW8) : Creator,  DawnLib, Coding, Xui.
 
-- [QWERTYrodrigo](https://www.youtube.com/watch?v=kHLM5DtR7Vc) : Modeling/Designs, Moon work, Sounds, Ideas/lore, Voice acting
+- [QWERTYrodrigo](https://www.youtube.com/watch?v=kHLM5DtR7Vc) : Co-Creator, Modeling/Designs, Sounds, KingRigo
 
-- [Bongo](https://thunderstore.io/c/lethal-company/p/loaforc/) : Coding
+- [Bongo](https://thunderstore.io/c/lethal-company/p/loaforc/) : Coding, DawnLib
 
-- [S1ckboy](https://thunderstore.io/c/lethal-company/p/s1ckboy/Seichi/) : Modeling/Designs, Moon work,
+- [S1ckboy](https://thunderstore.io/c/lethal-company/p/s1ckboy/Seichi/) : Modeling/Designs, Moon work
 
 - MrSaltedBeef : Concept art, Art, New mod icon
 
-- Siphonife : Modeling/Designs, Visuals
+- Siphonife : Original wood and metal crate models, Monarch Beam Visuals, other various visual shaders
 
-- [SolidStone](https://thunderstore.io/c/lethal-company/p/SolidStone/) : Modeling/Designs, Moon work,
-
-- [TestAccount666](https://thunderstore.io/c/lethal-company/p/TestAccount666/) : Coding
+- [SolidStone](https://thunderstore.io/c/lethal-company/p/SolidStone/) : Snow globe, Oxyde lights and Autonomous Crane models, Moon work
 
 - WhiteSpike : Coding
 
-- v0xx : Modeling/Designs
+- [TestAccount666](https://thunderstore.io/c/lethal-company/p/TestAccount666/) : Wallet Code
 
-- [IntegrityChaos](https://thunderstore.io/c/lethal-company/p/IntegrityChaos/) : Modeling/Designs
+- v0xx : Meteor visual shader
 
-- Bobilka : Modeling/Designs
+- [IntegrityChaos](https://thunderstore.io/c/lethal-company/p/IntegrityChaos/) : Meteor model
 
-- Oof Bubble : Sounds
+- Bobilka : Hoverboard model/design
 
-- Moroxide : Sounds
+- Oof Bubble : Meteor shower sounds
 
-- Flameburnt : Concept art
+- Moroxide : Original giant sounds
+
+- Flameburnt : Original giants concept art
 
 - NutDaddy : Ideas, Testing
 
-- Lizziegirl0099 : Voice acting, Testing
+- Lizziegirl0099 : Voice actor for Nancy, Testing
 
 - [A Glitched NPC](https://www.twitch.tv/a_glitched_npc) : Testing, [Bald](https://www.youtube.com/watch?v=yArdSNcTiAs)
 
-- [Smxrez](https://www.youtube.com/shorts/6Mo9MJFu89M) : Misc/Organisation
+- [Smxrez](https://www.youtube.com/shorts/6Mo9MJFu89M) : Original Thunderstore page Readme
 
 - [Slayer6409](https://thunderstore.io/c/lethal-company/p/slayer6409/Emergency_Dice_Updated/) : Testing
 
-- Generic : Super early Flash Turret idea.
-
 - CoddingCat : Old snail cat model
 
-- [MayaModez](https://mayamodez.straw.page/) : Visit Bozoros poster in shipyard
+- [MayaModez](https://mayamodez.straw.page/) : "Visit Bozoros" poster in shipyard
 
 - [NatsuBerry](https://bsky.app/profile/natsuberry.bsky.social) : Shockwave and Seamine gal art on the cabin magazine
 
+- [Fumo M. Borsh](https://www.youtube.com/watch?v=exbCTZAMaVk&ab_channel=Gulliver) : Backseating, bullying, distracting
+
+- [Londer Software](https://londersoftware.net) : Makers of the game "Zort", where the 4 Instrument models and music are from. (Great game, grab some friends and play it)
+
 - [SkittyMuffins](https://www.twitch.tv/skittymuffins) : Made a funny trailer that one time
 
-- [Fumo M. Borsh](https://www.youtube.com/watch?v=exbCTZAMaVk&ab_channel=Gulliver) : Backseating
+- [Generic](https://pallascats.org) : Super early Flash Turret idea.
 
-The 4 Instrument models and music are from the game "Zort" by Londer Software. (Great game, grab some friends and play it)
+
 
 ## Credits - Misc Online Assets
 
