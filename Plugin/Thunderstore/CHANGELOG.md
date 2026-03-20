@@ -1,6 +1,7 @@
 # v1.5.0
 
 - Beware the Merchant.
+- Lowered size of the mod down by 30mb.
 - Added compat with Lategame Upgrades and FasterItemDropship on Oxyde.
 - Added compat with Lategame Upgrades and Oxyde's sell percentage.
 - Fixed mistress plushie.
