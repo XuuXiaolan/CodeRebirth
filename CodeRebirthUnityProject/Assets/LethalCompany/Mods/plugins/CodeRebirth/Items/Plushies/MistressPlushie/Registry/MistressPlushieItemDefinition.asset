@@ -27,8 +27,38 @@ MonoBehaviour:
     <ItemInfoNode>k__BackingField: {fileID: 0}
   <TerminalPredicate>k__BackingField: {fileID: 0}
   <PricingStrategy>k__BackingField: {fileID: 0}
-  <MoonSpawnWeightsConfig>k__BackingField: []
-  <InteriorSpawnWeightsConfig>k__BackingField: []
+  <MoonSpawnWeightsConfig>k__BackingField:
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: tundra
+    MathOperation: 0
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: rend
+    MathOperation: 0
+    Weight: 3
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: dine
+    MathOperation: 0
+    Weight: 3
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: artifice
+    MathOperation: 0
+    Weight: 2
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: oxyde
+    MathOperation: 0
+    Weight: 3
+  <InteriorSpawnWeightsConfig>k__BackingField:
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: mansion
+    MathOperation: 0
+    Weight: 2
   <WeatherSpawnWeightsConfig>k__BackingField: []
   <IsScrap>k__BackingField: 1
   <GenerateScrapConfig>k__BackingField: 0
@@ -37,7 +67,6 @@ MonoBehaviour:
   <Cost>k__BackingField: 0
   <GenerateDisableUnlockConfig>k__BackingField: 0
   <GenerateDisablePricingStrategyConfig>k__BackingField: 0
-  <MoonSpawnWeights>k__BackingField: Tundra=+1, Rend=+2, Dine=+2, Artifice=+2, Code
-    Rebirth:Oxyde=+2
-  <InteriorSpawnWeights>k__BackingField: mansion+=2
+  <MoonSpawnWeights>k__BackingField: 
+  <InteriorSpawnWeights>k__BackingField: 
   <WeatherSpawnWeights>k__BackingField: 

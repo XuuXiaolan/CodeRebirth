@@ -29,7 +29,12 @@ MonoBehaviour:
   <PricingStrategy>k__BackingField: {fileID: 0}
   <MoonSpawnWeightsConfig>k__BackingField: []
   <InteriorSpawnWeightsConfig>k__BackingField: []
-  <WeatherSpawnWeightsConfig>k__BackingField: []
+  <WeatherSpawnWeightsConfig>k__BackingField:
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: foggy
+    MathOperation: 0
+    Weight: 1
   <IsScrap>k__BackingField: 1
   <GenerateScrapConfig>k__BackingField: 0
   <IsShopItem>k__BackingField: 0

@@ -28,7 +28,12 @@ MonoBehaviour:
   <TerminalPredicate>k__BackingField: {fileID: 0}
   <PricingStrategy>k__BackingField: {fileID: 0}
   <MoonSpawnWeightsConfig>k__BackingField: []
-  <InteriorSpawnWeightsConfig>k__BackingField: []
+  <InteriorSpawnWeightsConfig>k__BackingField:
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: mansion
+    MathOperation: 0
+    Weight: 4
   <WeatherSpawnWeightsConfig>k__BackingField: []
   <IsScrap>k__BackingField: 1
   <GenerateScrapConfig>k__BackingField: 0
