@@ -5,7 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Unlockables;
-public class HauntedTeddyBear : MonoBehaviour
+public class HauntedTeddyBear : NetworkBehaviour
 {
     [field: SerializeField, Range(0, 100)]
     public float SpawnChance { get; private set; }
@@ -65,13 +65,19 @@ public class HauntedTeddyBear : MonoBehaviour
         }
     }
 
-    public void Start()
+    public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn();
         ChangePosition();
     }
 
     public void ChangePosition()
     {
+        if (!IsServer)
+        {
+            return;
+        }
+
         if (RandomSpawnPositions.Count == 0)
         {
             return;
@@ -89,6 +95,21 @@ public class HauntedTeddyBear : MonoBehaviour
 
         AutoParentToShip.positionOffset = newPosition;
         AutoParentToShip.rotationOffset = newRotation;
+        AutoParentToShip.MoveToOffset();
+        SyncClientsPositionServerRpc();
+    }
+
+    [ServerRpc]
+    public void SyncClientsPositionServerRpc()
+    {
+        SyncClientsPositionClientRpc(AutoParentToShip.positionOffset, AutoParentToShip.rotationOffset);
+    }
+
+    [ClientRpc]
+    public void SyncClientsPositionClientRpc(Vector3 positionOffset, Vector3 rotationOffset)
+    {
+        AutoParentToShip.positionOffset = positionOffset;
+        AutoParentToShip.rotationOffset = rotationOffset;
         AutoParentToShip.MoveToOffset();
     }
 }

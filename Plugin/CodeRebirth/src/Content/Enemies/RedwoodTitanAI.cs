@@ -414,19 +414,25 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         agent.speed = 0f;
         yield return new WaitForSeconds(eating.length + 5f);
         if (isEnemyDead)
-            yield break;
-
-        foreach (EnemyAI enemy in RoundManager.Instance.SpawnedEnemies)
         {
-            if (enemy is not RadMechAI radMech)
-                continue;
+            yield break;
+        }
 
-            if (radMech.focusedThreatTransform == targetEnemy.transform)
+        if (targetEnemy != null)
+        {
+            foreach (EnemyAI enemy in RoundManager.Instance.SpawnedEnemies)
             {
-                radMech.targetedThreatCollider = null;
-                radMech.CheckSightForThreat();
+                if (enemy is not RadMechAI radMech)
+                    continue;
+
+                if (radMech.focusedThreatTransform == targetEnemy.transform)
+                {
+                    radMech.targetedThreatCollider = null;
+                    radMech.CheckSightForThreat();
+                }
             }
         }
+
         agent.angularSpeed = 40f;
         agent.speed = walkingSpeed;
         if (IsServer)

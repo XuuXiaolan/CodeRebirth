@@ -234,7 +234,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         Vector3 spawnPosition = position;
         if (Physics.Raycast(position + Vector3.up * 1f, Vector3.down, out RaycastHit hit, 100f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
         {
-            spawnPosition = hit.point + Vector3.up * item.verticalOffset + Vector3.up * 0.25f;
+            spawnPosition = hit.point + Vector3.up * item.verticalOffset;
         }
 
         GameObject go = Instantiate(item.spawnPrefab, spawnPosition, Quaternion.identity, null);
@@ -243,13 +243,8 @@ internal class CodeRebirthUtils : NetworkBehaviour
         networkObject.Spawn(false);
 
         int value = (int)(UnityEngine.Random.Range(item.minValue, item.maxValue) * RoundManager.Instance.scrapValueMultiplier) + valueIncrease;
-        Vector3 targetPosition = grabbableObject.transform.localPosition;
-        if (Physics.Raycast(spawnPosition, Vector3.down, out RaycastHit raycastHit, 80f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
-        {
-            targetPosition = raycastHit.point + grabbableObject.itemProperties.verticalOffset * Vector3.up;
-        }
 
-        SyncScanNodeParentRotationsAndFallRpc(new NetworkBehaviourReference(grabbableObject), spawnPosition, targetPosition, defaultRotation ? Quaternion.Euler(item.restingRotation) : rotation, value);
+        SyncScanNodeParentRotationsAndFallRpc(new NetworkBehaviourReference(grabbableObject), position, spawnPosition, defaultRotation ? Quaternion.Euler(item.restingRotation) : rotation, value);
 
         if (isQuest)
         {

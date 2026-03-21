@@ -177,7 +177,7 @@ public class VendingMachine : NetworkBehaviour
     [ClientRpc]
     private void SyncGrabbableObjectScanStuffClientRpc(NetworkBehaviourReference grabbableObjectRef, float borderColorR, float borderColorG, float borderColorB, float textColorR, float textColorG, float textColorB)
     {
-        GrabbableObject grabbableObject = (GrabbableObject)grabbableObjectRef;
+        GrabbableObject grabbableObject = (GrabbableObject)(NetworkBehaviour)grabbableObjectRef;
         grabbableObject.grabbable = true;
         ForceScanColorOnItem forceScanColorOnItem = grabbableObject.gameObject.AddComponent<ForceScanColorOnItem>();
         forceScanColorOnItem.grabbableObject = grabbableObject;

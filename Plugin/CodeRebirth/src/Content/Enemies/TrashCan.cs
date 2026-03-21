@@ -67,6 +67,11 @@ public class TrashCan : NetworkBehaviour
     public void SyncPositionRpc(Vector3 position)
     {
         transform.position = position;
+
+        if (meshFilter != null && Vector3.Distance(this.transform.position, RoundManager.FindMainEntrancePosition(true, false)) <= 8f)
+        {
+            meshFilter.gameObject.SetActive(false);
+        }
     }
 
     public override void OnNetworkDespawn()

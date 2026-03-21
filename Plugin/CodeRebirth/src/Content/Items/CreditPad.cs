@@ -21,7 +21,7 @@ public class CreditPad : GrabbableObject
 
     private IEnumerator WaitForEndOfFrame()
     {
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.25f);
         yield return new WaitUntil(() => !audioPlayer.isPlaying && !videoPlayer.isPlaying);
         if (isHeld || isPocketed)
         {
@@ -42,7 +42,7 @@ public class CreditPad : GrabbableObject
     [ServerRpc(RequireOwnership = false)]
     public void IncreaseShipValueServerRpc()
     {
-        int moneyToBe = Mathf.Min(0, TerminalRefs.Instance.groupCredits + creditValue);
+        int moneyToBe = Mathf.Max(0, TerminalRefs.Instance.groupCredits + creditValue);
         TerminalRefs.Instance.SyncGroupCreditsClientRpc(moneyToBe, TerminalRefs.Instance.numberOfItemsInDropship);
         PlaySoundClientRpc();
     }
