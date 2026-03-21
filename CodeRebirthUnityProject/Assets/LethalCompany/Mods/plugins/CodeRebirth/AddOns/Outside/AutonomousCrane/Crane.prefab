@@ -1265,7 +1265,6 @@ MonoBehaviour:
   _craneArmEnd: {fileID: 3395568646734061799}
   _magnet: {fileID: 968843961768655257}
   _leverAnimator: {fileID: 3939411310800624979}
-  _leverNetworkAnimator: {fileID: 0}
   _disableInteract: {fileID: 903419754823951601}
   _rotationSpeed: 12.5
 --- !u!114 &3139885552426168380
@@ -1451,59 +1450,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 6.6500006, y: 10.64626, z: 0.97493905}
   m_Center: {x: -0.59300506, y: 2.7158146, z: 0.069997475}
---- !u!1 &1697723164639110526
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8406036158410208439}
-  - component: {fileID: 1525919754219385030}
-  m_Layer: 13
-  m_Name: ItemDropCollider
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8406036158410208439
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1697723164639110526}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -31.5, z: 31}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 823998304425759146}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1525919754219385030
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1697723164639110526}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 6.5, y: 6.5, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1841900605184925590
 GameObject:
   m_ObjectHideFlags: 0
@@ -1553,7 +1499,7 @@ MonoBehaviour:
   physicsTransform: {fileID: 4927173273883218894}
   parentNetworkObject: {fileID: 8446445322963834555}
   allowDroppingItems: 1
-  priority: 1
+  priority: 2
   disablePhysicsRegion: 0
   physicsCollider: {fileID: 4284956452444226213}
   itemDropCollider: {fileID: 3870345187874416356}
@@ -2824,7 +2770,7 @@ MonoBehaviour:
   physicsTransform: {fileID: 4927173273883218894}
   parentNetworkObject: {fileID: 8446445322963834555}
   allowDroppingItems: 1
-  priority: 1
+  priority: 2
   disablePhysicsRegion: 0
   physicsCollider: {fileID: 7652169128406217691}
   itemDropCollider: {fileID: 3870345187874416356}
@@ -3331,9 +3277,7 @@ Transform:
   m_LocalPosition: {x: -0.09, y: -33.339993, z: -31.360008}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 4132490768600268311}
-  - {fileID: 8406036158410208439}
+  m_Children: []
   m_Father: {fileID: 1340960484883389396}
   m_LocalEulerAnglesHint: {x: -90.366, y: 0, z: 0}
 --- !u!33 &6880971381120493180
@@ -3620,91 +3564,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!1 &3964734201779652240
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4132490768600268311}
-  - component: {fileID: 7904147382695629508}
-  - component: {fileID: 1736765752661777883}
-  - component: {fileID: 3329021371112974934}
-  m_Layer: 13
-  m_Name: PlayerPhysicsRegion
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4132490768600268311
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3964734201779652240}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -31.5, z: 33.34}
-  m_LocalScale: {x: 4, y: 4, z: 8}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 823998304425759146}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7904147382695629508
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3964734201779652240}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 000ae222f5a7f7c7cee5ab5298053935, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  physicsTransform: {fileID: 3302067338001201865}
-  parentNetworkObject: {fileID: 8446445322963834555}
-  allowDroppingItems: 1
-  priority: 1
-  disablePhysicsRegion: 0
-  physicsCollider: {fileID: 3329021371112974934}
-  itemDropCollider: {fileID: 1525919754219385030}
-  addPositionOffsetToItems: {x: 0, y: 0, z: 0}
-  maxTippingAngle: 200
---- !u!33 &1736765752661777883
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3964734201779652240}
-  m_Mesh: {fileID: 8999911773206952699, guid: e809a46648bd17d49bc2c9459054a55c, type: 3}
---- !u!64 &3329021371112974934
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3964734201779652240}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 2146435063
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 8999911773206952699, guid: b39364d3b18921a469bd2c3773e9f722, type: 3}
 --- !u!1 &3975412230082546911
 GameObject:
   m_ObjectHideFlags: 0
@@ -5310,6 +5169,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1608071896409382527}
   - {fileID: 8311709200847746039}
   - {fileID: 8777218998440233784}
   - {fileID: 7674434870815482895}
@@ -5323,7 +5183,6 @@ Transform:
   - {fileID: 6087757660664793959}
   - {fileID: 5789720953763506001}
   - {fileID: 5355970916136641786}
-  - {fileID: 1608071896409382527}
   m_Father: {fileID: 5256061846233241887}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5638713566909721232
@@ -5847,7 +5706,7 @@ MonoBehaviour:
   physicsTransform: {fileID: 4927173273883218894}
   parentNetworkObject: {fileID: 8446445322963834555}
   allowDroppingItems: 1
-  priority: 1
+  priority: 2
   disablePhysicsRegion: 0
   physicsCollider: {fileID: 473291578286993550}
   itemDropCollider: {fileID: 564698489162901352}
