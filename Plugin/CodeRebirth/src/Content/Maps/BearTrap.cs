@@ -20,6 +20,7 @@ public class BearTrap : CodeRebirthHazard, IHittable
     public AudioClip resetTrapSound = null!;
     public AudioClip poppingTireSound = null!;
 
+    private float damagePlayerTimer = 0f;
     private Vector3 caughtPosition = Vector3.zero;
     internal PlayerControllerB? playerCaught = null;
     private EnemyAI? enemyCaught = null;
@@ -90,6 +91,7 @@ public class BearTrap : CodeRebirthHazard, IHittable
         UpdateAudio();
         if (playerCaught != null)
         {
+            damagePlayerTimer -= Time.deltaTime;
             float distanceToPlayer = Vector3.Distance(playerCaught.transform.position, this.transform.position);
             if (distanceToPlayer > 15)
             {
@@ -98,6 +100,7 @@ public class BearTrap : CodeRebirthHazard, IHittable
             }
             playerCaught.transform.position = Vector3.Lerp(playerCaught.transform.position, caughtPosition, 5f * Time.deltaTime);
         }
+
         if (enemyCaught == null)
         {
             return;
@@ -177,11 +180,27 @@ public class BearTrap : CodeRebirthHazard, IHittable
         TriggerTrap(playerControllerReference);
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    private void TriggerTrapServerRpc()
+    {
+        TriggerTrapClientRpc();
+    }
+
+    [ClientRpc]
+    private void TriggerTrapClientRpc()
+    {
+        TriggerTrap();
+    }
+
     public virtual void TriggerTrap(PlayerControllerB player)
     {
         playerCaught = player;
         playerCaught.disableMoveInput = true;
-        playerCaught.DamagePlayer(25, true, true, CauseOfDeath.Crushing, 0, false, default);
+        if (damagePlayerTimer <= 0f)
+        {
+            damagePlayerTimer = 0.5f;
+            playerCaught.DamagePlayer(25, true, true, CauseOfDeath.Crushing, 0, false, default);
+        }
         caughtPosition = playerCaught.transform.position;
 
         TriggerTrap();
@@ -206,6 +225,18 @@ public class BearTrap : CodeRebirthHazard, IHittable
         TriggerTrap();
 
         StartCoroutine(DelayReleasingTrap(10f * (enemy.enemyType.EnemySize == EnemySize.Medium ? 0.5f : 1f) * enemy.enemyType.stunTimeMultiplier));
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void DelayReleasingTrapServerRpc(float timer)
+    {
+        DelayReleasingTrapClientRpc(timer);
+    }
+
+    [ClientRpc]
+    private void DelayReleasingTrapClientRpc(float timer)
+    {
+        StartCoroutine(DelayReleasingTrap(timer));
     }
 
     private IEnumerator DelayReleasingTrap(float timer)
@@ -347,11 +378,11 @@ public class BearTrap : CodeRebirthHazard, IHittable
             return false;
         }
 
-        TriggerTrap();
+        TriggerTrapServerRpc();
 
         if (this is not BoomTrap)
         {
-            StartCoroutine(DelayReleasingTrap(60f));
+            DelayReleasingTrapServerRpc(60f);
         }
 
         return true;
