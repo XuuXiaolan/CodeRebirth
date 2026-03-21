@@ -190,6 +190,7 @@ If you're interested in helping with the development of the mod or have issues o
 
 ![Hazard](https://i.postimg.cc/Y0j0FyNr/Hazard-CR-5.png)
 > An old military anti air cannon repurposed for defensive capabilities. It specializes in anti air and helps keep a clear sky. Essential kit for any mining crew.
+> Moon creators can tag their moons the following to adjust weights: `air_control_unit_none`, `air_control_unit_low`, `air_control_unit_medium`, `air_control_unit_high` 
 
 ## Bear Traps
 
@@ -200,26 +201,31 @@ If you're interested in helping with the development of the mod or have issues o
 
 ![Hazard](https://i.postimg.cc/W46dcZbv/Hazard-CR-2.png)
 > Towering crane specializing in cargo carrying. Its strong frame is the backbone of company shipping. However stand clear of its heavy magnet when in use, less you be pancaked.
+> Moon creators can tag their moons the following to adjust weights: `autonomous_crane_none`, `autonomous_crane_low`, `autonomous_crane_medium`, `autonomous_crane_high`
 
 ## Industrial Fan
 
 ![Hazard](https://i.postimg.cc/MGkSntqV/image-2025-07-07-072850118.png)
 > Aeration device capable of producing fresh air to poorly ventilated mineshafts. Be cautious around the blades however.
+> Interior creators can tag their interiors the following to adjust weights: `industrial_fan_none`, `industrial_fan_low`, `industrial_fan_medium`, `industrial_fan_high`
 
 ## Microwave Cart
 
 ![Hazard](https://i.postimg.cc/NMBrK4PF/Hazard-CR-10.png)
 > Experimental mining technology used to weaken and crack rock using microwave radiation. Slowly traversing the halls on an automatic timer, results for this technology have showed great promise.
+> Interior creators can tag their interiors the following to adjust weights: `functional_microwave_none`, `functional_microwave_low`, `functional_microwave_medium`, `functional_microwave_high`
 
 ## Flash Turret
 
 ![Hazard](https://i.postimg.cc/BvxKZypR/Hazard-CR-8.png)
 > Surveying camera equipped with various photoreceptors and movement detectors. Great for capturing critters and wildlife in action. Say cheese!
+> Interior creators can tag their interiors the following to adjust weights: `flash_turret_none`, `flash_turret_low`, `flash_turret_medium`, `flash_turret_high`
 
 ## L.A.S.E.R Mining Rig
 
 ![Hazard](https://i.postimg.cc/L6ngghvt/Hazard-CR-11.png)
-> Experimental mining technology using giant crystal rubies. Its powerful laser melts away rock with ease. 
+> Experimental mining technology using giant crystal rubies. Its powerful laser melts away rock with ease.
+> Interior creators can tag their interiors the following to adjust weights: `laser_turret_none`, `laser_turret_low`, `laser_turret_medium`, `laser_turret_high`
 
 ## Cacti
 
@@ -231,12 +237,18 @@ If you're interested in helping with the development of the mod or have issues o
 ![Hazard](https://i.postimg.cc/KzGRGYRg/Hazard-CR-3.png)
 ![Hazard](https://i.postimg.cc/PqkC7yHy/Hazard-CR-1.png)
 > Wooden crates are used to store equipment while metal crates bring back valuables. Every mining crew uses these convenient containers. Pry open wooden crates with any tool but use a key to unlock a safe.
+> Moon creators can tag their moons the following to adjust weights:
+> `normal_wooden_crate_none`, `normal_wooden_crate_low`, `normal_wooden_crate_medium`, `normal_wooden_crate_high`
+> `normal_metal_crate_none`, `normal_metal_crate_low`, `normal_metal_crate_medium`, `normal_metal_crate_high`
 
 ## Infected Crates
 
 ![Hazard](https://i.postimg.cc/qR1gzd3D/Hazard-CR-4.png)
 ![Hazard](https://i.postimg.cc/nhmsT5yM/Hazard-CR-9.png)
 > Beware of false crates, while visibly identical, listen to their growls. Crimson blight stirs within them. Who knows what else awaits on Haemoglobin's surface...
+> Moon creators can tag their moons the following to adjust weights:
+> `mimic_metal_crate_none`, `mimic_metal_crate_low`, `mimic_metal_crate_medium`, `mimic_metal_crate_high`
+> `mimic_wooden_crate_none`, `mimicl_wooden_crate_low`, `mimicooden_crate_medium`, `mimic_wooden_crate_high`
 
 </details>
 
