@@ -25,8 +25,6 @@ public class KamikazeJimothy : NetworkBehaviour
 
     [SerializeField]
     private Animator _animator = null!;
-    [SerializeField]
-    private NetworkAnimator _networkAnimator = null!;
 
     [SerializeField]
     private AnimationClip _jimFixAnimation = null!;
@@ -61,7 +59,6 @@ public class KamikazeJimothy : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     private void PlaceHeadOnJimothyServerRpc()
     {
-        _networkAnimator.SetTrigger(AssembleHeadAnimationHash);
         PlaceHeadOnJimothyClientRpc();
         StartCoroutine(AnimationDelay());
     }
@@ -80,6 +77,7 @@ public class KamikazeJimothy : NetworkBehaviour
     [ClientRpc]
     private void PlaceHeadOnJimothyClientRpc()
     {
+        _animator.SetTrigger(AssembleHeadAnimationHash);
         _onJimFix.Invoke();
         _headTrigger.enabled = false;
     }
