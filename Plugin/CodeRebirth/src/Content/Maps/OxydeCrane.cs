@@ -24,12 +24,13 @@ public class OxydeCrane : NetworkBehaviour
 
     public void Awake()
     {
+        StartOfRound.Instance.StartNewRoundEvent.AddListener(OnStartNewRound);
+        dropButton.gameObject.SetActive(false);
         StartMatchLeverRefs.Instance.triggerScript.interactable = false;
         previousDisabledTriggerMessage = StartMatchLeverRefs.Instance.triggerScript.disabledHoverTip;
         StartMatchLeverRefs.Instance.triggerScript.disabledHoverTip = "Ship needs to be un-attached from the magnet.";
         // stop ship lever from being unable to be pulled until ship's already been dropped.
         StartCoroutine(SpawnOutsideHazards());
-        StartCoroutine(WaitUntilShipLoads());
     }
 
     private IEnumerator SpawnOutsideHazards()
@@ -38,21 +39,25 @@ public class OxydeCrane : NetworkBehaviour
         RoundManager.Instance.SpawnOutsideHazards();
     }
 
-    private IEnumerator WaitUntilShipLoads()
+    private void OnStartNewRound()
     {
-        yield return new WaitUntil(() => !StartOfRound.Instance.inShipPhase && this.NetworkObject.IsSpawned);
         craneAnimator.SetTrigger(StartAnimation);
+        StartOfRound.Instance.StartNewRoundEvent.RemoveListener(OnStartNewRound);
     }
 
     public void Update()
     {
         RoundManager.Instance.currentDungeonType = -1;
-        StartMatchLeverRefs.Instance.triggerScript.interactable = !dropButton.interactable;
+        StartMatchLeverRefs.Instance.triggerScript.interactable = alreadyDropped;
     }
 
     public void DropInteract(PlayerControllerB player)
     {
-        if (!player.IsLocalPlayer() || alreadyDropped) return;
+        if (!player.IsLocalPlayer() || alreadyDropped)
+        {
+            return;
+        }
+
         TryDropShipFromCraneServerRpc();
     }
 
@@ -77,6 +82,7 @@ public class OxydeCrane : NetworkBehaviour
         leverAnimator.SetTrigger(PullLeverAnimation);
         float timeElapsed = 0f;
         List<(GameObject gameObject, Vector3 startPos, Quaternion startRot)> objectsToDrop = [(shipNavColliders, shipNavColliders.transform.position, shipNavColliders.transform.rotation), (StartOfRound.Instance.shipAnimatorObject.gameObject, StartOfRound.Instance.shipAnimatorObject.transform.position, StartOfRound.Instance.shipAnimatorObject.transform.rotation)];
+        yield return new WaitForSeconds(0.5f);
         while (timeElapsed <= 2f)
         {
             yield return null;
@@ -89,7 +95,28 @@ public class OxydeCrane : NetworkBehaviour
             }
         }
 
+        float forceDuration = 5f;
+        while (forceDuration > 0f)
+        {
+            yield return null;
+            forceDuration -= Time.deltaTime;
+            foreach (var tuple in objectsToDrop)
+            {
+                tuple.gameObject.transform.SetPositionAndRotation(endPosition, endRotation);
+            }
+        }
+
         craneAnimator.SetTrigger(MoveBackAnimation);
+    }
+
+    public void AllowDropInteract()
+    {
+        if (alreadyDropped)
+        {
+            return;
+        }
+
+        dropButton.gameObject.SetActive(true);
     }
 
     public override void OnNetworkDespawn()
