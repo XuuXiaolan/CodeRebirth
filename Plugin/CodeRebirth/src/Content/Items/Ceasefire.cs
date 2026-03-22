@@ -125,7 +125,7 @@ public class Ceasefire : GrabbableObject
             _ceasefireBarrel.transform.localEulerAngles = new Vector3(-280 + _currentBarrelRotationX, 270f, 90f);
             if (playerHeldBy != null && playerHeldBy.IsLocalPlayer() && _particleSystemsGO.activeSelf)
             {
-                playerHeldBy.externalForceAutoFade += (-playerHeldBy.gameplayCamera.transform.right * 5f) + (-playerHeldBy.gameplayCamera.transform.forward) * 20f * (playerHeldBy.isCrouching ? 0.5f : 1f) * Time.deltaTime * (rotationDelta / 35f);
+                playerHeldBy.externalForceAutoFade += (-playerHeldBy.gameplayCamera.transform.forward) * 20f * (playerHeldBy.isCrouching ? 0.5f : 1f) * Time.deltaTime * (rotationDelta / 35f);
             }
         }
         if (tNorm >= 0.8f)

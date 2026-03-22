@@ -206,16 +206,9 @@ public class Puppeteer : CodeRebirthEnemyAI
     {
         if (!playerPuppetMap.ContainsKey(player))
         {
-            creatureSFX.PlayOneShot(makePuppetSound);
-            if (!IsServer) return;
-            if (EnemyHandler.Instance.ManorLord == null) return;
-            GameObject puppetObj = Instantiate(EnemyHandler.Instance.ManorLord.PuppeteerPuppetPrefab, needleAttachPoint.position, Quaternion.identity);
+            GameObject puppetObj = Instantiate(EnemyHandler.Instance.ManorLord!.PuppeteerPuppetPrefab, needleAttachPoint.position, Quaternion.identity);
             puppetObj.GetComponent<NetworkObject>().Spawn(true);
             CreatePlayerPuppetServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, player), new NetworkObjectReference(puppetObj));
-        }
-        else
-        {
-            Plugin.Logger.LogError("Tried to create puppet of already puppeted player???");
         }
     }
 
@@ -231,6 +224,7 @@ public class Puppeteer : CodeRebirthEnemyAI
         PlayerControllerB player = StartOfRound.Instance.allPlayerScripts[playerIndex];
 
         // Link puppet to player
+        creatureSFX.PlayOneShot(makePuppetSound);
         GameObject puppetObj = (GameObject)netObj;
         puppetObj.transform.localScale = this.transform.localScale;
         PuppeteersVoodoo puppetComp = puppetObj.GetComponent<PuppeteersVoodoo>();
@@ -513,11 +507,17 @@ public class Puppeteer : CodeRebirthEnemyAI
 
     public void PuppetPlayerAnimEvent()
     {
+        if (!IsServer)
+        {
+            return;
+        }
+
         if (targetPlayerToNeedle == null)
         {
             Plugin.Logger.LogError("No player to grab???");
             return;
         }
+
         CreatePlayerPuppet(targetPlayerToNeedle);
     }
 

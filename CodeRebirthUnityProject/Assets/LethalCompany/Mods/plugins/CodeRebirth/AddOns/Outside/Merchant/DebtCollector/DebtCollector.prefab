@@ -8318,7 +8318,7 @@ NavMeshAgent:
   m_Radius: 1.3
   m_Speed: 5
   m_Acceleration: 16
-  avoidancePriority: 40
+  avoidancePriority: 1
   m_AngularSpeed: 720
   m_StoppingDistance: 1.5
   m_AutoTraverseOffMeshLink: 1
@@ -8340,7 +8340,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1618959076
+  GlobalObjectIdHash: 3552567082
   InScenePlacedSourceGlobalObjectIdHash: 3552567082
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -8605,7 +8605,7 @@ MonoBehaviour:
   ventAnimationFinished: 0
   isEnemyDead: 0
   daytimeEnemyLeaving: 0
-  enemyHP: 40
+  enemyHP: 20
   nodesTempArray: []
   openDoorSpeedMultiplier: 1
   useSecondaryAudiosOnAnimatedObjects: 1

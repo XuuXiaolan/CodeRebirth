@@ -20,7 +20,7 @@ public class OxydeCrashingShip : FallingObjectBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        if (!LethalContent.Moons.TryGetValue(CodeRebirthMoonKeys.Oxyde, out DawnMoonInfo moonInfo) || moonInfo.DawnPurchaseInfo.PurchasePredicate.CanPurchase() == TerminalPurchaseResult.SuccessPurchaseResult.Success())
+        if (!LethalContent.Moons.TryGetValue(CodeRebirthMoonKeys.Oxyde, out DawnMoonInfo moonInfo) || moonInfo.DawnPurchaseInfo.PurchasePredicate.CanPurchase() == TerminalPurchaseResult.SuccessPurchaseResult.Success() || moonInfo.DawnPurchaseInfo.PurchasePredicate.CanPurchase() == TerminalPurchaseResult.SuccessPurchaseResult.Hidden())
         {
             if (IsServer)
             {

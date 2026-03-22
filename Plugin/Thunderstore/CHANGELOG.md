@@ -1,4 +1,20 @@
-# v1.5.0
+# v1.5.1
+
+- Fixed Ceasefire.
+- Adjusted dependencies to be latest version and removed weather registry as it's now a soft dependency for the weathers.
+- Fixed ShipUnlocker being multi-use.
+- Added more fallbacks for OxydeCrashingShip to not fall more than once after being unlocked.
+- Fixed merchant errors on client (harmless anyway).
+- Fixed DB's prying ship open on clients.
+- Adjusted Timmy Bass to be a decor.
+- Adjusted DB's health to be 20 and his attack regen to be 1 per attack and 5 per grab.
+- Added grilled cheese to EZ Bake.
+- Made DB the priority Agent.
+- Fixed Toast decor from being unmoveable.
+- Expanded range of EZ Bake Microwave.
+- Slightly polished some manor lord code.
+
+## v1.5.0
 
 - Beware the Merchant.
 - Lowered size of the mod down by 30mb.

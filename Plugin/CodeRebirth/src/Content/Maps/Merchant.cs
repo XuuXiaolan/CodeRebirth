@@ -102,6 +102,11 @@ public class Merchant : NetworkBehaviour
     public void DeleteItemsAtBarrel(int barrelRef)
     {
         itemsDeleted++;
+        if (!IsServer)
+        {
+            return;
+        }
+
         MerchantBarrel merchantBarrel = existingMerchantBarrels[barrelRef];
         if (merchantBarrel.currentlySpawnedGrabbableObject == null)
             return;
@@ -113,6 +118,11 @@ public class Merchant : NetworkBehaviour
     public void SpawnItemAtBarrel(int barrelRef)
     {
         itemsSpawned++;
+        if (!IsServer)
+        {
+            return;
+        }
+
         MerchantBarrel merchantBarrel = existingMerchantBarrels[barrelRef];
         HandleSpawningMerchantItems(merchantBarrel);
     }
@@ -193,7 +203,11 @@ public class Merchant : NetworkBehaviour
 
     private IEnumerator PayUpBoy(int itemCost)
     {
-        MoneyCounter.Instance!.RemoveMoney(itemCost);
+        if (IsServer)
+        {
+            MoneyCounter.Instance!.RemoveMoney(itemCost);
+        }
+
         foreach ((GrabbableObject grabbableObject, int price) in itemsOnSale)
         {
             SetupGrabbableTooltip(grabbableObject, price);

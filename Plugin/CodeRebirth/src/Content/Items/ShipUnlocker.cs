@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using CodeRebirth.src.Util;
 using Dawn.Internal;
 using Unity.Netcode;
 using UnityEngine;
@@ -13,9 +12,15 @@ public class ShipUnlocker : GrabbableObject
     public AudioSource audioPlayer = null!;
     public VideoPlayer videoPlayer = null!;
 
+    private bool usedOnce = false;
     public override void ItemActivate(bool used, bool buttonDown = true)
     {
         base.ItemActivate(used, buttonDown);
+        if (usedOnce)
+        {
+            return;
+        }
+
         List<UnlockableItem> unlockableItems = new();
         foreach (UnlockableItem unlockableItem in StartOfRound.Instance.unlockablesList.unlockables)
         {
@@ -38,6 +43,7 @@ public class ShipUnlocker : GrabbableObject
 
     private IEnumerator WaitForEndOfFrame()
     {
+        yield return new WaitForSeconds(0.25f);
         yield return new WaitUntil(() => !audioPlayer.isPlaying && !videoPlayer.isPlaying);
         if (isHeld || isPocketed)
         {
@@ -58,6 +64,7 @@ public class ShipUnlocker : GrabbableObject
     [ClientRpc]
     public void PlaySoundClientRpc()
     {
+        usedOnce = true;
         audioPlayer.Play();
         videoPlayer.gameObject.SetActive(true);
         if (!videoPlayer.playOnAwake)

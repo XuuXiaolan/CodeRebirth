@@ -114,6 +114,7 @@ public class DebtCollector : CodeRebirthEnemyAI
         _lastPosition = this.transform.position;
         _treadMaterials.Add(skinnedMeshRenderers[1].materials[2]); // Left Tread
         _treadMaterials.Add(skinnedMeshRenderers[1].materials[3]); // Right Tread
+        _shipDoor = FindFirstObjectByType<HangarShipDoor>();
 
         if (!IsServer)
         {
@@ -121,7 +122,6 @@ public class DebtCollector : CodeRebirthEnemyAI
         }
 
         FindRandomPlayerViaAsyncPathfinding();
-        _shipDoor = FindFirstObjectByType<HangarShipDoor>();
     }
 
     public override void Update()
@@ -478,7 +478,7 @@ public class DebtCollector : CodeRebirthEnemyAI
         _playerIsGrabbed = true;
         targetPlayer.disableMoveInput = true;
         targetPlayer.inAnimationWithEnemy = this;
-        enemyHP = Mathf.Clamp(enemyHP + 20, 0, 50);
+        enemyHP = Mathf.Clamp(enemyHP + 5, 0, 20);
         creatureAnimator.SetTrigger(SuccessAnimationHash);
     }
     #endregion
@@ -649,7 +649,7 @@ public class DebtCollector : CodeRebirthEnemyAI
 
         if (_playersHit.Count > 0)
         {
-            enemyHP = Mathf.Clamp(enemyHP + 5 * _playersHit.Count, 0, 50);
+            enemyHP = Mathf.Clamp(enemyHP + 1 * _playersHit.Count, 0, 20);
         }
 
         _playersHit.Clear();
@@ -685,7 +685,7 @@ public class DebtCollector : CodeRebirthEnemyAI
             agent.speed = ChasingSpeed;
             SwitchToBehaviourStateOnLocalClient((int)DebtCollectorState.ChasingTargetPlayer);
         }
-        else if (playerWhoHit == null)
+        else if (playerWhoHit == null && currentBehaviourStateIndex == ((int)DebtCollectorState.ChasingTargetPlayer))
         {
             AudioSource.PlayOneShot(BitchSliceSound);
             creatureAnimator.ResetTrigger(SliceAnimationHash);

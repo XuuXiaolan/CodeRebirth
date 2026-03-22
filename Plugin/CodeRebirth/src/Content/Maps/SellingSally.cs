@@ -152,11 +152,17 @@ public class SellingSally : NetworkBehaviour
         _sellableScraps.Clear();
         GrabbableObject[] grabbableObjects = transform.GetComponentsInChildren<GrabbableObject>();
         if (grabbableObjects.Length == 0)
-            return false;
-
-        foreach (var grabbableObject in grabbableObjects)
         {
-            if (grabbableObject.transform.parent != sallyLoaderTransform) continue;
+            return false;
+        }
+
+        foreach (GrabbableObject grabbableObject in grabbableObjects)
+        {
+            if (grabbableObject.transform.parent != sallyLoaderTransform)
+            {
+                continue;
+            }
+
             if (grabbableObject.itemProperties.itemName == "Sally Cube" || grabbableObject.itemProperties.itemName == "Flattened Body")
             {
                 _sellableScraps.Add(grabbableObject);
@@ -165,12 +171,16 @@ public class SellingSally : NetworkBehaviour
             _sellableScraps.Clear();
             return false;
         }
-        foreach (var sellableScrap in _sellableScraps)
+
+        foreach (GrabbableObject sellableScrap in _sellableScraps)
         {
             sellableScrap.grabbable = false;
         }
+
         if (_sellableScraps.Count == 0)
+        {
             return false;
+        }
 
         return true;
     }
@@ -187,6 +197,11 @@ public class SellingSally : NetworkBehaviour
             GameNetworkManager.Instance.localPlayerController.KillPlayer(GameNetworkManager.Instance.localPlayerController.velocityLastFrame, true, CauseOfDeath.Blast, 9);
         }
 
+        if (!IsServer)
+        {
+            return;
+        }
+
         int scrapValueToMake = 0;
         if (!CanCurrentlyShoot())
         {
@@ -200,29 +215,30 @@ public class SellingSally : NetworkBehaviour
             scrapValueToMake += sellableScrap.scrapValue;
         }
 
-        SellAndDisplayItemProfits(scrapValueToMake, TerminalRefs.Instance);
+        SellAndDisplayItemProfitsRpc(scrapValueToMake);
     }
 
-    private void SellAndDisplayItemProfits(int profit, Terminal terminal)
+    [Rpc(SendTo.Everyone)]
+    private void SellAndDisplayItemProfitsRpc(int profit)
     {
         TooManyEmotesCompat.AddCredits(profit);
         if (!_usedOnce)
         {
-            foreach (var enemyLevelSpawner in EnemyLevelSpawner.enemyLevelSpawners)
+            foreach (EnemyLevelSpawner enemyLevelSpawner in EnemyLevelSpawner.enemyLevelSpawners)
             {
                 enemyLevelSpawner.spawnTimerMin /= 8f;
                 enemyLevelSpawner.spawnTimerMax /= 8f;
             }
-            OxydeLightsManager.oxydeLightsManager.IncrementLights();
+            OxydeLightsManager.Instance.IncrementLights();
             _usedOnce = true;
             HUDManager.Instance.DisplayTip("Warning!", "Rampant underground activity detected, evacuation recommended.", true);
         }
 
         DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.Internship);
-        terminal.groupCredits += profit;
+        TerminalRefs.Instance.groupCredits += profit;
         StartOfRound.Instance.gameStats.scrapValueCollected += profit;
         TimeOfDay.Instance.quotaFulfilled += profit;
-        HUDManager.Instance.DisplayCreditsEarning(profit, _sellableScraps.ToArray(), terminal.groupCredits);
+        HUDManager.Instance.DisplayCreditsEarning(profit, _sellableScraps.ToArray(), TerminalRefs.Instance.groupCredits);
 
         foreach (GrabbableObject sellableScrap in _sellableScraps)
         {

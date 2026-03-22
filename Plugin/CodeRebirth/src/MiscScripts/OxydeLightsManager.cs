@@ -13,10 +13,10 @@ public class OxydeLightsManager : MonoBehaviour
     private Light[] _lights = [];
 
     private int _currentLightIndex = 0;
-    internal static OxydeLightsManager oxydeLightsManager = null!;
+    internal static OxydeLightsManager Instance = null!;
     private void Start()
     {
-        oxydeLightsManager = this;
+        Instance = this;
         IncrementLights();
     }
 
