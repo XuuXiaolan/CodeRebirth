@@ -540,7 +540,6 @@ GameObject:
   - component: {fileID: 1809205322762496473}
   - component: {fileID: 6904610231587874633}
   - component: {fileID: 7682458782736325733}
-  - component: {fileID: 5627089283044738071}
   - component: {fileID: 4395047199544177820}
   - component: {fileID: 1460342213835444441}
   - component: {fileID: 1288711711486736261}
@@ -623,27 +622,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &5627089283044738071
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1574516792246697467}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 766946447
-  InScenePlacedSourceGlobalObjectIdHash: 0
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
 --- !u!114 &4395047199544177820
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -817,7 +795,7 @@ MonoBehaviour:
   UseQuaternionSynchronization: 0
   UseQuaternionCompression: 0
   UseHalfFloatPrecision: 0
-  InLocalSpace: 1
+  InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
 --- !u!136 &628193322848618802
@@ -957,6 +935,7 @@ MonoBehaviour:
   OnEnableOrDisableAgent:
     m_PersistentCalls:
       m_Calls: []
+  CanTryToFlyToDestination: 1
   lastUsedEntranceTeleport: {fileID: 0}
   agent: {fileID: 0}
   _nodeRemovalPrecision: 5

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
 using Dawn.Utils;
-
 using GameNetcodeStuff;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -14,7 +13,7 @@ namespace CodeRebirth.src.Content.Unlockables;
 [RequireComponent(typeof(SmartAgentNavigator))]
 public class GalAI : NetworkBehaviour, IHittable
 {
-    public CRNoiseListener _GalAINoiseListener = null!; // todo implement this
+    public CRNoiseListener _GalAINoiseListener = null!;
     public string GalName = "";
     public Animator Animator = null!;
     public NetworkAnimator NetworkAnimator = null!;
@@ -64,10 +63,6 @@ public class GalAI : NetworkBehaviour, IHittable
             _GalAINoiseListener = GetComponentInChildren<CRNoiseListener>();
         }
         _GalAINoiseListener._onNoiseDetected.AddListener(DetectNoise);
-        if (!IsServer) return;
-
-        transform.SetParent(GalCharger.transform, false);
-        transform.SetPositionAndRotation(GalCharger.transform.position, GalCharger.transform.rotation);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -106,7 +101,10 @@ public class GalAI : NetworkBehaviour, IHittable
 
     private void BoomboxUpdate()
     {
-        if (!boomboxPlaying || inActive) return;
+        if (!boomboxPlaying || inActive)
+        {
+            return;
+        }
 
         boomboxTimer += Time.deltaTime;
         if (boomboxTimer >= 2f)
@@ -118,9 +116,16 @@ public class GalAI : NetworkBehaviour, IHittable
 
     private void IdleUpdate()
     {
-        if (inActive) return;
+        if (inActive)
+        {
+            return;
+        }
+
         idleTimer += Time.deltaTime;
-        if (idleTimer <= idleNeededTimer) return;
+        if (idleTimer <= idleNeededTimer)
+        {
+            return;
+        }
 
         idleTimer = 0f;
         idleNeededTimer = galRandom.NextFloat(10f, 15f);
@@ -138,7 +143,11 @@ public class GalAI : NetworkBehaviour, IHittable
 
     public virtual void Update()
     {
-        if (!NetworkObject.IsSpawned) return;
+        if (!NetworkObject.IsSpawned)
+        {
+            return;
+        }
+
         InActiveUpdate();
         BoomboxUpdate();
         IdleUpdate();
@@ -200,7 +209,10 @@ public class GalAI : NetworkBehaviour, IHittable
         }
 
         staringTimer += Time.deltaTime;
-        if (staringTimer < stareThreshold) return;
+        if (staringTimer < stareThreshold)
+        {
+            return;
+        }
 
         Vector3 lookDirection = (ownerPlayer.gameplayCamera.transform.position - transform.position).normalized;
         lookDirection.y = 0f;

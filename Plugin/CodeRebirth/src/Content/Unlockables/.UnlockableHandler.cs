@@ -8,21 +8,14 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
     {
         [LoadFromBundle("LaserShockBlast.prefab")]
         public GameObject LaserShockBlast { get; private set; } = null!;
-
-        [LoadFromBundle("ShockWaveDrone.prefab")]
-        public GameObject ShockWaveDronePrefab { get; private set; } = null!;
     }
 
     public class SeamineTinkAssets(DuskMod mod, string filePath) : AssetBundleLoader<SeamineTinkAssets>(mod, filePath)
     {
-        [LoadFromBundle("SeamineGal.prefab")]
-        public GameObject SeamineGalPrefab { get; private set; } = null!;
     }
 
     public class TerminalBotAssets(DuskMod mod, string filePath) : AssetBundleLoader<TerminalBotAssets>(mod, filePath)
     {
-        [LoadFromBundle("TerminalGalDaisy.prefab")]
-        public GameObject TerminalGalPrefab { get; private set; } = null!;
     }
 
     public class SCP999Assets(DuskMod mod, string filePath) : AssetBundleLoader<SCP999Assets>(mod, filePath)
@@ -39,8 +32,6 @@ public class UnlockableHandler : ContentHandler<UnlockableHandler>
 
     public class CruiserGalAssets(DuskMod mod, string filePath) : AssetBundleLoader<CruiserGalAssets>(mod, filePath)
     {
-        [LoadFromBundle("CruiserGal.prefab")]
-        public GameObject CruiserGalPrefab { get; private set; } = null!;
     }
 
     public class CodeRebirthPlatinumAssets(DuskMod mod, string filePath) : AssetBundleLoader<CodeRebirthPlatinumAssets>(mod, filePath)

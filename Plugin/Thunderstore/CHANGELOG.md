@@ -1,4 +1,11 @@
-# v1.5.1
+# v1.5.2
+
+- Accidently deleted the natural cactus spawns, so brought them back.
+- Properly made Oxyde unhide.
+- Fixed issues with the gals that made them unusable and other misc issues that might've been old issues.
+- Added Cullfactory compat to vending machine items.
+
+## v1.5.1
 
 - Fixed Ceasefire.
 - Adjusted dependencies to be latest version and removed weather registry as it's now a soft dependency for the weathers.

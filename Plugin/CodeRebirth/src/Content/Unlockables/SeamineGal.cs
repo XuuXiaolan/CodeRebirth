@@ -43,17 +43,18 @@ public class SeamineGalAI : GalAI
     private bool ridingBruce = false;
     private State galState = State.Inactive;
     private bool jojoPosing = false;
-    private readonly static int inElevatorAnimation = Animator.StringToHash("inElevator"); // bool
-    private readonly static int chargeCountInt = Animator.StringToHash("chargeCount"); // int
-    private readonly static int revealHazardsAnimation = Animator.StringToHash("revealHazards"); // trigger
-    private readonly static int hugAnimation = Animator.StringToHash("doHug"); // trigger
-    private readonly static int jojoAnimationInt = Animator.StringToHash("jojoPoseInt"); // should be an int to choose specific anim
-    private readonly static int attackModeAnimation = Animator.StringToHash("attackMode"); // bool
-    private readonly static int ridingBruceAnimation = Animator.StringToHash("ridingBruce"); // bool
-    private readonly static int startExplodeAnimation = Animator.StringToHash("doExplode"); // trigger
-    private readonly static int danceAnimation = Animator.StringToHash("dancing"); // bool
-    private readonly static int activatedAnimation = Animator.StringToHash("activated"); // bool
-    private readonly static int runSpeedFloat = Animator.StringToHash("RunSpeed"); // float
+    private float enemyCheckTimer = 1f;
+    private static readonly int inElevatorAnimation = Animator.StringToHash("inElevator"); // bool
+    private static readonly int chargeCountInt = Animator.StringToHash("chargeCount"); // int
+    private static readonly int revealHazardsAnimation = Animator.StringToHash("revealHazards"); // trigger
+    private static readonly int hugAnimation = Animator.StringToHash("doHug"); // trigger
+    private static readonly int jojoAnimationInt = Animator.StringToHash("jojoPoseInt"); // should be an int to choose specific anim
+    private static readonly int attackModeAnimation = Animator.StringToHash("attackMode"); // bool
+    private static readonly int ridingBruceAnimation = Animator.StringToHash("ridingBruce"); // bool
+    private static readonly int startExplodeAnimation = Animator.StringToHash("doExplode"); // trigger
+    private static readonly int danceAnimation = Animator.StringToHash("dancing"); // bool
+    private static readonly int activatedAnimation = Animator.StringToHash("activated"); // bool
+    private static readonly int runSpeedFloat = Animator.StringToHash("RunSpeed"); // float
 
     public enum State
     {
@@ -76,7 +77,10 @@ public class SeamineGalAI : GalAI
         }
         if (seamineChargers.Count <= 0)
         {
-            if (IsServer) NetworkObject.Despawn();
+            if (IsServer)
+            {
+                NetworkObject.Despawn();
+            }
             Plugin.Logger.LogError($"SeamineCharger not found in scene. SeamineGalAI will not be functional.");
             return;
         }
@@ -94,14 +98,22 @@ public class SeamineGalAI : GalAI
         flashLightInteractTrigger.onInteract.AddListener(OnFlashLightInteract);
         GalCharger.ActivateOrDeactivateTrigger.onInteract.AddListener(GalCharger.OnActivateGal);
         pickable.IsLocked = false;
-        StartCoroutine(CheckForNearbyEnemiesToOwner());
-        StartCoroutine(UpdateRidingBruceSound());
+        RidingBruceSource.volume = Plugin.ModConfig.ConfigSeamineTinkRidingBruceVolume.Value;
+        RidingBruceSource.Stop();
     }
 
     public void OnBeltInteract()
     {
-        if (GameNetworkManager.Instance.localPlayerController != ownerPlayer) return;
-        if (ownerPlayer.currentlyHeldObjectServer == null || ownerPlayer.currentlyHeldObjectServer.itemProperties.itemName != "Key") return;
+        if (ownerPlayer == null || !ownerPlayer.IsLocalPlayer())
+        {
+            return;
+        }
+
+        if (ownerPlayer.currentlyHeldObjectServer == null || ownerPlayer.currentlyHeldObjectServer is not KeyItem)
+        {
+            return;
+        }
+
         ownerPlayer.DespawnHeldObject();
         StartBeltInteractServerRpc();
     }
@@ -120,19 +132,13 @@ public class SeamineGalAI : GalAI
         GalSFX.PlayOneShot(rechargeChargesSound);
     }
 
-    private IEnumerator UpdateRidingBruceSound()
-    {
-        while (true)
-        {
-            yield return new WaitUntil(() => !RidingBruceSource.isPlaying);
-            RidingBruceSource.clip = bruceSwimmingAudioClips[UnityEngine.Random.Range(0, bruceSwimmingAudioClips.Count)];
-            RidingBruceSource.Play();
-        }
-    }
-
     private void OnFlashLightInteract(PlayerControllerB playerInteracting)
     {
-        if (!playerInteracting.IsLocalPlayer() || playerInteracting != ownerPlayer) return;
+        if (!playerInteracting.IsLocalPlayer() || playerInteracting != ownerPlayer)
+        {
+            return;
+        }
+
         StartFlashLightInteractServerRpc();
     }
 
@@ -152,7 +158,11 @@ public class SeamineGalAI : GalAI
 
     private void OnHugInteract(PlayerControllerB playerInteracting)
     {
-        if (!playerInteracting.IsLocalPlayer() || playerInteracting != ownerPlayer) return;
+        if (!playerInteracting.IsLocalPlayer() || playerInteracting != ownerPlayer)
+        {
+            return;
+        }
+
         StartHugInteractServerRpc();
     }
 
@@ -165,7 +175,11 @@ public class SeamineGalAI : GalAI
     [ClientRpc]
     private void StartHugInteractClientRpc()
     {
-        if (ownerPlayer == null) return;
+        if (ownerPlayer == null)
+        {
+            return;
+        }
+
         if (physicsEnabled)
         {
             physicsTemporarilyDisabled = true;
@@ -182,9 +196,20 @@ public class SeamineGalAI : GalAI
 
     private void ResetToChargerStation(State state)
     {
-        if (!IsServer) return;
-        if (Agent.enabled) Agent.Warp(GalCharger.ChargeTransform.position);
-        else transform.position = GalCharger.ChargeTransform.position;
+        if (!IsServer)
+        {
+            return;
+        }
+
+        if (Agent.enabled)
+        {
+            Agent.Warp(GalCharger.ChargeTransform.position);
+        }
+        else
+        {
+            transform.position = GalCharger.ChargeTransform.position;
+        }
+
         transform.rotation = GalCharger.ChargeTransform.rotation;
         HandleStateAnimationSpeedChangesServerRpc((int)state);
     }
@@ -231,7 +256,7 @@ public class SeamineGalAI : GalAI
             maxChargeCount = chargeCount;
             Agent.enabled = false;
 
-            var enemyBlacklist = UnlockableHandler.Instance.SeamineTink.GetConfig<string>("Seamine Tink | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
+            var enemyBlacklist = UnlockableHandler.Instance.SeamineTink!.GetConfig<string>("Seamine Tink | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
             foreach (var nameEntry in enemyBlacklist)
             {
                 enemyTargetBlacklist.UnionWith(LethalContent.Enemies.Values.Where(et => et.EnemyType.enemyName.Equals(nameEntry, System.StringComparison.OrdinalIgnoreCase)).Select(et => et.EnemyType.enemyName));
@@ -252,9 +277,18 @@ public class SeamineGalAI : GalAI
         SetIdleDefaultStateForEveryone();
         InteractTriggersUpdate();
 
-        if (inActive) return;
+        if (inActive)
+        {
+            return;
+        }
+
         StoppingDistanceUpdate();
-        if (!IsHost) return;
+        if (!IsHost)
+        {
+            return;
+        }
+
+        EnemyChecks();
         HostSideUpdate();
     }
 
@@ -263,6 +297,49 @@ public class SeamineGalAI : GalAI
         float speedMultiplier = 1f * (galState == State.FollowingPlayer ? 2f : 1f) * (galState == State.AttackMode ? 4f : 1f) * (jojoPosing || inHugAnimation || currentlyAttacking ? 0f : 1f);
         if (inHugAnimation && Vector3.Distance(transform.position, Agent.pathEndPosition) <= Agent.stoppingDistance) Agent.velocity = Vector3.zero;
         return speedMultiplier;
+    }
+
+    private void EnemyChecks()
+    {
+        enemyCheckTimer -= Time.deltaTime;
+        if (enemyCheckTimer > 0f)
+        {
+            return;
+        }
+
+        enemyCheckTimer = 1f;
+        if (galState != State.FollowingPlayer || ownerPlayer == null || !Agent.enabled || chargeCount <= 0 || (!smartAgentNavigator.IsAgentOutside() && !ownerPlayer.isInsideFactory) || (smartAgentNavigator.IsAgentOutside() && ownerPlayer.isInsideFactory))
+            return;
+
+        int numHits = Physics.OverlapSphereNonAlloc(ownerPlayer.gameplayCamera.transform.position, 15, cachedColliders, MoreLayerMasks.EnemiesMask, QueryTriggerInteraction.Collide);
+        Plugin.ExtendedLogging($"Found {numHits} enemies");
+        for (int i = 0; i < numHits; i++)
+        {
+            Collider collider = cachedColliders[i];
+            if (!collider.gameObject.activeSelf)
+                continue;
+
+            if (!collider.TryGetComponent(out EnemyAICollisionDetect enemyCollisionDetect))
+                continue;
+
+            EnemyAI enemy = enemyCollisionDetect.mainScript;
+
+            if (enemy == null || enemy.isEnemyDead || enemyTargetBlacklist.Contains(enemy.enemyType.enemyName) || enemy is Transporter)
+                continue;
+
+            // First, do a simple direction check to see if the enemy is in front of the player
+            if (Physics.Linecast(ownerPlayer.gameplayCamera.transform.position, collider.transform.position, out RaycastHit hit, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
+            {
+                Plugin.ExtendedLogging("Missed Hit: " + hit.collider.name);
+                continue;
+            }
+            //Plugin.ExtendedLogging("Correct Hit: " + hit.collider.name);
+
+
+            SetEnemyTargetServerRpc(new NetworkBehaviourReference(enemy));
+            HandleStateAnimationSpeedChanges(State.AttackMode);
+            break;
+        }        
     }
 
     private void HostSideUpdate()
@@ -322,7 +399,8 @@ public class SeamineGalAI : GalAI
             return;
         }
 
-        if (smartAgentNavigator.DoPathingToDestination(ownerPlayer.transform.position))
+        smartAgentNavigator.TryDoPathingToDestination(ownerPlayer.transform.position, out SmartAgentNavigator.GoToDestinationResult result);
+        if (result == SmartAgentNavigator.GoToDestinationResult.InProgress || result == SmartAgentNavigator.GoToDestinationResult.Failure)
         {
             return;
         }
@@ -458,7 +536,11 @@ public class SeamineGalAI : GalAI
 
     private bool DoHuggingOwner(PlayerControllerB ownerPlayer)
     {
-        if (!huggingOwner) return false;
+        if (!huggingOwner)
+        {
+            return false;
+        }
+
         if (Vector3.Distance(transform.position, ownerPlayer.transform.position) <= Agent.stoppingDistance && Agent.enabled && !inHugAnimation)
         {
             NetworkAnimator.SetTrigger(hugAnimation);
@@ -492,7 +574,11 @@ public class SeamineGalAI : GalAI
         huggingOwner = false;
         EnablePhysics(!physicsTemporarilyDisabled);
         physicsTemporarilyDisabled = false;
-        if (ownerPlayer == null) return;
+        if (ownerPlayer == null)
+        {
+            return;
+        }
+
         ownerPlayer.enteringSpecialAnimation = false;
         ownerPlayer.disableMoveInput = false;
     }
@@ -500,52 +586,11 @@ public class SeamineGalAI : GalAI
     private IEnumerator StopDancingDelay()
     {
         yield return new WaitUntil(() => !boomboxPlaying || galState != State.Dancing);
-        if (galState != State.Dancing) yield break;
-        HandleStateAnimationSpeedChanges(State.FollowingPlayer);
-    }
-
-    private IEnumerator CheckForNearbyEnemiesToOwner()
-    {
-        if (!IsServer) yield break;
-
-        var delay = new WaitForSeconds(1f);
-        while (true)
+        if (galState != State.Dancing)
         {
-            yield return delay;
-
-            if (galState != State.FollowingPlayer || ownerPlayer == null || !Agent.enabled || chargeCount <= 0 || (!smartAgentNavigator.IsAgentOutside() && !ownerPlayer.isInsideFactory) || (smartAgentNavigator.IsAgentOutside() && ownerPlayer.isInsideFactory))
-                continue;
-
-            int numHits = Physics.OverlapSphereNonAlloc(ownerPlayer.gameplayCamera.transform.position, 15, cachedColliders, MoreLayerMasks.EnemiesMask, QueryTriggerInteraction.Collide);
-            Plugin.ExtendedLogging($"Found {numHits} enemies");
-            for (int i = 0; i < numHits; i++)
-            {
-                Collider collider = cachedColliders[i];
-                if (!collider.gameObject.activeSelf)
-                    continue;
-
-                if (!collider.TryGetComponent(out EnemyAICollisionDetect enemyCollisionDetect))
-                    continue;
-
-                EnemyAI enemy = enemyCollisionDetect.mainScript;
-
-                if (enemy == null || enemy.isEnemyDead || enemyTargetBlacklist.Contains(enemy.enemyType.enemyName) || enemy is Transporter)
-                    continue;
-
-                // First, do a simple direction check to see if the enemy is in front of the player
-                if (Physics.Linecast(ownerPlayer.gameplayCamera.transform.position, collider.transform.position, out RaycastHit hit, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
-                {
-                    Plugin.ExtendedLogging("Missed Hit: " + hit.collider.name);
-                    continue;
-                }
-                //Plugin.ExtendedLogging("Correct Hit: " + hit.collider.name);
-
-
-                SetEnemyTargetServerRpc(new NetworkBehaviourReference(enemy));
-                HandleStateAnimationSpeedChanges(State.AttackMode);
-                break;
-            }
+            yield break;
         }
+        HandleStateAnimationSpeedChanges(State.FollowingPlayer);
     }
 
     private void CheckIfEnemyIsHitAnimEvent()
@@ -564,7 +609,11 @@ public class SeamineGalAI : GalAI
                 {
                     // Ensure there's a line of sight from SeamineGalAI to the enemy
                     Plugin.ExtendedLogging("Enemy hit: " + enemyDetected);
-                    if (enemiesToKill.Contains(enemyDetected)) continue;
+                    if (enemiesToKill.Contains(enemyDetected))
+                    {
+                        continue;
+                    }
+
                     enemiesToKill.Add(enemyDetected);
                 }
             }
@@ -641,9 +690,13 @@ public class SeamineGalAI : GalAI
         if (RidingBruce)
         {
             GalSFX.PlayOneShot(startOrEndRidingBruceAudioClips[galRandom.Next(startOrEndRidingBruceAudioClips.Count)]);
-            RidingBruceSource.volume = Plugin.ModConfig.ConfigSeamineTinkRidingBruceVolume.Value;
+            RidingBruceSource.clip = bruceSwimmingAudioClips[UnityEngine.Random.Range(0, bruceSwimmingAudioClips.Count)];
+            RidingBruceSource.Play();
         }
-        else RidingBruceSource.volume = 0f;
+        else
+        {
+            RidingBruceSource.Stop();
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -773,7 +826,10 @@ public class SeamineGalAI : GalAI
 
     public static IEnumerator DoCustomPassThing(ParticleSystem particleSystem, CustomPassManager.CustomPassType customPassType, float scanRange)
     {
-        if (CustomPassManager.Instance.EnableCustomPass(customPassType, true) is not SeeThroughCustomPass customPass) yield break;
+        if (CustomPassManager.Instance.EnableCustomPass(customPassType, true) is not SeeThroughCustomPass customPass)
+        {
+            yield break;
+        }
 
         customPass.maxVisibilityDistance = 0f;
 
@@ -791,6 +847,7 @@ public class SeamineGalAI : GalAI
             customPass.maxVisibilityDistance -= Time.deltaTime * scanRange / 3f; // takes 3s
             return customPass.maxVisibilityDistance > 0f;
         });
+
         CustomPassManager.Instance.RemoveCustomPass(customPassType);
     }
 }

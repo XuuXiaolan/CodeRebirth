@@ -13,6 +13,7 @@ using CodeRebirth.src.Content.Maps;
 using System.Collections;
 using Dawn;
 using UnityEngine.InputSystem.Utilities;
+using CodeRebirth.src.ModCompats;
 
 namespace CodeRebirth.src.Util;
 internal class CodeRebirthUtils : NetworkBehaviour
@@ -292,6 +293,8 @@ internal class CodeRebirthUtils : NetworkBehaviour
         grabbableObject.startFallingPosition = StartOfRound.Instance.propsContainer.InverseTransformPoint(spawnPosition);
         grabbableObject.targetFloorPosition = StartOfRound.Instance.propsContainer.InverseTransformPoint(targetPosition);
 		grabbableObject.InitializeAfterPositioning();
+        grabbableObject.EnableItemMeshes(true);
+        grabbableObject.EnablePhysics(true);
     }
 
     private IEnumerator ForceRotationForABit(GameObject go, Quaternion rotation)

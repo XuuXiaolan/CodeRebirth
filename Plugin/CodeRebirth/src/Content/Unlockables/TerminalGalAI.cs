@@ -428,7 +428,8 @@ public class TerminalGalAI : GalAI
             return;
         }
 
-        if (smartAgentNavigator.DoPathingToDestination(ownerPlayer.transform.position))
+        smartAgentNavigator.TryDoPathingToDestination(ownerPlayer.transform.position, out SmartAgentNavigator.GoToDestinationResult result);
+        if (result == SmartAgentNavigator.GoToDestinationResult.InProgress || result == SmartAgentNavigator.GoToDestinationResult.Failure)
         {
             return;
         }

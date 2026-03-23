@@ -454,7 +454,8 @@ public class CruiserGalAI : GalAI
         }
 
 
-        if (smartAgentNavigator.DoPathingToDestination(ownerPlayer.transform.position))
+        smartAgentNavigator.TryDoPathingToDestination(ownerPlayer.transform.position, out SmartAgentNavigator.GoToDestinationResult result);
+        if (result == SmartAgentNavigator.GoToDestinationResult.InProgress || result == SmartAgentNavigator.GoToDestinationResult.Failure)
         {
             return;
         }
@@ -476,9 +477,15 @@ public class CruiserGalAI : GalAI
         }
 
         smartAgentNavigator.DoPathingToDestination(entranceToGoTo.entrancePoint.position);
-        if (Vector3.Distance(this.transform.position, entranceToGoTo.entrancePoint.position) > Agent.stoppingDistance) return;
-        if (Agent.hasPath && Agent.velocity.sqrMagnitude != 0f) return;
-        // finished
+        if (Vector3.Distance(this.transform.position, entranceToGoTo.entrancePoint.position) > Agent.stoppingDistance)
+        {
+            return;
+        }
+        if (Agent.hasPath && Agent.velocity.sqrMagnitude != 0f)
+        {
+            return;
+        }
+
         ContainerGO.SetActive(false);
         HandleStateAnimationSpeedChangesServerRpc((int)State.FollowingPlayer);
     }

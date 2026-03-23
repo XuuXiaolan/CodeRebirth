@@ -40,7 +40,13 @@ MonoBehaviour:
     AlignWithTerrain: 0
   <IsInsideHazard>k__BackingField: 0
   <CreateInsideHazardConfig>k__BackingField: 0
-  <InsideMoonCurveSpawnWeights>k__BackingField:
+  <InsideMoonCurveSpawnWeights>k__BackingField: []
+  <InsideInteriorCurveSpawnWeights>k__BackingField: []
+  <InsidePrioritiseMoonConfig>k__BackingField: 0
+  <CreateInsideCurveSpawnWeightsConfig>k__BackingField: 0
+  <IsOutsideHazard>k__BackingField: 1
+  <CreateOutsideHazardConfig>k__BackingField: 0
+  <OutsideMoonCurveSpawnWeights>k__BackingField:
   - <Key>k__BackingField:
       _namespace: lethal_company
       _key: canyon
@@ -131,12 +137,6 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 0
-  <InsideInteriorCurveSpawnWeights>k__BackingField: []
-  <InsidePrioritiseMoonConfig>k__BackingField: 0
-  <CreateInsideCurveSpawnWeightsConfig>k__BackingField: 0
-  <IsOutsideHazard>k__BackingField: 1
-  <CreateOutsideHazardConfig>k__BackingField: 0
-  <OutsideMoonCurveSpawnWeights>k__BackingField: []
   <OutsideInteriorCurveSpawnWeights>k__BackingField: []
   <OutsidePrioritiseMoonConfig>k__BackingField: 1
   <CreateOutsideCurveSpawnWeightsConfig>k__BackingField: 1

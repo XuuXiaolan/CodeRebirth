@@ -284,6 +284,7 @@ Transform:
   - {fileID: 3202713792200809238}
   - {fileID: 7525583701685489540}
   - {fileID: 8282411561440557720}
+  - {fileID: 8462160875451979478}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &827248177496013399
@@ -338,6 +339,8 @@ MonoBehaviour:
   m_Script: {fileID: 972113856, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GalPrefab: {fileID: 8273578112294545693, guid: fbfd2005f97f3a84ea32e1cff205eb7e,
+    type: 3}
   ActivateOrDeactivateTrigger: {fileID: 6281558672129517230}
   ChargeTransform: {fileID: 3024628350122615232}
 --- !u!1 &7070932884676107650
@@ -551,6 +554,51 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1001 &2067407392920422992
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 8439347656895662444}
+    m_Modifications:
+    - target: {fileID: 7628898115743898758, guid: fbfd2005f97f3a84ea32e1cff205eb7e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7628898115743898758, guid: fbfd2005f97f3a84ea32e1cff205eb7e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7628898115743898758, guid: fbfd2005f97f3a84ea32e1cff205eb7e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7859705604145919047, guid: fbfd2005f97f3a84ea32e1cff205eb7e,
+        type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2354081924
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273578112294545693, guid: fbfd2005f97f3a84ea32e1cff205eb7e,
+        type: 3}
+      propertyPath: m_Name
+      value: SeamineGal
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 7859705604145919047, guid: fbfd2005f97f3a84ea32e1cff205eb7e, type: 3}
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: fbfd2005f97f3a84ea32e1cff205eb7e, type: 3}
+--- !u!4 &8462160875451979478 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7628898115743898758, guid: fbfd2005f97f3a84ea32e1cff205eb7e,
+    type: 3}
+  m_PrefabInstance: {fileID: 2067407392920422992}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8465553523008724339
 PrefabInstance:
   m_ObjectHideFlags: 0

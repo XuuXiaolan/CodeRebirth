@@ -19,10 +19,11 @@ public class SCP999GalAI : NetworkBehaviour
     public GameObject particleSystemGameObject = null!;
     public List<Transform> revivePositions = new();
 
-    [NonSerialized] public float boomboxTimer = 0f;
-    [NonSerialized] public NetworkVariable<int> boomboxPlaying = new(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    private float boomboxTimer = 0f;
+    private bool boomboxPlaying = false;
     private bool currentlyHealing = false;
-    private NetworkVariable<float> cooldownTimer = new(5f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    private float nearbyAnimationTimer = 1f;
+    private float cooldownTimer = 5f;
     private static readonly int playerIsNearby = Animator.StringToHash("playerIsNearby"); // bool
     private static readonly int isDancing = Animator.StringToHash("isDancing"); // bool
     private static readonly int doSquishAnimation = Animator.StringToHash("doSquish"); // trigger
@@ -35,14 +36,14 @@ public class SCP999GalAI : NetworkBehaviour
     public static List<SCP999GalAI> Instances = new();
 
     private static readonly NamespacedKey NancyHealReviveCount = NamespacedKey.From("code_rebirth", "nancy_heal_revive_count");
-    public IEnumerator Start()
+    public override void OnNetworkSpawn()
     {
-        yield return new WaitUntil(() => GameNetworkManager.Instance.localPlayerController != null || NetworkObject.IsSpawned);
+        base.OnNetworkSpawn();
         if (IsServer)
         {
             if (!GameNetworkManager.Instance.gameHasStarted)
             {
-                Vector2 reviveHealCount = DawnLib.GetCurrentContract().GetOrSetDefault(NancyHealReviveCount, new Vector2(0, 0));
+                Vector2 reviveHealCount = DawnLib.GetCurrentContract()!.GetOrSetDefault(NancyHealReviveCount, new Vector2(0, 0));
                 reviveChargeCount.Value = (int)reviveHealCount.x;
                 healChargeCount.Value = (int)reviveHealCount.y;
             }
@@ -52,14 +53,13 @@ public class SCP999GalAI : NetworkBehaviour
             }
         }
         Instances.Add(this);
-        UpdatePlayerHealthForSelf();
+        StartCoroutine(UpdatePlayerHealthForSelf());
         QualitySettings.skinWeights = SkinWeights.FourBones;
         if (IsServer)
         {
             RechargeGalHealsAndRevivesServerRpc(true, true);
-            StartCoroutine(DetectingNearbyPlayer());
-            MakeTriggerInteractableServerRpc(!StartOfRound.Instance.inShipPhase);
         }
+        MakeTriggerInteractable(!StartOfRound.Instance.inShipPhase);
         _SCP999GalNoiseListener._onNoiseDetected.AddListener(DetectNoise);
         HealTrigger.onInteract.AddListener(HealPlayerInteraction);
     }
@@ -69,14 +69,34 @@ public class SCP999GalAI : NetworkBehaviour
         base.OnNetworkDespawn();
         if (IsServer)
         {
-            DawnLib.GetCurrentContract().Set(NancyHealReviveCount, new Vector2(reviveChargeCount.Value, healChargeCount.Value));
+            DawnLib.GetCurrentContract()!.Set(NancyHealReviveCount, new Vector2(reviveChargeCount.Value, healChargeCount.Value));
         }
         Instances.Remove(this);
     }
 
     public void Update()
     {
-        if (cooldownTimer.Value <= 0f)
+        if (nearbyAnimationTimer <= 0f)
+        {
+            nearbyAnimationTimer = 1f;
+            bool foundPlayer = false;
+            foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
+            {
+                if (player.isPlayerDead || !player.isPlayerControlled || !player.isInHangarShipRoom)
+                {
+                    continue;
+                }
+
+                if (Vector3.Distance(transform.position, player.transform.position) <= 10f)
+                {
+                    foundPlayer = true;
+                    break;
+                }
+            }
+            animator.SetBool(playerIsNearby, foundPlayer);
+        }
+
+        if (cooldownTimer <= 0f)
         {
             bool moreThan0HealCapacity = healChargeCount.Value > 0;
             bool moreThan0ReviveCapacity = reviveChargeCount.Value > 0;
@@ -99,35 +119,38 @@ public class SCP999GalAI : NetworkBehaviour
         }
         else
         {
-            HealTrigger.hoverTip = "Healing Cooldown: " + Math.Round(cooldownTimer.Value, 2);
+            HealTrigger.hoverTip = "Healing Cooldown: " + Math.Round(cooldownTimer, 2);
         }
 
-        if (!IsServer) return;
         if (!currentlyHealing)
         {
             // Plugin.ExtendedLogging($"Cooldown timer: {cooldownTimer}");
-            cooldownTimer.Value -= Time.deltaTime;
+            cooldownTimer -= Time.deltaTime;
         }
         BoomboxUpdate();
     }
 
     private void BoomboxUpdate()
     {
-        if (boomboxPlaying.Value == 0) return;
+        if (!boomboxPlaying)
+        {
+            return;
+        }
 
         boomboxTimer += Time.deltaTime;
         if (boomboxTimer >= 2f)
         {
             boomboxTimer = 0f;
-            boomboxPlaying.Value = 0;
+            boomboxPlaying = false;
             animator.SetBool(isDancing, false);
         }
     }
 
-    public void UpdatePlayerHealthForSelf()
+    public IEnumerator UpdatePlayerHealthForSelf()
     {
+        yield return new WaitUntil(() => GameNetworkManager.Instance.localPlayerController != null);
         PlayerControllerB localPlayer = GameNetworkManager.Instance.localPlayerController;
-        InformOtherClientsOfMaxHealthRpc(localPlayer, GrabMaxHealthForPlayer(localPlayer));
+        ResetAndSetMaxHealthForPlayerRpc();
     }
 
     public int GrabMaxHealthForPlayer(PlayerControllerB player)
@@ -136,36 +159,34 @@ public class SCP999GalAI : NetworkBehaviour
     }
 
     [Rpc(SendTo.Everyone, DeferLocal = true)]
-    private void InformOtherClientsOfMaxHealthRpc(PlayerControllerReference player, int maxHealth)
+    private void ResetAndSetMaxHealthForPlayerRpc()
     {
-        playerMaxHealthDict.Add(player, maxHealth);
+        playerMaxHealthDict.Clear();
+        PlayerControllerB localPlayer = GameNetworkManager.Instance.localPlayerController;
+        InformOtherClientsOfMaxHealthRpc(localPlayer, GrabMaxHealthForPlayer(localPlayer));
     }
 
-    private IEnumerator DetectingNearbyPlayer()
+    [Rpc(SendTo.Everyone, DeferLocal = true)]
+    private void InformOtherClientsOfMaxHealthRpc(PlayerControllerReference player, int maxHealth)
     {
-        while (true)
+        PlayerControllerB playerControllerB = player;
+        Plugin.ExtendedLogging($"Informing other clients that player {playerControllerB.playerUsername} has max health: {maxHealth}");
+        if (playerMaxHealthDict.ContainsKey(playerControllerB))
         {
-            bool foundPlayer = false;
-            foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
-            {
-                if (player.isPlayerDead || !player.isPlayerControlled || !player.isInHangarShipRoom) continue;
-                if (Vector3.Distance(transform.position, player.transform.position) <= 10f)
-                {
-                    foundPlayer = true;
-                    break;
-                }
-            }
-            animator.SetBool(playerIsNearby, foundPlayer);
-            yield return new WaitForSeconds(1f);
-            yield return new WaitForEndOfFrame();
+            playerMaxHealthDict[playerControllerB] = maxHealth;
+            return;
         }
+        playerMaxHealthDict.Add(playerControllerB, maxHealth);
     }
 
     private void HealPlayerInteraction(PlayerControllerB playerInteracting)
     {
-        Plugin.ExtendedLogging($"Healing player: {playerInteracting} | Cooldown timer: {cooldownTimer.Value} | Heal Charge count: {healChargeCount.Value} | Revive Charge count: {reviveChargeCount.Value}");
-        if (boomboxPlaying.Value == 1) return;
-        if (cooldownTimer.Value > 0f || (healChargeCount.Value <= 0 && reviveChargeCount.Value <= 0))
+        Plugin.ExtendedLogging($"Healing player: {playerInteracting} | Cooldown timer: {cooldownTimer} | Heal Charge count: {healChargeCount.Value} | Revive Charge count: {reviveChargeCount.Value}");
+        if (boomboxPlaying)
+        {
+            return;
+        }
+        if (cooldownTimer > 0f || (healChargeCount.Value <= 0 && reviveChargeCount.Value <= 0))
         {
             Plugin.ExtendedLogging($"triggering squish animation.");
             TriggerAnimationServerRpc(doSquishAnimation);
@@ -240,7 +261,7 @@ public class SCP999GalAI : NetworkBehaviour
             networkAnimator.SetTrigger(doSucceedAnimation);
         }
 
-        cooldownTimer.Value = Plugin.ModConfig.Config999GalHealCooldown.Value;
+        cooldownTimer = Plugin.ModConfig.Config999GalHealCooldown.Value;
     }
 
     [ClientRpc]
@@ -439,7 +460,7 @@ public class SCP999GalAI : NetworkBehaviour
         int ActivePlayerAmount = 0;
         foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
         {
-            if (player.isPlayerControlled)
+            if (player.isPlayerControlled && !player.isPlayerDead)
             {
                 ActivePlayerAmount++;
             }
@@ -475,14 +496,11 @@ public class SCP999GalAI : NetworkBehaviour
 
     public void DetectNoise(NoiseParams noiseParams)
     {
-        if (!IsServer)
-            return;
-
         if (noiseParams.noiseID != 5 || Physics.Linecast(transform.position, noiseParams.noisePosition, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
             return;
 
         boomboxTimer = 0f;
-        boomboxPlaying.Value = 1;
+        boomboxPlaying = true;
         animator.SetBool(isDancing, true);
     }
 }

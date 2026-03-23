@@ -418,6 +418,7 @@ Transform:
   - {fileID: 6417347556269755486}
   - {fileID: 8538040950924847636}
   - {fileID: 8243985282306516833}
+  - {fileID: 6529854970886578883}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3272383635430614626
@@ -507,6 +508,8 @@ MonoBehaviour:
   m_Script: {fileID: -1594426630, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GalPrefab: {fileID: 2252480004514947101, guid: 233213eac0aca2e4b9ca9833c20f0a98,
+    type: 3}
   ActivateOrDeactivateTrigger: {fileID: 8961698831747888178}
   ChargeTransform: {fileID: 6138722746098619757}
   animator: {fileID: 3471554038775788269}
@@ -946,3 +949,48 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4791727645122105921}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &5663010939381454948
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 4791727645122105921}
+    m_Modifications:
+    - target: {fileID: 1443889724278766247, guid: 233213eac0aca2e4b9ca9833c20f0a98,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1443889724278766247, guid: 233213eac0aca2e4b9ca9833c20f0a98,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1443889724278766247, guid: 233213eac0aca2e4b9ca9833c20f0a98,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2252480004514947101, guid: 233213eac0aca2e4b9ca9833c20f0a98,
+        type: 3}
+      propertyPath: m_Name
+      value: CruiserGal
+      objectReference: {fileID: 0}
+    - target: {fileID: 4908326308568251630, guid: 233213eac0aca2e4b9ca9833c20f0a98,
+        type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 3905869105
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 4908326308568251630, guid: 233213eac0aca2e4b9ca9833c20f0a98, type: 3}
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 233213eac0aca2e4b9ca9833c20f0a98, type: 3}
+--- !u!4 &6529854970886578883 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1443889724278766247, guid: 233213eac0aca2e4b9ca9833c20f0a98,
+    type: 3}
+  m_PrefabInstance: {fileID: 5663010939381454948}
+  m_PrefabAsset: {fileID: 0}
