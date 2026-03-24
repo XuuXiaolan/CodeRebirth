@@ -125,7 +125,8 @@ public class Ceasefire : GrabbableObject
             _ceasefireBarrel.transform.localEulerAngles = new Vector3(-280 + _currentBarrelRotationX, 270f, 90f);
             if (playerHeldBy != null && playerHeldBy.IsLocalPlayer() && _particleSystemsGO.activeSelf)
             {
-                playerHeldBy.externalForceAutoFade += (-playerHeldBy.gameplayCamera.transform.forward) * 20f * (playerHeldBy.isCrouching ? 0.5f : 1f) * Time.deltaTime * (rotationDelta / 35f);
+                float multiplierOnDirection = 20f * (playerHeldBy.isCrouching ? 0.5f : 1f) * Time.deltaTime * (rotationDelta / 35f);
+                playerHeldBy.externalForceAutoFade += (-playerHeldBy.gameplayCamera.transform.forward) * multiplierOnDirection;
             }
         }
         if (tNorm >= 0.8f)
@@ -156,8 +157,11 @@ public class Ceasefire : GrabbableObject
         if (!buttonDown)
         {
             if (_firingStartRoutine != null)
+            {
                 StopCoroutine(_firingStartRoutine);
-            _firingStartRoutine = null;
+                _firingStartRoutine = null;
+            }
+
             _firingEndRoutine = StartCoroutine(DoEndFiringSequence());
             isBeingUsed = false;
         }
