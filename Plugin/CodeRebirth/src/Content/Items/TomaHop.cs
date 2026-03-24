@@ -60,6 +60,11 @@ public class TomaHop : CRWeapon
     {
         base.Update();
         _groundLaunchTimer -= Time.deltaTime;
+        if (hitsInSuccession <= 0)
+        {
+            return;
+        }
+
         hitTimer -= Time.deltaTime;
         if (hitTimer <= 0)
         {
