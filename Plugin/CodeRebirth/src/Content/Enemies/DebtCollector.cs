@@ -334,6 +334,7 @@ public class DebtCollector : CodeRebirthEnemyAI
             }
             else
             {
+                _grabAttackTimer -= 1f;
                 NetworkAudioSource.PlayOneShot(BitchSliceSound);
                 creatureNetworkAnimator.SetTrigger(SliceAnimationHash);
             }
@@ -478,7 +479,7 @@ public class DebtCollector : CodeRebirthEnemyAI
         _playerIsGrabbed = true;
         targetPlayer.disableMoveInput = true;
         targetPlayer.inAnimationWithEnemy = this;
-        enemyHP = Mathf.Clamp(enemyHP + 5, 0, 20);
+        enemyHP = Mathf.Clamp(enemyHP + 10, 0, 30);
         creatureAnimator.SetTrigger(SuccessAnimationHash);
     }
     #endregion
@@ -649,7 +650,7 @@ public class DebtCollector : CodeRebirthEnemyAI
 
         if (_playersHit.Count > 0)
         {
-            enemyHP = Mathf.Clamp(enemyHP + 1 * _playersHit.Count, 0, 20);
+            enemyHP = Mathf.Clamp(enemyHP + 2 * _playersHit.Count, 0, 30);
         }
 
         _playersHit.Clear();
@@ -671,25 +672,19 @@ public class DebtCollector : CodeRebirthEnemyAI
         {
             return;
         }
-        _hitCooldown = 0.20f;
+        _hitCooldown = 0.25f;
 
         if (force > 5)
         {
             force = 5;
         }
 
-        if (playerWhoHit != null && playerWhoHit != targetPlayer)
+        if (playerWhoHit != null && playerWhoHit != targetPlayer && (targetPlayer == null || Vector3.Distance(transform.position, playerWhoHit.transform.position) < Vector3.Distance(transform.position, targetPlayer.transform.position)))
         {
             SetPlayerTarget(playerWhoHit);
             smartAgentNavigator.StopSearchRoutine();
             agent.speed = ChasingSpeed;
             SwitchToBehaviourStateOnLocalClient((int)DebtCollectorState.ChasingTargetPlayer);
-        }
-        else if (playerWhoHit == null && currentBehaviourStateIndex == ((int)DebtCollectorState.ChasingTargetPlayer))
-        {
-            AudioSource.PlayOneShot(BitchSliceSound);
-            creatureAnimator.ResetTrigger(SliceAnimationHash);
-            creatureAnimator.SetTrigger(SliceAnimationHash);
         }
 
         enemyHP -= force;

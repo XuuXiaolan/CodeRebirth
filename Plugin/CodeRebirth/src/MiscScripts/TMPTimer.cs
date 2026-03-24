@@ -1,5 +1,7 @@
 using System;
+using Dawn.Utils;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,7 +11,7 @@ public class TMPTimer : MonoBehaviour
     [field: SerializeField]
     public TextMeshPro TimerText { get; private set; }
     [field: SerializeField]
-    public int TotalSeconds { get; private set; }
+    public BoundedRange TotalSecondsRange { get; private set; } = new BoundedRange(90f, 180f);
     [field: SerializeField]
     public bool StartOnAwake { get; private set; }
     [field: SerializeField]
@@ -36,7 +38,19 @@ public class TMPTimer : MonoBehaviour
         {
             _timerIsActive = false;
         }
-        _currentSecond = TotalSeconds;
+
+        if (!NetworkManager.Singleton.IsServer)
+        {
+            return;
+        }
+
+        SyncTimerRpc(TotalSecondsRange.GetRandomInRange(new System.Random(StartOfRound.Instance.randomMapSeed + UnityEngine.Random.Range(0, 1000))));
+    }
+
+    [Rpc(SendTo.Everyone)]
+    public void SyncTimerRpc(float TotalSeconds)
+    {
+        _currentSecond = Mathf.ClampToInt((long)TotalSeconds);
         _currentTime = TotalSeconds;
     }
 
@@ -59,15 +73,16 @@ public class TMPTimer : MonoBehaviour
         }
 
         TimeSpan time = TimeSpan.FromSeconds(_currentTime);
-        if (Mathf.ClampToInt((long)time.TotalSeconds) < _currentSecond)
+        int totalSecondClamped = Mathf.ClampToInt((long)time.TotalSeconds);
+        if (totalSecondClamped < _currentSecond)
         {
             // second has passed
             AudioSource.PlayOneShot(SecondPassSound);
-            _currentSecond = Mathf.ClampToInt((long)time.TotalSeconds);
+            _currentSecond = totalSecondClamped;
         }
         TimerText.text = time.ToString(@"mm\:ss\:ff");
 
-        if (_canPlaySound && time < TimeSpan.FromSeconds(TimeToPlaySource) && !AudioSource.isPlaying)
+        if (_canPlaySound && _currentSecond <= TimeToPlaySource && !AudioSource.isPlaying)
         {
             _canPlaySound = false;
             AudioSource.Play();

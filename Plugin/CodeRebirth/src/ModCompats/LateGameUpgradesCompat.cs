@@ -33,7 +33,7 @@ internal static class LateGameUpgradesCompat
 
     private static bool FixDropshipOnOxyde(RuntimeILReferenceBag.FastDelegateInvokers.Func<float, bool> orig, float shipTimer)
     {
-        if (LethalContent.Moons[NamespacedKey<DawnMoonInfo>.From("code_rebirth", "oxyde")].Level == RoundManager.Instance.currentLevel)
+        if (LethalContent.Moons.TryGetValue(CodeRebirthMoonKeys.Oxyde, out DawnMoonInfo oxydeMoonInfo) && oxydeMoonInfo.Level == RoundManager.Instance.currentLevel)
         {
             return false;
         }
