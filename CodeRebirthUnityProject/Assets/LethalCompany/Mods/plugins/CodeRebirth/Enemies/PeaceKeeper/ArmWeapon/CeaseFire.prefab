@@ -5421,7 +5421,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3797306231
+  GlobalObjectIdHash: 1159592409
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -5609,13 +5609,13 @@ MonoBehaviour:
   _fireLoopSound: {fileID: 8300000, guid: 714c761220ff2b5488169cf0d71052b7, type: 3}
   _fireEndSound: {fileID: 8300000, guid: f3b6cd4336c77924eb11260a593bd754, type: 3}
   _maxChargedTime: 10
-  _minParticleRateOverTime: 0
+  _minParticleRateOverTime: -50
   _maxParticleRateOverTime: 150
   _minEmissionIntensity: 0
-  _maxEmissionIntensity: 10
+  _maxEmissionIntensity: 15
   _maxDamageIntervalAtMaxCharge: 1
   _overheatEffect: {fileID: 8572332115556941923}
-  _minigunDamageInterval: 0.1
+  _minigunDamageInterval: 0.2
   _minigunRange: 60
   _minigunWidth: 1.5
   _minigunDamage: 5
@@ -5632,10 +5632,19 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0.1024735
     - serializedVersion: 3
-      time: 0.40125832
-      value: 0.026071116
-      inSlope: 0.22865278
-      outSlope: 0.22865278
+      time: 0.3939851
+      value: 0.2526102
+      inSlope: 0.7925761
+      outSlope: 0.7925761
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.1457089
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.7581699
+      value: 0.54215795
+      inSlope: 0.94653684
+      outSlope: 0.94653684
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
@@ -5643,11 +5652,11 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 1
       value: 0.8
-      inSlope: 2.1171105
-      outSlope: 2.1171105
+      inSlope: 1.4212897
+      outSlope: 1.4212897
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.040993735
+      inWeight: 0.2553169
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2

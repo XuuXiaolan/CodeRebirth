@@ -1,4 +1,14 @@
-# v1.5.2
+# v1.5.3
+
+- Nerfed Ceasefire to be harder to use and do a little less damage overall.
+- Removed spawn weights for unintended to spawn items.
+- Tomahop's bug fixed, its nerf is also back.
+- Eugene buffed.
+- Droppod timer pitch volume etc edited.
+- DebtCollector buffed, given a bit more health, more width on the arm to not be able to just circle it.
+- Fixed issue where you can't disable oxyde.
+
+## v1.5.2
 
 - Accidently deleted the natural cactus spawns, so brought them back.
 - Properly made Oxyde unhide.

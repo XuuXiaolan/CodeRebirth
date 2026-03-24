@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using CodeRebirth.src.MiscScripts;
 using Dawn.Utils;
 using GameNetcodeStuff;
 using UnityEngine;
@@ -45,6 +46,8 @@ public class Ceasefire : GrabbableObject
     private float _maxDamageIntervalAtMaxCharge = 2f;
     [SerializeField]
     private ParticleSystem _overheatEffect = null!;
+    [SerializeField]
+    private float _overChargedDuration = 30f;
 
     private float _startingTime = 0f;
     private float _endingTime = 0f;
@@ -53,6 +56,8 @@ public class Ceasefire : GrabbableObject
     private float _currentBarrelRotationX = 0f;
     private Material _ceasefireMaterial = null!;
     private Color _baseEmissionColor;
+    private bool _overCharged = false;
+    private float _overChargedTimer = 30f;
     private float _chargedTime = 0f;
 
     [Header("Gatling Gun")]
@@ -77,6 +82,7 @@ public class Ceasefire : GrabbableObject
     public override void Start()
     {
         base.Start();
+        _overChargedTimer = _overChargedDuration;
         _ceasefireMaterial = _ceasefireRenderer.material;
         _baseEmissionColor = _ceasefireMaterial.GetColor(_EmissiveColorHash);
 
@@ -88,8 +94,19 @@ public class Ceasefire : GrabbableObject
     public override void Update()
     {
         base.Update();
+        if (_overCharged && _overChargedTimer > 0f)
+        {
+            _overChargedTimer -= Time.deltaTime;
+            if (_overChargedTimer <= 0f)
+            {
+                _overCharged = false;
+            }
+        }
+
         if (!isHeld || isPocketed)
+        {
             return;
+        }
 
         float rotationDelta = 0f;
 
@@ -126,9 +143,23 @@ public class Ceasefire : GrabbableObject
             if (playerHeldBy != null && playerHeldBy.IsLocalPlayer() && _particleSystemsGO.activeSelf)
             {
                 float multiplierOnDirection = 20f * (playerHeldBy.isCrouching ? 0.5f : 1f) * Time.deltaTime * (rotationDelta / 35f);
-                playerHeldBy.externalForceAutoFade += (-playerHeldBy.gameplayCamera.transform.forward) * multiplierOnDirection;
+                int randomDirection = UnityEngine.Random.Range(0, 2);
+                Vector3 direction = randomDirection switch
+                {
+                    0 => this.transform.right,
+                    1 => -this.transform.right,
+                    _ => this.transform.right,
+                };
+
+                float upwardStrength = Mathf.Clamp(UnityEngine.Random.Range(-5f, 1f), 0f, 1f);
+                if (upwardStrength > 0f)
+                {
+                    StartCoroutine(CRUtilities.AlternateForcePlayerLookup(playerHeldBy, 0.5f, upwardStrength / 7.5f));
+                }
+                playerHeldBy.externalForceAutoFade += (-playerHeldBy.gameplayCamera.transform.forward) * multiplierOnDirection + direction * multiplierOnDirection * 2f;
             }
         }
+
         if (tNorm >= 0.8f)
         {
             _overheatEffect.Play();
@@ -154,7 +185,7 @@ public class Ceasefire : GrabbableObject
     public override void ItemActivate(bool used, bool buttonDown = true)
     {
         base.ItemActivate(used, buttonDown);
-        if (!buttonDown)
+        if (!buttonDown || _overCharged)
         {
             if (_firingStartRoutine != null)
             {
@@ -165,10 +196,12 @@ public class Ceasefire : GrabbableObject
             _firingEndRoutine = StartCoroutine(DoEndFiringSequence());
             isBeingUsed = false;
         }
-        else
+        else 
         {
             if (_firingEndRoutine != null)
+            {
                 StopCoroutine(_firingEndRoutine);
+            }
             _firingEndRoutine = null;
             _firingStartRoutine = StartCoroutine(DoStartFiringSequence());
             isBeingUsed = true;
@@ -221,14 +254,31 @@ public class Ceasefire : GrabbableObject
             _damageInterval += Time.deltaTime;
             return;
         }
-        if (playerHeldBy.IsLocalPlayer()) HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
+        if (playerHeldBy.IsLocalPlayer())
+        {
+            HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
+        }
+
         if (damageThreshold >= _maxDamageIntervalAtMaxCharge - 0.25f)
         {
-            playerHeldBy.DamagePlayer(5, true, true, CauseOfDeath.Gunshots, 0, false, -playerHeldBy.gameplayCamera.transform.forward * 20f);
+            playerHeldBy.DamagePlayer(10, true, true, CauseOfDeath.Gunshots, 0, false, playerHeldBy.velocityLastFrame * 10f);
+            isBeingUsed = false;
+            _overChargedTimer = _overChargedDuration;
+            _overCharged = true;
+            if (_firingStartRoutine != null)
+            {
+                StopCoroutine(_firingStartRoutine);
+                _firingStartRoutine = null;
+            }
+
+            _firingEndRoutine = StartCoroutine(DoEndFiringSequence());
         }
         _damageInterval = 0f;
 
-        if (!IsServer) return;
+        if (!IsServer)
+        {
+            return;
+        }
 
         enemyAIs.Clear();
 

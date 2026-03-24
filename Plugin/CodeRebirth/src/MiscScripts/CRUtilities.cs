@@ -401,6 +401,21 @@ public class CRUtilities
         }
     }
 
+    public static IEnumerator AlternateForcePlayerLookup(PlayerControllerB player, float length, float intensity)
+    {
+        float totalTime = length;
+        float timeElapsed = 0f;
+
+        Vector2 upwardInput = new Vector2(0, 1f) * intensity;
+
+        while (timeElapsed <= totalTime)
+        {
+            CalculateVerticalLookingInput(upwardInput, player);
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+    }
+
     public static void CalculateVerticalLookingInput(Vector2 inputVector, PlayerControllerB playerCurrentlyControlling)
     {
         if (!playerCurrentlyControlling.smoothLookEnabledLastFrame)
