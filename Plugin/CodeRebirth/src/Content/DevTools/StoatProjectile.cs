@@ -133,7 +133,7 @@ public class StoatProjectile : MonoBehaviour
                 enemyAI.KillEnemyServerRpc(false);
                 continue;
             }
-            enemyAI.HitEnemyOnLocalClient(force, this.transform.position);
+            enemyAI.HitEnemyOnLocalClient(force, this.transform.position, playerHeldBy, true, -1);
         }
 
         foreach (IHittable hittable in hittablesHit)

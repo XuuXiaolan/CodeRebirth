@@ -237,8 +237,11 @@ public class Ceasefire : GrabbableObject
     {
         _particleSystemsGO.SetActive(false);
         _idleSource.clip = _fireEndSound;
-        _idleSource.Stop();
-        _idleSource.Play();
+        if (!_overCharged)
+        {
+            _idleSource.Stop();
+            _idleSource.Play();
+        }
         _endingTime = 2f;
         float timeElapsed = _fireEndSound.length;
         while (timeElapsed > 0)

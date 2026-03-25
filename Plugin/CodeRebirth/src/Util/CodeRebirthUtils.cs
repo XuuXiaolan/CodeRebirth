@@ -13,7 +13,6 @@ using CodeRebirth.src.Content.Maps;
 using System.Collections;
 using Dawn;
 using UnityEngine.InputSystem.Utilities;
-using CodeRebirth.src.ModCompats;
 
 namespace CodeRebirth.src.Util;
 internal class CodeRebirthUtils : NetworkBehaviour
@@ -34,7 +33,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        if (Plugin.ModConfig.ConfigDebugMode.Value && IsHost)
+        if (DevToolHandler.Instance.DevTools != null && Plugin.ModConfig.ConfigDebugMode.Value && IsHost)
         {
             NetworkObjectReference netObjRefXuBucket = SpawnScrap(LethalContent.Items[CodeRebirthItemKeys.CrispXuBuck].Item, Vector3.zero);
             NetworkObjectReference netObjRefDebugStick = SpawnScrap(LethalContent.Items[CodeRebirthItemKeys.DebugStick].Item, Vector3.zero);

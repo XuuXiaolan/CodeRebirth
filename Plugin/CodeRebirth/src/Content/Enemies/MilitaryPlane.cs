@@ -32,7 +32,12 @@ public class MilitaryPlane : NetworkBehaviour
     private Vector3 ExplodePosition = Vector3.zero;
 
     private static int militaryPlaneCount = 0;
-    public void Start()
+    public void Awake()
+    {
+        StartOfRound.Instance.StartNewRoundEvent.AddListener(OnStartNewRound);
+    }
+
+    public void OnStartNewRound()
     {
         militaryPlaneCount++;
         AudioSource.PlayOneShot(WarningSirenSound);
@@ -101,7 +106,9 @@ public class MilitaryPlane : NetworkBehaviour
     public void Update()
     {
         this.transform.position += this.transform.forward * Time.deltaTime * FlyingSpeed;
-        if (!droppedBoxChute && Vector3.Distance(this.transform.position, DropPosition) <= 0.5f)
+        float dot = Vector3.Dot(this.transform.forward, (DropPosition - this.transform.position).normalized);
+        Plugin.ExtendedLogging($"Military plane position: {this.transform.position} | drop position: {DropPosition} | dot: {dot} | exploded: {exploded} | droppedBoxChute: {droppedBoxChute}");
+        if (!droppedBoxChute && (Vector3.Distance(this.transform.position, DropPosition) <= 0.5f))
         {
             GameObject boxChuteObject = GameObject.Instantiate(BoxChutePrefab, DropPosition, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
             BoxChute boxChute = boxChuteObject.GetComponent<BoxChute>();

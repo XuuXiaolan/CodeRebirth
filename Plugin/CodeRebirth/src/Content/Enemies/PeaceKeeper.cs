@@ -30,6 +30,8 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
     internal GameObject _gunParticleSystemGO = null!;
     [SerializeField]
     private GameObject _fakeGunGO = null!;
+    [SerializeField]
+    private List<ParticleSystem> _ammoParticles = new();
 
     [Header("Audio")]
     [SerializeField]
@@ -207,11 +209,40 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
             return;
         }
 
+        if (_gunParticleSystemGO.activeSelf)
+        {
+            foreach (ParticleSystem particleSystem in _ammoParticles)
+            {
+                if (particleSystem.isPlaying)
+                {
+                    continue;
+                }
+
+                particleSystem.Play();
+            }
+        }
+        else
+        {
+            foreach (ParticleSystem particleSystem in _ammoParticles)
+            {
+                if (!particleSystem.isPlaying)
+                {
+                    continue;
+                }
+
+                particleSystem.Stop();
+            }
+        }
+
         if (!_isShooting)
+        {
             return;
+        }
 
         if (!_gunParticleSystemGO.activeSelf)
+        {
             return;
+        }
 
         DoGatlingGunDamage();
     }

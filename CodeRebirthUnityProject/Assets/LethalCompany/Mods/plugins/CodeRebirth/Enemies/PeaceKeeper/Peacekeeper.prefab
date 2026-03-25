@@ -2329,7 +2329,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3268728965381598644
 Transform:
   m_ObjectHideFlags: 0
@@ -2362,7 +2362,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 1
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -2916,7 +2916,7 @@ ParticleSystem:
         m_RotationOrder: 4
     randomizeRotationDirection: 0
     gravitySource: 0
-    maxNumParticles: 300
+    maxNumParticles: 200
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 0
@@ -12953,6 +12953,9 @@ MonoBehaviour:
   _shootingSpeed: 0.5
   _gunParticleSystemGO: {fileID: 1367203227059449936}
   _fakeGunGO: {fileID: 2654170570665937546}
+  _ammoParticles:
+  - {fileID: 2779290732990128265}
+  - {fileID: 8767109663918793877}
   _treadsSource: {fileID: 1571176913221313562}
   _aggroSFX: {fileID: 5112934747078218043}
   _revUpSound: {fileID: 8300000, guid: d9f25185427ac5e4ebb2af25a2aa053d, type: 3}
@@ -15891,7 +15894,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4177510118349014172
 Transform:
   m_ObjectHideFlags: 0
@@ -15924,7 +15927,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 1
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -16478,7 +16481,7 @@ ParticleSystem:
         m_RotationOrder: 4
     randomizeRotationDirection: 0
     gravitySource: 0
-    maxNumParticles: 300
+    maxNumParticles: 200
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 0

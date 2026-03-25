@@ -1,4 +1,11 @@
-# v1.5.3
+# v1.5.4
+
+- Upped the spawnrate of vending machines.
+- Fuck your cruisers, BearTraps can finally puncture the tyres, AND IT SAVES, RELOADING WONT HELP YOU.
+- Adjusted the visuals of Ceasefire and Peacekeeper.
+- Fixed an error from disabling the devtools from this mod.
+
+## v1.5.3
 
 - Nerfed Ceasefire to be harder to use and do a little less damage overall.
 - Removed spawn weights for unintended to spawn items.
