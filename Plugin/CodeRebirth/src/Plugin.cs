@@ -85,6 +85,7 @@ public class Plugin : BaseUnityPlugin
         StoatGun.Init();
         CommitKeyToSave.Init();
         HauntedTeddyBear.Init();
+        BearTrapWheelProxy.Init();
 
         // This should be ran before Network Prefabs are registered.
         InputActionsInstance = new IngameKeybinds();

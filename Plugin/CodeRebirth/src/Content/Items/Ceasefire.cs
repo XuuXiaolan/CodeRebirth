@@ -25,6 +25,10 @@ public class Ceasefire : GrabbableObject
     [SerializeField]
     private AudioSource _idleSource = null!;
     [SerializeField]
+    private AudioClip _overheatedSound = null!;
+    [SerializeField]
+    private AudioClip _outOfOverheatSound = null!;
+    [SerializeField]
     private AudioClip _fireStartSound = null!;
     [SerializeField]
     private AudioClip _fireLoopSound = null!;
@@ -74,7 +78,7 @@ public class Ceasefire : GrabbableObject
     private float _damageInterval = 0f;
 
     private Collider[] _cachedColliders = new Collider[20];
-    private List<EnemyAI> enemyAIs = new();
+    private List<EnemyAI> _enemyAIs = new();
 
     private float CurrentDamageInterval => Mathf.Lerp(_minigunDamageInterval, _maxDamageIntervalAtMaxCharge, _minigunDamageCurve.Evaluate(Mathf.Clamp01(_chargedTime / _maxChargedTime)));
 
@@ -100,6 +104,7 @@ public class Ceasefire : GrabbableObject
             if (_overChargedTimer <= 0f)
             {
                 _overCharged = false;
+                _idleSource.PlayOneShot(_outOfOverheatSound);
             }
         }
 
@@ -156,7 +161,7 @@ public class Ceasefire : GrabbableObject
                 {
                     StartCoroutine(CRUtilities.AlternateForcePlayerLookup(playerHeldBy, 0.5f, upwardStrength / 7.5f));
                 }
-                playerHeldBy.externalForceAutoFade += (-playerHeldBy.gameplayCamera.transform.forward) * multiplierOnDirection + direction * multiplierOnDirection * 2f;
+                playerHeldBy.externalForceAutoFade += (-playerHeldBy.gameplayCamera.transform.forward) * multiplierOnDirection * 0.75f + direction * multiplierOnDirection * 2f;
             }
         }
 
@@ -177,7 +182,7 @@ public class Ceasefire : GrabbableObject
         }
 
         // Increase emissive intensity with charge
-        float intensity = Mathf.Lerp(_minEmissionIntensity, _maxEmissionIntensity, evaluatedValue);
+        float intensity = Mathf.Clamp(Mathf.Lerp(_minEmissionIntensity, _maxEmissionIntensity, evaluatedValue), 0, _maxEmissionIntensity);
         Color emitColor = _baseEmissionColor * intensity;
         _ceasefireMaterial.SetColor(_EmissiveColorHash, emitColor);
     }
@@ -264,6 +269,7 @@ public class Ceasefire : GrabbableObject
             playerHeldBy.DamagePlayer(10, true, true, CauseOfDeath.Gunshots, 0, false, playerHeldBy.velocityLastFrame * 10f);
             isBeingUsed = false;
             _overChargedTimer = _overChargedDuration;
+            _idleSource.PlayOneShot(_overheatedSound);
             _overCharged = true;
             if (_firingStartRoutine != null)
             {
@@ -280,7 +286,7 @@ public class Ceasefire : GrabbableObject
             return;
         }
 
-        enemyAIs.Clear();
+        _enemyAIs.Clear();
 
         Vector3 capsuleStart = _ceasefireBarrel.transform.position;
         Vector3 capsuleEnd = capsuleStart + (-_ceasefireBarrel.transform.up) * _minigunRange;
@@ -306,10 +312,10 @@ public class Ceasefire : GrabbableObject
             }
             else if (hittable is EnemyAICollisionDetect enemy)
             {
-                if (enemyAIs.Contains(enemy.mainScript))
+                if (_enemyAIs.Contains(enemy.mainScript))
                     continue;
 
-                enemyAIs.Add(enemy.mainScript);
+                _enemyAIs.Add(enemy.mainScript);
                 enemy.mainScript.HitEnemyOnLocalClient(1, capsuleStart, playerHeldBy, true, -1);
             }
             else

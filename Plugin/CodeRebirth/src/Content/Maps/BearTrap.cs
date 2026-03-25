@@ -1,7 +1,8 @@
-using System;
 using System.Collections;
+using System.Collections.Generic;
 using Dawn;
 using Dawn.Utils;
+using Dusk;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -26,7 +27,7 @@ public class BearTrap : CodeRebirthHazard, IHittable
     private EnemyAI? enemyCaught = null;
     private bool isTriggered = false;
     private bool canTrigger = true;
-    [NonSerialized] public bool byProduct = false;
+    internal bool byProduct = false;
     private static readonly int IsTrapTriggered = Animator.StringToHash("isTrapTriggered");
     private static readonly int IsTrapResetting = Animator.StringToHash("isTrapResetting");
 
@@ -109,31 +110,14 @@ public class BearTrap : CodeRebirthHazard, IHittable
         enemyCaught.agent.velocity = Vector3.zero;
     }
 
-    public void SetWheelFriction(GameObject wheelHitGameObject)
+    public void SetWheelFriction(BearTrapWheelProxy bearTrapWheelProxy)
     {
         if (!Plugin.ModConfig.ConfigBearTrapsPopTires.Value)
         {
             return;
         }
 
-        WheelCollider wheelCollider = wheelHitGameObject.GetComponent<WheelCollider>();
-
-        WheelFrictionCurve sidewaysFriction = wheelCollider.sidewaysFriction;
-        sidewaysFriction.stiffness = 0.1f;  // Decrease stiffness to simulate reduced grip
-        sidewaysFriction.extremumValue = 0.1f;  // Very little grip at the extremum point
-        sidewaysFriction.asymptoteValue = 0.05f;  // Even less grip at the asymptote point
-        sidewaysFriction.extremumSlip = 0.2f;  // The point where grip drops sharply (this could vary based on how flat the tire is)
-        sidewaysFriction.asymptoteSlip = 0.5f;  // Adjust based on how you want the tire to behave at high slip
-
-        WheelFrictionCurve forwardFriction = wheelCollider.forwardFriction;
-        forwardFriction.stiffness = 0.1f;  // Similar to sideways friction, reduce stiffness
-        forwardFriction.extremumValue = 0.1f;  // Reduce friction at extremum
-        forwardFriction.asymptoteValue = 0.05f;  // Further reduce friction at asymptote
-        forwardFriction.extremumSlip = 0.2f;  // Lower slip for the point where the tire loses traction
-        forwardFriction.asymptoteSlip = 0.5f;  // Lower this for when traction is very reduced
-
-        wheelCollider.sidewaysFriction = sidewaysFriction;
-        wheelCollider.forwardFriction = forwardFriction;
+        bearTrapWheelProxy.PunctureWheel();
     }
 
     private void UpdateAudio()
@@ -148,10 +132,10 @@ public class BearTrap : CodeRebirthHazard, IHittable
             return;
         }
 
-        if (other.gameObject.layer == 30 && other.TryGetComponent(out WheelCollider wheel))
+        if (other.gameObject.layer == 30 && other.TryGetComponent(out BearTrapWheelProxy wheelProxy))
         {
             trapAudioSource.PlayOneShot(poppingTireSound);
-            SetWheelFriction(wheel.gameObject);
+            SetWheelFriction(wheelProxy);
         }
         else if (other.gameObject.layer == 3 && other.TryGetComponent(out PlayerControllerB player) && player.IsLocalPlayer())
         {
