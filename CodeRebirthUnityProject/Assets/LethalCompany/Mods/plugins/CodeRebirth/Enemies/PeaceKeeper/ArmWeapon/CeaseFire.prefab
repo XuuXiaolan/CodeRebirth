@@ -3059,7 +3059,7 @@ Transform:
   m_GameObject: {fileID: 6747567250055755945}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7066802, y: -0.0000010530352, z: -0.0000010543063, w: 0.7075331}
-  m_LocalPosition: {x: 0, y: -0.1, z: 0.67}
+  m_LocalPosition: {x: 0, y: -0.1, z: -0.61}
   m_LocalScale: {x: 0.29999998, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -3128,9 +3128,9 @@ ParticleSystem:
         m_RotationOrder: 4
     startSpeed:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 3
       scalar: 6
-      minScalar: 5
+      minScalar: 3
       maxCurve:
         serializedVersion: 2
         m_Curve: []
@@ -3147,7 +3147,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0, g: 0, b: 0, a: 0.73333335}
+      maxColor: {r: 0.3886792, g: 0.38061228, b: 0.38061228, a: 0.73333335}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -3211,8 +3211,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 3
-      minScalar: 2
+      scalar: 5
+      minScalar: 4
       maxCurve:
         serializedVersion: 2
         m_Curve: []
@@ -3319,7 +3319,7 @@ ParticleSystem:
     gravityModifier:
       serializedVersion: 2
       minMaxState: 0
-      scalar: -0.08
+      scalar: -0.001
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -3336,7 +3336,7 @@ ParticleSystem:
   ShapeModule:
     serializedVersion: 6
     enabled: 1
-    type: 4
+    type: 5
     angle: 9.24
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
@@ -3344,7 +3344,7 @@ ParticleSystem:
     donutRadius: 0.2
     m_Position: {x: 0, y: 0, z: 0}
     m_Rotation: {x: 0, y: 0, z: 0}
-    m_Scale: {x: 1, y: 1, z: 1}
+    m_Scale: {x: 1.84, y: 3.05, z: 1}
     placementMode: 0
     m_MeshMaterialIndex: 0
     m_MeshNormalOffset: 0
@@ -3383,9 +3383,9 @@ ParticleSystem:
     m_TextureColorAffectsParticles: 1
     m_TextureAlphaAffectsParticles: 1
     m_TextureBilinearFiltering: 0
-    randomDirectionAmount: 0
+    randomDirectionAmount: 0.1
     sphericalDirectionAmount: 0
-    randomPositionAmount: 1.28
+    randomPositionAmount: 0
     radius:
       value: 0.4
       mode: 0
@@ -3434,7 +3434,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 120
+      scalar: 5
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -5421,7 +5421,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1159592409
+  GlobalObjectIdHash: 3797306231
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -5611,10 +5611,11 @@ MonoBehaviour:
   _maxChargedTime: 10
   _minParticleRateOverTime: -50
   _maxParticleRateOverTime: 150
-  _minEmissionIntensity: 0
-  _maxEmissionIntensity: 15
+  _minEmissionIntensity: -5
+  _maxEmissionIntensity: 10
   _maxDamageIntervalAtMaxCharge: 1
   _overheatEffect: {fileID: 8572332115556941923}
+  _overChargedDuration: 30
   _minigunDamageInterval: 0.2
   _minigunRange: 60
   _minigunWidth: 1.5
