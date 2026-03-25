@@ -15,15 +15,16 @@ public class UnityWheelColliderProxy : BearTrapWheelProxy
 
     public override void PunctureWheel()
     {
+        base.PunctureWheel();
         WheelCollider vehicleTyre = GetComponent<WheelCollider>();
-        vehicleTyre.radius *= 0.8f;
+        vehicleTyre.radius *= 0.9f;
 
         WheelFrictionCurve forwardFriction = vehicleTyre.forwardFriction;
-        forwardFriction.stiffness *= 0.5f;
+        forwardFriction.stiffness *= 0.7f;
         vehicleTyre.forwardFriction = forwardFriction;
 
         WheelFrictionCurve sidewaysFriction = vehicleTyre.sidewaysFriction;
-        sidewaysFriction.stiffness *= 0.5f;
+        sidewaysFriction.stiffness *= 0.4f;
         vehicleTyre.sidewaysFriction = sidewaysFriction;
     }
 }

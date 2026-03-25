@@ -8,6 +8,7 @@ namespace CodeRebirth.src.Content.Maps;
 
 public abstract class BearTrapWheelProxy : MonoBehaviour
 {
+    public bool AlreadyPunctured { get; private set; }
     internal static int MapHazardsLayerMask = -1;
 
     private static readonly NamespacedKey BearTrapWheelProxyKey = NamespacedKey.From("code_rebirth", "bear_trap_wheel_proxy");
@@ -70,6 +71,12 @@ public abstract class BearTrapWheelProxy : MonoBehaviour
 
     public virtual void PunctureWheel()
     {
+        if (AlreadyPunctured)
+        {
+            return;
+        }
+
+        AlreadyPunctured = true;
         PersistentDataContainer saveContainer = DawnLib.GetCurrentContract()!;
         List<string> gameObjectNames = saveContainer.GetOrSetDefault<List<string>>(BearTrapWheelProxyKey, []);
         gameObjectNames.Add(gameObject.name);

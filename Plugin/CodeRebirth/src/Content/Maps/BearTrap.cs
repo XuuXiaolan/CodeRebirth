@@ -1,8 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using Dawn;
 using Dawn.Utils;
-using Dusk;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -134,6 +132,10 @@ public class BearTrap : CodeRebirthHazard, IHittable
 
         if (other.gameObject.layer == 30 && other.TryGetComponent(out BearTrapWheelProxy wheelProxy))
         {
+            if (wheelProxy.AlreadyPunctured)
+            {
+                return;
+            }
             trapAudioSource.PlayOneShot(poppingTireSound);
             SetWheelFriction(wheelProxy);
         }

@@ -14,6 +14,7 @@ public class UnknownWheelProxy : BearTrapWheelProxy
 
     public override void PunctureWheel()
     {
+        base.PunctureWheel();
         PunctureWheelAction?.Invoke();
     }
 }
