@@ -218,7 +218,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
     {
         if (!LethalContent.Items.TryGetValue(itemKey, out var itemInfo))
         {
-            Plugin.Logger.LogError($"'{itemKey}' either isn't a CodeRebirth scrap or not registered! This method only handles CodeRebirth scrap!");
+            Plugin.Logger.LogError($"'{itemKey}' is not registered through DawnLib!");
             return;
         }
         SpawnScrap(itemInfo.Item, position, isQuest, defaultRotation, valueIncrease);
@@ -250,6 +250,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         {
             StartUIForItemServerRpc(go);
         }
+
         return new NetworkObjectReference(go);
     }
 

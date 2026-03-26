@@ -209,31 +209,6 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
             return;
         }
 
-        if (_gunParticleSystemGO.activeSelf)
-        {
-            foreach (ParticleSystem particleSystem in _ammoParticles)
-            {
-                if (particleSystem.isPlaying)
-                {
-                    continue;
-                }
-
-                particleSystem.Play();
-            }
-        }
-        else
-        {
-            foreach (ParticleSystem particleSystem in _ammoParticles)
-            {
-                if (!particleSystem.isPlaying)
-                {
-                    continue;
-                }
-
-                particleSystem.Stop();
-            }
-        }
-
         if (!_isShooting)
         {
             return;
@@ -631,6 +606,22 @@ public class PeaceKeeper : CodeRebirthEnemyAI, IVisibleThreat
     #endregion
 
     #region Animation Events
+
+    public void EnableBulletParticles()
+    {
+        foreach (ParticleSystem particleSystem in _ammoParticles)
+        {
+            particleSystem.Play();
+        }
+    }
+
+    public void DisableBulletParticles()
+    {
+        foreach (ParticleSystem particleSystem in _ammoParticles)
+        {
+            particleSystem.Stop();
+        }
+    }
 
     public void ReplaceAndSpawnRealGunAnimationEvent()
     {
