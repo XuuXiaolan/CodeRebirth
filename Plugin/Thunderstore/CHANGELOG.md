@@ -1,9 +1,10 @@
 # v1.5.4
 
-- Upped the spawnrate of vending machines.
+- Upped the spawnrate and pricing of vending machines.
 - Fuck your cruisers, BearTraps can finally puncture the tyres, AND IT SAVES, RELOADING WONT HELP YOU.
-- Adjusted the visuals of Ceasefire and Peacekeeper.
+- Adjusted the visuals of Peacekeeper.
 - Fixed an error from disabling the devtools from this mod.
+- Mimic crates are now impossible to cheese by using something like TME to check inside of them.
 
 ## v1.5.3
 
