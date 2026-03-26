@@ -8878,7 +8878,7 @@ Transform:
   m_GameObject: {fileID: 7952619480326014836}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 35.975677, y: -0.5753379, z: 15.427771}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -8905,7 +8905,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1758033118
+  GlobalObjectIdHash: 4092093034
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -9055,6 +9055,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+  skinnedMeshRenderer: {fileID: 2969623847393940429}
+  transparentMaterial: {fileID: 2100000, guid: b3c98f126c1645444b2bef60c3c4a112, type: 2}
+  mimicMaterial: {fileID: 0}
   trigger: {fileID: 0}
   pickable: {fileID: 0}
   animator: {fileID: 8557149345729840933}

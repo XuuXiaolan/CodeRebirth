@@ -24,6 +24,10 @@ public class ItemCrate : CRHittable
     public UnityEvent onBurn = new();
     public UnityEvent postBurn = new();
 
+    public SkinnedMeshRenderer skinnedMeshRenderer = null!;
+    public Material? transparentMaterial = null;
+    public Material? mimicMaterial = null;
+
     public InteractTrigger? trigger = null!;
     public Pickable? pickable = null!;
     public Animator animator = null!;
@@ -53,6 +57,14 @@ public class ItemCrate : CRHittable
         base.OnNetworkSpawn();
         Instances.Add(this);
         Transporter.objectsWithPriorityToTransport.Add(new GameObjectWithPriority(gameObject, 5));
+        if (crateType == CrateType.WoodenMimic)
+        {
+            skinnedMeshRenderer.SetSharedMaterials([skinnedMeshRenderer.sharedMaterials[0], transparentMaterial]);
+        }
+        else if (crateType == CrateType.MetalMimic)
+        {
+            skinnedMeshRenderer.SetSharedMaterials([skinnedMeshRenderer.sharedMaterials[0], skinnedMeshRenderer.sharedMaterials[1], transparentMaterial]);
+        }
     }
 
     public override void OnNetworkDespawn()
@@ -82,13 +94,13 @@ public class ItemCrate : CRHittable
 
         if (crateType == CrateType.Wooden || crateType == CrateType.WoodenMimic)
         {
-            var healthBoundedRange = MapObjectHandler.Instance.Crate.GetConfig<BoundedRange>("Wooden Crate | Health").Value;
+            var healthBoundedRange = MapObjectHandler.Instance.Crate!.GetConfig<BoundedRange>("Wooden Crate | Health").Value;
             health = crateRandom.Next((int)healthBoundedRange.Min, (int)healthBoundedRange.Max + 1);
         }
 
         if ((crateType == CrateType.Metal || crateType == CrateType.MetalMimic) && trigger != null)
         {
-            var holdTimerBoundedRange = MapObjectHandler.Instance.Crate.GetConfig<BoundedRange>("Metal Safe | Hold Timer").Value;
+            var holdTimerBoundedRange = MapObjectHandler.Instance.Crate!.GetConfig<BoundedRange>("Metal Safe | Hold Timer").Value;
             trigger.timeToHold = crateRandom.NextFloat(holdTimerBoundedRange.Min, holdTimerBoundedRange.Max);
             animator.SetFloat("openingSpeed", 11.875f / trigger.timeToHold);
             Plugin.ExtendedLogging("Crate time to hold: " + trigger.timeToHold);
@@ -205,12 +217,12 @@ public class ItemCrate : CRHittable
             int numberOfScrapToSpawn = 3;
             if (crateType == CrateType.Metal)
             {
-                var boundedRange = MapObjectHandler.Instance.Crate.GetConfig<BoundedRange>("Metal Safe | Scrap Spawn Number").Value;
+                BoundedRange boundedRange = MapObjectHandler.Instance.Crate!.GetConfig<BoundedRange>("Metal Safe | Scrap Spawn Number").Value;
                 numberOfScrapToSpawn = UnityEngine.Random.Range((int)boundedRange.Min, (int)boundedRange.Max + 1);
             }
             else if (crateType == CrateType.Wooden)
             {
-                var boundedRange = MapObjectHandler.Instance.Crate.GetConfig<BoundedRange>("Wooden Crate | Scrap Spawn Number").Value;
+                BoundedRange boundedRange = MapObjectHandler.Instance.Crate!.GetConfig<BoundedRange>("Wooden Crate | Scrap Spawn Number").Value;
                 numberOfScrapToSpawn = UnityEngine.Random.Range((int)boundedRange.Min, (int)boundedRange.Max + 1);
             }
 
@@ -222,7 +234,7 @@ public class ItemCrate : CRHittable
                 switch (crateType)
                 {
                     case CrateType.Metal:
-                        string potentiallyBlacklistedScrapConfig = MapObjectHandler.Instance.Crate.GetConfig<string>("Metal Safe | Blacklist").Value;
+                        string potentiallyBlacklistedScrapConfig = MapObjectHandler.Instance.Crate!.GetConfig<string>("Metal Safe | Blacklist").Value;
                         bool actuallyABlacklist = MapObjectHandler.Instance.Crate.GetConfig<bool>("Metal Safe | Blacklist Or Whitelist").Value;
 
                         string[] blacklistedOrWhitelistedScrap = potentiallyBlacklistedScrapConfig.Split(',').Select(s => s.Trim().ToLowerInvariant()).ToArray();
@@ -250,7 +262,10 @@ public class ItemCrate : CRHittable
                         break;
                 }
 
-                if (item == null || item.spawnPrefab == null) continue;
+                if (item == null || item.spawnPrefab == null)
+                {
+                    continue;
+                }
                 CodeRebirthUtils.Instance.SpawnScrap(item, transform.position + Vector3.up + Vector3.right * crateRandom.NextFloat(-0.25f, 0.25f) + Vector3.forward * crateRandom.NextFloat(-0.25f, 0.25f), false, true, 0);
             }
         }
@@ -265,6 +280,14 @@ public class ItemCrate : CRHittable
 
     public void OpenCrateLocally()
     {
+        if (crateType == CrateType.WoodenMimic)
+        {
+            skinnedMeshRenderer.SetSharedMaterials([skinnedMeshRenderer.sharedMaterials[0], mimicMaterial]);
+        }
+        else if (crateType == CrateType.MetalMimic)
+        {
+            skinnedMeshRenderer.SetSharedMaterials([skinnedMeshRenderer.sharedMaterials[0], skinnedMeshRenderer.sharedMaterials[1], mimicMaterial]);
+        }
         slowlyOpeningSFX?.Stop();
         if (pickable != null && trigger != null)
         {
@@ -285,8 +308,16 @@ public class ItemCrate : CRHittable
             animator.SetBool("opened", true);
         }
         animator.SetBool("opening", false);
-        if (grabAndPullPlayerScript != null) grabAndPullPlayerScript.enabled = true;
-        if (grabAndLaunchPlayerScript != null) grabAndLaunchPlayerScript.enabled = true;
+        if (grabAndPullPlayerScript != null)
+        {
+            grabAndPullPlayerScript.enabled = true;
+        }
+
+        if (grabAndLaunchPlayerScript != null)
+        {
+            grabAndLaunchPlayerScript.enabled = true;
+        }
+
         if (crateType == CrateType.WoodenMimic)
         {
             StartCoroutine(ResetCrateManually());
@@ -296,8 +327,14 @@ public class ItemCrate : CRHittable
     private IEnumerator ResetCrateManually()
     {
         yield return new WaitForSeconds(2f);
-        if (health > 0 && digProgress == 0) yield break;
-        if (grabAndLaunchPlayerScript != null) grabAndLaunchPlayerScript.enabled = false;
+        if (health > 0 && digProgress == 0)
+        {
+            yield break;
+        }
+        if (grabAndLaunchPlayerScript != null)
+        {
+            grabAndLaunchPlayerScript.enabled = false;
+        }
         ResetWoodenCrate();
     }
 
@@ -356,6 +393,15 @@ public class ItemCrate : CRHittable
 
     private IEnumerator DoBurningLocal(int randomMimicScrapToSpawn)
     {
+        if (crateType == CrateType.WoodenMimic)
+        {
+            skinnedMeshRenderer.SetSharedMaterials([skinnedMeshRenderer.sharedMaterials[0], mimicMaterial]);
+        }
+        else if (crateType == CrateType.MetalMimic)
+        {
+            skinnedMeshRenderer.SetSharedMaterials([skinnedMeshRenderer.sharedMaterials[0], skinnedMeshRenderer.sharedMaterials[1], mimicMaterial]);
+        }
+
         burned = true;
         isBurning = true;
         animator.SetBool(BurningHash, true);
@@ -412,11 +458,11 @@ public class ItemCrate : CRHittable
         bool shovelOnly = false;
         if (crateType == CrateType.Metal || crateType == CrateType.MetalMimic)
         {
-            shovelOnly = MapObjectHandler.Instance.Crate.GetConfig<bool>("Metal Safe | Shovellin").Value;
+            shovelOnly = MapObjectHandler.Instance.Crate!.GetConfig<bool>("Metal Safe | Shovellin").Value;
         }
         else if (crateType == CrateType.Wooden || crateType == CrateType.WoodenMimic)
         {
-            shovelOnly = MapObjectHandler.Instance.Crate.GetConfig<bool>("Wooden Crate | Shovellin").Value;
+            shovelOnly = MapObjectHandler.Instance.Crate!.GetConfig<bool>("Wooden Crate | Shovellin").Value;
         }
 
         if (playerWhoHit.currentlyHeldObjectServer == null && shovelOnly)
@@ -443,7 +489,7 @@ public class ItemCrate : CRHittable
 
     public Item GetRandomShopItem()
     {
-        string woodenCrateItemConfig = MapObjectHandler.Instance.Crate.GetConfig<string>("Wooden Crate | Blacklist").Value;
+        string woodenCrateItemConfig = MapObjectHandler.Instance.Crate!.GetConfig<string>("Wooden Crate | Blacklist").Value;
         bool isWhitelist = !MapObjectHandler.Instance.Crate.GetConfig<bool>("Wooden Crate | Blacklist Or Whitelist").Value;
         string[] blackListedScrap = [];
         string[] whiteListedScrap = [];
@@ -541,7 +587,7 @@ public class ItemCrate : CRHittable
             StartCoroutine(DisableGrabPullThing(player));
             StartCoroutine(StartDamagingPlayer(player));
         }
-        if (crateType == CrateType.WoodenMimic)
+        else if (crateType == CrateType.WoodenMimic)
         {
             StartCoroutine(DisableGrabLaunchThing());
         }
@@ -565,6 +611,10 @@ public class ItemCrate : CRHittable
         animator.SetBool("opened", false);
         UpdateDigPosition(digProgress, 0);
         digProgress = Mathf.Clamp01(0);
+        if (crateType == CrateType.WoodenMimic)
+        {
+            skinnedMeshRenderer.SetSharedMaterials([skinnedMeshRenderer.sharedMaterials[0], transparentMaterial]);
+        }
     }
 
     private IEnumerator DisableGrabPullThing(PlayerControllerB player)
@@ -587,5 +637,7 @@ public class ItemCrate : CRHittable
             player.DamagePlayer(10, false, true, CauseOfDeath.Suffocation, 0, false, default);
             player.Crouch(true);
         }
+
+        skinnedMeshRenderer.SetSharedMaterials([skinnedMeshRenderer.sharedMaterials[0], skinnedMeshRenderer.sharedMaterials[1], transparentMaterial]);
     }
 }
