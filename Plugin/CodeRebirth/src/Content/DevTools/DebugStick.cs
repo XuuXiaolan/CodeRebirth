@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -8,6 +9,7 @@ using GameNetcodeStuff;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 
@@ -15,6 +17,9 @@ namespace CodeRebirth.src.Content.DevTools;
 
 public class DebugStick : GrabbableObject
 {
+    [field: SerializeField]
+    public List<Material> NavMeshMaterials { get; private set; }
+
     [field: SerializeField]
     public AudioSource Source { get; private set; }
 
@@ -26,6 +31,14 @@ public class DebugStick : GrabbableObject
 
     private Dictionary<DawnMapObjectInfo, HologramCopy> _hologramCopies = new();
     private DawnMapObjectInfo _currentlySelectedHazard;
+    private bool _updateNavMesh = false;
+    private GameObject? _navMeshObject;
+
+    private void NavMeshSurface_BuildNavMesh(On.Unity.AI.Navigation.NavMeshSurface.orig_BuildNavMesh orig, Unity.AI.Navigation.NavMeshSurface self)
+    {
+        orig(self);
+        VisualiseNavMesh();
+    }
 
     private bool CanPlaceHologram([NotNullWhen(true)] out RaycastHit raycastHit)
     {
@@ -62,6 +75,7 @@ public class DebugStick : GrabbableObject
         // Up and down Arrow keys to rotate up or down.
         // Z to tp to a random hazard of the current selection.
         // Remove all map hazards with R key.
+        // Visualise NavMesh with P key.
     }
 
     private static bool doneOnce = false;
@@ -213,6 +227,92 @@ public class DebugStick : GrabbableObject
         {
             MoveUpDown(keyboard.oKey);
         }
+        else if (keyboard.pKey.wasPressedThisFrame)
+        {
+            ToggleNavMesh();
+        }
+    }
+
+    private void ToggleNavMesh()
+    {
+        _updateNavMesh = !_updateNavMesh;
+        VisualiseNavMesh();
+    }
+
+    private void VisualiseNavMesh()
+    {
+        if (!_updateNavMesh)
+        {
+            if (_navMeshObject != null)
+            {
+                Destroy(_navMeshObject);
+            }
+            return;
+        }
+
+        if (_navMeshObject != null)
+        {
+            Destroy(_navMeshObject);
+        }
+
+        _navMeshObject = new("NavMesh Visualiser");
+
+        NavMeshTriangulation triangulation = NavMesh.CalculateTriangulation();
+        Vector3[] points = triangulation.vertices;
+
+        // Somehow smooth out the points so they don't clip underground? (or make them appear through the ground too, render over it)
+
+        MeshFilter meshFilter = _navMeshObject.AddComponent<MeshFilter>();
+        MeshRenderer meshRenderer = _navMeshObject.AddComponent<MeshRenderer>();
+
+        Dictionary<int, List<int>> submeshIndices = [];
+
+        for (int i = 0; i < triangulation.areas.Length; i++)
+        {
+            if (!submeshIndices.ContainsKey(triangulation.areas[i]))
+            {
+                submeshIndices.Add(triangulation.areas[i], []);
+            }
+
+            submeshIndices[triangulation.areas[i]].Add(triangulation.indices[3 * i]);
+            submeshIndices[triangulation.areas[i]].Add(triangulation.indices[3 * i + 1]);
+            submeshIndices[triangulation.areas[i]].Add(triangulation.indices[3 * i + 2]);
+        }
+
+        Mesh mesh = new()
+        {
+            vertices = points,
+            subMeshCount = submeshIndices.Count
+        };
+
+        int index = 0;
+        foreach (KeyValuePair<int, List<int>> entry in submeshIndices)
+        {
+            mesh.SetTriangles(entry.Value.ToArray(), index++);
+        }
+
+        meshFilter.mesh = mesh;
+        mesh.RecalculateNormals();
+        mesh.RecalculateBounds();
+
+        List<Material> materials = [];
+        foreach (KeyValuePair<int, List<int>> entry in submeshIndices)
+        {
+            materials.Add(NavMeshMaterials[entry.Key]);
+        }
+
+        meshRenderer.SetSharedMaterials(materials);
+    }
+
+    private static void SnapVerticesToNavMesh(Vector3[] points, int areaMask, float maxDistance = 0.2f)
+    {
+        for (int i = 0; i < points.Length; i++)
+        {
+            if (NavMesh.SamplePosition(points[i] + Vector3.up * 0.1f, out NavMeshHit hit, maxDistance, areaMask))
+            {
+                points[i] = hit.position + Vector3.up * 0.03f; // slight visual offset
+            }
+        }
     }
 
     private void ResetAllRotationAndPositionEdits()
@@ -264,7 +364,43 @@ public class DebugStick : GrabbableObject
         {
             ImperiumCompat.ToggleInputs(false);
         }
+
         SetHazardTooltips();
+    }
+
+    public override void GrabItem()
+    {
+        base.GrabItem();
+        On.Unity.AI.Navigation.NavMeshSurface.BuildNavMesh += NavMeshSurface_BuildNavMesh;
+        On.Unity.AI.Navigation.NavMeshSurface.UpdateNavMesh += NavMeshSurface_UpdateNavMesh;
+        // On.Unity.AI.Navigation.NavMeshSurface.UpdateDataIfTransformChanged += NavMeshSurface_UpdateDataIfTransformChanged;
+        On.Unity.AI.Navigation.NavMeshSurface.OnDisable += NavMeshSurface_OnDisable;
+        On.Unity.AI.Navigation.NavMeshSurface.OnEnable += NavMeshSurface_OnEnable;
+    }
+
+    private void NavMeshSurface_UpdateDataIfTransformChanged(On.Unity.AI.Navigation.NavMeshSurface.orig_UpdateDataIfTransformChanged orig, Unity.AI.Navigation.NavMeshSurface self)
+    {
+        orig(self);
+        VisualiseNavMesh();
+    }
+
+    private void NavMeshSurface_OnEnable(On.Unity.AI.Navigation.NavMeshSurface.orig_OnEnable orig, Unity.AI.Navigation.NavMeshSurface self)
+    {
+        orig(self);
+        VisualiseNavMesh();
+    }
+
+    private void NavMeshSurface_OnDisable(On.Unity.AI.Navigation.NavMeshSurface.orig_OnDisable orig, Unity.AI.Navigation.NavMeshSurface self)
+    {
+        orig(self);
+        VisualiseNavMesh();
+    }
+
+    private AsyncOperation NavMeshSurface_UpdateNavMesh(On.Unity.AI.Navigation.NavMeshSurface.orig_UpdateNavMesh orig, Unity.AI.Navigation.NavMeshSurface self, NavMeshData data)
+    {
+        AsyncOperation result = orig(self, data);
+        result.completed += delegate { VisualiseNavMesh(); };
+        return result;
     }
 
     public override void PocketItem()
@@ -283,6 +419,12 @@ public class DebugStick : GrabbableObject
         {
             ImperiumCompat.ToggleInputs(true);
         }
+
+        On.Unity.AI.Navigation.NavMeshSurface.BuildNavMesh -= NavMeshSurface_BuildNavMesh;
+        On.Unity.AI.Navigation.NavMeshSurface.UpdateNavMesh -= NavMeshSurface_UpdateNavMesh;
+        // On.Unity.AI.Navigation.NavMeshSurface.UpdateDataIfTransformChanged -= NavMeshSurface_UpdateDataIfTransformChanged;
+        On.Unity.AI.Navigation.NavMeshSurface.OnDisable -= NavMeshSurface_OnDisable;
+        On.Unity.AI.Navigation.NavMeshSurface.OnEnable -= NavMeshSurface_OnEnable;
     }
 
     public void SetHazardTooltips()
