@@ -527,6 +527,7 @@ public class ItemCrate : CRHittable
                 acceptableItems.Add(item);
             }
         }
+
         if (acceptableItems.Count <= 0)
         {
             Plugin.Logger.LogError("Acceptable items count is 0, check your wooden crate config to make sure its setup right.");

@@ -255,64 +255,130 @@ public class DebugStick : GrabbableObject
             Destroy(_navMeshObject);
         }
 
-        _navMeshObject = new("NavMesh Visualiser");
+        _navMeshObject = new GameObject("NavMesh Visualiser");
 
         NavMeshTriangulation triangulation = NavMesh.CalculateTriangulation();
-        Vector3[] points = triangulation.vertices;
 
-        // Somehow smooth out the points so they don't clip underground? (or make them appear through the ground too, render over it)
+        Vector3[] originalVertices = triangulation.vertices;
+        int[] originalIndices = triangulation.indices;
+        int[] originalAreas = triangulation.areas;
+
+        List<Vector3> vertices = [.. originalVertices];
+        List<int> indices = [];
+        List<int> triangleAreas = [];
+
+        Dictionary<(int, int), int> midpointCache = new();
+
+        int GetMidpointIndex(int a, int b)
+        {
+            if (a > b)
+            {
+                (a, b) = (b, a);
+            }
+
+            if (midpointCache.TryGetValue((a, b), out int cachedIndex))
+            {
+                return cachedIndex;
+            }
+
+            Vector3 midpoint = (vertices[a] + vertices[b]) * 0.5f;
+            int newIndex = vertices.Count;
+            vertices.Add(midpoint);
+            midpointCache[(a, b)] = newIndex;
+            return newIndex;
+        }
+
+        for (int tri = 0; tri < originalAreas.Length; tri++)
+        {
+            int i0 = originalIndices[tri * 3];
+            int i1 = originalIndices[tri * 3 + 1];
+            int i2 = originalIndices[tri * 3 + 2];
+
+            int m01 = GetMidpointIndex(i0, i1);
+            int m12 = GetMidpointIndex(i1, i2);
+            int m20 = GetMidpointIndex(i2, i0);
+
+            int area = originalAreas[tri];
+
+            AddTriangle(i0, m01, m20, area);
+            AddTriangle(m01, i1, m12, area);
+            AddTriangle(m20, m12, i2, area);
+            AddTriangle(m01, m12, m20, area);
+        }
+
+        void AddTriangle(int a, int b, int c, int area)
+        {
+            indices.Add(a);
+            indices.Add(b);
+            indices.Add(c);
+            triangleAreas.Add(area);
+        }
+
+        const float rayStartHeight = 1f;
+        const float rayDistance = 20f;
+        const float visualOffset = 0.03f;
+        int groundMask = LayerMask.GetMask("Default", "Room", "NavigationSurface");
+
+        for (int i = 0; i < vertices.Count; i++)
+        {
+            Vector3 start = vertices[i] + Vector3.up * rayStartHeight;
+
+            if (Physics.Raycast(start, Vector3.down, out RaycastHit hit, rayDistance, groundMask, QueryTriggerInteraction.Ignore))
+            {
+                vertices[i] = hit.point + Vector3.up * visualOffset;
+            }
+            else if (NavMesh.SamplePosition(vertices[i] + Vector3.up * 0.1f, out NavMeshHit navHit, 1f, NavMesh.AllAreas))
+            {
+                vertices[i] = navHit.position + Vector3.up * visualOffset;
+            }
+            else
+            {
+                vertices[i] += Vector3.up * visualOffset;
+            }
+        }
 
         MeshFilter meshFilter = _navMeshObject.AddComponent<MeshFilter>();
         MeshRenderer meshRenderer = _navMeshObject.AddComponent<MeshRenderer>();
 
         Dictionary<int, List<int>> submeshIndices = [];
 
-        for (int i = 0; i < triangulation.areas.Length; i++)
+        for (int tri = 0; tri < triangleAreas.Count; tri++)
         {
-            if (!submeshIndices.ContainsKey(triangulation.areas[i]))
+            int area = triangleAreas[tri];
+
+            if (!submeshIndices.ContainsKey(area))
             {
-                submeshIndices.Add(triangulation.areas[i], []);
+                submeshIndices.Add(area, []);
             }
 
-            submeshIndices[triangulation.areas[i]].Add(triangulation.indices[3 * i]);
-            submeshIndices[triangulation.areas[i]].Add(triangulation.indices[3 * i + 1]);
-            submeshIndices[triangulation.areas[i]].Add(triangulation.indices[3 * i + 2]);
+            submeshIndices[area].Add(indices[tri * 3]);
+            submeshIndices[area].Add(indices[tri * 3 + 1]);
+            submeshIndices[area].Add(indices[tri * 3 + 2]);
         }
 
         Mesh mesh = new()
         {
-            vertices = points,
+            vertices = vertices.ToArray(),
             subMeshCount = submeshIndices.Count
         };
 
-        int index = 0;
+        int submesh = 0;
         foreach (KeyValuePair<int, List<int>> entry in submeshIndices)
         {
-            mesh.SetTriangles(entry.Value.ToArray(), index++);
+            mesh.SetTriangles(entry.Value, submesh++);
         }
 
-        meshFilter.mesh = mesh;
         mesh.RecalculateNormals();
         mesh.RecalculateBounds();
+        meshFilter.sharedMesh = mesh;
 
-        List<Material> materials = [];
+        List<Material> materials = new();
         foreach (KeyValuePair<int, List<int>> entry in submeshIndices)
         {
             materials.Add(NavMeshMaterials[entry.Key]);
         }
 
         meshRenderer.SetSharedMaterials(materials);
-    }
-
-    private static void SnapVerticesToNavMesh(Vector3[] points, int areaMask, float maxDistance = 0.2f)
-    {
-        for (int i = 0; i < points.Length; i++)
-        {
-            if (NavMesh.SamplePosition(points[i] + Vector3.up * 0.1f, out NavMeshHit hit, maxDistance, areaMask))
-            {
-                points[i] = hit.position + Vector3.up * 0.03f; // slight visual offset
-            }
-        }
     }
 
     private void ResetAllRotationAndPositionEdits()
