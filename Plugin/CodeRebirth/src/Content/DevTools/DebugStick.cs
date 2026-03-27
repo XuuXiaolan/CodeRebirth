@@ -1,7 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.ModCompats;
 using Dawn;
 using Dawn.Utils;
@@ -314,28 +314,13 @@ public class DebugStick : GrabbableObject
             triangleAreas.Add(area);
         }
 
-        const float rayStartHeight = 1f;
-        const float rayDistance = 20f;
+        const float rayStartHeight = 0.5f;
+        const float sampleDistance = 1f;
+        const float rayDistance = 5f;
         const float visualOffset = 0.03f;
         int groundMask = LayerMask.GetMask("Default", "Room", "NavigationSurface");
 
-        for (int i = 0; i < vertices.Count; i++)
-        {
-            Vector3 start = vertices[i] + Vector3.up * rayStartHeight;
-
-            if (Physics.Raycast(start, Vector3.down, out RaycastHit hit, rayDistance, groundMask, QueryTriggerInteraction.Ignore))
-            {
-                vertices[i] = hit.point + Vector3.up * visualOffset;
-            }
-            else if (NavMesh.SamplePosition(vertices[i] + Vector3.up * 0.1f, out NavMeshHit navHit, 1f, NavMesh.AllAreas))
-            {
-                vertices[i] = navHit.position + Vector3.up * visualOffset;
-            }
-            else
-            {
-                vertices[i] += Vector3.up * visualOffset;
-            }
-        }
+        SnapVerticesToGroundHeightOnly(vertices, rayStartHeight, sampleDistance, rayDistance, visualOffset, groundMask);
 
         MeshFilter meshFilter = _navMeshObject.AddComponent<MeshFilter>();
         MeshRenderer meshRenderer = _navMeshObject.AddComponent<MeshRenderer>();
@@ -379,6 +364,28 @@ public class DebugStick : GrabbableObject
         }
 
         meshRenderer.SetSharedMaterials(materials);
+    }
+
+    private static void SnapVerticesToGroundHeightOnly(List<Vector3> vertices, float rayStartHeight, float sampleDistance, float rayDistance, float visualOffset, int groundMask)
+    {
+        for (int i = 0; i < vertices.Count; i++)
+        {
+            Vector3 vertex = vertices[i];
+            Vector3 rayStart = vertex + Vector3.up * rayStartHeight;
+
+            if (Physics.Raycast(rayStart, Vector3.down, out RaycastHit rayHit, rayDistance, groundMask, QueryTriggerInteraction.Ignore))
+            {
+                vertices[i] = new Vector3(vertex.x, rayHit.point.y + visualOffset, vertex.z);
+            }
+            else if (NavMesh.SamplePosition(rayStart, out NavMeshHit navHit, sampleDistance, NavMesh.AllAreas))
+            {
+                vertices[i] = new Vector3(vertex.x, navHit.position.y + visualOffset, vertex.z);
+            }
+            else
+            {
+                vertices[i] = new Vector3(vertex.x, vertex.y + visualOffset, vertex.z);
+            }
+        }
     }
 
     private void ResetAllRotationAndPositionEdits()
