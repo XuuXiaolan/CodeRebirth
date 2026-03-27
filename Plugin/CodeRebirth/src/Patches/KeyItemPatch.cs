@@ -23,6 +23,7 @@ static class KeyItemPatch
                 pickable.UnlockStuffServerRpc();
                 if (__instance.IsSpawned)
                 {
+                    __instance.playerHeldBy.carryWeight = Mathf.Clamp(__instance.playerHeldBy.carryWeight - (__instance.itemProperties.weight - 1f), 1f, 10f);
                     __instance.playerHeldBy.DestroyItemInSlotAndSync(Array.IndexOf(__instance.playerHeldBy.ItemSlots, __instance));
                 }
             }

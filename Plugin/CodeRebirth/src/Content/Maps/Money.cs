@@ -34,10 +34,10 @@ public class Money : GrabbableObject
 
     private static void DisplayCoinMessage()
     {
-        bool flicked = Plugin.PersistentDataContainer.GetOrSetDefault(CoinMesageKey, false);
+        bool flicked = DawnLib.GetCurrentContract()!.GetOrSetDefault(CoinMesageKey, false);
         if (!flicked)
         {
-            Plugin.PersistentDataContainer.Set(CoinMesageKey, true);
+            DawnLib.GetCurrentContract()!.Set(CoinMesageKey, true);
             HUDManager.Instance.DisplayTip(new HUDDisplayTip("Error - TP Failed", "Denomination Analyser not located.\nPlease purchase one from the ship terminal to store currency.", HUDDisplayTip.AlertType.Hint));
         }
     }
@@ -96,6 +96,7 @@ public class Money : GrabbableObject
         yield return new WaitForSeconds(0.1f);
         if (playerHeldBy && (isHeld || isPocketed))
         {
+            playerHeldBy.carryWeight = Mathf.Clamp(playerHeldBy.carryWeight - (itemProperties.weight - 1f), 1f, 10f);
             playerHeldBy.DestroyItemInSlotAndSync(Array.IndexOf(playerHeldBy.ItemSlots, this));
         }
         else

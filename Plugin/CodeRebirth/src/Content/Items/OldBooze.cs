@@ -31,6 +31,7 @@ public class OldBooze : GrabbableObject
             {
                 if (playerHeldBy.IsLocalPlayer())
                 {
+                    playerHeldBy.carryWeight = Mathf.Clamp(playerHeldBy.carryWeight - (itemProperties.weight - 1f), 1f, 10f);
                     playerHeldBy.DestroyItemInSlotAndSync(Array.IndexOf(playerHeldBy.ItemSlots, this));
                 }
             }
@@ -75,6 +76,7 @@ public class OldBooze : GrabbableObject
             customGrabTooltip = "Empty...";
             if (playerHeldBy != null && playerHeldBy.IsLocalPlayer())
             {
+                playerHeldBy.carryWeight = Mathf.Clamp(playerHeldBy.carryWeight - (itemProperties.weight - 1f), 1f, 10f);
                 playerHeldBy.DestroyItemInSlotAndSync(Array.IndexOf(playerHeldBy.ItemSlots, this));
             }
             yield break;

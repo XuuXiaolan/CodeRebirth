@@ -25,6 +25,7 @@ public class CreditPad : GrabbableObject
         yield return new WaitUntil(() => !audioPlayer.isPlaying && !videoPlayer.isPlaying);
         if (isHeld || isPocketed)
         {
+            playerHeldBy.carryWeight = Mathf.Clamp(playerHeldBy.carryWeight - (itemProperties.weight - 1f), 1f, 10f);
             playerHeldBy.DestroyItemInSlotAndSync(Array.IndexOf(playerHeldBy.ItemSlots, this));
         }
         else
