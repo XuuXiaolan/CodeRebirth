@@ -1,6 +1,6 @@
 using Dusk;
 
-namespace CodeRebirth.src.Content.Items;
+namespace CodeRebirth.src.Content.DevTools;
 
 public class DevToolHandler : ContentHandler<DevToolHandler>
 {

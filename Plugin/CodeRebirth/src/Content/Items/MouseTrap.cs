@@ -1,4 +1,5 @@
 using System.Collections;
+using CodeRebirth.src.MiscScripts;
 using Dawn.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -6,7 +7,7 @@ using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
 
-public class MouseTrap : GrabbableObject
+public class MouseTrap : GrabbableObject, ITriggerProxy
 {
     [field: SerializeField]
     public AudioSource AudioSource { get; private set; }
@@ -21,7 +22,7 @@ public class MouseTrap : GrabbableObject
     private static readonly int ArmedHash = Animator.StringToHash("Armed"); // Bool
 
     private bool _armed = false;
-    public void OnTriggerEnter(Collider other)
+    public void OnProxyTriggerEnter(Collider other)
     {
         // damage enemy or player if _armed
         if (!_armed)
@@ -37,6 +38,10 @@ public class MouseTrap : GrabbableObject
         {
             HandleEnemyInteractionsRpc(new NetworkBehaviourReference(enemyAICollisionDetect.mainScript));
         }
+        else if (other.TryGetComponent(out DeadBodyInfo deadBodyInfo) && deadBodyInfo.playerScript.IsLocalPlayer())
+        {
+            HandleDeadBodyInteractionsRpc();
+        }
     }
 
     [Rpc(SendTo.Everyone, RequireOwnership = false)]
@@ -50,6 +55,17 @@ public class MouseTrap : GrabbableObject
         PlayerControllerB player = playerControllerReference;
         player.DamagePlayer(5, true, true, CauseOfDeath.Crushing, 0, false, default);
         StartCoroutine(StunPlayerTemporarily(player));
+    }
+
+    [Rpc(SendTo.Everyone, RequireOwnership = false)]
+    private void HandleDeadBodyInteractionsRpc()
+    {
+        AudioSource.PlayOneShot(SnapSound);
+
+        _armed = false;
+        Animator.SetBool(ArmedHash, false);
+
+        StartCoroutine(StunNothingTemporarily());
     }
 
     [Rpc(SendTo.Everyone, RequireOwnership = false)]
@@ -69,11 +85,17 @@ public class MouseTrap : GrabbableObject
     {
         base.ItemActivate(used, buttonDown);
 
-        _armed = true;
         Animator.SetBool(ArmedHash, true);
         AudioSource.PlayOneShot(ArmingSound);
+        grabbable = false;
 
         StartCoroutine(playerHeldBy.waitToEndOfFrameToDiscard());
+    }
+
+    public void ArmMouseTrap()
+    {
+        _armed = true;
+        grabbable = true;
     }
 
     public override void EquipItem()
@@ -88,6 +110,13 @@ public class MouseTrap : GrabbableObject
             Animator.SetBool(ArmedHash, false);
             _armed = false;
         }
+    }
+
+    private IEnumerator StunNothingTemporarily()
+    {
+        grabbable = false;
+        yield return new WaitForSeconds(2f);
+        grabbable = true;
     }
 
     private IEnumerator StunPlayerTemporarily(PlayerControllerB player)
