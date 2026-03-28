@@ -93,6 +93,10 @@ public class FunctionalMicrowave : CodeRebirthHazard
         {
             return LethalContent.Items[CodeRebirthItemKeys.SapsuckerOmelette].Item;
         }
+        else if (result == 4)
+        {
+            return LethalContent.Items[CodeRebirthItemKeys.CharredSpork].Item;
+        }
         return null;
     }
 

@@ -13,7 +13,9 @@ public class RubberBand : GrabbableObject
     // sort of like slime launcher from those minecraft mods, costs 1 health and sends you forward, try to get rid of the next incoming fall damage?
 
     private static readonly int ProgressAnimationHash = Animator.StringToHash("Progress"); // Float
-    private static readonly int ChargingAnimationHash = Animator.StringToHash("Charging"); // Bool
+    private static readonly int ChargingAnimationHash = Animator.StringToHash("Charging"); // Trigger
+    private static readonly int ReleaseAnimationHash = Animator.StringToHash("Release"); // Trigger
+
     private float _charging = 0f;
 
     public override void Update()
@@ -21,11 +23,11 @@ public class RubberBand : GrabbableObject
         base.Update();
         if (isBeingUsed)
         {
-            _charging += Time.deltaTime;
+            _charging += Time.deltaTime/3f;
         }
         else
         {
-            _charging = Mathf.Clamp01(_charging - Time.deltaTime);
+            _charging = Mathf.Clamp01(_charging - Time.deltaTime*3f);
         }
 
         if (isPocketed || !isHeld)
@@ -43,7 +45,8 @@ public class RubberBand : GrabbableObject
         isBeingUsed = buttonDown;
         if (buttonDown)
         {
-            Animator.SetBool(ChargingAnimationHash, true);
+            Animator.SetFloat(ProgressAnimationHash, 0f);
+            Animator.SetTrigger(ChargingAnimationHash);
         }
         else
         {
@@ -52,11 +55,10 @@ public class RubberBand : GrabbableObject
                 return;
             }
             float progress = UseCurveStrength.Evaluate(_charging);
-            playerHeldBy.externalForceAutoFade += playerHeldBy.gameplayCamera.transform.forward * PushStrength * progress;
+            playerHeldBy.externalForceAutoFade += playerHeldBy.gameplayCamera.transform.forward * PushStrength * progress * 10f;
             _charging = 0f;
             Animator.SetFloat(ProgressAnimationHash, 1f);
-            Animator.SetFloat(ProgressAnimationHash, 0f);
-            Animator.SetBool(ChargingAnimationHash, false);
+            Animator.SetTrigger(ReleaseAnimationHash);
         }
         playerHeldBy.activatingItem = buttonDown;
     }

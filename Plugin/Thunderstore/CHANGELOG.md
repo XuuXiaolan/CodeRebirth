@@ -6,6 +6,7 @@
 - Mel is now missing.
 - Tiny Mu snailcat is now Salted Beef.
 - Stopped Jimothy from being able to grab TrashCans and Cacti.
+- Microwave spork obtainable again, I don't know how long it's not been obtainable for.
 
 ## v1.5.4
 
