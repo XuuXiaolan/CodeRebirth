@@ -475,68 +475,60 @@ Add lush foliage to any moon. Flora adjusts its coloration to the ground type.
 
 - [Londer Software](https://londersoftware.net) : Makers of the game "Zort", where the 4 Instrument models and music are from. (Great game, grab some friends and play it)
 
-- [SkittyMuffins](https://www.twitch.tv/skittymuffins) : Made a funny trailer that one time
-
 - [Generic](https://pallascats.org) : Super early Flash Turret idea.
-
-
 
 ## Credits - Misc Online Assets
 
-"Mu Posters" (<https://bsky.app/profile/estelaris.bsky.social>) by Estelaris.
+### Sound Websites
 
-"Carnivorous Plant" (<https://skfb.ly/oLzIp>) by mike69420 is licensed under Creative Commons Attribution (<http://creativecommons.org/licenses/by/4.0/>).
+<https://signaturesounds.org>
 
-## Sound Websites:
+<https://99sounds.org>
 
-https://signaturesounds.org 
+<https://freesound.org>
 
-https://99sounds.org 
+<https://pixabay.com>
 
-https://freesound.org 
+<https://www.zapsplat.com>
 
-https://pixabay.com 
+<https://freesfx.co.uk>
 
-https://www.zapsplat.com 
+<https://www.pacdv.com>
 
-https://freesfx.co.uk 
+<https://getsoundly.com>
 
-https://www.pacdv.com 
+### Individual Sounds
 
-https://getsoundly.com 
-
-## Individual Sounds:
-
-Female screaming for help by AmeAngelofSin -- https://freesound.org/s/326893/ -- License: Attribution 4.0
+Female screaming for help by AmeAngelofSin -- <https://freesound.org/s/326893/> -- License: Attribution 4.0
 
 Digital Alarm Loop.wav by bbrocer -- <https://freesound.org/s/389511/> -- License: Creative Commons 0
 
-Alarm 2 by RandomRecord19 -- https://freesound.org/s/738588/ -- License: Attribution 4.0
+Alarm 2 by RandomRecord19 -- <https://freesound.org/s/738588/> -- License: Attribution 4.0
 
-Baz Bass III Short (Nova).aif by Walter_Odington -- https://freesound.org/s/25955/ -- License: Creative Commons 0
+Baz Bass III Short (Nova).aif by Walter_Odington -- <https://freesound.org/s/25955/> -- License: Creative Commons 0
 
-_B_A0.wav by menegass -- https://freesound.org/s/107283/ -- License: Creative Commons 0
+_B_A0.wav by menegass -- <https://freesound.org/s/107283/> -- License: Creative Commons 0
 
-monologue with dl4 split-054.wav by CVLTIV8R -- https://freesound.org/s/792980/ -- License: Creative Commons 0
+monologue with dl4 split-054.wav by CVLTIV8R -- <https://freesound.org/s/792980/> -- License: Creative Commons 0
 
-Weapon, Sword, Metal sword, Swing, fast, impact by julianmateo_ -- https://freesound.org/s/522701/ -- License: Creative Commons 0
+Weapon, Sword, Metal sword, Swing, fast, impact by julianmateo_ -- <https://freesound.org/s/522701/> -- License: Creative Commons 0
 
-Large sword swing by Squirrel_404 -- https://freesound.org/s/737748/ -- License: Attribution 4.0
+Large sword swing by Squirrel_404 -- <https://freesound.org/s/737748/> -- License: Attribution 4.0
 
-https://www.zapsplat.com/music/coin-toss-throw-ring/
+<https://www.zapsplat.com/music/coin-toss-throw-ring/>
 
-https://www.zapsplat.com/music/motorcycle-helmet-set-down-hard-with-visor-vibrate-rattle-2/
+<https://www.zapsplat.com/music/motorcycle-helmet-set-down-hard-with-visor-vibrate-rattle-2/>
 
-Guillottine test 02.ogg by Glaneur de sons -- https://freesound.org/s/30187/ -- License: Attribution 4.0
+Guillottine test 02.ogg by Glaneur de sons -- <https://freesound.org/s/30187/> -- License: Attribution 4.0
 
-Droid falls over (messy).mp3 by J.R.Mythical -- https://freesound.org/s/589621/ -- License: Creative Commons 0
+Droid falls over (messy).mp3 by J.R.Mythical -- <https://freesound.org/s/589621/> -- License: Creative Commons 0
 
-Rattling Metal Cabinet Door 5.wav by F.M.Audio -- https://freesound.org/s/687130/ -- License: Attribution 4.0
+Rattling Metal Cabinet Door 5.wav by F.M.Audio -- <https://freesound.org/s/687130/> -- License: Attribution 4.0
 
-s_f_alarm.wav by SoundsofTh -- https://freesound.org/s/434937/ -- License: Attribution 4.0
+s_f_alarm.wav by SoundsofTh -- <https://freesound.org/s/434937/> -- License: Attribution 4.0
 
-## Fonts:
+### Fonts
 
-Digital-7 Font  -- Sizenko Alexander, Style-7 -- https://www.dafont.com/digital-7.font & https://www.styleseven.com -- Created: Oct 7, 2008
+Digital-7 Font  -- Sizenko Alexander, Style-7 -- <https://www.dafont.com/digital-7.font> & <https://www.styleseven.com> -- Created: Oct 7, 2008
 
-Scorched Earth Font -- KC Fonts -- https://www.fontspace.com/scorched-earth-font-f14776
+Scorched Earth Font -- KC Fonts -- <https://www.fontspace.com/scorched-earth-font-f14776>
