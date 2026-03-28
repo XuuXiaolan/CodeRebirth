@@ -20,7 +20,7 @@ public class FakeSnailCat : GrabbableObject
 
     internal PlayerControllerB lastOwner = null!;
     internal Vector3 localScale = Vector3.one;
-    internal string snailCatName = "Mu";
+    internal string snailCatName = "Salted Beef";
     internal float shiftHash = 0;
 
     public override void OnNetworkSpawn()

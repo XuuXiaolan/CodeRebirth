@@ -1,4 +1,12 @@
-# v1.5.4
+# v1.5.5
+
+- Added MouseTrap.
+- Added RubberBand.
+- Removed mentions of SkittyMuffins from the mod.
+- Mel is now missing.
+- Tiny Mu snailcat is now Salted Beef.
+
+## v1.5.4
 
 - Upped the spawnrate and pricing of vending machines.
 - Fuck your cruisers, BearTraps can finally puncture the tyres, AND IT SAVES, RELOADING WONT HELP YOU.

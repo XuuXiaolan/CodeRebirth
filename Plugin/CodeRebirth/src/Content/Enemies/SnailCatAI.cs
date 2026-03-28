@@ -78,7 +78,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
 
             if (randomizedNames.Count == 0)
             {
-                randomizedNames.Add("Mu");
+                randomizedNames.Add("Salted Beef");
             }
 
             string randomName = randomizedNames[enemyRandom.Next(randomizedNames.Count)];
@@ -86,7 +86,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
             this.transform.localScale *= randomScale;
             currentName = randomName;
             scanNodeProperties.headerText = currentName;
-            if (currentName == "Mu")
+            if (currentName == "Salted Beef")
             {
                 this.transform.localScale *= 0.1f;
             }
