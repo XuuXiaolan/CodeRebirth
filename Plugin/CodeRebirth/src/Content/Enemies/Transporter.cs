@@ -36,7 +36,7 @@ public class Transporter : CodeRebirthEnemyAI
     public Transform palletTransform = null!;
     public Transform jimothyTransform = null!;
 
-    [HideInInspector] public static List<GameObjectWithPriority> objectsWithPriorityToTransport = new();
+    internal static List<GameObjectWithPriority> objectsWithPriorityToTransport = new();
 
     private Coroutine? onHitRoutine = null;
     private GameObjectWithPriority? transportTarget = null;

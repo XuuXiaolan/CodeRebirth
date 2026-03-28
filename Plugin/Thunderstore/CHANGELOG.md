@@ -5,6 +5,7 @@
 - Removed mentions of SkittyMuffins from the mod.
 - Mel is now missing.
 - Tiny Mu snailcat is now Salted Beef.
+- Stopped Jimothy from being able to grab TrashCans and Cacti.
 
 ## v1.5.4
 
