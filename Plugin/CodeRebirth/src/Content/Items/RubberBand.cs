@@ -1,3 +1,4 @@
+using Dawn;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
@@ -15,45 +16,57 @@ public class RubberBand : GrabbableObject
     private static readonly int ProgressAnimationHash = Animator.StringToHash("Progress"); // Float
     private static readonly int ChargingAnimationHash = Animator.StringToHash("Charging"); // Trigger
     private static readonly int ReleaseAnimationHash = Animator.StringToHash("Release"); // Trigger
+    private static readonly int MaxChargeAnimationHash = Animator.StringToHash("MaxCharge"); // Trigger
 
     private float _charging = 0f;
+    private float _cooldown = 0.5f;
 
     public override void Update()
     {
         base.Update();
-        if (isBeingUsed)
-        {
-            _charging += Time.deltaTime/3f;
-        }
-        else
-        {
-            _charging = Mathf.Clamp01(_charging - Time.deltaTime*3f);
-        }
-
+        _cooldown -= Time.deltaTime;
         if (isPocketed || !isHeld)
         {
             return;
         }
 
+        if (_charging >= 3f)
+        {
+            return;
+        }
+
+        if (isBeingUsed)
+        {
+            _charging += Time.deltaTime;
+        }
+
         float progress = UseCurveStrength.Evaluate(_charging);
         Animator.SetFloat(ProgressAnimationHash, progress);
+        if (_charging >= 3f)
+        {
+            Animator.SetTrigger(MaxChargeAnimationHash);
+        }
     }
 
     public override void ItemActivate(bool used, bool buttonDown = true)
     {
         base.ItemActivate(used, buttonDown);
+        if (_cooldown > 0f)
+        {
+            return;
+        }
+
         isBeingUsed = buttonDown;
         if (buttonDown)
         {
+            playerHeldBy.isMovementHindered = Mathf.Clamp(1, 1, playerHeldBy.isMovementHindered);
             Animator.SetFloat(ProgressAnimationHash, 0f);
             Animator.SetTrigger(ChargingAnimationHash);
         }
         else
         {
-            if (_charging <= 0.5f)
-            {
-                return;
-            }
+            _cooldown = 0.5f;
+            playerHeldBy.isMovementHindered = Mathf.Clamp(playerHeldBy.isMovementHindered - 1, 0, playerHeldBy.isMovementHindered);
             float progress = UseCurveStrength.Evaluate(_charging);
             playerHeldBy.externalForceAutoFade += playerHeldBy.gameplayCamera.transform.forward * PushStrength * progress * 10f;
             _charging = 0f;
@@ -66,12 +79,20 @@ public class RubberBand : GrabbableObject
     public override void DiscardItem()
     {
         base.DiscardItem();
+        Animator.SetFloat(ProgressAnimationHash, 0f);
+        Animator.ResetTrigger(ChargingAnimationHash);
+        Animator.ResetTrigger(ReleaseAnimationHash);
+        Animator.ResetTrigger(MaxChargeAnimationHash);
         isBeingUsed = false;
     }
 
     public override void PocketItem()
     {
         base.PocketItem();
+        Animator.SetFloat(ProgressAnimationHash, 0f);
+        Animator.ResetTrigger(ChargingAnimationHash);
+        Animator.ResetTrigger(ReleaseAnimationHash);
+        Animator.ResetTrigger(MaxChargeAnimationHash);
         isBeingUsed = false;
     }
 }
