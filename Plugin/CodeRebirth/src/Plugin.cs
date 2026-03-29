@@ -13,6 +13,7 @@ using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.Content.DevTools;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Content.Unlockables;
+using System;
 
 namespace CodeRebirth.src;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
@@ -37,7 +38,11 @@ public class Plugin : BaseUnityPlugin
 
         [LoadFromBundle("EmptyNetworkObject.prefab")]
         public GameObject EmptyNetworkObject { get; private set; } = null!;
+
+        [LoadFromBundle("Melanie.prefab")]
+        public GameObject MelaniePrefab { get; private set; } = null!;
     }
+
     internal static MainAssets Assets { get; private set; } = null!;
 
     internal const ulong GLITCH_STEAM_ID = 9;
@@ -115,6 +120,41 @@ public class Plugin : BaseUnityPlugin
         Config.Save();
 
         Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
+
+        On.GrabbableObject.Start += MelanieReplacement;
+    }
+
+    private void MelanieReplacement(On.GrabbableObject.orig_Start orig, GrabbableObject self)
+    {
+        orig(self);
+        MelanieReplacement(self);
+    }
+
+    private void MelanieReplacement(GrabbableObject grabbableObject)
+    {
+        DawnItemInfo? itemInfo = grabbableObject.itemProperties.GetDawnInfo();
+        if (itemInfo == null || itemInfo.Key.Namespace != "code_rebirth")
+        {
+            return;
+        }
+
+        Bounds biggestBounds = new(Vector3.zero, Vector3.one);
+        foreach (Renderer renderer in grabbableObject.GetComponentsInChildren<Renderer>())
+        {
+            if (biggestBounds == null)
+            {
+                biggestBounds = renderer.bounds;
+            }
+            else
+            {
+                biggestBounds.Encapsulate(renderer.bounds);
+            }
+            renderer.forceRenderingOff = true;
+        }
+
+        var melanieObject = GameObject.Instantiate(Assets.MelaniePrefab, Vector3.zero, Quaternion.identity);
+        melanieObject.transform.SetParent(grabbableObject.transform, false);
+        melanieObject.transform.localScale = biggestBounds.size;
     }
 
     internal static void ExtendedLogging(object text)
