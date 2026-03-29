@@ -264,6 +264,7 @@ Transform:
   - {fileID: 793164974146422617}
   - {fileID: 8599132794710523515}
   - {fileID: 2215426688367823816}
+  - {fileID: 2772630408138373303}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &7976517917240362025
@@ -584,7 +585,7 @@ SkinnedMeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4328256670030288565}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -872,3 +873,82 @@ MonoBehaviour:
   ladderHorizontalPosition: {fileID: 0}
   ladderPlayerPositionNode: {fileID: 0}
   usingLadder: 0
+--- !u!1001 &2800170135689335976
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 6899234996551596116}
+    m_Modifications:
+    - target: {fileID: 46847224833059871, guid: 374d6c91bfcbc31488d8db9148b35fdf,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.26603007
+      objectReference: {fileID: 0}
+    - target: {fileID: 46847224833059871, guid: 374d6c91bfcbc31488d8db9148b35fdf,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 46847224833059871, guid: 374d6c91bfcbc31488d8db9148b35fdf,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.024
+      objectReference: {fileID: 0}
+    - target: {fileID: 46847224833059871, guid: 374d6c91bfcbc31488d8db9148b35fdf,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.71
+      objectReference: {fileID: 0}
+    - target: {fileID: 46847224833059871, guid: 374d6c91bfcbc31488d8db9148b35fdf,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.023826096
+      objectReference: {fileID: 0}
+    - target: {fileID: 46847224833059871, guid: 374d6c91bfcbc31488d8db9148b35fdf,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.99971616
+      objectReference: {fileID: 0}
+    - target: {fileID: 46847224833059871, guid: 374d6c91bfcbc31488d8db9148b35fdf,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 46847224833059871, guid: 374d6c91bfcbc31488d8db9148b35fdf,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 46847224833059871, guid: 374d6c91bfcbc31488d8db9148b35fdf,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -177.269
+      objectReference: {fileID: 0}
+    - target: {fileID: 46847224833059871, guid: 374d6c91bfcbc31488d8db9148b35fdf,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 46847224833059871, guid: 374d6c91bfcbc31488d8db9148b35fdf,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6219040203734575621, guid: 374d6c91bfcbc31488d8db9148b35fdf,
+        type: 3}
+      propertyPath: m_Name
+      value: SpookyHead
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 374d6c91bfcbc31488d8db9148b35fdf, type: 3}
+--- !u!4 &2772630408138373303 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 46847224833059871, guid: 374d6c91bfcbc31488d8db9148b35fdf,
+    type: 3}
+  m_PrefabInstance: {fileID: 2800170135689335976}
+  m_PrefabAsset: {fileID: 0}

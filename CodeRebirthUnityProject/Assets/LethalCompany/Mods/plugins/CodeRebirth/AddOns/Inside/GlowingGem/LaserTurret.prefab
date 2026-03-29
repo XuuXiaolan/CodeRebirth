@@ -173,7 +173,7 @@ Light:
   serializedVersion: 10
   m_Type: 0
   m_Shape: 0
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.927732, b: 0, a: 1}
   m_Intensity: 3
   m_Range: 0.3
   m_SpotAngle: 144.9
@@ -390,7 +390,7 @@ Light:
   serializedVersion: 10
   m_Type: 0
   m_Shape: 0
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.9115547, b: 0, a: 1}
   m_Intensity: 9.126443
   m_Range: 1
   m_SpotAngle: 179
@@ -754,16 +754,16 @@ VisualEffect:
         m_Overridden: 1
     m_Vector4f:
       m_Array:
-      - m_Value: {x: 6.3833785, y: 0, z: 0, w: 1}
+      - m_Value: {x: 6.3833785, y: 5.289041, z: 0, w: 1}
         m_Name: BeamCoreColor
         m_Overridden: 1
-      - m_Value: {x: 50.757, y: 1.3287174, z: 2.6574347, w: 1}
+      - m_Value: {x: 50.757, y: 45.074875, z: 1.3287169, w: 1}
         m_Name: ParticlesColor
         m_Overridden: 1
-      - m_Value: {x: 0.2, y: 0, z: 0, w: 1}
+      - m_Value: {x: 0.2, y: 0.18719554, z: 0, w: 1}
         m_Name: DarkBeamColor
         m_Overridden: 1
-      - m_Value: {x: 127.98067, y: 25.09425, z: 25.09425, w: 1}
+      - m_Value: {x: 127.98066, y: 104.03611, z: 25.462116, w: 1}
         m_Name: ElectricBeamColor
         m_Overridden: 1
     m_Uint:
@@ -1006,7 +1006,7 @@ Light:
   serializedVersion: 10
   m_Type: 0
   m_Shape: 0
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.922792, b: 0, a: 1}
   m_Intensity: 1000
   m_Range: 2.27
   m_SpotAngle: 83.1
@@ -1276,8 +1276,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 0, b: 0, a: 1}
-      key1: {r: 1, g: 0, b: 0, a: 1}
+      key0: {r: 1, g: 0.8625783, b: 0, a: 1}
+      key1: {r: 1, g: 0.67839515, b: 0, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -1608,7 +1608,7 @@ Light:
   serializedVersion: 10
   m_Type: 0
   m_Shape: 0
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.927732, b: 0, a: 1}
   m_Intensity: 3.3773298
   m_Range: 0.4
   m_SpotAngle: 44.4
@@ -1954,7 +1954,7 @@ Light:
   serializedVersion: 10
   m_Type: 0
   m_Shape: 0
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.927732, b: 0, a: 1}
   m_Intensity: 12.052849
   m_Range: 0.4
   m_SpotAngle: 44.4
@@ -2224,8 +2224,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 0, b: 0, a: 1}
-      key1: {r: 1, g: 0, b: 0, a: 1}
+      key0: {r: 1, g: 0.8625783, b: 0, a: 1}
+      key1: {r: 1, g: 0.67839515, b: 0, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -2299,6 +2299,7 @@ Transform:
   - {fileID: 8125724109210367778}
   - {fileID: 2114763962298083096}
   - {fileID: 8904160874502225165}
+  - {fileID: 1422338519858190020}
   m_Father: {fileID: 1810791667581943739}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5833698061727549699
@@ -5058,3 +5059,92 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1001 &1376771165227563739
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2152758053777120939}
+    m_Modifications:
+    - target: {fileID: 46847224833059871, guid: 374d6c91bfcbc31488d8db9148b35fdf,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.1111112
+      objectReference: {fileID: 0}
+    - target: {fileID: 46847224833059871, guid: 374d6c91bfcbc31488d8db9148b35fdf,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.1111118
+      objectReference: {fileID: 0}
+    - target: {fileID: 46847224833059871, guid: 374d6c91bfcbc31488d8db9148b35fdf,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.1111118
+      objectReference: {fileID: 0}
+    - target: {fileID: 46847224833059871, guid: 374d6c91bfcbc31488d8db9148b35fdf,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.19000001
+      objectReference: {fileID: 0}
+    - target: {fileID: 46847224833059871, guid: 374d6c91bfcbc31488d8db9148b35fdf,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.2672243
+      objectReference: {fileID: 0}
+    - target: {fileID: 46847224833059871, guid: 374d6c91bfcbc31488d8db9148b35fdf,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.9600005
+      objectReference: {fileID: 0}
+    - target: {fileID: 46847224833059871, guid: 374d6c91bfcbc31488d8db9148b35fdf,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071069
+      objectReference: {fileID: 0}
+    - target: {fileID: 46847224833059871, guid: 374d6c91bfcbc31488d8db9148b35fdf,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.70710665
+      objectReference: {fileID: 0}
+    - target: {fileID: 46847224833059871, guid: 374d6c91bfcbc31488d8db9148b35fdf,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -2.842171e-14
+      objectReference: {fileID: 0}
+    - target: {fileID: 46847224833059871, guid: 374d6c91bfcbc31488d8db9148b35fdf,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -1.4210855e-14
+      objectReference: {fileID: 0}
+    - target: {fileID: 46847224833059871, guid: 374d6c91bfcbc31488d8db9148b35fdf,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 46847224833059871, guid: 374d6c91bfcbc31488d8db9148b35fdf,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 46847224833059871, guid: 374d6c91bfcbc31488d8db9148b35fdf,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6219040203734575621, guid: 374d6c91bfcbc31488d8db9148b35fdf,
+        type: 3}
+      propertyPath: m_Name
+      value: SpookyHead
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 374d6c91bfcbc31488d8db9148b35fdf, type: 3}
+--- !u!4 &1422338519858190020 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 46847224833059871, guid: 374d6c91bfcbc31488d8db9148b35fdf,
+    type: 3}
+  m_PrefabInstance: {fileID: 1376771165227563739}
+  m_PrefabAsset: {fileID: 0}
