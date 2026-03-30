@@ -70,7 +70,7 @@ public class Guillotine : NetworkBehaviour
         if (StartOfRound.Instance.allPlayerScripts.Count(player => player.isPlayerControlled && !player.isPlayerDead && !player.IsPseudoDead()) == 1)
         {
             if (playerToKill.IsLocalPlayer())
-                playerToKill.KillPlayer(Vector3.zero, false, CauseOfDeath.Snipped, 0);
+                playerToKill.KillPlayer(Vector3.zero, false, CauseOfDeath.Snipping, 0);
 
             return;
         }

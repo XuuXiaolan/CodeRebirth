@@ -114,7 +114,7 @@ public class Transporter : CodeRebirthEnemyAI
             grabbableObject.EnablePhysics(true);
         }
 
-        this.transform.position = smartAgentNavigator.lastUsedEntranceTeleport!.exitPoint.position;
+        this.transform.position = smartAgentNavigator.lastUsedEntranceTeleport!.exitScript.transform.position;
         if (GameNetworkManager.Instance.localPlayerController.transform.parent != this.transform)
         {
             return;

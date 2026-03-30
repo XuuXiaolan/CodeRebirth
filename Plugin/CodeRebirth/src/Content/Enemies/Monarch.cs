@@ -519,7 +519,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
             if (player.IsJumping())
                 continue;
 
-            player.DamagePlayer(33, true, true, CauseOfDeath.Snipped, 7, true, default);
+            player.DamagePlayer(33, true, true, CauseOfDeath.Snipping, 7, true, default);
         }
         creatureSFX.PlayOneShot(_biteSounds[enemyRandom.Next(0, _biteSounds.Length)]);
         targetPlayer = null;

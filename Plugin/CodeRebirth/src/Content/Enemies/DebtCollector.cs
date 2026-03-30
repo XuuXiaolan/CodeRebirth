@@ -573,7 +573,7 @@ public class DebtCollector : CodeRebirthEnemyAI
             }
             targetPlayer.disableMoveInput = false;
             targetPlayer.inAnimationWithEnemy = null;
-            targetPlayer.KillPlayer(Vector3.zero, true, CauseOfDeath.Snipped, 8, default);
+            targetPlayer.KillPlayer(Vector3.zero, true, CauseOfDeath.Snipping, 8, default);
             ClearPlayerTarget();
         }
         _playerIsGrabbed = false;
@@ -614,7 +614,7 @@ public class DebtCollector : CodeRebirthEnemyAI
 
                 Vector3 directionVector = (player.transform.position - this.transform.position).normalized * 20f;
                 NetworkAudioSource.PlayOneShot(BitchSliceHit);
-                player.DamagePlayer(20, true, true, CauseOfDeath.Snipped, 7, false, directionVector);
+                player.DamagePlayer(20, true, true, CauseOfDeath.Snipping, 7, false, directionVector);
                 player.externalForceAutoFade += directionVector;
             }
             else if (iHittable is EnemyAICollisionDetect enemyAICollisionDetect)

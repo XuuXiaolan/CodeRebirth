@@ -117,7 +117,7 @@ public class TalkingHead : GrabbableObject
                 meshRenderer.enabled = true;
                 HUDManager.Instance.HideHUD(false);
                 StartOfRound.Instance.allowLocalPlayerDeath = true;
-                player.KillPlayer(Vector3.zero, false, CauseOfDeath.Snipped, 0);
+                player.KillPlayer(Vector3.zero, false, CauseOfDeath.Snipping, 0);
             }
             Plugin.ExtendedLogging($"Killing talking head.");
             player = null;
