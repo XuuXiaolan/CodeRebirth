@@ -1,12 +1,12 @@
-# v1.5.5
+# v1.6.0
 
 - Added MouseTrap.
 - Added RubberBand.
-- Removed mentions of SkittyMuffins from the mod.
 - Mel is now missing.
-- Tiny Mu snailcat is now Salted Beef.
+- Tiny snailcat is now Salted Beef.
 - Stopped Jimothy from being able to grab TrashCans and Cacti.
 - Microwave spork obtainable again, I don't know how long it's not been obtainable for.
+- Updated for V80, PLEASE DO NOT USE THIS ON V73, IT WILL NOT WORK.
 
 ## v1.5.4
 
