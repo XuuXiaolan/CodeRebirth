@@ -190,7 +190,6 @@ If you're interested in helping with the development of the mod or have issues o
 
 ![Hazard](https://i.postimg.cc/Y0j0FyNr/Hazard-CR-5.png)
 > An old military anti air cannon repurposed for defensive capabilities. It specializes in anti air and helps keep a clear sky. Essential kit for any mining crew.
-> Moon creators can tag their moons the following to adjust weights: `air_control_unit_none`, `air_control_unit_low`, `air_control_unit_medium`, `air_control_unit_high` 
 
 ## Bear Traps
 
@@ -201,31 +200,26 @@ If you're interested in helping with the development of the mod or have issues o
 
 ![Hazard](https://i.postimg.cc/W46dcZbv/Hazard-CR-2.png)
 > Towering crane specializing in cargo carrying. Its strong frame is the backbone of company shipping. However stand clear of its heavy magnet when in use, less you be pancaked.
-> Moon creators can tag their moons the following to adjust weights: `autonomous_crane_none`, `autonomous_crane_low`, `autonomous_crane_medium`, `autonomous_crane_high`
 
 ## Industrial Fan
 
 ![Hazard](https://i.postimg.cc/MGkSntqV/image-2025-07-07-072850118.png)
 > Aeration device capable of producing fresh air to poorly ventilated mineshafts. Be cautious around the blades however.
-> Interior creators can tag their interiors the following to adjust weights: `industrial_fan_none`, `industrial_fan_low`, `industrial_fan_medium`, `industrial_fan_high`
 
 ## Microwave Cart
 
 ![Hazard](https://i.postimg.cc/NMBrK4PF/Hazard-CR-10.png)
 > Experimental mining technology used to weaken and crack rock using microwave radiation. Slowly traversing the halls on an automatic timer, results for this technology have showed great promise.
-> Interior creators can tag their interiors the following to adjust weights: `functional_microwave_none`, `functional_microwave_low`, `functional_microwave_medium`, `functional_microwave_high`
 
 ## Flash Turret
 
 ![Hazard](https://i.postimg.cc/BvxKZypR/Hazard-CR-8.png)
 > Surveying camera equipped with various photoreceptors and movement detectors. Great for capturing critters and wildlife in action. Say cheese!
-> Interior creators can tag their interiors the following to adjust weights: `flash_turret_none`, `flash_turret_low`, `flash_turret_medium`, `flash_turret_high`
 
 ## L.A.S.E.R Mining Rig
 
 ![Hazard](https://i.postimg.cc/L6ngghvt/Hazard-CR-11.png)
-> Experimental mining technology using giant crystal rubies. Its powerful laser melts away rock with ease.
-> Interior creators can tag their interiors the following to adjust weights: `laser_turret_none`, `laser_turret_low`, `laser_turret_medium`, `laser_turret_high`
+> Experimental mining technology using giant crystal rubies. Its powerful laser melts away rock with ease. 
 
 ## Cacti
 
@@ -237,18 +231,12 @@ If you're interested in helping with the development of the mod or have issues o
 ![Hazard](https://i.postimg.cc/KzGRGYRg/Hazard-CR-3.png)
 ![Hazard](https://i.postimg.cc/PqkC7yHy/Hazard-CR-1.png)
 > Wooden crates are used to store equipment while metal crates bring back valuables. Every mining crew uses these convenient containers. Pry open wooden crates with any tool but use a key to unlock a safe.
-> Moon creators can tag their moons the following to adjust weights:
-> `normal_wooden_crate_none`, `normal_wooden_crate_low`, `normal_wooden_crate_medium`, `normal_wooden_crate_high`
-> `normal_metal_crate_none`, `normal_metal_crate_low`, `normal_metal_crate_medium`, `normal_metal_crate_high`
 
 ## Infected Crates
 
 ![Hazard](https://i.postimg.cc/qR1gzd3D/Hazard-CR-4.png)
 ![Hazard](https://i.postimg.cc/nhmsT5yM/Hazard-CR-9.png)
 > Beware of false crates, while visibly identical, listen to their growls. Crimson blight stirs within them. Who knows what else awaits on Haemoglobin's surface...
-> Moon creators can tag their moons the following to adjust weights:
-> `mimic_metal_crate_none`, `mimic_metal_crate_low`, `mimic_metal_crate_medium`, `mimic_metal_crate_high`
-> `mimic_wooden_crate_none`, `mimicl_wooden_crate_low`, `mimicooden_crate_medium`, `mimic_wooden_crate_high`
 
 </details>
 
@@ -279,12 +267,6 @@ If you're interested in helping with the development of the mod or have issues o
 ![HB](https://i.postimg.cc/wj6mw7Nc/hoverboard.png)
 
 > Shop Item that allows you to drift around the world, should be faster than walking speed and allows a boost using sprint.
-
-### Wallet
-
-![W](https://i.postimg.cc/wMBrg32r/imwadadage-removebg-preview.png)
-
-> Shop Item to get some extra cash for the quota can pick up coins.
 
 </details>
 
@@ -329,19 +311,29 @@ Add lush foliage to any moon. Flora adjusts its coloration to the ground type.
 <details>
   <summary><strong>📁 Unlockable Ship Upgrades</strong></summary>
 
-### Piggy Bank
+### Denomination Analyzer
+> Ship upgrade costs 255 credits
 
-![Piggy](https://i.postimg.cc/kX44LM5h/image-2025-07-07-081319598.png)
 
-> While wallets can be fickle things and vanish on team wipe. Coins stored withing this bank will be saved. To regain your stored coins simply whack it open.
+![Denomination-Chan > ~ <](https://i.postimg.cc/s26PZ9dQ/image-2026-03-28-180211471.png)
+
+> An automatic coin counting machine able to teleport and store currency. It has a 3 digit display for showing the stored amount of coins as well as a new Hud icon. It is essential for collecting coins to trade at the merchant and to use various other features. Once purchased it cannot be stored and will remain active until reset.
+
+> Coins give 1 coin, Dollar bills give 5 coins and Wallets give 5-10 coins. 
+
+> When bought, a penalty of 5 coins per crewmate dead will occur on a full team wipe. Make sure not to go in the negatives.
 
 ### Shockwave Gal (SWRD-1)
+> Ship upgrade costs 2200 credits
+
 
 ![ShG1](https://i.postimg.cc/0y6MVyXk/image.png)
 
 > Strong and Reliable, this robotic assistant can carry items back to the ship and kill enemies
 
 ### Seamine Gal (SEA-M1)
+> Ship upgrade costs 1500 credits
+
 
 ![SeG](https://i.postimg.cc/dt3jKvNX/image.png)
 
@@ -350,6 +342,8 @@ Add lush foliage to any moon. Flora adjusts its coloration to the ground type.
 > Attack charges recharge in orbit or when a key is used on her belt!
 
 ### Terminal Gal (DAISY)
+> Ship upgrade costs 2200 credits
+
 
 ![TeG](https://i.postimg.cc/5tyVBXsg/image.png)
 
@@ -359,6 +353,8 @@ Add lush foliage to any moon. Flora adjusts its coloration to the ground type.
 > Unlock any door or safe!
 
 ### Cruiser Gal (MISS CRUISER)
+> Ship upgrade costs 2500 credits
+
 
 ![CrG](https://i.postimg.cc/8c8rvQmp/image.png)
 
@@ -374,6 +370,7 @@ Add lush foliage to any moon. Flora adjusts its coloration to the ground type.
 > Can also revive players nearby.
 > Recharges on orbit or on quota depending on config.
 > Highly configurable.
+> Ship upgrade costs 1700 credits
 
 ### Shrimp Dispenser
 
@@ -383,9 +380,37 @@ Add lush foliage to any moon. Flora adjusts its coloration to the ground type.
 > One time use unless you dispense another.
 > Dropping the Shrimp despawns it.
 > Inspired by the shrimp from lockdown protocol, it's a lovely game.
+> Ship upgrade costs 500 credits
+
 </details>
 <details>
   <summary><strong>📁 Ship Decorations</strong></summary>
+
+![SB](https://i.postimg.cc/0NgGjbxX/Coat-Rack.png)
+
+> Fancy coat hanger
+
+![SB](https://i.postimg.cc/6Qdrvt5H/Cutie-Case.png)
+
+> Cutiefly case
+
+![SB](https://i.postimg.cc/mrQYHB2p/Jim-Plaque.png)
+
+> Jim employee plaque
+
+![SB](https://i.postimg.cc/k5xQbqX1/Timmy-Bass.png)
+
+> Timmy Bass
+
+![SB](https://i.postimg.cc/GpkFydhS/Toaster.png)
+
+> Toasty toaster
+
+![SB](https://i.postimg.cc/JhbNkMzL/Trash-Hoop.png)
+
+> Trash hoop
+
+## Other
 
 ![SB](https://i.postimg.cc/mZJGVMzg/image.png)
 
@@ -477,58 +502,60 @@ Add lush foliage to any moon. Flora adjusts its coloration to the ground type.
 
 - [Generic](https://pallascats.org) : Super early Flash Turret idea.
 
+
+
 ## Credits - Misc Online Assets
 
-### Sound Websites
+## Sound Websites:
 
-<https://signaturesounds.org>
+https://signaturesounds.org 
 
-<https://99sounds.org>
+https://99sounds.org 
 
-<https://freesound.org>
+https://freesound.org 
 
-<https://pixabay.com>
+https://pixabay.com 
 
-<https://www.zapsplat.com>
+https://www.zapsplat.com 
 
-<https://freesfx.co.uk>
+https://freesfx.co.uk 
 
-<https://www.pacdv.com>
+https://www.pacdv.com 
 
-<https://getsoundly.com>
+https://getsoundly.com 
 
-### Individual Sounds
+## Individual Sounds:
 
-Female screaming for help by AmeAngelofSin -- <https://freesound.org/s/326893/> -- License: Attribution 4.0
+Female screaming for help by AmeAngelofSin -- https://freesound.org/s/326893/ -- License: Attribution 4.0
 
 Digital Alarm Loop.wav by bbrocer -- <https://freesound.org/s/389511/> -- License: Creative Commons 0
 
-Alarm 2 by RandomRecord19 -- <https://freesound.org/s/738588/> -- License: Attribution 4.0
+Alarm 2 by RandomRecord19 -- https://freesound.org/s/738588/ -- License: Attribution 4.0
 
-Baz Bass III Short (Nova).aif by Walter_Odington -- <https://freesound.org/s/25955/> -- License: Creative Commons 0
+Baz Bass III Short (Nova).aif by Walter_Odington -- https://freesound.org/s/25955/ -- License: Creative Commons 0
 
-_B_A0.wav by menegass -- <https://freesound.org/s/107283/> -- License: Creative Commons 0
+_B_A0.wav by menegass -- https://freesound.org/s/107283/ -- License: Creative Commons 0
 
-monologue with dl4 split-054.wav by CVLTIV8R -- <https://freesound.org/s/792980/> -- License: Creative Commons 0
+monologue with dl4 split-054.wav by CVLTIV8R -- https://freesound.org/s/792980/ -- License: Creative Commons 0
 
-Weapon, Sword, Metal sword, Swing, fast, impact by julianmateo_ -- <https://freesound.org/s/522701/> -- License: Creative Commons 0
+Weapon, Sword, Metal sword, Swing, fast, impact by julianmateo_ -- https://freesound.org/s/522701/ -- License: Creative Commons 0
 
-Large sword swing by Squirrel_404 -- <https://freesound.org/s/737748/> -- License: Attribution 4.0
+Large sword swing by Squirrel_404 -- https://freesound.org/s/737748/ -- License: Attribution 4.0
 
-<https://www.zapsplat.com/music/coin-toss-throw-ring/>
+https://www.zapsplat.com/music/coin-toss-throw-ring/
 
-<https://www.zapsplat.com/music/motorcycle-helmet-set-down-hard-with-visor-vibrate-rattle-2/>
+https://www.zapsplat.com/music/motorcycle-helmet-set-down-hard-with-visor-vibrate-rattle-2/
 
-Guillottine test 02.ogg by Glaneur de sons -- <https://freesound.org/s/30187/> -- License: Attribution 4.0
+Guillottine test 02.ogg by Glaneur de sons -- https://freesound.org/s/30187/ -- License: Attribution 4.0
 
-Droid falls over (messy).mp3 by J.R.Mythical -- <https://freesound.org/s/589621/> -- License: Creative Commons 0
+Droid falls over (messy).mp3 by J.R.Mythical -- https://freesound.org/s/589621/ -- License: Creative Commons 0
 
-Rattling Metal Cabinet Door 5.wav by F.M.Audio -- <https://freesound.org/s/687130/> -- License: Attribution 4.0
+Rattling Metal Cabinet Door 5.wav by F.M.Audio -- https://freesound.org/s/687130/ -- License: Attribution 4.0
 
-s_f_alarm.wav by SoundsofTh -- <https://freesound.org/s/434937/> -- License: Attribution 4.0
+s_f_alarm.wav by SoundsofTh -- https://freesound.org/s/434937/ -- License: Attribution 4.0
 
-### Fonts
+## Fonts:
 
-Digital-7 Font  -- Sizenko Alexander, Style-7 -- <https://www.dafont.com/digital-7.font> & <https://www.styleseven.com> -- Created: Oct 7, 2008
+Digital-7 Font  -- Sizenko Alexander, Style-7 -- https://www.dafont.com/digital-7.font & https://www.styleseven.com -- Created: Oct 7, 2008
 
-Scorched Earth Font -- KC Fonts -- <https://www.fontspace.com/scorched-earth-font-f14776>
+Scorched Earth Font -- KC Fonts -- https://www.fontspace.com/scorched-earth-font-f14776
