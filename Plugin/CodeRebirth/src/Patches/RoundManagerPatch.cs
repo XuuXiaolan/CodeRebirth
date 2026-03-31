@@ -38,7 +38,7 @@ static class RoundManagerPatch
         PersistentDataContainer contract = DawnLib.GetCurrentContract()!;
         for (int i = 0; i < contract.GetOrSetDefault(MilitaryAmountKey, 1); i++)
         {
-            GameObject militaryPlane = GameObject.Instantiate(LethalContent.MapObjects[CodeRebirthMapObjectKeys.MilitaryPlane].MapObject, Vector3.zero, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
+            GameObject militaryPlane = GameObject.Instantiate(LethalContent.MapObjects[CodeRebirthMapObjectKeys.MilitaryPlane].GetMapObjectPrefab(), Vector3.zero, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
             militaryPlane.GetComponent<NetworkObject>().Spawn(true);
         }
     }

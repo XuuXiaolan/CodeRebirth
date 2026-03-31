@@ -51,28 +51,28 @@ public class BearTrap : CodeRebirthHazard, IHittable
                 continue;
 
             var mapObjectInfo = LethalContent.MapObjects[CodeRebirthMapObjectKeys.GravelBearTrap];
-            GameObject beartrap = mapObjectInfo.MapObject;
+            GameObject beartrap = mapObjectInfo.GetMapObjectPrefab();
 
             if (hit.collider.CompareTag("Grass"))
             {
                 mapObjectInfo = LethalContent.MapObjects[CodeRebirthMapObjectKeys.GrassBearTrap];
-                beartrap = mapObjectInfo.MapObject;
+                beartrap = mapObjectInfo.GetMapObjectPrefab();
             }
             else if (hit.collider.CompareTag("Snow"))
             {
                 mapObjectInfo = LethalContent.MapObjects[CodeRebirthMapObjectKeys.SnowBearTrap];
-                beartrap = mapObjectInfo.MapObject;
+                beartrap = mapObjectInfo.GetMapObjectPrefab();
             }
 
             if (this is BoomTrap)
             {
                 mapObjectInfo = LethalContent.MapObjects[CodeRebirthMapObjectKeys.BoomTrap];
-                beartrap = mapObjectInfo.MapObject;
+                beartrap = mapObjectInfo.GetMapObjectPrefab();
             }
             else if (UnityEngine.Random.Range(0, 1000) < 5)
             {
                 mapObjectInfo = LethalContent.MapObjects[CodeRebirthMapObjectKeys.BoomTrap];
-                beartrap = mapObjectInfo.MapObject;
+                beartrap = mapObjectInfo.GetMapObjectPrefab();
             }
             GameObject spawnedTrap = GameObject.Instantiate(beartrap, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
             spawnedTrap.GetComponent<BearTrap>().byProduct = true;

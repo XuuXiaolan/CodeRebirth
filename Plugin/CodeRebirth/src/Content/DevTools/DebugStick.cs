@@ -64,7 +64,7 @@ public class DebugStick : GrabbableObject
         foreach (DawnMapObjectInfo mapObjectInfo in LethalContent.MapObjects.Values)
         {
             _hologramCopies[mapObjectInfo] = new HologramCopy();
-            _hologramCopies[mapObjectInfo].SetUpHologram(mapObjectInfo.MapObject);
+            _hologramCopies[mapObjectInfo].SetUpHologram(mapObjectInfo.GetMapObjectPrefab());
         }
 
         FixControlTips();

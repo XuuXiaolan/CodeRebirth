@@ -1,4 +1,8 @@
-# v1.6.0
+# v1.6.1
+
+- Updated for compatibilty with latest DawnLib.
+
+## v1.6.0
 
 - Added MouseTrap.
 - Added RubberBand.

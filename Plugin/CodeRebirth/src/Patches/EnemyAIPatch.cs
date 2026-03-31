@@ -49,7 +49,7 @@ static class EnemyAIPatch
             if (!LethalContent.MapObjects.TryGetValue(CodeRebirthMapObjectKeys.Coin, out DawnMapObjectInfo mapObjectInfo))
                 return;
 
-            GameObject coin = UnityEngine.Object.Instantiate(mapObjectInfo.MapObject, self.transform.position, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
+            GameObject coin = UnityEngine.Object.Instantiate(mapObjectInfo.GetMapObjectPrefab(), self.transform.position, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
             coin.GetComponent<NetworkObject>().Spawn(true);
         }
     }

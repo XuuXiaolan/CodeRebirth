@@ -165,13 +165,13 @@ public class HologramCopy
         {
             if (NetworkManager.Singleton.IsServer)
             {
-                GameObject gameObject = GameObject.Instantiate(dawnMapObjectInfoContainer.MapObject, raycastHit.point + positionOffset, Quaternion.Euler(rotationOffset));
+                GameObject gameObject = GameObject.Instantiate(dawnMapObjectInfoContainer.GetMapObjectPrefab(), raycastHit.point + positionOffset, Quaternion.Euler(rotationOffset));
                 gameObject.GetComponent<NetworkObject>().Spawn();
             }
         }
         else
         {
-            GameObject.Instantiate(dawnMapObjectInfoContainer.MapObject, raycastHit.point + positionOffset, Quaternion.Euler(rotationOffset));
+            GameObject.Instantiate(dawnMapObjectInfoContainer.GetMapObjectPrefab(), raycastHit.point + positionOffset, Quaternion.Euler(rotationOffset));
         }
     }
 }
