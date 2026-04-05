@@ -1,4 +1,56 @@
-# v0.8.9
+# v0.9.2
+
+- Updated for latest V80 beta.
+
+## v0.9.1
+
+- Fixed inside hazards not working and massively updated the code quality, thanks zeekerss for changing how they work like I asked :p
+- Some breaking changes were made to how DawnMapObjectInfo is written so please keep that in mind for any mods trying to be compatible with DawnLib.
+- Restored additional missing functionality such as LLL compatibility for some things.
+- Added the vanilla keys for the new additions into the registries.
+- Gave the new custom entities etc some tags I felt appropriate.
+- Added Carjack Bloke.
+
+## v0.9.0
+
+- Updated for v80 beta, please do not use this version on v73.
+- It is currently 2:36pm, I missed my class on 1pm for this and update came out 6am, I've been working on fixing stuff since probably 6:30am
+- Inside hazards are broken for now, I need to sleep it's been 25 hours.
+- WIP route price configuration.
+
+## v0.8.16
+
+- Fixed an issue with DuskDefinitions defaulting to mod dev defined weights if none are defined in the config.
+- Fixed issues with interior weights not being applied to enemies.
+- Fixed issues relating to ship upgrades not being completely picked up by DawnLib, also cleaned up the unlockable terminal code a bit.
+
+## v0.8.15
+
+- This has not been a good day for me, adjusted the progressive predicate thing to add a `Has` option.
+
+## v0.8.14
+
+- Fixed another small issue with setting progressive predicates to be unhidden not saving that unhidden state.
+
+## v0.8.13
+
+- Fixed an issue where making a hidden decoration would cause the terminal to crash in some rare scenarios.
+
+## v0.8.12
+
+- Fixed an issue with unlockables list on store not displaying some unlockables if they have the same display name (different buy name).
+
+## v0.8.11
+
+- Rewrote the outside hazard system to be more reliable with the amount that should be spawning.
+- Correctly applied some unapplied moon tags.
+- Implemented another PR by Darmuh for the terminal allowing editing text in different terminal display texts.
+
+## v0.8.10
+
+- Little fix for HUDDisplayTip not having a default constructor which only didn't work sometimes? not sure what the issue honestly is.
+
+## v0.8.9
 
 - Added `TryDoPathingToDestination` to `SmartAgentNavigator` for better info to caller when trying to path to a position.
 - Added `CanTryToFlyToDestination` to `SmartAgentNavigator` to allow for a custom check to see if the agent can fly to a position if it cannot path to it.

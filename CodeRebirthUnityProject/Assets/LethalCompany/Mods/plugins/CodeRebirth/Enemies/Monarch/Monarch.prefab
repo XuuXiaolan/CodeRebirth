@@ -1495,6 +1495,7 @@ MonoBehaviour:
   serverRotation: {x: 0, y: 0, z: 0}
   agent: {fileID: 8570772098668741845}
   allAINodes: []
+  agentMask: 0
   targetNode: {fileID: 0}
   favoriteSpot: {fileID: 0}
   tempDist: 0
@@ -1546,6 +1547,7 @@ MonoBehaviour:
   isOutside: 0
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
+  overrideSettingEnemyMeshes: 0
   creatureNetworkAnimator: {fileID: 3489037866509937600}
   smartAgentNavigator: {fileID: 5572793871451428965}
   _idleAudioClips:

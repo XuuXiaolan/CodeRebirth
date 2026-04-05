@@ -29,7 +29,11 @@
     "Redpill": "lethal_company:red_pill",
     "BunkerSpider": "lethal_company:bunker_spider",
     "EarthLeviathan": "lethal_company:earth_leviathan",
-    "Spring": "lethal_company:spring"
+    "Spring": "lethal_company:spring",
+    "Stingray": "lethal_company:stingray",
+    "Feiopar": "lethal_company:feiopar",
+    "CadaverGrowths": "lethal_company:cadaver_growths",
+    "CadaverBloom": "lethal_company:cadaver_bloom"
   },
   "UnlockableItemKeys": {
     "__type": "DawnUnlockableItemInfo",
@@ -118,7 +122,7 @@
     "Magnifyingglass": "lethal_company:magnifying_glass",
     "Mapper": "lethal_company:mapper",
     "Metalsheet": "lethal_company:metal_sheet",
-    "Cookiemoldpan": "lethal_company:cookie_mold_pan",
+    "Cookiepan": "lethal_company:cookie_pan",
     "Mug": "lethal_company:mug",
     "Perfumebottle": "lethal_company:perfume_bottle",
     "Oldphone": "lethal_company:old_phone",
@@ -202,6 +206,9 @@
     "MineshaftTunnelEnd": "lethal_company:mineshaft_tunnel_end_tiles",
     "MineshaftTunnel": "lethal_company:mineshaft_tunnel_tiles",
     "MineshaftStartRooms": "lethal_company:mineshaft_start_rooms",
+    "MineshaftCaveBranch": "lethal_company:mineshaft_cave_branch_tiles",
+    "MineshaftEndTunnel": "lethal_company:mineshaft_end_tunnel_tiles",
+    "MineshaftEndTunnelBranchCaps": "lethal_company:mineshaft_end_tunnel_branch_caps_tiles",
     "StartRooms": "lethal_company:start_rooms"
   },
   "DungeonArchetypeKeys": {
@@ -210,8 +217,9 @@
     "FacilityMaze": "lethal_company:facility_maze_archetype",
     "MansionB": "lethal_company:mansion_b_archetype",
     "MansionC": "lethal_company:mansion_c_archetype",
-    "MineshaftCaves": "lethal_company:mineshaft_tunnels_archetype",
-    "MineshaftTunnels": "lethal_company:mineshaft_cave_archetype"
+    "MineshaftCaves": "lethal_company:mineshaft_caves_archetype",
+    "MineshaftTunnels": "lethal_company:mineshaft_tunnels_archetype",
+    "MineshaftEndTunnels": "lethal_company:mineshaft_end_tunnels_archetype"
   },
   "MapObjectKeys": {
     "__type": "DawnMapObjectInfo",
@@ -250,14 +258,15 @@
     "BehindTheWallSepFour": "lethal_company:behind_the_wall__sep_four",
     "GoodbyeSepSeven": "lethal_company:goodbye__sep_seven",
     "ScreamsSepOneThree": "lethal_company:screams__sep_onethree",
-    "GoldenplanetAug": "lethal_company:golden_planet__aug_",
+    "GoldenplanetSep": "lethal_company:golden_planet__sep_",
     "IdeaSepOneEight": "lethal_company:idea__sep_oneeight",
     "NonsenseSepTwoSeven": "lethal_company:nonsense__sep_twoseven",
     "HidingSepThreeZero": "lethal_company:hiding__sep_threezero",
     "RealJobOctOne": "lethal_company:real_job__oct_one",
-    "DesmondOctNine": "lethal_company:desmond__oct_nine",
+    "DesmondOctSeven": "lethal_company:desmond__oct_seven",
     "TeamSynergyOctOneZero": "lethal_company:team_synergy__oct_onezero",
-    "LetterOfResignationOctOneThree": "lethal_company:letter_of_resignation__oct_onethree"
+    "LetterOfResignationOctOneThree": "lethal_company:letter_of_resignation__oct_onethree",
+    "WorkOctOneSix": "lethal_company:work__oct_onesix"
   },
   "SurfaceKeys": {
     "__type": "DawnSurfaceInfo",
@@ -272,7 +281,9 @@
     "Snow": "lethal_company:snow",
     "Carpet": "lethal_company:carpet",
     "Untagged": "lethal_company:untagged",
-    "Wood": "lethal_company:wood"
+    "Wood": "lethal_company:wood",
+    "Slime": "lethal_company:slime",
+    "Tree": "lethal_company:tree"
   },
   "TerminalCommandKeys": {
     "__type": "DawnTerminalCommandInfo",

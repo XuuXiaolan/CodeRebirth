@@ -1,6 +1,312 @@
 **Changelog**
 --
 
+**<details><summary>Version 1.6.9</summary>**
+
+**<details><summary>General</summary>**
+
+* Updated mod for Lethal Company version 80
+  * **NOTE:** Interiors that have not been explicitly rebundled for v80 will _not_ be able to load, but moons and other stuff should be fine for the most part
+
+</details>
+
+**<details><summary>Fixes</summary>**
+
+* Fixed not being able to generate a Dungeon in the Editor with LethalLevelLoader enabled in the project
+* Fixed custom interior ReverbPresets taking priority over vanilla ones, if they shared the same name
+  * They are also no longer destroyed if they _don't_ have a vanilla name
+* Fixed `onPlayerEnterDungeon` only being called for the host, and twice.
+
+</details>
+
+</details>
+
+**<details><summary>Version 1.6.8</summary>**
+
+**<details><summary>Fixes</summary>**
+
+* Fixed "Waiting for crew..." getting stuck being displayed to the host until landing the ship, upon clients joining the lobby
+
+</details>
+
+</details>
+
+**<details><summary>Version 1.6.7</summary>**
+
+**<details><summary>Fixes</summary>**
+
+* Fixed scene selection patch not matching the correct IL instructions and causing issues
+* Fixed Moons Catalogue not displaying moons that dynamically change their hidden status
+* Fixed ExtendedLevel Terminal keywords for moons with spaces not being correct
+
+</details>
+
+</details>
+
+**<details><summary>Version 1.6.6</summary>**
+
+**<details><summary>Features</summary>**
+
+* Made `simulate` Terminal command default to the currently-routed moon, if no level is provided
+* Added 'All' as an available info type for the `simulate` Terminal command config, which displays both interior weights and percentages
+  * Reformatted `simulate` page to look a bit neater, too
+
+</details>
+
+**<details><summary>Fixes</summary>**
+
+* Fixed ExtendedLevel random scene selection causing some issues in multiplayer
+* Fixed ExtendedLevel random scene selection using the map seed for the previous round (or 0) before selecting a scene
+* Fixed ExtendedLevel overrides being applied to moons registered outside LLL
+* Fixed ExtendedLevel Terminal keywords not including any numbers present in the moon's name
+* Fixed Moons Catalogue grouping moons in numbers lower than the set split amount, due to hidden moons
+
+</details>
+
+</details>
+
+**<details><summary>Version 1.6.5</summary>**
+
+**<details><summary>Fixes</summary>**
+
+* Fixed errors from parsing interiors with certain special characters in their name
+
+</details>
+
+</details>
+
+**<details><summary>Version 1.6.4</summary>**
+
+**<details><summary>Features</summary>**
+
+* Added OutsideDungeonMatchingProperties and DaytimeDungeonMatchingProperties fields to ExtendedEnemyType
+* Added setting to toggle dynamic weight injections (which _should_ be kept enabled, save for a few specific compatibility reasons)
+
+</details>
+
+**<details><summary>Fixes</summary>**
+
+* Fixed DungeonMatchingProperties not being applied for ExtendedEnemyTypes
+* Fixed bundle loading blacklist not allowing spaces between entries
+
+</details>
+
+</details>
+
+**<details><summary>Version 1.6.3</summary>**
+
+**<details><summary>Features</summary>**
+
+* Added a blacklist for bundles to the general settings, to prevent specific bundles from being loaded at all
+
+</details>
+
+**<details><summary>Fixes</summary>**
+
+* Fixed items with zero weights being able to show up during single item days
+* Fixed DungeonMatchingProperties not being applied for ExtendedItems
+
+</details>
+
+</details>
+
+**<details><summary>Version 1.6.2</summary>**
+
+**<details><summary>Fixes</summary>**
+
+* Fixed dynamic dungeon size config settings always being applied with Content Configuration enabled
+* Fixed vanilla rain particles being disabled during Stormy weather despite having no override set for it
+
+</details>
+
+</details>
+
+**<details><summary>Version 1.6.1</summary>**
+
+**<details><summary>Fixes</summary>**
+
+* Fixed networking issues related to the dynamic dungeon size settings, which caused an error during generation that led to a bunch of other things happening
+* Fixed ship remaining in 'orbit' state after landing (no ladder on the side of the ship), with [DawnLib](https://thunderstore.io/c/lethal-company/p/TeamXiaolan/DawnLib) (and likely some other mods) being present
+* Fixed rain prefab overrides (OverrideRainPrefab, OverrideStormyRainPrefab) not being applied
+* Fixed some references to vanilla weather effect objects not being reassigned upon lobby reload
+
+</details>
+
+</details>
+
+**<details><summary>Version 1.6.0</summary>**
+
+**<details><summary>General</summary>**
+
+* Pushed v73 branch to the main mod page!
+  * [LethalLevelLoaderUpdated](https://thunderstore.io/c/lethal-company/p/pacoito/LethalLevelLoaderUpdated) will technically still work, but is now deprecated and will not be receiving further updates
+  * It's still fine to have both in the same profile (only the intended one will be loaded), but any mods that switched their dependencies should swap back whenever possible
+
+</details>
+
+**<details><summary>Features</summary>**
+
+* Added several additional weather effect override settings to ExtendedLevel, some of which include:
+  * OverrideRainPrefab
+  * OverrideStormyLightningStrikeExplosion
+  * OverrideStormyLightningStrikeSFX
+  * OverrideFloodedPrefab
+  * OverrideEclipsedMusic
+* Added TimeOfDay music override settings to ExtendedLevel, allowing authors to optionally use their own custom music throughout the day
+* Added EnableDynamicOutOfBoundsTrigger setting to ExtendedDungeonFlow, for dynamically lowering a moon's kill floor to the lowest point of the dungeon it generates
+  * Allows for more vertical dungeon generation without having to worry about intersecting the kill floor
+
+</details>
+
+**<details><summary>Fixes</summary>**
+
+* Fixed ShipFlyToMoonClip & ShipFlyFromMoonClip AnimationClip overrides not being applied
+* Fixed dynamic dungeon size related settings for ExtendedDungeonFlow not being applied
+* Removed the dynamic font size adjusting from the Moons Catalogue display
+  * Replaced instead with a patch for Terminal scrolling that avoids skipping over moons when displaying a long list
+
+</details>
+
+</details>
+
+**<details><summary>Version 1.5.6</summary>**
+
+**<details><summary>Fixes</summary>**
+
+* Fixed skipped scene AssetBundles not taking renamed bundles into account
+  * 🦆
+
+</details>
+
+</details>
+
+**<details><summary>Version 1.5.5</summary>**
+
+**<details><summary>Features</summary>**
+
+* Made any _known_ scene AssetBundles be skipped from being loaded at the start
+  * A _known_ bundle refers to a scene bundle that has been loaded at least once, and thus has an entry present in the file kept in the BepInEx cache folder
+  * Due to just being a text file, all _known_ bundle entries should also properly import and export with modpack codes
+
+</details>
+
+**<details><summary>Fixes</summary>**
+
+* Fixed ExtendedUnlockableItem terminal node IDs not being properly set
+* Improved SpawnSyncedObject (and SpawnableMapObject) restoration and registering steps a bit
+
+</details>
+
+</details>
+
+**<details><summary>Version 1.5.4</summary>**
+
+**<details><summary>Fixes</summary>**
+
+* Fixed potential cyclic dependency with [DawnLib](https://thunderstore.io/c/lethal-company/p/TeamXiaolan/DawnLib) soft compatibility
+
+</details>
+
+</details>
+
+**<details><summary>Version 1.5.3</summary>**
+
+**<details><summary>Fixes</summary>**
+
+* Fixed soft compatibility for [DawnLib](https://thunderstore.io/c/lethal-company/p/TeamXiaolan/DawnLib) erroring when not present
+
+</details>
+
+</details>
+
+**<details><summary>Version 1.5.2</summary>**
+
+**<details><summary>Fixes</summary>**
+
+* Made any found duplicate bundles be skipped from loading
+  * Should allow the game to launch properly after attempting to load a bundle that's already loaded
+* Made ship lever no longer able to be pulled while the ship is still in its routing animation
+  * Tooltip now also says "Routing..." when switching to a different moon
+* Added some soft compatibility for moons registered through [DawnLib](https://thunderstore.io/c/lethal-company/p/TeamXiaolan/DawnLib)
+
+</details>
+
+</details>
+
+**<details><summary>Version 1.5.1</summary>**
+
+**<details><summary>Fixes</summary>**
+
+* Fixed clients not being able to land the ship (after the game has started)
+  * Also fixed being able to pull the lever before the ship finished routing, which would play the animation but not do anything
+
+</details>
+
+</details>
+
+**<details><summary>Version 1.5.0</summary>**
+
+**<details><summary>Features</summary>**
+
+* Updated mod for Lethal Company version 73
+* Added ExtendedUnlockableItem (suits, ship furniture, ship upgrades)
+
+</details>
+
+**<details><summary>Fixes</summary>**
+
+* Fixed SpawnableMapObjects defined in ExtendedDungeonFlow not spawning for clients
+* Fixed some ExtendedContent not being re-registered on the terminal after a lobby reload
+* Fixed OnLethalBundleLoaded listeners being called multiple times (once for every bundle found)
+* Fixed bundle of the currently-routed moon unloading immediately after reloading the save file
+  * Should make [LLLHotreloadPatch](https://thunderstore.io/c/lethal-company/p/dopadream/LLLHotreloadPatch) no longer needed
+
+</details>
+
+</details>
+
+**<details><summary>Version 1.4.11</summary>**
+
+**<details><summary>Fixes</summary>**
+
+* Added additional check to hotloading system to avoid issues when leaving a lobby as a host (Thank you Zaggy)
+* Added additional validation checks to ExtendedBuyableVehicle to avoid errors with incorrectly setup content (Thank you ScandalTheVandal)
+
+</details>
+
+</details>
+
+**<details><summary>Version 1.4.10</summary>**
+
+**<details><summary>Fixes</summary>**
+
+* Small hotfix
+
+</details>
+
+</details>
+
+**<details><summary>Version 1.4.9</summary>**
+
+**<details><summary>Fixes</summary>**
+
+* Made change to improve issue related to host leaving a multiplayer session
+* Added log when client fails to import ExtendedLevel saved data to further troubleshoot ongoing issues
+
+</details>
+
+</details>
+
+**<details><summary>Version 1.4.8</summary>**
+
+**<details><summary>Fixes</summary>**
+
+* Fixed issue with LethalLib SoftDependency
+
+</details>
+
+</details>
+
 **<details><summary>Version 1.4.7</summary>**
 
 **<details><summary>Fixes</summary>**
