@@ -29,10 +29,15 @@ public class NitroCrate : GrabbableObject, IHittable
     [ServerRpc(RequireOwnership = false)]
     public void RequestServerToDespawnServerRpc()
     {
-        if (exploded) return;
+        if (exploded)
+        {
+            return;
+        }
         exploded = true;
-        playerHeldBy?.DropAllHeldItems();
-        playerHeldBy?.DropAllHeldItemsClientRpc();
+        if (playerHeldBy != null)
+        {
+            playerHeldBy.DropAllHeldItems();
+        }
         StartCoroutine(DespawnAfterDelay(1f));
     }
 
