@@ -69,7 +69,7 @@ MonoBehaviour:
   maxRange: 13
   minRange: 0
   requiresLineOfSight: 1
-  headerText: Worthless
+  headerText: Scribbled Paper
   subText: 
   scrapValue: 0
   creatureScanID: -1
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 3218440351860040241}
   - component: {fileID: 8746308962493688382}
   m_Layer: 6
-  m_Name: Worthless
+  m_Name: ScribbledPaper
   m_TagString: PhysicsProp
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -342,7 +342,6 @@ MonoBehaviour:
   originalScale: {x: 0, y: 0, z: 0}
   wasOwnerLastFrame: 0
   mainObjectRenderer: {fileID: 1673501749683589092}
-  isSendingItemRPC: 0
   scrapPersistedThroughRounds: 0
   heldByPlayerOnServer: 0
   radarIcon: {fileID: 0}
