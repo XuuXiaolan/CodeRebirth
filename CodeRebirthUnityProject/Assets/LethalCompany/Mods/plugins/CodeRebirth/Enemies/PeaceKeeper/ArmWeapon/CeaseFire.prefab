@@ -5316,7 +5316,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a701185c680a8e14685f2c7900fc97e3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5589,7 +5589,6 @@ MonoBehaviour:
   originalScale: {x: 0, y: 0, z: 0}
   wasOwnerLastFrame: 0
   mainObjectRenderer: {fileID: 5573095911387202118}
-  isSendingItemRPC: 0
   scrapPersistedThroughRounds: 0
   heldByPlayerOnServer: 0
   radarIcon: {fileID: 0}
@@ -5605,6 +5604,8 @@ MonoBehaviour:
   _rotationSpeed: 3000
   _ceasefireRenderer: {fileID: 5573095911387202118}
   _idleSource: {fileID: 6866611088339977767}
+  _overheatedSound: {fileID: 8300000, guid: 7bbbacf0e3a848c46bb65c7ffe3ecef3, type: 3}
+  _outOfOverheatSound: {fileID: 8300000, guid: a60fe2bb3d7f0c2449a6e1f62010a759, type: 3}
   _fireStartSound: {fileID: 8300000, guid: d9f25185427ac5e4ebb2af25a2aa053d, type: 3}
   _fireLoopSound: {fileID: 8300000, guid: 714c761220ff2b5488169cf0d71052b7, type: 3}
   _fireEndSound: {fileID: 8300000, guid: f3b6cd4336c77924eb11260a593bd754, type: 3}
@@ -5615,7 +5616,7 @@ MonoBehaviour:
   _maxEmissionIntensity: 10
   _maxDamageIntervalAtMaxCharge: 1
   _overheatEffect: {fileID: 8572332115556941923}
-  _overChargedDuration: 30
+  _overChargedDuration: 20
   _minigunDamageInterval: 0.2
   _minigunRange: 60
   _minigunWidth: 1.5
