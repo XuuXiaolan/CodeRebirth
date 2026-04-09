@@ -1,6 +1,7 @@
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
+
 public class BoundsDefiner : MonoBehaviour
 {
     public Color boundColor = Color.blue; // Customizable color for bounds

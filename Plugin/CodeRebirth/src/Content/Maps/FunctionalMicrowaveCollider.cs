@@ -2,6 +2,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
+
 public class FunctionalMicrowaveCollider : NetworkBehaviour
 {
     public FunctionalMicrowave mainScript;

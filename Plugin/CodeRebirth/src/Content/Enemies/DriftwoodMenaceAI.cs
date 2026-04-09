@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using Dawn;
 
 namespace CodeRebirth.src.Content.Enemies;
+
 public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
 {
     public AudioClip BurningSound = null!;
@@ -162,7 +163,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
 
             return;
         }
-    
+
         if (currentlyStunned && stunNormalizedTimer <= 0f)
         {
             currentlyStunned = false;

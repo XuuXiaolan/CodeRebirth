@@ -4,6 +4,7 @@ using GameNetcodeStuff;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
+
 public class Swatter : CRWeapon
 {
     private Collider[] cachedColliders = new Collider[24];

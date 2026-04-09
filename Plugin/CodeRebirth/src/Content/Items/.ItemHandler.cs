@@ -2,6 +2,7 @@
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
+
 public class ItemHandler : ContentHandler<ItemHandler>
 {
     public class HoverboardAssets(DuskMod mod, string filePath) : AssetBundleLoader<HoverboardAssets>(mod, filePath)

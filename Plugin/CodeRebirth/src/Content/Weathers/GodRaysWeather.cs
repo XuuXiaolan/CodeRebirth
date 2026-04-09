@@ -7,6 +7,7 @@ using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.Rendering;
 
 namespace CodeRebirth.src.Content.Weathers;
+
 struct GodRaySkyEffect(Color colour, Vector3 position, float radius, float falloff, Vector3 bottomPosition)
 {
     public Color colour = colour;

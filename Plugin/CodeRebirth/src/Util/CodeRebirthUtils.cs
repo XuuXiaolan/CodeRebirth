@@ -14,8 +14,10 @@ using System.Collections;
 using Dawn;
 using UnityEngine.InputSystem.Utilities;
 using CodeRebirth.src.Content.DevTools;
+using CodeRebirth.src.Util.Timer;
 
 namespace CodeRebirth.src.Util;
+
 internal class CodeRebirthUtils : NetworkBehaviour
 {
     public Material WireframeMaterial = null!;
@@ -34,6 +36,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+        this.gameObject.AddComponent<TimerExecutor>();
         if (DevToolHandler.Instance.DevTools != null && Plugin.ModConfig.ConfigDebugMode.Value && IsHost)
         {
             NetworkObjectReference netObjRefXuBucket = SpawnScrap(LethalContent.Items[CodeRebirthItemKeys.CrispXuBuck].Item, Vector3.zero);
@@ -293,7 +296,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         RoundManager.Instance.totalScrapValueInLevel += grabbableObject.scrapValue;
         grabbableObject.startFallingPosition = StartOfRound.Instance.propsContainer.InverseTransformPoint(spawnPosition);
         grabbableObject.targetFloorPosition = StartOfRound.Instance.propsContainer.InverseTransformPoint(targetPosition);
-		grabbableObject.InitializeAfterPositioning();
+        grabbableObject.InitializeAfterPositioning();
         grabbableObject.EnableItemMeshes(true);
         grabbableObject.EnablePhysics(true);
     }

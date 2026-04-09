@@ -3,6 +3,7 @@ using System.Linq;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
+
 public class InstrumentPlayer : GrabbableObject
 {
     public AudioSource audioPlayer = null!;

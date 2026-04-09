@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
+
 public class Detonator : GrabbableObject
 {
     public AudioSource detonatorSource = null!;

@@ -9,6 +9,7 @@ using UnityEngine.InputSystem.Controls;
 using UnityEngine.VFX;
 
 namespace CodeRebirth.src.Content.Items;
+
 public class ElectricSlugger : GrabbableObject
 {
     public SkinnedMeshRenderer skinnedMeshRenderer = null!;
@@ -29,10 +30,6 @@ public class ElectricSlugger : GrabbableObject
     public override void Start()
     {
         base.Start();
-        if (sluggerMask == 0)
-        {
-            sluggerMask = LayerMask.GetMask("Default", "Player", "Room", "Props", "Enemies", "Terrain", "MapHazards", "Vehicle");
-        }
 
         foreach (Light light in lights)
         {
@@ -144,12 +141,11 @@ public class ElectricSlugger : GrabbableObject
         }
     }
 
-    private static int sluggerMask = 0;
     public override void ItemActivate(bool used, bool buttonDown = true)
     {
         base.ItemActivate(used, buttonDown);
         if (!canFire || insertedBattery.empty || insertedBattery.charge <= 0) return;
-        int numHits = Physics.SphereCastNonAlloc(playerHeldBy.gameplayCamera.transform.position, 1, playerHeldBy.gameObject.transform.forward, cachedRaycastHits, 999, sluggerMask, QueryTriggerInteraction.Collide);
+        int numHits = Physics.SphereCastNonAlloc(playerHeldBy.gameplayCamera.transform.position, 1, playerHeldBy.gameObject.transform.forward, cachedRaycastHits, 999, LayerMask.GetMask("Default", "Player", "Room", "Props", "Enemies", "Terrain", "MapHazards", "Vehicle")/*MoreLayerMasks.RoomAndPlayerAndAndEnemiesAndTerrainAndHazardAndVehicleAndPropsAndDefaultMask*/, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numHits; i++)
         {
             CRUtilities.CreateExplosion(cachedRaycastHits[i].transform.position, true, 0, 0, 0, 0, playerHeldBy, null, 0);

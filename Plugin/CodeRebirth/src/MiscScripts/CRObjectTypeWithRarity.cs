@@ -1,6 +1,7 @@
 using System;
 
 namespace CodeRebirth.src.MiscScripts;
+
 [Serializable]
 public class CRObjectTypeWithRarity
 {

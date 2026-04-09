@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.Video;
 
 namespace CodeRebirth.src.Content.Items;
+
 public class CRPlanetUnlocker : GrabbableObject
 {
     [Header("Planet Unlocker Settings")]

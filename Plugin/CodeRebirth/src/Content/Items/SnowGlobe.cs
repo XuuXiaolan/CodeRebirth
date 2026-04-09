@@ -3,6 +3,7 @@ using System.Collections;
 using GameNetcodeStuff;
 
 namespace CodeRebirth.src.Content.Items;
+
 public class SnowGlobe : GrabbableObject
 {
     [Tooltip("Lights")]

@@ -4,6 +4,7 @@ using HarmonyLib;
 using Unity.Netcode;
 
 namespace CodeRebirth.src.Patches;
+
 [HarmonyPatch(typeof(NetworkBehaviour))]
 static class NetworkBehaviourPatch
 {

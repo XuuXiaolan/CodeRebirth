@@ -8,6 +8,7 @@ using Dawn;
 
 
 namespace CodeRebirth.src.Content.Weathers;
+
 public class Meteors : FallingObjectBehaviour
 {
     private float chanceToSpawnScrap;

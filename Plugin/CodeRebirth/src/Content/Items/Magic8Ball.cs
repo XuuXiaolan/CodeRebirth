@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
+
 public class Magic8Ball : GrabbableObject
 {
     [field: SerializeField]

@@ -7,6 +7,7 @@ using GameNetcodeStuff;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
+
 public class Xui : GrabbableObject
 {
     [SerializeField]

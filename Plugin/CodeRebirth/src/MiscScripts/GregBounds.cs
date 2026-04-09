@@ -1,6 +1,7 @@
 using CodeRebirth.src.Content.Maps;
 
 namespace CodeRebirth.src.MiscScripts;
+
 public class GregBounds : BoundsDefiner
 {
     public void OnEnable()

@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace CodeRebirth.src.Content.Unlockables;
+
 public enum HoverboardTypes
 {
     Regular,

@@ -101,7 +101,7 @@ public class CommitKeyToSave : NetworkBehaviour
                 _shouldSaveSave = true;
                 break;
             case SaveTypes.Plugin:
-                _savedPluginKeys =  Plugin.PersistentDataContainer.GetOrCreateDefault<HashSet<NamespacedKey>>(CodeRebirthLoreKey);
+                _savedPluginKeys = Plugin.PersistentDataContainer.GetOrCreateDefault<HashSet<NamespacedKey>>(CodeRebirthLoreKey);
                 if (!_savedPluginKeys.Add(key))
                 {
                     return;

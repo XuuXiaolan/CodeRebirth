@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 namespace CodeRebirth.src.Content.Enemies;
+
 [RequireComponent(typeof(SmartAgentNavigator))]
 public class PuppeteersVoodoo : NetworkBehaviour, IHittable
 {

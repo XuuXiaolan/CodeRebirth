@@ -19,6 +19,7 @@ MonoBehaviour:
   twoHandedAnimation: 0
   disableHandsOnWall: 0
   canBeGrabbedBeforeGameStart: 1
+  disallowUtilitySlot: 0
   weight: 1
   itemIsTrigger: 0
   holdButtonUse: 1
@@ -58,7 +59,6 @@ MonoBehaviour:
   - 'Move Horizontal : [I, J, K, L]'
   - 'Move Vertical : [U & O]'
   - 'Remove all : [R]'
-  - 'TP to same selection : [Z]'
   - 'Reset Edits : [X]'
   - 'Toggle NavMesh : [P]'
   verticalOffset: 0
@@ -70,5 +70,6 @@ MonoBehaviour:
   meshOffset: 0
   meshVariants: []
   materialVariants: []
+  clinkAudios: []
   usableInSpecialAnimations: 0
   canBeInspected: 0

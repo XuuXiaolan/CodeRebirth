@@ -4,6 +4,7 @@ using CodeRebirth.src.Content.Enemies;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
+
 public class PuppetDamageDealer : MonoBehaviour
 {
     public bool isEnabled = false;

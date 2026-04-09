@@ -6,6 +6,7 @@ using Unity.Netcode.Components;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
+
 public class JimothyNPC : NetworkBehaviour
 {
     [Header("References")]

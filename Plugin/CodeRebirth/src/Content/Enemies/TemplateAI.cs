@@ -1,6 +1,7 @@
 using GameNetcodeStuff;
 
 namespace CodeRebirth.src.Content.Enemies;
+
 public class TemplateAI : CodeRebirthEnemyAI
 {
 

@@ -318,9 +318,8 @@ public class DebugStick : GrabbableObject
         const float sampleDistance = 1f;
         const float rayDistance = 5f;
         const float visualOffset = 0.03f;
-        int groundMask = LayerMask.GetMask("Default", "Room", "NavigationSurface");
 
-        SnapVerticesToGroundHeightOnly(vertices, rayStartHeight, sampleDistance, rayDistance, visualOffset, groundMask);
+        SnapVerticesToGroundHeightOnly(vertices, rayStartHeight, sampleDistance, rayDistance, visualOffset, LayerMask.GetMask("Default", "Room", "NavigationSurface" /*MoreLayerMasks.DefaultRoomAndNavigationSurfaceMask*/));
 
         MeshFilter meshFilter = _navMeshObject.AddComponent<MeshFilter>();
         MeshRenderer meshRenderer = _navMeshObject.AddComponent<MeshRenderer>();

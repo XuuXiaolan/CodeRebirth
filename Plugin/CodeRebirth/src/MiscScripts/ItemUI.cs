@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace CodeRebirth.src.MiscScripts;
+
 public class ItemUI : MonoBehaviour
 {
     public RectTransform uiElement = null!;

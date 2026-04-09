@@ -7,6 +7,7 @@ using Unity.Netcode.Components;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Unlockables;
+
 public class CleanerDroneGalAI : NetworkBehaviour
 {
     public Animator animator;

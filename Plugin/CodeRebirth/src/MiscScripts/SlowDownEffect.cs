@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
+
 public static class SlowDownEffect
 {
     public static bool isSlowDownEffectActive = false;

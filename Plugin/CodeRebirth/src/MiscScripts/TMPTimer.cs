@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 namespace CodeRebirth.src.MiscScripts;
+
 public class TMPTimer : MonoBehaviour
 {
     [field: SerializeField]

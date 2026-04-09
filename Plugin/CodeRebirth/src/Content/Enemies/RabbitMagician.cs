@@ -7,6 +7,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;
+
 public class RabbitMagician : CodeRebirthEnemyAI
 {
     [Header("Audio")]

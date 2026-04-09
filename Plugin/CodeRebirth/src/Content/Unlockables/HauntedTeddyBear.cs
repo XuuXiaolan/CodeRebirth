@@ -5,6 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Unlockables;
+
 public class HauntedTeddyBear : NetworkBehaviour
 {
     [field: SerializeField, Range(0, 100)]

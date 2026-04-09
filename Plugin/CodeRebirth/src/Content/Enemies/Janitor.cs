@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 namespace CodeRebirth.src.Content.Enemies;
+
 public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
 {
     #region Fields & Properties
@@ -199,7 +200,7 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
                 creatureAnimator.SetBool(HoldingPlayerAnimation, false);
             }
         }
-    
+
         if (currentlyStunned && stunNormalizedTimer <= 0f)
         {
             StunSource.Stop();

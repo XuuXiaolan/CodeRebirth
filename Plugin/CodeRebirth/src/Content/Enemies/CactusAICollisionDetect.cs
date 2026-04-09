@@ -2,6 +2,7 @@ using GameNetcodeStuff;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;
+
 public class CactusAICollisionDetect : MonoBehaviour
 {
     [SerializeField]

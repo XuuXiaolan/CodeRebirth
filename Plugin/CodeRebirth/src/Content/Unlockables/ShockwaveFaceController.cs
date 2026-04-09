@@ -5,6 +5,7 @@ using UnityEngine;
 using static CodeRebirth.src.Content.Unlockables.ShockwaveGalAI;
 
 namespace CodeRebirth.src.Content.Unlockables;
+
 public class ShockwaveFaceController : MonoBehaviour
 {
     public ShockwaveGalAI ShockwaveGalAI = null!;

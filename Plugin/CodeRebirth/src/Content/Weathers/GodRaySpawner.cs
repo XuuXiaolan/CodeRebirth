@@ -5,6 +5,7 @@ using Dawn.Utils;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Weathers;
+
 public class GodRaySpawner : MonoBehaviour
 {
     // these four should be set in the inspector
@@ -16,13 +17,12 @@ public class GodRaySpawner : MonoBehaviour
     private System.Random godRayRandom = null!;
     private int numberOfGodrays = 30;
 
-    // Layer mask for "Room" and "Terrain"
     private LayerMask raycastLayerMask;
 
     private void Start()
     {
         godRayRandom = new System.Random(StartOfRound.Instance.randomMapSeed);
-        raycastLayerMask = LayerMask.GetMask("Room", "Terrain");
+        raycastLayerMask = LayerMask.GetMask("Room"); // MoreLayerMasks.RoomMask;
         StartCoroutine(SpawnGodRays());
     }
 

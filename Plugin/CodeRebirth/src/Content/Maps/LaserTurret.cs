@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.VFX;
 
 namespace CodeRebirth.src.Content.Maps;
+
 public class LaserTurret : CodeRebirthHazard
 {
     public Transform turretTransform = null!;

@@ -9,6 +9,7 @@ using Dawn;
 using Unity.Netcode;
 
 namespace CodeRebirth.src.Patches;
+
 [HarmonyPatch(typeof(RoundManager))]
 static class RoundManagerPatch
 {

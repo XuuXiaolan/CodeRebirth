@@ -6,6 +6,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
+
 public class NitroCrate : GrabbableObject, IHittable
 {
     public Renderer renderer = null!;

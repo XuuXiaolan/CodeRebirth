@@ -2,6 +2,7 @@
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
+
 public class HittableCollisionDetect : MonoBehaviour, IHittable
 {
     [SerializeField]

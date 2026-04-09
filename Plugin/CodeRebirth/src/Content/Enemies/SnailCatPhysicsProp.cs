@@ -4,6 +4,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;
+
 public class SnailCatPhysicsProp : GrabbableObject
 {
     public Animator animator = null!;

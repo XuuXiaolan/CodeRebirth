@@ -3,6 +3,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
+
 public abstract class CRHittable : NetworkBehaviour
 {
     public abstract bool Hit(int force, Vector3 hitDirection, PlayerControllerB playerWhoHit = null!,

@@ -2,6 +2,7 @@
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;
+
 public class EnemyHandler : ContentHandler<EnemyHandler>
 {
     public class SnailCatAssets(DuskMod mod, string filePath) : AssetBundleLoader<SnailCatAssets>(mod, filePath)

@@ -2,6 +2,7 @@ using CodeRebirth.src.MiscScripts;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
+
 public class CrateExplodeable : MonoBehaviour, IExplodeable
 {
     [field: SerializeField]

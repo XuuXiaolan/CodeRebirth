@@ -1,3 +1,4 @@
+using Dawn.Utils;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
@@ -10,7 +11,7 @@ public class UnityWheelColliderProxy : BearTrapWheelProxy
         SphereCollider sphereCollider = vehicleTyre.gameObject.AddComponent<SphereCollider>();
         sphereCollider.isTrigger = true;
         sphereCollider.radius = vehicleTyre.radius;
-        sphereCollider.includeLayers = MapHazardsLayerMask;
+        sphereCollider.includeLayers = MoreLayerMasks.HazardMask;
     }
 
     public override void PunctureWheel()

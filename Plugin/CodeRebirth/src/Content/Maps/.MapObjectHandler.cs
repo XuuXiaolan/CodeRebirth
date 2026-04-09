@@ -5,6 +5,7 @@ using Dusk;
 using CodeRebirth.src.Content.Moons;
 
 namespace CodeRebirth.src.Content.Maps;
+
 public class MapObjectHandler : ContentHandler<MapObjectHandler>
 {
     public class CompactorTobyAssets(DuskMod mod, string filePath) : AssetBundleLoader<CompactorTobyAssets>(mod, filePath)

@@ -7,6 +7,7 @@ using Unity.Netcode.Components;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Unlockables;
+
 public class BellCrabGalAI : NetworkBehaviour
 {
     public CRNoiseListener _BellCrabGalNoiseListener = null!; // todo implement this

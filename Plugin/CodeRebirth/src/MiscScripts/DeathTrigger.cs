@@ -3,6 +3,7 @@ using GameNetcodeStuff;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
+
 public class DeathTrigger : MonoBehaviour
 {
     public void OnTriggerEnter(Collider other)

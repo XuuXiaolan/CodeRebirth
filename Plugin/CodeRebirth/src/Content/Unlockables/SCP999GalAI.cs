@@ -10,6 +10,7 @@ using Unity.Netcode.Components;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Unlockables;
+
 public class SCP999GalAI : NetworkBehaviour
 {
     public CRNoiseListener _SCP999GalNoiseListener = null!; // todo implement this 

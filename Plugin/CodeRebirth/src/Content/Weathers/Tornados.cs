@@ -12,6 +12,7 @@ using CodeRebirth.src.Content.Enemies;
 
 
 namespace CodeRebirth.src.Content.Weathers;
+
 public class Tornados : CodeRebirthEnemyAI
 {
     [Header("Properties")]

@@ -7,6 +7,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
+
 public class InfiniKey : GrabbableObject
 {
     public AudioSource infiniSource = null!;

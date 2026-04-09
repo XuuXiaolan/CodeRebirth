@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 namespace CodeRebirth.src.Content.Items;
+
 public class SmallRigo : MonoBehaviour
 {
     public AudioSource audioSource = null!;

@@ -4,6 +4,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
+
 public class FlattenedBody : GrabbableObject
 {
     internal PlayerControllerB? _flattenedBodyName = null;

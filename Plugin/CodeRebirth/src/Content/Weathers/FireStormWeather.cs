@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Weathers;
+
 public class FireStormWeather : CodeRebirthWeathers
 {
     private IEnumerable<GameObject> nodes = [];

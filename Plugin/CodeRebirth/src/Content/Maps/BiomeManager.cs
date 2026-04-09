@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace CodeRebirth.src.Content.Maps;
+
 public class BiomeManager : CodeRebirthHazard
 {
     public DecalProjector corruptionProjector = null!;

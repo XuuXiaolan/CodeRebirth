@@ -3,6 +3,7 @@ using CodeRebirth.src.Util;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
+
 public class AutonomousCraneTrigger : MonoBehaviour
 {
     [SerializeField]

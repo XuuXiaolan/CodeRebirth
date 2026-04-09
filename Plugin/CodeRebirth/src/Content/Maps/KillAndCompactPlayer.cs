@@ -5,6 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
+
 public class KillAndCompactPlayer : MonoBehaviour
 {
     public CompactorToby toby = null!;

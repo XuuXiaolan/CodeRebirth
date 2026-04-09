@@ -2,6 +2,7 @@ using Dawn.Utils;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
+
 public class JimBall : SoccerBallProp
 {
     [SerializeField]

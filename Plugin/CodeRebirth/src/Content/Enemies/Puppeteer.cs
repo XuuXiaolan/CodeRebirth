@@ -11,6 +11,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;
+
 public class Puppeteer : CodeRebirthEnemyAI
 {
     [Header("General Configuration")]

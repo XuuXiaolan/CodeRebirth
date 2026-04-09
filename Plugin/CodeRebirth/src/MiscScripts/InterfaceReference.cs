@@ -5,11 +5,14 @@ using Object = UnityEngine.Object;
 namespace CodeRebirth.src.MiscScripts;
 
 [Serializable]
-public class InterfaceReference<TInterface, TObject> where TObject : Object where TInterface : class {
+public class InterfaceReference<TInterface, TObject> where TObject : Object where TInterface : class
+{
     [SerializeField, HideInInspector] TObject underlyingValue;
 
-    public TInterface Value {
-        get => underlyingValue switch {
+    public TInterface Value
+    {
+        get => underlyingValue switch
+        {
             null => null,
             TInterface @interface => @interface,
             _ => throw new InvalidOperationException($"{underlyingValue} needs to implement interface {nameof(TInterface)}.")
@@ -22,17 +25,18 @@ public class InterfaceReference<TInterface, TObject> where TObject : Object wher
         };
     }
 
-    public TObject UnderlyingValue {
+    public TObject UnderlyingValue
+    {
         get => underlyingValue;
         set => underlyingValue = value;
     }
-    
+
     public InterfaceReference() { }
-    
+
     public InterfaceReference(TObject target) => underlyingValue = target;
-    
+
     public InterfaceReference(TInterface @interface) => underlyingValue = @interface as TObject;
-    
+
     public static implicit operator TInterface(InterfaceReference<TInterface, TObject> obj) => obj.Value;
 }
 

@@ -6,6 +6,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
+
 public class AirControlUnit : CodeRebirthHazard
 {
     public Transform turretTransform = null!;

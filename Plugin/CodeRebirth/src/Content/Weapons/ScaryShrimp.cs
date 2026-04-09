@@ -5,6 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Weapons;
+
 public class ScaryShrimp : Shovel
 {
     public AudioClip killClip = null!;

@@ -1,6 +1,7 @@
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
+
 public class Flora : MonoBehaviour
 {
     public GameObject[] Grass = null!;

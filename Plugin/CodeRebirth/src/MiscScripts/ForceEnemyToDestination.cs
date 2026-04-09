@@ -3,6 +3,7 @@ using CodeRebirth.src.Content.Enemies;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
+
 public class ForceEnemyToDestination : MonoBehaviour
 {
     public EnemyAI? enemy = null;

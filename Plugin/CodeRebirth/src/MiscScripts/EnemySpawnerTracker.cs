@@ -5,6 +5,7 @@ using Dawn.Utils;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
+
 public class EnemySpawnerTracker : MonoBehaviour
 {
     [HideInInspector]

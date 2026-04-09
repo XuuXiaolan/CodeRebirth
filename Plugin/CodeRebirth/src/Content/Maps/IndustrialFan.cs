@@ -3,6 +3,7 @@ using GameNetcodeStuff;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
+
 public class IndustrialFan : CodeRebirthHazard
 {
     public Transform fanTransform = null!;

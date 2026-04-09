@@ -1,6 +1,7 @@
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
+
 public class ForceLineRendererPositions : MonoBehaviour
 {
     [SerializeField]

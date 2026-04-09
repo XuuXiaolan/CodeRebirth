@@ -7,6 +7,7 @@ using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 namespace CodeRebirth.src.MiscScripts;
+
 public class InteractSeatable : InteractTrigger // I stole this from paco
 {
     public PlayerControllerB? SittingPlayer { get; private set; }

@@ -4,6 +4,7 @@ using UnityEngine;
 using static CodeRebirth.src.Content.Unlockables.TerminalGalAI;
 
 namespace CodeRebirth.src.Content.Unlockables;
+
 public class TerminalFaceController : MonoBehaviour
 {
     public TerminalGalAI TerminalGalAI = null!;

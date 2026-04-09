@@ -486,20 +486,20 @@ public class DebtCollector : CodeRebirthEnemyAI
 
     #region Animation Events
 
-	public void FinishPryOpenDoor(int cancelledEarly)
-	{
+    public void FinishPryOpenDoor(int cancelledEarly)
+    {
         Plugin.ExtendedLogging($"Finishing pry open door with {cancelledEarly}");
-		if (cancelledEarly != 1)
-		{
-			_shipDoor.shipDoorsAnimator.SetBool(ClosedDoorAnimationHash, false);
-			StartOfRound.Instance.SetShipDoorsClosed(false);
-			StartOfRound.Instance.SetShipDoorsOverheatLocalClient();
-			_shipDoor.doorPower = 0f;
-		}
-		_breakingDoorOpen = false;
-		inSpecialAnimation = false;
-		_shipDoor.shipDoorsAnimator.SetBool(PryingOpenDoorAnimationHash, false);
-	}
+        if (cancelledEarly != 1)
+        {
+            _shipDoor.shipDoorsAnimator.SetBool(ClosedDoorAnimationHash, false);
+            StartOfRound.Instance.SetShipDoorsClosed(false);
+            StartOfRound.Instance.SetShipDoorsOverheatLocalClient();
+            _shipDoor.doorPower = 0f;
+        }
+        _breakingDoorOpen = false;
+        inSpecialAnimation = false;
+        _shipDoor.shipDoorsAnimator.SetBool(PryingOpenDoorAnimationHash, false);
+    }
 
     public void TeleportSomewhereRandom()
     {

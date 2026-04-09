@@ -15,6 +15,7 @@ using Dawn;
 using UnityEngine.Events;
 
 namespace CodeRebirth.src.Content.Maps;
+
 public class ItemCrate : CRHittable
 {
     [Header("Audio")]

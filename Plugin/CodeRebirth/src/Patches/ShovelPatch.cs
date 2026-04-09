@@ -2,6 +2,7 @@
 using UnityEngine;
 
 namespace CodeRebirth.src.Patches;
+
 public static class ShovelPatch
 {
     public static void Init()

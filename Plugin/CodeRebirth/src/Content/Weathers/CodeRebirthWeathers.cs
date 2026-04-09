@@ -4,6 +4,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Weathers;
+
 public class CodeRebirthWeathers : MonoBehaviour
 {
     public IEnumerable<GameObject> CullNodesByProximity(IEnumerable<GameObject> nodes, float minDistance = 5f, bool cullDoors = true, bool cullShip = false, float shipCullDistance = 20f)

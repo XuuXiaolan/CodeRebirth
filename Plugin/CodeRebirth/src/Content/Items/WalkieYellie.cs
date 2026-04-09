@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 
 namespace CodeRebirth.src.Content.Items;
+
 public class WalkieYellie : GrabbableObject
 {
     [Header("Audio")]

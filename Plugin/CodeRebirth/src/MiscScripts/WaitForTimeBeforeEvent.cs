@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 namespace CodeRebirth.src.MiscScripts;
+
 public class WaitForTimeBeforeEvent : MonoBehaviour
 {
     [SerializeField]

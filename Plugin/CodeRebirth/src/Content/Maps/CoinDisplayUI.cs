@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace CodeRebirth.src.Content.Maps;
+
 public class CoinDisplayUI : Singleton<CoinDisplayUI>
 {
     [field: SerializeField]

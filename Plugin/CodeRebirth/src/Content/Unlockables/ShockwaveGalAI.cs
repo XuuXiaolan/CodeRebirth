@@ -11,6 +11,7 @@ using UnityEngine;
 using static CodeRebirth.src.Content.Unlockables.ShockwaveFaceController;
 
 namespace CodeRebirth.src.Content.Unlockables;
+
 public class ShockwaveGalAI : GalAI
 {
     public ShockwaveFaceController RobotFaceController = null!;

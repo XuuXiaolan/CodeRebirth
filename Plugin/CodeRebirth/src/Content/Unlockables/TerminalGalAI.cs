@@ -14,6 +14,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 namespace CodeRebirth.src.Content.Unlockables;
+
 public class TerminalGalAI : GalAI
 {
     public SkinnedMeshRenderer FaceSkinnedMeshRenderer = null!;

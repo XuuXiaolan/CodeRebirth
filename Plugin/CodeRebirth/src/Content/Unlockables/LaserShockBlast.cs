@@ -9,6 +9,7 @@ using Dawn.Utils;
 
 
 namespace CodeRebirth.src.Content.Unlockables;
+
 public class LaserShockBlast : NetworkBehaviour
 {
     [Header("Laser Settings")]

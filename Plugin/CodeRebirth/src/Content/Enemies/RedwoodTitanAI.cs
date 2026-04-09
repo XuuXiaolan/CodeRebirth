@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace CodeRebirth.src.Content.Enemies;
+
 public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
 {
     public Material AlbinoCharredMaterial = null!;

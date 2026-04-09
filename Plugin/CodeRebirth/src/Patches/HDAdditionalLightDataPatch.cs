@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
 
 namespace CodeRebirth.src.Patches;
+
 [HarmonyPatch(typeof(HDAdditionalLightData))]
 static class HDAdditionalLightDataPatch
 {

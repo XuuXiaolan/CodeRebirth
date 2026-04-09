@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
 
 namespace CodeRebirth.src.MiscScripts.CustomPasses;
+
 public class CustomPassManager
 {
     public enum CustomPassType

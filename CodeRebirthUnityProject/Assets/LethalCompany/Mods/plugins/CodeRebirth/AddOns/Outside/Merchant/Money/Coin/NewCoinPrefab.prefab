@@ -138,7 +138,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 4219964514
+  GlobalObjectIdHash: 3949493691
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -210,7 +210,6 @@ MonoBehaviour:
   originalScale: {x: 0, y: 0, z: 0}
   wasOwnerLastFrame: 0
   mainObjectRenderer: {fileID: 0}
-  isSendingItemRPC: 0
   scrapPersistedThroughRounds: 0
   heldByPlayerOnServer: 0
   radarIcon: {fileID: 0}
@@ -455,9 +454,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grabbableObject: {fileID: 0}
-  borderColor: {r: 0.745283, g: 0.5555119, b: 0, a: 1}
-  textColor: {r: 1, g: 0.7614651, b: 0, a: 1}
-  scanNodeProperties: {fileID: 7504167663243897336}
+  borderColor: {r: 0, g: 1, b: 0, a: 1}
+  textColor: {r: 0, g: 1, b: 0, a: 1}
+  scanNodeProperties: {fileID: 0}
 --- !u!1 &5959542242408541072
 GameObject:
   m_ObjectHideFlags: 0

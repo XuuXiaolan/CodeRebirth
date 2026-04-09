@@ -5,6 +5,7 @@ using HarmonyLib;
 using UnityEngine;
 
 namespace CodeRebirth.src.Patches;
+
 [HarmonyPatch(typeof(KeyItem))]
 static class KeyItemPatch
 {

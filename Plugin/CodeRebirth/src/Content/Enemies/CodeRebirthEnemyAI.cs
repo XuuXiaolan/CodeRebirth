@@ -6,6 +6,7 @@ using Unity.Netcode.Components;
 using Dawn.Utils;
 
 namespace CodeRebirth.src.Content.Enemies;
+
 [RequireComponent(typeof(SmartAgentNavigator))]
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(NetworkAnimator))]

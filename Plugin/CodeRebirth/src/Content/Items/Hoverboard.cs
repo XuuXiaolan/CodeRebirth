@@ -14,6 +14,7 @@ using Dawn.Utils;
 using CodeRebirth.src.Content.Unlockables;
 
 namespace CodeRebirth.src.Content.Items;
+
 public class Hoverboard : GrabbableObject, IHittable
 {
     public Rigidbody hb = null!;

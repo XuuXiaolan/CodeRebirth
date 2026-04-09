@@ -8,6 +8,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Util;
+
 public enum CodeRebirthStatusEffects
 {
     None,

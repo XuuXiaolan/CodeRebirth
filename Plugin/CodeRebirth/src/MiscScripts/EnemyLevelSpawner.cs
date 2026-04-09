@@ -4,6 +4,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
+
 public class EnemyLevelSpawner : MonoBehaviour
 {
     [Header("Misc")]

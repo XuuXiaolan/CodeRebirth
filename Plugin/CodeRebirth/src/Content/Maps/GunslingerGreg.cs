@@ -4,6 +4,7 @@ using GameNetcodeStuff;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
+
 public class GunslingerGreg : CodeRebirthHazard
 {
     public Transform gregBase = null!;

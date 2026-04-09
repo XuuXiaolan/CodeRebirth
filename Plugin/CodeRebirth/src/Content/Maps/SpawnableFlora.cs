@@ -3,6 +3,7 @@ using Dawn;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
+
 public enum FloraTag
 {
     None,

@@ -168,7 +168,7 @@ public class Transporter : CodeRebirthEnemyAI
             }
         }
 
-    
+
         if (currentlyStunned && stunNormalizedTimer <= 0f)
         {
             StunSource.Stop();

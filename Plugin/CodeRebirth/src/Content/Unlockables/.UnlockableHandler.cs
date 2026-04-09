@@ -2,6 +2,7 @@ using Dusk;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Unlockables;
+
 public class UnlockableHandler : ContentHandler<UnlockableHandler>
 {
     public class ShockwaveBotAssets(DuskMod mod, string filePath) : AssetBundleLoader<ShockwaveBotAssets>(mod, filePath)

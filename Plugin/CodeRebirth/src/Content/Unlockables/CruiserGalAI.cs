@@ -11,6 +11,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Unlockables;
+
 public class CruiserGalAI : GalAI
 {
     public InteractTrigger ChestCollisionToggleTrigger = null!;

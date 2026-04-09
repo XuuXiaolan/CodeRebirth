@@ -4,6 +4,7 @@ using UnityEngine;
 // Taken by TheCSDev from <https://discussions.unity.com/t/check-if-component-is-requred-by-another/172189> in the unity forums.
 
 namespace CodeRebirth.src.Util.Extensions;
+
 public static class GameObjectUtils
 {
     /// <summary>

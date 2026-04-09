@@ -12,6 +12,7 @@ using UnityEngine.InputSystem.Utilities;
 using CodeRebirth.src.MiscScripts;
 
 namespace CodeRebirth.src.Content.Enemies;
+
 public class CactusBudling : CodeRebirthEnemyAI, IVisibleThreat
 {
     [Header("Audio")]

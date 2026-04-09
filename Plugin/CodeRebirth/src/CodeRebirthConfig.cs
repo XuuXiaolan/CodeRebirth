@@ -1,6 +1,7 @@
 ﻿using BepInEx.Configuration;
 
 namespace CodeRebirth.src;
+
 public class CodeRebirthConfig
 {
     #region Enables/Disables

@@ -31,13 +31,15 @@ MonoBehaviour:
     spawnWithBackFlushAgainstWall: 0
     requireDistanceBetweenSpawns: 0
     disallowSpawningNearEntrances: 0
+    allowInMineshaft: 0
   <OutsideMapObjectSettings>k__BackingField:
-    SpawnFacingAwayFromWall: 0
-    ObjectWidth: 0
-    RotationOffset: {x: 0, y: 0, z: 0}
-    SpawnableFloorTags: []
-    MinimumAINodeSpawnRequirement: 0
-    AlignWithTerrain: 0
+    spawnFacingAwayFromWall: 0
+    objectWidth: 0
+    destroyTrees: 0
+    rotationOffset: {x: 0, y: 0, z: 0}
+    spawnableFloorTags: []
+    minimumAINodeSpawnRequirement: 0
+    alignWithTerrain: 0
   <IsInsideHazard>k__BackingField: 0
   <CreateInsideHazardConfig>k__BackingField: 0
   <InsideMoonCurveSpawnWeights>k__BackingField: []

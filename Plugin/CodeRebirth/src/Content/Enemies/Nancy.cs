@@ -8,6 +8,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;
+
 public class Nancy : CodeRebirthEnemyAI
 {
     [Header("Audio")]

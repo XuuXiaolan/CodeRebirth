@@ -1,6 +1,7 @@
 using static CodeRebirth.src.Content.Unlockables.PlantPot;
 
 namespace CodeRebirth.src.Content.Items;
+
 public class WoodenSeed : GrabbableObject
 {
     public FruitType fruitType = FruitType.None;

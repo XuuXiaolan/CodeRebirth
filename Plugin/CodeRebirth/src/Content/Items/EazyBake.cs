@@ -5,6 +5,7 @@ using GameNetcodeStuff;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
+
 public class EazyBake : GrabbableObject
 {
     [field: SerializeField]
@@ -15,7 +16,7 @@ public class EazyBake : GrabbableObject
     public Animator Animator { get; private set; }
 
     private List<Collider> collidersInside = new();
-    private float timeSinceLastDamage = 0f; 
+    private float timeSinceLastDamage = 0f;
 
     private static readonly int FiringHash = Animator.StringToHash("Firing"); // Boolean
 

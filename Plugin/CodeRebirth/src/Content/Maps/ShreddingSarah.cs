@@ -9,6 +9,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
+
 public class ShreddingSarah : NetworkSingleton<ShreddingSarah>
 {
     public float launchSpeed = 30f;

@@ -1,10 +1,10 @@
 using System.Collections;
-using System.Linq;
 using Dawn;
 using GameNetcodeStuff;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;
+
 public class CutieFlyAI : CodeRebirthEnemyAI
 {
     public GameObject armature = null!;

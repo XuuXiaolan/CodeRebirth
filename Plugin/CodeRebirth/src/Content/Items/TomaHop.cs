@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 
 namespace CodeRebirth.src.Content.Items;
+
 public class TomaHop : CRWeapon
 {
     [SerializeField]

@@ -6,6 +6,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
+
 public class Mountaineer : CRWeapon
 {
     public Renderer iceRenderer = null!;

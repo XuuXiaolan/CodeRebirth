@@ -4,6 +4,7 @@ using GameNetcodeStuff;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
+
 public class GunslingerMissile : MonoBehaviour
 {
     public float speed = 20f;

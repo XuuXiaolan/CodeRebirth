@@ -7,6 +7,7 @@ using GameNetcodeStuff;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
+
 public class BoomTrap : BearTrap
 {
     public AudioSource boomSource = null!;

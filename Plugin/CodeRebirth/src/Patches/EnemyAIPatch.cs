@@ -11,6 +11,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Patches;
+
 static class EnemyAIPatch
 {
     private static Dictionary<EnemyAI, Coroutine> _slowedEnemies = new();

@@ -3,6 +3,7 @@ using LethalCompanyInputUtils.BindingPathEnums;
 using UnityEngine.InputSystem;
 
 namespace CodeRebirth.src;
+
 public class IngameKeybinds : LcInputActions
 {
     [InputAction("<Keyboard>/r", Name = "PullChain")]

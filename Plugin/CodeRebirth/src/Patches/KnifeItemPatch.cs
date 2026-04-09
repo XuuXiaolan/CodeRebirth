@@ -1,4 +1,5 @@
 namespace CodeRebirth.src.Patches;
+
 public static class KnifeItemPatch
 {
     public static void Init()

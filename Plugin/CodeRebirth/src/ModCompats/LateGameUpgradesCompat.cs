@@ -6,6 +6,7 @@ using MonoMod.RuntimeDetour;
 using System.Runtime.CompilerServices;
 
 namespace CodeRebirth.src.ModCompats;
+
 internal static class LateGameUpgradesCompat
 {
     internal static bool LateGameUpgradesExists = Chainloader.PluginInfos.ContainsKey("com.malco.lethalcompany.moreshipupgrades");

@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 
 namespace CodeRebirth.src.ModCompats;
+
 internal static class ImperiumCompat
 {
     internal static bool Enabled { get { return BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey(Imperium.PluginInfo.PLUGIN_GUID); } }

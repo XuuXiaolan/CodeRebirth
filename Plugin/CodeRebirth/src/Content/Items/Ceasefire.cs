@@ -7,6 +7,7 @@ using GameNetcodeStuff;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
+
 public class Ceasefire : GrabbableObject
 {
     [Header("Visuals")]
@@ -201,7 +202,7 @@ public class Ceasefire : GrabbableObject
             _firingEndRoutine = StartCoroutine(DoEndFiringSequence());
             isBeingUsed = false;
         }
-        else 
+        else
         {
             if (_firingEndRoutine != null)
             {

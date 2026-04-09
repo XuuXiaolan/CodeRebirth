@@ -13,6 +13,7 @@ using Unity.Netcode.Components;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
+
 public class CompactorToby : NetworkBehaviour, IHittable
 {
     [Header("Sounds")]

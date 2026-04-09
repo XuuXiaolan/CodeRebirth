@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.InputSystem.Controls;
 
 namespace CodeRebirth.src.Content.Items;
+
 public class Oxidizer : GrabbableObject
 {
     public ParticleSystem[] flameStreamParticleSystems = [];

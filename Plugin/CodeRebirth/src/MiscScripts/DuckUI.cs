@@ -6,6 +6,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
+
 public delegate void OnFinishTalking();
 public class DuckUI : NetworkBehaviour
 {

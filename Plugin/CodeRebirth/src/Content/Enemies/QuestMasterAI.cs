@@ -9,6 +9,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;
+
 public abstract class QuestMasterAI : CodeRebirthEnemyAI
 {
     [Header("Quest Variables")]

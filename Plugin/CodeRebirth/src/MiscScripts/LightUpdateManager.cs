@@ -4,6 +4,7 @@ using CodeRebirth.src.Util;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
+
 public class LightUpdateManager : MonoBehaviour
 {
     public static HashSet<DetectLightInSurroundings> detectLightInSurroundings = new();

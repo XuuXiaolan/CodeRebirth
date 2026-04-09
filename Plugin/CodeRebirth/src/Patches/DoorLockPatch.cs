@@ -3,6 +3,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Patches;
+
 public static class DoorLockPatch
 {
     public static void Init()

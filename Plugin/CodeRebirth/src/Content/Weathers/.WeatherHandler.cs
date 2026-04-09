@@ -5,6 +5,7 @@ using Dusk;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Weathers;
+
 public class WeatherHandler : ContentHandler<WeatherHandler>
 {
     public class MeteoriteAssets(DuskMod mod, string filePath) : AssetBundleLoader<MeteoriteAssets>(mod, filePath)

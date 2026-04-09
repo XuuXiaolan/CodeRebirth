@@ -1,6 +1,7 @@
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Unlockables;
+
 public class TerrainScanner : MonoBehaviour
 {
     public GameObject TerrainScannerPrefab;

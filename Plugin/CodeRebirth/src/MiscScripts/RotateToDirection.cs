@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
+
 public class RotateToDirection : MonoBehaviour
 {
     [field: SerializeField]

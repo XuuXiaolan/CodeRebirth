@@ -5,6 +5,7 @@ using Dawn;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
+
 public class OxydeCrashingShip : FallingObjectBehaviour
 {
     [Header("Audio")]

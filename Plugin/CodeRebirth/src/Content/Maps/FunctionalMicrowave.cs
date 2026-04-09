@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 namespace CodeRebirth.src.Content.Maps;
+
 public class FunctionalMicrowave : CodeRebirthHazard
 {
     public float microwaveOpeningTimer = 15f;

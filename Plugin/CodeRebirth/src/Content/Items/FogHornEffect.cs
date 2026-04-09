@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.VFX;
 
 namespace CodeRebirth.src.Content.Items;
+
 public class FogHornEffect : MonoBehaviour
 {
     [SerializeField]

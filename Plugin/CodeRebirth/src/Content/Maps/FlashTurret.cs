@@ -3,6 +3,7 @@ using GameNetcodeStuff;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
+
 public class FlashTurret : CodeRebirthHazard
 {
     public CRNoiseListener _FlashTurretNoiseListener = null!; // todo implement this

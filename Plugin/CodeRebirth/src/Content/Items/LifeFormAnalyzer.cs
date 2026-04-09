@@ -4,6 +4,7 @@ using CodeRebirth.src.MiscScripts.CustomPasses;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
+
 public class LifeFormAnalyzer : GrabbableObject
 {
     public Animator animator = null!;

@@ -327,7 +327,7 @@ public class Merchant : NetworkBehaviour
 
         RealItemWithRarityAndColor selectedItem = CRUtilities.ChooseRandomWeightedType(merchantBarrel.validItemsWithRarityAndColor.Select(x => (x, x.rarity)))!;
 
-        if (selectedItem.item == null) 
+        if (selectedItem.item == null)
         {
             Plugin.ExtendedLogging("Item selection failed for barrel at " + spawnPosition + "Assuming Random item");
             Item item = GetRandomVanillaItem(false, storeSeededRandom);

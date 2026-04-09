@@ -3,6 +3,7 @@ using DigitalRuby.ThunderAndLightning;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
+
 public class LightningStrikeScript
 {
     public static StormyWeather? stormyWeather = null;

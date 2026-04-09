@@ -6,6 +6,7 @@ using Dawn.Utils;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Weathers;
+
 public class MeteorShower : CodeRebirthWeathers
 {
     private Coroutine? spawnHandler = null;

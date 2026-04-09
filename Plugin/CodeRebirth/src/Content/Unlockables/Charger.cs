@@ -9,6 +9,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Unlockables;
+
 public class Charger : NetworkBehaviour
 {
     public InteractTrigger ActivateOrDeactivateTrigger = null!;

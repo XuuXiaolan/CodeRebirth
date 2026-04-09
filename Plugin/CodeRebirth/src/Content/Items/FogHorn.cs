@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.VFX;
 
 namespace CodeRebirth.src.Content.Items;
+
 public class FogHorn : GrabbableObject
 {
     public VisualEffect fogHornEffect = null!;

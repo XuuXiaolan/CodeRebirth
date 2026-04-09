@@ -18,6 +18,7 @@ using UnityEngine.InputSystem;
 using CodeRebirth.src.Content.Maps;
 
 namespace CodeRebirth.src.Patches;
+
 [HarmonyPatch(typeof(PlayerControllerB))]
 static class PlayerControllerBPatch
 {

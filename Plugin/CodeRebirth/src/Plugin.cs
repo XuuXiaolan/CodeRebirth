@@ -15,6 +15,7 @@ using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Content.Unlockables;
 
 namespace CodeRebirth.src;
+
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 [BepInDependency("com.rune580.LethalCompanyInputUtils")]
 [BepInDependency(DawnLib.PLUGIN_GUID)]

@@ -4,6 +4,7 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
 
 namespace CodeRebirth.src.MiscScripts;
+
 public class WeatherController : MonoBehaviour
 {
     public Renderer[] renderersToDisableEmissiveness = null!;

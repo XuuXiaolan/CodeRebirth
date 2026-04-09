@@ -440,7 +440,7 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
 
         HundredWheel.localRotation = _hundredBase * Quaternion.AngleAxis(endHundred, Vector3.right);
         TenWheel.localRotation = _tenBase * Quaternion.AngleAxis(endTen, Vector3.right);
-        OneWheel.localRotation  = _oneBase * Quaternion.AngleAxis(endOne, Vector3.right);
+        OneWheel.localRotation = _oneBase * Quaternion.AngleAxis(endOne, Vector3.right);
     }
 
     private int GetDigitFromWheel(Transform wheel, Quaternion baseRot)

@@ -10,6 +10,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
+
 public class TalkingHead : GrabbableObject
 {
     public Transform playerBone = null!;

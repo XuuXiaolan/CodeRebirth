@@ -7,6 +7,7 @@ using GameNetcodeStuff;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
+
 public class GrabAndLaunchPlayer : MonoBehaviour
 {
     public Transform pullTransform = null!;

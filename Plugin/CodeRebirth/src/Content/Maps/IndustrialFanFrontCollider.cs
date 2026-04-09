@@ -3,6 +3,7 @@ using GameNetcodeStuff;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
+
 public class IndustrialFanFrontCollider : MonoBehaviour
 {
     public IndustrialFan industrialFan = null!;

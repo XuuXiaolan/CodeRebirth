@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 namespace CodeRebirth.src.Content.Enemies;
+
 public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
 {
     [Header("Audio")]

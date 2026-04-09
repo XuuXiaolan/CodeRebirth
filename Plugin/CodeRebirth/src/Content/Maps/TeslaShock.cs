@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.VFX;
 
 namespace CodeRebirth.src.Content.Maps;
+
 public class TeslaShock : CodeRebirthHazard
 {
     public float distanceFromPlayer = 5f;

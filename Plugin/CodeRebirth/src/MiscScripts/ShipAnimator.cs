@@ -8,6 +8,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
+
 public class ShipAnimator : MonoBehaviour // Some of this code is from Kite, so thanks to them
 {
     [HideInInspector] public AnimationClip originalShipLeaveClip = null!;

@@ -9,7 +9,6 @@ namespace CodeRebirth.src.Content.Maps;
 public abstract class BearTrapWheelProxy : MonoBehaviour
 {
     public bool AlreadyPunctured { get; private set; }
-    internal static int MapHazardsLayerMask = -1;
 
     private static readonly NamespacedKey BearTrapWheelProxyKey = NamespacedKey.From("code_rebirth", "bear_trap_wheel_proxy");
     public virtual void Start()
@@ -59,7 +58,6 @@ public abstract class BearTrapWheelProxy : MonoBehaviour
             }
         }
 
-        MapHazardsLayerMask = LayerMask.GetMask("MapHazards");
         foreach (WheelCollider vehicleTyre in vehiclesTyres)
         {
             UnityWheelColliderProxy wheelProxy = vehicleTyre.gameObject.AddComponent<UnityWheelColliderProxy>();

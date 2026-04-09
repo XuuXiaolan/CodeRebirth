@@ -6,6 +6,7 @@ using Dawn;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Weathers;
+
 public class TornadoWeather : CodeRebirthWeathers
 {
     private IEnumerable<GameObject> nodes = [];

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem.Controls;
 
 namespace CodeRebirth.src.Content.Items;
+
 public class MoleDigger : GrabbableObject
 {
     public Animator moleAnimator = null!;

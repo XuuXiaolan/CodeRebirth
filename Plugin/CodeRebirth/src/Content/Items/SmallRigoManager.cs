@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 namespace CodeRebirth.src.Content.Items;
+
 public class SmallRigoManager : MonoBehaviour
 {
     public GoldRigo goldRigo = null!;

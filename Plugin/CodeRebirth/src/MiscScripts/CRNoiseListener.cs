@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 namespace CodeRebirth.src.MiscScripts;
+
 [RequireComponent(typeof(Collider))]
 public class CRNoiseListener : MonoBehaviour, INoiseListener
 {

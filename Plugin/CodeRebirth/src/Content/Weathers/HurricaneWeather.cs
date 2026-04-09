@@ -4,6 +4,7 @@ using UnityEngine;
 using WeatherRegistry;
 
 namespace CodeRebirth.src.Content.Weathers;
+
 public class HurricaneWeather : CodeRebirthWeathers
 {
     private IEnumerable<GameObject> nodes = [];

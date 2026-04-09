@@ -4,6 +4,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
+
 public class CodeRebirthHazard : NetworkBehaviour
 {
     private Collider[] cachedColliders = new Collider[5];

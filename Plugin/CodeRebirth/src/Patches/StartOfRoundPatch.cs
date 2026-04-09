@@ -9,6 +9,7 @@ using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.ModCompats;
 
 namespace CodeRebirth.src.Patches;
+
 [HarmonyPatch(typeof(StartOfRound))]
 static class StartOfRoundPatch
 {

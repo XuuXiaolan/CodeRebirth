@@ -4,6 +4,7 @@ using GameNetcodeStuff;
 using UnityEngine;
 
 namespace CodeRebirth.src.Patches;
+
 public static class TurretPatch
 {
     public static void Init()

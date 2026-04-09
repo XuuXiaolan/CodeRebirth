@@ -6,6 +6,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Unlockables;
+
 public class GlitchedPlushie : NetworkBehaviour
 {
     public SkinnedMeshRenderer skinnedMeshRenderer = null!;

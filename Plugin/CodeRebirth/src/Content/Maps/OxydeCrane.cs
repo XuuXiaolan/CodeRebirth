@@ -7,6 +7,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
+
 public class OxydeCrane : NetworkBehaviour
 {
     public GameObject shipNavColliders = null!;

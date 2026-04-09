@@ -1,6 +1,7 @@
 
 
 namespace CodeRebirth.src.Content.Enemies;
+
 public class Duck : QuestMasterAI
 {
     public void Awake()

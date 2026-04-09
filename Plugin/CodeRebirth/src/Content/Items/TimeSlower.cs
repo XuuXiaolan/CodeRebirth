@@ -3,6 +3,7 @@ using CodeRebirth.src.MiscScripts;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
+
 public class TimeSlower : GrabbableObject
 {
     public Animator animator = null!;

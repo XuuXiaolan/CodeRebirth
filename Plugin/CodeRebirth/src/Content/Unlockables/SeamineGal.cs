@@ -14,6 +14,7 @@ using Unity.Netcode.Components;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Unlockables;
+
 public class SeamineGalAI : GalAI
 {
     public TerrainScanner terrainScanner = null!;
@@ -339,7 +340,7 @@ public class SeamineGalAI : GalAI
             SetEnemyTargetServerRpc(new NetworkBehaviourReference(enemy));
             HandleStateAnimationSpeedChanges(State.AttackMode);
             break;
-        }        
+        }
     }
 
     private void HostSideUpdate()

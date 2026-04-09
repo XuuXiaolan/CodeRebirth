@@ -2,6 +2,7 @@ using CodeRebirth.src.Content.Items;
 using UnityEngine;
 
 namespace CodeRebirth.src.Patches;
+
 public static class SoccerBallPropPatch
 {
     public static void Init()

@@ -1,6 +1,7 @@
 using UnityEngine;
 
 namespace CodeRebirth.src.MiscScripts;
+
 public static class AnimationCurveUtil
 {
     public enum TangentMode

@@ -10,6 +10,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Enemies;
+
 public class Guillotine : NetworkBehaviour
 {
     public Transform scrapSpawnTransform = null!;

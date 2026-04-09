@@ -3,6 +3,7 @@ using GameNetcodeStuff;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Skins;
+
 public class PeaceMyers : MonoBehaviour
 {
     private PeaceKeeper peaceKeeper = null!;

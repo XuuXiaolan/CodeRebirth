@@ -3,6 +3,7 @@ using CodeRebirth.src.Content.Enemies;
 using UnityEngine;
 
 namespace CodeRebirth.src.Patches;
+
 public static class ShotgunItemPatch
 {
     public static void Init()

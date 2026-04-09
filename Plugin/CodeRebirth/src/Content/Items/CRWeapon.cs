@@ -11,6 +11,7 @@ using Dawn.Utils;
 using Dawn;
 
 namespace CodeRebirth.src.Content.Items;
+
 public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's JMeleeWeapon
 {
     [Header("Melee Weapon")]

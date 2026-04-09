@@ -2,6 +2,7 @@
 using Dusk;
 
 namespace CodeRebirth.src.Content.Moons;
+
 [ContentOrder(1)]
 public class MoonHandler : ContentHandler<MoonHandler>
 {

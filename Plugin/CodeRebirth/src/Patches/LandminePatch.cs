@@ -7,6 +7,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Patches;
+
 public static class LandminePatch
 {
     public static void Init()
@@ -117,7 +118,7 @@ public static class LandminePatch
                 {
                     voodooDoll.Hit(2, vector, null, true, -1);
                 }
-            }            
+            }
         }
     }
 }
