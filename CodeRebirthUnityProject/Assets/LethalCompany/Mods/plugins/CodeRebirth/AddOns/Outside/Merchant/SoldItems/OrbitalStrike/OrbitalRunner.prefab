@@ -491,7 +491,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8992018265442965805}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
@@ -651,7 +651,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8992018265442965805}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 1268936034, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
@@ -698,6 +698,8 @@ MonoBehaviour:
   <NavMeshAgent>k__BackingField: {fileID: 3672211586787028224}
   <SmartAgentNavigator>k__BackingField: {fileID: 6908900245347261567}
   <Rigidbody>k__BackingField: {fileID: 182202364228413453}
+  <MinimumActivationTime>k__BackingField: 3
+  <LaserDuration>k__BackingField: 20
 --- !u!114 &6908900245347261567
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -745,6 +747,6 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 1
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1

@@ -42,8 +42,10 @@ public class OrbitalStrike : GrabbableObject
     public override void Start()
     {
         base.Start();
+        gameObject.layer = 20;
         MinimumActivationTimer = new Timer(MinimumActivationTime, TimerExecutionTime.Update);
         LaserDurationTimer = new Timer(LaserDuration, TimerExecutionTime.Update);
+
         // MinimumActivationTimer.OnFinish += ActivateLaserFromTimer;
         LaserDurationTimer.OnFinish += DeactivateLaser;
     }
@@ -59,7 +61,8 @@ public class OrbitalStrike : GrabbableObject
             grabbable = false;
             MinimumActivationTimer.Start();
             Rigidbody.AddForce(playerHeldBy.gameplayCamera.transform.forward * 30.0f, ForceMode.VelocityChange);
-            playerHeldBy.DiscardHeldObject(placeObject: true, null, playerHeldBy.transform.position);
+            NavMeshAgent.Warp(playerHeldBy.transform.position);
+            playerHeldBy.DiscardHeldObject(placeObject: false, null, playerHeldBy.transform.position);
         }
     }
 
@@ -74,6 +77,7 @@ public class OrbitalStrike : GrabbableObject
     }
 
     private void ActivateLaser() {
+        Plugin.Logger.LogWarning("Fire Laser!!!!");
         MinimumActivationTimer.Stop();
         LaserDurationTimer.Start();
         Animator.SetTrigger(ActivateAnimation);
@@ -81,7 +85,6 @@ public class OrbitalStrike : GrabbableObject
         Rigidbody.isKinematic = true;
         SmartAgentNavigator.enabled = true;
         SmartAgentNavigator.StartSearchRoutine(20f);
-        NavMeshAgent.Warp(playerHeldBy.transform.position);
     }
 
     public override void DiscardItem(){
@@ -95,7 +98,10 @@ public class OrbitalStrike : GrabbableObject
         base.PocketItem();
     }
     public override void Update(){
-        base.Update();
+        if (Rigidbody.isKinematic)
+        {
+            base.Update();
+        }
         Animator.SetFloat(RunSpeedAnimation, NavMeshAgent.velocity.magnitude / NavMeshAgent.speed);
     }
 
@@ -103,7 +109,9 @@ public class OrbitalStrike : GrabbableObject
         // public void LateUpdate(){
         if (!NavMeshAgent.enabled && Rigidbody.isKinematic){
             base.LateUpdate();
+            // Plugin.Logger.LogWarning("LateUpdate");
         }else if (!Rigidbody.isKinematic){
+            Plugin.Logger.LogWarning(Rigidbody.velocity.magnitude.ToString());
             if(Rigidbody.velocity.magnitude<2.0 && MinimumActivationTimer.IsFinished){
                 ActivateLaser();
             }
