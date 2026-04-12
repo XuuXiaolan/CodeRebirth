@@ -1,18 +1,33 @@
-# v0.9.3
+# v0.9.5
+
+- Added Routeprice configurability to items, enemies, interiors and entity replacements.
+- Got rid of my logging on vow and march from last update, whoops.
+
+## v0.9.4
+
+- Added compatibility with latest `TestAccount666.GoodItemScan` update.
+- Addded more logging related to achievements.
+- Possibly fixed issues relating to making more TileSets attached to interiors.
+- Tried to fix old moons with terrain colliders not having proper footsteps.
+- Fixed an issue with lobby reloads in relation to footstep surfaces.
+
+## v0.9.3
 
 - Updated the editor dll for the following changes:
   - Long-awaited visualisers for scrap and hazard spawning.
-  - Visualisers for DunGen DoorWays and Tiles.
+  - Visualisers for DunGen Doorways.
   - A dropdown on the top of the screen that generates every single Blank ScriptableObject you'll need, which will auto account for future updates.
   - A button on every DuskDefinition that will generate basic weights for every vanilla moon, interior, weather and a selection of tags: `none, low, medium, high, ultra_high`.
-  - Visualisation added to the moon if redlocustbees can spawn (which shows the radius for their reduced price).
+  - Visualisation added to the moon if redlocustbees can spawn (which shows the radius for hives reduced price).
 - Updated DawnSurface to support TerrainColliders.
-- Added a config to enable vanilla compatibility.
-- Added Component that reads the result of a config file and runs UnityEvents in correspondence to the value of the config. // TODO
-  - Currently only supports string, float, int, bool, BoundedRange, Vector3, Color and AnimationCurve. // TODO
-- DawnSurface now also supports changing the player's rotation to be upside down etc. // TODO
+- Added a config to enable vanilla compatibility (untested, let me know how it goes).
+- Added Component that reads the result of a config file and runs UnityEvents in correspondence to the value of the config.
+  - Currently only supports string, float, int, bool, BoundedRange, Vector3, Color and AnimationCurve.
 - OutsideObjects from DawnLib break trees if setup to like vanilla OutsideObjects now.
 - Simulate and Filter commands added.
+  - Simulate supports typing an interior or moon name.
+  - Filter supports being fed a tag name.
+- General code quality improvements.
 
 ## v0.9.2
 
