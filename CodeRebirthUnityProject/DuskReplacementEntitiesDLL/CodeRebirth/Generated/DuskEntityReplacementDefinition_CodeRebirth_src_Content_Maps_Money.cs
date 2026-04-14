@@ -5,13 +5,37 @@ using Dawn.Utils;
 using System.Collections.Generic;
 namespace Dusk
 {
-    [CreateAssetMenu(fileName = "New Map Object Replacement Definition", menuName = $"Entity Replacements/Map Object Replacements/CodeRebirth.src.Content.Maps.Money")]
-    public class DuskEntityReplacementDefinition_CodeRebirth_src_Content_Maps_Money : DuskMapObjectReplacementDefinition<Dusk.DuskMapObject>
+    [CreateAssetMenu(fileName = "New Item Replacement Definition", menuName = $"Entity Replacements/Item Replacements/CodeRebirth.src.Content.Maps.Money")]
+    public class DuskEntityReplacementDefinition_CodeRebirth_src_Content_Maps_Money : DuskItemReplacementDefinition<CodeRebirth.src.Content.Maps.Money>
     {
+        [Space(10)]
+        public AudioClip? _collectSound = null;
+        public AudioClip? potential_moneySource = null;
+        public ParticleSystem? _moneyParticles;
 
-        protected override void ApplyTyped(Dusk.DuskMapObject Money)
+        protected override void ApplyTyped(CodeRebirth.src.Content.Maps.Money Money)
         {
             CodeRebirth.src.Content.Maps.Money component = Money.gameObject.GetComponentInChildren<CodeRebirth.src.Content.Maps.Money>();
+            if (component._moneySource.clip != null && this.potential_moneySource != null)
+            {
+                component._moneySource.clip = this.potential_moneySource;
+            }
+            if (this._collectSound != null)
+            {
+                component._collectSound = this._collectSound;
+            }
+            if (this._moneyParticles != null)
+            {
+                ParticleSystem? newParticleSystem = this._moneyParticles;
+                ParticleSystem targetParticleSystem = component._moneyParticles;
+                if (newParticleSystem != null && targetParticleSystem != null)
+                {
+                    GameObject newParticle = GameObject.Instantiate(newParticleSystem.gameObject, targetParticleSystem.transform.parent);
+                    newParticle.name = targetParticleSystem.gameObject.name;
+                    Destroy(targetParticleSystem.gameObject);
+                    component._moneyParticles = this._moneyParticles;
+                }
+            }
         }
     }
 }

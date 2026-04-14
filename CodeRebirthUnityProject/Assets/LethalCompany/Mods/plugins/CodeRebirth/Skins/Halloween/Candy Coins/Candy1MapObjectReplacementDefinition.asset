@@ -20,16 +20,18 @@ MonoBehaviour:
     _key: candy
   _typedKey:
     _namespace: code_rebirth
-    _key: candy_one
+    _key: nuts
+  <SkinName>k__BackingField: Nuts
   <EntityToReplaceKey>k__BackingField:
     _namespace: code_rebirth
-    _key: money
+    _key: coin
   <DatePredicate>k__BackingField: {fileID: 11400000, guid: f635dcda5ba8bac458e944ac6e20e98c,
     type: 2}
   <Replacements>k__BackingField:
   - {fileID: 11400000, guid: b61f7fd153ddb8b4bba1585470b6fd2c, type: 2}
   - {fileID: 11400000, guid: 1b73211348984144cb6044ce6d4a73a7, type: 2}
   - {fileID: 11400000, guid: d30246362f7ae7c448b6b8554df45f9f, type: 2}
+  - {fileID: 11400000, guid: 388356df22ad39142ac706d7b1f66f6a, type: 2}
   <GameObjectAddons>k__BackingField: []
   <MoonSpawnWeightsConfig>k__BackingField:
   - NamespacedKey:
@@ -44,8 +46,21 @@ MonoBehaviour:
     Weight: 9999
   <InteriorSpawnWeightsConfig>k__BackingField: []
   <WeatherSpawnWeightsConfig>k__BackingField: []
+  <RouteSpawnWeightsConfig>k__BackingField: []
   <GenerateSpawnWeightsConfig>k__BackingField: 1
   <GenerateDisableDateConfig>k__BackingField: 1
   <MoonSpawnWeights>k__BackingField: 
   <InteriorSpawnWeights>k__BackingField: 
   <WeatherSpawnWeights>k__BackingField: 
+  <GrabSFX>k__BackingField: {fileID: 0}
+  <DropSFX>k__BackingField: {fileID: 0}
+  <PocketSFX>k__BackingField: {fileID: 0}
+  <ThrowSFX>k__BackingField: {fileID: 0}
+  <VerticalOffset>k__BackingField: 0
+  <FloorYOffset>k__BackingField: 0
+  <RestingRotation>k__BackingField: {x: 0, y: 0, z: 90}
+  <RotationOffset>k__BackingField: {x: 0, y: 0, z: 0}
+  <PositionOffset>k__BackingField: {x: 0, y: 0, z: 0}
+  _collectSound: {fileID: 0}
+  potential_moneySource: {fileID: 0}
+  _moneyParticles: {fileID: 0}

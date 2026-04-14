@@ -10,7 +10,6 @@ namespace Dusk
     {
         [Space(10)]
         public AudioClipsWithTime _idleAudioClips = new();
-        public AudioClip? enemyDetectSound = null;
         public AudioClip? spawnSound = null;
         public AudioClip? dieSFX = null;
         public AudioClip[] wiwiwiiiSound = System.Array.Empty<AudioClip>();
@@ -35,10 +34,6 @@ namespace Dusk
             if (component.creatureSFX.clip != null && this.potentialCreatureSFX != null)
             {
                 component.creatureSFX.clip = this.potentialCreatureSFX;
-            }
-            if (this.enemyDetectSound != null)
-            {
-                component.enemyDetectSound = this.enemyDetectSound;
             }
             if (this.spawnSound != null)
             {

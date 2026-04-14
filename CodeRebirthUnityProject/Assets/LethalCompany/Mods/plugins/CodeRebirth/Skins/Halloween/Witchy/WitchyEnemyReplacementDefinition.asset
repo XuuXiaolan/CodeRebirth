@@ -19,6 +19,7 @@ MonoBehaviour:
   _typedKey:
     _namespace: code_rebirth
     _key: witchy
+  <SkinName>k__BackingField: Witchy
   <EntityToReplaceKey>k__BackingField:
     _namespace: code_rebirth
     _key: nancy
@@ -41,6 +42,7 @@ MonoBehaviour:
     Weight: 9999
   <InteriorSpawnWeightsConfig>k__BackingField: []
   <WeatherSpawnWeightsConfig>k__BackingField: []
+  <RouteSpawnWeightsConfig>k__BackingField: []
   <GenerateSpawnWeightsConfig>k__BackingField: 1
   <GenerateDisableDateConfig>k__BackingField: 1
   <MoonSpawnWeights>k__BackingField: 
@@ -60,7 +62,6 @@ MonoBehaviour:
   _detectInjuredPlayerVoicelines: []
   _specialDetectInjuredPlayerVoicelines: []
   _healFailVoicelines: []
-  _healSuccessVoiceline: []
   potential_rollingSource: {fileID: 0}
   potential_healDuringSource: {fileID: 0}
   potentialCreatureVoice: {fileID: 0}

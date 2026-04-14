@@ -12,8 +12,6 @@ namespace Dusk
         public AudioClipsWithTime _idleAudioClips = new();
         public AudioClip? eatenSound = null;
         public AudioClip? roarSound = null;
-        public AudioClip? jumpSound = null;
-        public AudioClip? kickSound = null;
         public AudioClip? crunchySquishSound = null;
         public AudioClip? spawnSound = null;
         public AudioClip? dieSFX = null;
@@ -26,7 +24,6 @@ namespace Dusk
         public ParticleSystem? DriftwoodGiantParticles;
         public ParticleSystem? OldBirdParticles;
         public ParticleSystem? DeathParticles;
-        public ParticleSystem? BigSmokeEffect;
 
         protected override void ApplyTyped(CodeRebirth.src.Content.Enemies.RedwoodTitanAI RedwoodTitanAI)
         {
@@ -54,14 +51,6 @@ namespace Dusk
             if (this.roarSound != null)
             {
                 component.roarSound = this.roarSound;
-            }
-            if (this.jumpSound != null)
-            {
-                component.jumpSound = this.jumpSound;
-            }
-            if (this.kickSound != null)
-            {
-                component.kickSound = this.kickSound;
             }
             if (this.crunchySquishSound != null)
             {
@@ -145,18 +134,6 @@ namespace Dusk
                     newParticle.name = targetParticleSystem.gameObject.name;
                     Destroy(targetParticleSystem.gameObject);
                     component.DeathParticles = this.DeathParticles;
-                }
-            }
-            if (this.BigSmokeEffect != null)
-            {
-                ParticleSystem? newParticleSystem = this.BigSmokeEffect;
-                ParticleSystem targetParticleSystem = component.BigSmokeEffect;
-                if (newParticleSystem != null && targetParticleSystem != null)
-                {
-                    GameObject newParticle = GameObject.Instantiate(newParticleSystem.gameObject, targetParticleSystem.transform.parent);
-                    newParticle.name = targetParticleSystem.gameObject.name;
-                    Destroy(targetParticleSystem.gameObject);
-                    component.BigSmokeEffect = this.BigSmokeEffect;
                 }
             }
         }

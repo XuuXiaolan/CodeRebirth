@@ -15,7 +15,6 @@ namespace Dusk
         public AudioClip[] _detectInjuredPlayerVoicelines = System.Array.Empty<AudioClip>();
         public AudioClip[] _specialDetectInjuredPlayerVoicelines = System.Array.Empty<AudioClip>();
         public AudioClip[] _healFailVoicelines = System.Array.Empty<AudioClip>();
-        public AudioClip[] _healSuccessVoiceline = System.Array.Empty<AudioClip>();
         public AudioClip? potential_rollingSource = null;
         public AudioClip? potential_healDuringSource = null;
         public AudioClip? potentialCreatureVoice = null;
@@ -39,10 +38,6 @@ namespace Dusk
             if (this._healFailVoicelines.Length > 0)
             {
                 component._healFailVoicelines = this._healFailVoicelines;
-            }
-            if (this._healSuccessVoiceline.Length > 0)
-            {
-                component._healSuccessVoiceline = this._healSuccessVoiceline;
             }
             if (component._rollingSource.clip != null && this.potential_rollingSource != null)
             {

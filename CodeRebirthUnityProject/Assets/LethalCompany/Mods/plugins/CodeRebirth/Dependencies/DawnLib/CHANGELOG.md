@@ -1,7 +1,22 @@
-# v0.9.5
+# v0.9.7
+
+- Improved item entity skins to show up on the collect display when bringing item back to ship.
+- Improved editor looks regarding obsolete fields and headers.
+
+## v0.9.6
+
+- Fixed a couple issues relating to Vanilla compatibility config.
+- Fixed some localisation issues with BoundedRange.
+- Simplified some custom interior code.
+- Added some debugging in case of invalid doorway sockets.
+- Allowed configuring the weights of different scenes on a moon.
+- Fixed visualisation issue with SpawnSyncedObject visualiser having incorrect scaling sometimes.
+
+## v0.9.5
 
 - Added Routeprice configurability to items, enemies, interiors and entity replacements.
 - Got rid of my logging on vow and march from last update, whoops.
+- Fixed vow making snow sounds on near fire exit.
 
 ## v0.9.4
 
