@@ -28,6 +28,8 @@ MonoBehaviour:
       m_PreInfinity: 0
       m_PostInfinity: 0
       m_RotationOrder: 0
+    defaultVector3: {x: 0, y: 0, z: 0}
+    defaultColor: {r: 0, g: 0, b: 0, a: 0}
     Description: Cacti can only be broken by shovels or player attacks with scrap.
   _tags:
   - _namespace: code_rebirth
@@ -35,7 +37,7 @@ MonoBehaviour:
   - _namespace: code_rebirth
     _key: plant
   <Key>k__BackingField:
-    _namespace: code_rebirth
+    _namespace: <None>
     _key: cactus_budling
   <EnemyType>k__BackingField: {fileID: 11400000, guid: 828dae466f5ef864ab8cde898f71bbe5,
     type: 2}
@@ -47,12 +49,12 @@ MonoBehaviour:
       _namespace: lethal_company
       _key: vanilla
     MathOperation: 0
-    Weight: 10
+    Weight: 7
   - NamespacedKey:
       _namespace: lethal_company
       _key: custom
     MathOperation: 0
-    Weight: 10
+    Weight: 7
   - NamespacedKey:
       _namespace: lethal_company
       _key: valley
@@ -134,11 +136,26 @@ MonoBehaviour:
     MathOperation: 0
     Weight: 10
   - NamespacedKey:
-      _namespace: code_rebirth
+      _namespace: <None>
       _key: oxyde
     MathOperation: 0
-    Weight: 10
-  <InteriorSpawnWeightsConfig>k__BackingField: []
+    Weight: 5
+  <InteriorSpawnWeightsConfig>k__BackingField:
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: facility
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: mansion
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: mineshaft
+    MathOperation: 0
+    Weight: 0
   <WeatherSpawnWeightsConfig>k__BackingField:
   - NamespacedKey:
       _namespace: lethal_company
@@ -201,11 +218,14 @@ MonoBehaviour:
     MathOperation: 2
     Weight: 0.8
   - NamespacedKey:
-      _namespace: weather_registry
+      _namespace: <None>
       _key: blackout
     MathOperation: 2
     Weight: 0.5
+  <RouteSpawnWeightsConfig>k__BackingField: []
   <GenerateSpawnWeightsConfig>k__BackingField: 1
+  <GeneratePowerLevelConfig>k__BackingField: 1
+  <GenerateMaxSpawnCountConfig>k__BackingField: 1
   <MoonSpawnWeights>k__BackingField: 
   <InteriorSpawnWeights>k__BackingField: 
   <WeatherSpawnWeights>k__BackingField: 
