@@ -118,6 +118,36 @@ MonoBehaviour:
       _key: oxyde
     MathOperation: 0
     Weight: 0
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: embrion
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: janitor_none
+    MathOperation: 2
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: janitor_low
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: janitor_medium
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: janitor_high
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: janitor_ultra_high
+    MathOperation: 0
+    Weight: 0
   <InteriorSpawnWeightsConfig>k__BackingField:
   - NamespacedKey:
       _namespace: lethal_company
@@ -132,6 +162,41 @@ MonoBehaviour:
   - NamespacedKey:
       _namespace: lethal_company
       _key: mineshaft
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: vanilla
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: custom
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: janitor_none
+    MathOperation: 2
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: janitor_low
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: janitor_medium
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: janitor_high
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: janitor_ultra_high
     MathOperation: 0
     Weight: 0
   <WeatherSpawnWeightsConfig>k__BackingField:
@@ -193,6 +258,51 @@ MonoBehaviour:
   - NamespacedKey:
       _namespace: <None>
       _key: blackout
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: vanilla
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: custom
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: none
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: eclipsed
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: <none>
+      _key: janitor_none
+    MathOperation: 2
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: janitor_low
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: <none>
+      _key: janitor_medium
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: <none>
+      _key: janitor_high
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: <none>
+      _key: janitor_ultra_high
     MathOperation: 2
     Weight: 1
   <RouteSpawnWeightsConfig>k__BackingField: []

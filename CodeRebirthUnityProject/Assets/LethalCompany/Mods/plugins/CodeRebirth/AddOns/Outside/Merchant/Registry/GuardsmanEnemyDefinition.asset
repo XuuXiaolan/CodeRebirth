@@ -89,7 +89,7 @@ MonoBehaviour:
       _namespace: lethal_company
       _key: experimentation
     MathOperation: 0
-    Weight: 0
+    Weight: 0.2
   - NamespacedKey:
       _namespace: lethal_company
       _key: assurance
@@ -99,7 +99,7 @@ MonoBehaviour:
       _namespace: lethal_company
       _key: offense
     MathOperation: 0
-    Weight: 0
+    Weight: 0.5
   - NamespacedKey:
       _namespace: lethal_company
       _key: vow
@@ -114,7 +114,7 @@ MonoBehaviour:
       _namespace: lethal_company
       _key: adamance
     MathOperation: 0
-    Weight: 0
+    Weight: 0.2
   - NamespacedKey:
       _namespace: lethal_company
       _key: rend
@@ -134,12 +134,27 @@ MonoBehaviour:
       _namespace: lethal_company
       _key: artifice
     MathOperation: 0
-    Weight: 0
+    Weight: 1
   - NamespacedKey:
       _namespace: <None>
       _key: oxyde
     MathOperation: 0
-    Weight: 0
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: military
+    MathOperation: 0
+    Weight: 2
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: amethyst
+    MathOperation: 0
+    Weight: 2
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: embrion
+    MathOperation: 0
+    Weight: 2
   <InteriorSpawnWeightsConfig>k__BackingField: []
   <WeatherSpawnWeightsConfig>k__BackingField:
   - NamespacedKey:
