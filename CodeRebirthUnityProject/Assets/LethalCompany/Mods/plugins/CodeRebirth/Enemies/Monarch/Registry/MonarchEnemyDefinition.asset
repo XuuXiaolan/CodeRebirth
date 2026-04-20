@@ -39,7 +39,7 @@ MonoBehaviour:
   - _namespace: code_rebirth
     _key: easter_egg
   <Key>k__BackingField:
-    _namespace: <None>
+    _namespace: code_rebirth
     _key: monarch
   <EnemyType>k__BackingField: {fileID: 11400000, guid: b4eadd75cb1361040a7fc4f821ef81ab,
     type: 2}
@@ -138,10 +138,40 @@ MonoBehaviour:
     MathOperation: 0
     Weight: 0
   - NamespacedKey:
-      _namespace: <None>
+      _namespace: code_rebirth
       _key: oxyde
     MathOperation: 0
     Weight: 0
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: embrion
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: monarch_none
+    MathOperation: 2
+    Weight: 0
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: monarch_low
+    MathOperation: 0
+    Weight: 2
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: monarch_medium
+    MathOperation: 0
+    Weight: 10
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: monarch_high
+    MathOperation: 0
+    Weight: 35
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: monarch_ultra_high
+    MathOperation: 0
+    Weight: 65
   <InteriorSpawnWeightsConfig>k__BackingField: []
   <WeatherSpawnWeightsConfig>k__BackingField:
   - NamespacedKey:
@@ -165,12 +195,12 @@ MonoBehaviour:
     MathOperation: 2
     Weight: 1
   - NamespacedKey:
-      _namespace: <None>
+      _namespace: code_rebirth
       _key: meteor_shower
     MathOperation: 2
     Weight: 1
   - NamespacedKey:
-      _namespace: <None>
+      _namespace: code_rebirth
       _key: tornado
     MathOperation: 2
     Weight: 1
@@ -204,6 +234,51 @@ MonoBehaviour:
       _key: blackout
     MathOperation: 2
     Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: vanilla
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: custom
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: none
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: eclipsed
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: monarch_none
+    MathOperation: 2
+    Weight: 0
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: monarch_low
+    MathOperation: 2
+    Weight: 0.5
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: monarch_medium
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: monarch_high
+    MathOperation: 2
+    Weight: 2
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: monarch_ultra_high
+    MathOperation: 2
+    Weight: 5
   <RouteSpawnWeightsConfig>k__BackingField: []
   <GenerateSpawnWeightsConfig>k__BackingField: 1
   <GeneratePowerLevelConfig>k__BackingField: 1

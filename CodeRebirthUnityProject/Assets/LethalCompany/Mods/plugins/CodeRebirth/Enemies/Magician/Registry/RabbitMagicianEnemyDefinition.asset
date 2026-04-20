@@ -17,7 +17,7 @@ MonoBehaviour:
   - _namespace: code_rebirth
     _key: mansion
   <Key>k__BackingField:
-    _namespace: <None>
+    _namespace: code_rebirth
     _key: rabbit_magician
   <EnemyType>k__BackingField: {fileID: 11400000, guid: 0a42719f4e0350243932b8d15cd5b065,
     type: 2}
@@ -116,8 +116,38 @@ MonoBehaviour:
     MathOperation: 0
     Weight: 0
   - NamespacedKey:
-      _namespace: <None>
+      _namespace: code_rebirth
       _key: oxyde
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: embrion
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: rabbit_magician_none
+    MathOperation: 2
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: rabbit_magician_low
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: rabbit_magician_medium
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: rabbit_magician_high
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: rabbit_magician_ultra_high
     MathOperation: 0
     Weight: 0
   <InteriorSpawnWeightsConfig>k__BackingField:
@@ -134,6 +164,41 @@ MonoBehaviour:
   - NamespacedKey:
       _namespace: lethal_company
       _key: mineshaft
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: vanilla
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: custom
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: rabbit_magician_none
+    MathOperation: 2
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: rabbit_magician_low
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: rabbit_magician_medium
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: rabbit_magician_high
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: rabbit_magician_ultra_high
     MathOperation: 0
     Weight: 0
   <WeatherSpawnWeightsConfig>k__BackingField:
@@ -158,12 +223,12 @@ MonoBehaviour:
     MathOperation: 2
     Weight: 1
   - NamespacedKey:
-      _namespace: <None>
+      _namespace: code_rebirth
       _key: meteor_shower
     MathOperation: 2
     Weight: 1
   - NamespacedKey:
-      _namespace: <None>
+      _namespace: code_rebirth
       _key: tornado
     MathOperation: 2
     Weight: 1
@@ -195,6 +260,51 @@ MonoBehaviour:
   - NamespacedKey:
       _namespace: <None>
       _key: blackout
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: vanilla
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: custom
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: none
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: eclipsed
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: <none>
+      _key: rabbit_magician_none
+    MathOperation: 2
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: rabbit_magician_low
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: <none>
+      _key: rabbit_magician_medium
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: <none>
+      _key: rabbit_magician_high
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: <none>
+      _key: rabbit_magician_ultra_high
     MathOperation: 2
     Weight: 1
   <RouteSpawnWeightsConfig>k__BackingField: []

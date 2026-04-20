@@ -71,7 +71,7 @@ MonoBehaviour:
   - _namespace: code_rebirth
     _key: cosmological_horror_beyond_imagination
   <Key>k__BackingField:
-    _namespace: <None>
+    _namespace: code_rebirth
     _key: duck
   <EnemyType>k__BackingField: {fileID: 11400000, guid: 191e88b614dcb5144835fad35d9d53ca,
     type: 2}
@@ -170,10 +170,40 @@ MonoBehaviour:
     MathOperation: 0
     Weight: 1
   - NamespacedKey:
-      _namespace: <None>
+      _namespace: code_rebirth
       _key: oxyde
     MathOperation: 1
     Weight: 999
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: embrion
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: duck_none
+    MathOperation: 2
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: duck_low
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: duck_medium
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: duck_high
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: duck_ultra_high
+    MathOperation: 0
+    Weight: 0
   <InteriorSpawnWeightsConfig>k__BackingField:
   - NamespacedKey:
       _namespace: lethal_company
@@ -190,7 +220,107 @@ MonoBehaviour:
       _key: mineshaft
     MathOperation: 0
     Weight: 2
-  <WeatherSpawnWeightsConfig>k__BackingField: []
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: vanilla
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: custom
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: duck_none
+    MathOperation: 2
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: duck_low
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: duck_medium
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: duck_high
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: duck_ultra_high
+    MathOperation: 0
+    Weight: 0
+  <WeatherSpawnWeightsConfig>k__BackingField:
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: vanilla
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: custom
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: none
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: rainy
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: stormy
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: foggy
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: flooded
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: eclipsed
+    MathOperation: 2
+    Weight: 2
+  - NamespacedKey:
+      _namespace: <none>
+      _key: duck_none
+    MathOperation: 2
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: duck_low
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: <none>
+      _key: duck_medium
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: <none>
+      _key: duck_high
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: <none>
+      _key: duck_ultra_high
+    MathOperation: 2
+    Weight: 1
   <RouteSpawnWeightsConfig>k__BackingField: []
   <GenerateSpawnWeightsConfig>k__BackingField: 1
   <GeneratePowerLevelConfig>k__BackingField: 1

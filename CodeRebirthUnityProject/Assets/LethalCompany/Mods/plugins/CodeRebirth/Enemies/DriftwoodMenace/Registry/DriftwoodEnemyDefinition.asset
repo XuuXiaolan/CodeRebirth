@@ -34,7 +34,7 @@ MonoBehaviour:
     Description: Enemy name Blacklist for what the Driftwood won't attack.
   _tags: []
   <Key>k__BackingField:
-    _namespace: <None>
+    _namespace: code_rebirth
     _key: driftwood_menace
   <EnemyType>k__BackingField: {fileID: 11400000, guid: 560802ac9add3a544bc2b1cebb1fcf88,
     type: 2}
@@ -133,10 +133,40 @@ MonoBehaviour:
     MathOperation: 0
     Weight: 10
   - NamespacedKey:
-      _namespace: <None>
+      _namespace: code_rebirth
       _key: oxyde
     MathOperation: 0
     Weight: 40
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: embrion
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: driftwood_menace_none
+    MathOperation: 2
+    Weight: 0
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: driftwood_menace_low
+    MathOperation: 0
+    Weight: 2
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: driftwood_menace_medium
+    MathOperation: 0
+    Weight: 10
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: driftwood_menace_high
+    MathOperation: 0
+    Weight: 35
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: driftwood_menace_ultra_high
+    MathOperation: 0
+    Weight: 65
   <InteriorSpawnWeightsConfig>k__BackingField: []
   <WeatherSpawnWeightsConfig>k__BackingField:
   - NamespacedKey:
@@ -160,12 +190,12 @@ MonoBehaviour:
     MathOperation: 2
     Weight: 0.5
   - NamespacedKey:
-      _namespace: <None>
+      _namespace: code_rebirth
       _key: meteor_shower
     MathOperation: 2
     Weight: 0
   - NamespacedKey:
-      _namespace: <None>
+      _namespace: code_rebirth
       _key: tornado
     MathOperation: 2
     Weight: 0.2
@@ -199,6 +229,51 @@ MonoBehaviour:
       _key: blackout
     MathOperation: 2
     Weight: 0.8
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: vanilla
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: custom
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: none
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: eclipsed
+    MathOperation: 2
+    Weight: 1.5
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: driftwood_menace_none
+    MathOperation: 2
+    Weight: 0
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: driftwood_menace_low
+    MathOperation: 2
+    Weight: 0.5
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: driftwood_menace_medium
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: driftwood_menace_high
+    MathOperation: 2
+    Weight: 2
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: driftwood_menace_ultra_high
+    MathOperation: 2
+    Weight: 5
   <RouteSpawnWeightsConfig>k__BackingField: []
   <GenerateSpawnWeightsConfig>k__BackingField: 1
   <GeneratePowerLevelConfig>k__BackingField: 1

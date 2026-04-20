@@ -15,7 +15,7 @@ MonoBehaviour:
   _configEntries: []
   _tags: []
   <Key>k__BackingField:
-    _namespace: <None>
+    _namespace: code_rebirth
     _key: janitor
   <EnemyType>k__BackingField: {fileID: 11400000, guid: 00c443ea757f8274ab52e6a49f647569,
     type: 2}
@@ -27,133 +27,133 @@ MonoBehaviour:
       _namespace: lethal_company
       _key: vanilla
     MathOperation: 0
-    Weight: 0
+    Weight: 10
   - NamespacedKey:
       _namespace: lethal_company
       _key: custom
     MathOperation: 0
-    Weight: 0
+    Weight: 10
   - NamespacedKey:
       _namespace: lethal_company
       _key: valley
     MathOperation: 0
-    Weight: 0
+    Weight: 20
   - NamespacedKey:
       _namespace: lethal_company
       _key: canyon
     MathOperation: 0
-    Weight: 0
+    Weight: 20
   - NamespacedKey:
       _namespace: lethal_company
       _key: desert
     MathOperation: 0
-    Weight: 0
+    Weight: 10
   - NamespacedKey:
       _namespace: lethal_company
       _key: tundra
     MathOperation: 0
-    Weight: 0
+    Weight: 5
   - NamespacedKey:
       _namespace: lethal_company
       _key: marsh
     MathOperation: 0
-    Weight: 0
+    Weight: 5
   - NamespacedKey:
       _namespace: lethal_company
       _key: rocky
     MathOperation: 0
-    Weight: 0
+    Weight: 20
   - NamespacedKey:
       _namespace: lethal_company
       _key: experimentation
     MathOperation: 0
-    Weight: 0
+    Weight: 2
   - NamespacedKey:
       _namespace: lethal_company
       _key: assurance
     MathOperation: 0
-    Weight: 0
+    Weight: 7
   - NamespacedKey:
       _namespace: lethal_company
       _key: offense
     MathOperation: 0
-    Weight: 0
+    Weight: 15
   - NamespacedKey:
       _namespace: lethal_company
       _key: vow
     MathOperation: 0
-    Weight: 0
+    Weight: 25
   - NamespacedKey:
       _namespace: lethal_company
       _key: march
     MathOperation: 0
-    Weight: 0
+    Weight: 10
   - NamespacedKey:
       _namespace: lethal_company
       _key: adamance
     MathOperation: 0
-    Weight: 0
+    Weight: 5
   - NamespacedKey:
       _namespace: lethal_company
       _key: rend
     MathOperation: 0
-    Weight: 0
+    Weight: 2
   - NamespacedKey:
       _namespace: lethal_company
       _key: dine
     MathOperation: 0
-    Weight: 0
+    Weight: 10
   - NamespacedKey:
       _namespace: lethal_company
       _key: titan
     MathOperation: 0
-    Weight: 0
+    Weight: 20
   - NamespacedKey:
       _namespace: lethal_company
       _key: artifice
     MathOperation: 0
-    Weight: 0
+    Weight: 15
   - NamespacedKey:
-      _namespace: <None>
+      _namespace: code_rebirth
       _key: oxyde
     MathOperation: 0
-    Weight: 0
+    Weight: 50
   - NamespacedKey:
       _namespace: lethal_company
       _key: embrion
     MathOperation: 0
-    Weight: 0
+    Weight: 2
   - NamespacedKey:
-      _namespace: <none>
+      _namespace: code_rebirth
       _key: janitor_none
     MathOperation: 2
     Weight: 0
   - NamespacedKey:
-      _namespace: <none>
+      _namespace: code_rebirth
       _key: janitor_low
     MathOperation: 0
-    Weight: 0
+    Weight: 2
   - NamespacedKey:
-      _namespace: <none>
+      _namespace: <None>
       _key: janitor_medium
     MathOperation: 0
-    Weight: 0
+    Weight: 10
   - NamespacedKey:
-      _namespace: <none>
+      _namespace: <None>
       _key: janitor_high
     MathOperation: 0
-    Weight: 0
+    Weight: 35
   - NamespacedKey:
-      _namespace: <none>
+      _namespace: <None>
       _key: janitor_ultra_high
     MathOperation: 0
-    Weight: 0
+    Weight: 65
   <InteriorSpawnWeightsConfig>k__BackingField:
   - NamespacedKey:
       _namespace: lethal_company
       _key: facility
     MathOperation: 0
-    Weight: 0
+    Weight: 7
   - NamespacedKey:
       _namespace: lethal_company
       _key: mansion
@@ -163,7 +163,7 @@ MonoBehaviour:
       _namespace: lethal_company
       _key: mineshaft
     MathOperation: 0
-    Weight: 0
+    Weight: 5
   - NamespacedKey:
       _namespace: lethal_company
       _key: vanilla
@@ -175,41 +175,41 @@ MonoBehaviour:
     MathOperation: 0
     Weight: 0
   - NamespacedKey:
-      _namespace: <none>
+      _namespace: <None>
       _key: janitor_none
     MathOperation: 2
     Weight: 0
   - NamespacedKey:
-      _namespace: <none>
+      _namespace: code_rebirth
       _key: janitor_low
     MathOperation: 0
-    Weight: 0
+    Weight: 2
   - NamespacedKey:
-      _namespace: <none>
+      _namespace: code_rebirth
       _key: janitor_medium
     MathOperation: 0
-    Weight: 0
+    Weight: 10
   - NamespacedKey:
-      _namespace: <none>
+      _namespace: code_rebirth
       _key: janitor_high
     MathOperation: 0
-    Weight: 0
+    Weight: 35
   - NamespacedKey:
-      _namespace: <none>
+      _namespace: code_rebirth
       _key: janitor_ultra_high
     MathOperation: 0
-    Weight: 0
+    Weight: 65
   <WeatherSpawnWeightsConfig>k__BackingField:
   - NamespacedKey:
       _namespace: lethal_company
       _key: rainy
     MathOperation: 2
-    Weight: 1
+    Weight: 1.3
   - NamespacedKey:
       _namespace: lethal_company
       _key: stormy
     MathOperation: 2
-    Weight: 1
+    Weight: 1.2
   - NamespacedKey:
       _namespace: lethal_company
       _key: foggy
@@ -219,17 +219,17 @@ MonoBehaviour:
       _namespace: lethal_company
       _key: flooded
     MathOperation: 2
-    Weight: 1
+    Weight: 0.3
   - NamespacedKey:
-      _namespace: <None>
+      _namespace: code_rebirth
       _key: meteor_shower
     MathOperation: 2
-    Weight: 1
+    Weight: 0.7
   - NamespacedKey:
-      _namespace: <None>
+      _namespace: code_rebirth
       _key: tornado
     MathOperation: 2
-    Weight: 1
+    Weight: 0.5
   - NamespacedKey:
       _namespace: <None>
       _key: snowfall
@@ -279,32 +279,32 @@ MonoBehaviour:
       _namespace: lethal_company
       _key: eclipsed
     MathOperation: 2
-    Weight: 1
+    Weight: 0.8
   - NamespacedKey:
-      _namespace: <none>
+      _namespace: code_rebirth
       _key: janitor_none
     MathOperation: 2
     Weight: 0
   - NamespacedKey:
-      _namespace: <none>
+      _namespace: code_rebirth
       _key: janitor_low
     MathOperation: 2
-    Weight: 1
+    Weight: 0.5
   - NamespacedKey:
-      _namespace: <none>
+      _namespace: code_rebirth
       _key: janitor_medium
     MathOperation: 2
     Weight: 1
   - NamespacedKey:
-      _namespace: <none>
+      _namespace: code_rebirth
       _key: janitor_high
     MathOperation: 2
-    Weight: 1
+    Weight: 2
   - NamespacedKey:
-      _namespace: <none>
+      _namespace: code_rebirth
       _key: janitor_ultra_high
     MathOperation: 2
-    Weight: 1
+    Weight: 5
   <RouteSpawnWeightsConfig>k__BackingField: []
   <GenerateSpawnWeightsConfig>k__BackingField: 1
   <GeneratePowerLevelConfig>k__BackingField: 1

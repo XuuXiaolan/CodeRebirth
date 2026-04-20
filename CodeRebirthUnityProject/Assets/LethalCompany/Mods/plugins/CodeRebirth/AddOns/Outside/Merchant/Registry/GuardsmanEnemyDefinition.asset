@@ -37,7 +37,7 @@ MonoBehaviour:
   - _namespace: code_rebirth
     _key: mechanical
   <Key>k__BackingField:
-    _namespace: <None>
+    _namespace: code_rebirth
     _key: guardsman
   <EnemyType>k__BackingField: {fileID: 11400000, guid: a8f01c1864e6e264395b7d4435a4f168,
     type: 2}
@@ -89,7 +89,7 @@ MonoBehaviour:
       _namespace: lethal_company
       _key: experimentation
     MathOperation: 0
-    Weight: 0.2
+    Weight: 1
   - NamespacedKey:
       _namespace: lethal_company
       _key: assurance
@@ -99,7 +99,7 @@ MonoBehaviour:
       _namespace: lethal_company
       _key: offense
     MathOperation: 0
-    Weight: 0.5
+    Weight: 1
   - NamespacedKey:
       _namespace: lethal_company
       _key: vow
@@ -114,7 +114,7 @@ MonoBehaviour:
       _namespace: lethal_company
       _key: adamance
     MathOperation: 0
-    Weight: 0.2
+    Weight: 1
   - NamespacedKey:
       _namespace: lethal_company
       _key: rend
@@ -136,10 +136,10 @@ MonoBehaviour:
     MathOperation: 0
     Weight: 1
   - NamespacedKey:
-      _namespace: <None>
+      _namespace: code_rebirth
       _key: oxyde
     MathOperation: 0
-    Weight: 1
+    Weight: 2
   - NamespacedKey:
       _namespace: lethal_company
       _key: military
@@ -154,7 +154,7 @@ MonoBehaviour:
       _namespace: lethal_company
       _key: embrion
     MathOperation: 0
-    Weight: 2
+    Weight: 3
   <InteriorSpawnWeightsConfig>k__BackingField: []
   <WeatherSpawnWeightsConfig>k__BackingField:
   - NamespacedKey:
@@ -178,12 +178,12 @@ MonoBehaviour:
     MathOperation: 2
     Weight: 1
   - NamespacedKey:
-      _namespace: <None>
+      _namespace: code_rebirth
       _key: meteor_shower
     MathOperation: 2
     Weight: 1
   - NamespacedKey:
-      _namespace: <None>
+      _namespace: code_rebirth
       _key: tornado
     MathOperation: 2
     Weight: 1
@@ -217,6 +217,11 @@ MonoBehaviour:
       _key: blackout
     MathOperation: 2
     Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: eclipsed
+    MathOperation: 2
+    Weight: 1.7
   <RouteSpawnWeightsConfig>k__BackingField: []
   <GenerateSpawnWeightsConfig>k__BackingField: 1
   <GeneratePowerLevelConfig>k__BackingField: 1

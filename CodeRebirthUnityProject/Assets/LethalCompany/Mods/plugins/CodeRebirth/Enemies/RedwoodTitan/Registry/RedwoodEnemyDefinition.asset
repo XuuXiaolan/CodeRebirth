@@ -15,7 +15,7 @@ MonoBehaviour:
   _configEntries: []
   _tags: []
   <Key>k__BackingField:
-    _namespace: <None>
+    _namespace: code_rebirth
     _key: redwood_titan
   <EnemyType>k__BackingField: {fileID: 11400000, guid: 91b71ab5528e7334caf325a14da014a4,
     type: 2}
@@ -114,11 +114,91 @@ MonoBehaviour:
     MathOperation: 0
     Weight: 0
   - NamespacedKey:
-      _namespace: <None>
+      _namespace: code_rebirth
       _key: oxyde
     MathOperation: 0
     Weight: 0
-  <InteriorSpawnWeightsConfig>k__BackingField: []
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: embrion
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: redwood_titan_none
+    MathOperation: 2
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: redwood_titan_low
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: redwood_titan_medium
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: redwood_titan_high
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: redwood_titan_ultra_high
+    MathOperation: 0
+    Weight: 0
+  <InteriorSpawnWeightsConfig>k__BackingField:
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: vanilla
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: custom
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: facility
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: mansion
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: mineshaft
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: redwood_titan_none
+    MathOperation: 2
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: redwood_titan_low
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: redwood_titan_medium
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: redwood_titan_high
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: redwood_titan_ultra_high
+    MathOperation: 0
+    Weight: 0
   <WeatherSpawnWeightsConfig>k__BackingField:
   - NamespacedKey:
       _namespace: lethal_company
@@ -141,12 +221,12 @@ MonoBehaviour:
     MathOperation: 2
     Weight: 1
   - NamespacedKey:
-      _namespace: <None>
+      _namespace: code_rebirth
       _key: meteor_shower
     MathOperation: 2
     Weight: 1
   - NamespacedKey:
-      _namespace: <None>
+      _namespace: code_rebirth
       _key: tornado
     MathOperation: 2
     Weight: 1
@@ -178,6 +258,51 @@ MonoBehaviour:
   - NamespacedKey:
       _namespace: <None>
       _key: blackout
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: vanilla
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: custom
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: none
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: eclipsed
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: <none>
+      _key: redwood_titan_none
+    MathOperation: 2
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <none>
+      _key: redwood_titan_low
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: <none>
+      _key: redwood_titan_medium
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: <none>
+      _key: redwood_titan_high
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: <none>
+      _key: redwood_titan_ultra_high
     MathOperation: 2
     Weight: 1
   <RouteSpawnWeightsConfig>k__BackingField: []

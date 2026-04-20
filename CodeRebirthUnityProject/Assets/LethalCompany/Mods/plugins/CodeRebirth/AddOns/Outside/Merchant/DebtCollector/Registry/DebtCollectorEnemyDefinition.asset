@@ -15,7 +15,7 @@ MonoBehaviour:
   _configEntries: []
   _tags: []
   <Key>k__BackingField:
-    _namespace: <None>
+    _namespace: code_rebirth
     _key: debt_collector
   <EnemyType>k__BackingField: {fileID: 11400000, guid: 325d1402d1239994f9ca66841c583495,
     type: 2}
@@ -116,12 +116,157 @@ MonoBehaviour:
     MathOperation: 0
     Weight: 0
   - NamespacedKey:
-      _namespace: <None>
+      _namespace: code_rebirth
       _key: oxyde
     MathOperation: 0
     Weight: 0
-  <InteriorSpawnWeightsConfig>k__BackingField: []
-  <WeatherSpawnWeightsConfig>k__BackingField: []
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: embrion
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: debt_collector_none
+    MathOperation: 2
+    Weight: 0
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: debt_collector_low
+    MathOperation: 0
+    Weight: 2
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: debt_collector_medium
+    MathOperation: 0
+    Weight: 10
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: debt_collector_high
+    MathOperation: 0
+    Weight: 35
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: debt_collector_ultra_high
+    MathOperation: 0
+    Weight: 65
+  <InteriorSpawnWeightsConfig>k__BackingField:
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: vanilla
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: custom
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: facility
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: mansion
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: mineshaft
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: debt_collector_none
+    MathOperation: 2
+    Weight: 0
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: debt_collector_low
+    MathOperation: 0
+    Weight: 2
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: debt_collector_medium
+    MathOperation: 0
+    Weight: 10
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: debt_collector_high
+    MathOperation: 0
+    Weight: 35
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: debt_collector_ultra_high
+    MathOperation: 0
+    Weight: 65
+  <WeatherSpawnWeightsConfig>k__BackingField:
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: vanilla
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: custom
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: none
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: rainy
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: stormy
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: foggy
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: flooded
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: eclipsed
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: debt_collector_none
+    MathOperation: 2
+    Weight: 0
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: debt_collector_low
+    MathOperation: 2
+    Weight: 0.5
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: debt_collector_medium
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: debt_collector_high
+    MathOperation: 2
+    Weight: 2
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: debt_collector_ultra_high
+    MathOperation: 2
+    Weight: 5
   <RouteSpawnWeightsConfig>k__BackingField: []
   <GenerateSpawnWeightsConfig>k__BackingField: 0
   <GeneratePowerLevelConfig>k__BackingField: 0
