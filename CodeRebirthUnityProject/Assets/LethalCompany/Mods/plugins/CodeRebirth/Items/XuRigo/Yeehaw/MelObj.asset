@@ -13,17 +13,18 @@ MonoBehaviour:
   m_Name: MelObj
   m_EditorClassIdentifier: 
   itemId: 0
-  itemName: Melicious Mel
+  itemName: Yeehawlanie
   spawnPositionTypes: []
-  twoHanded: 0
+  twoHanded: 1
   twoHandedAnimation: 1
   disableHandsOnWall: 0
   canBeGrabbedBeforeGameStart: 0
-  weight: 2
+  disallowUtilitySlot: 0
+  weight: 67
   itemIsTrigger: 0
   holdButtonUse: 0
   itemSpawnsOnGround: 1
-  isConductiveMetal: 0
+  isConductiveMetal: 1
   isScrap: 1
   creditsWorth: 0
   lockedInDemo: 0
@@ -41,9 +42,9 @@ MonoBehaviour:
   pocketAnim: 
   throwAnim: 
   grabAnimationTime: 0
-  grabSFX: {fileID: 8300000, guid: 42a877e7cf307bb4486bdc9a331bd9f8, type: 3}
-  dropSFX: {fileID: 8300000, guid: 986ed99b891c7a446bd18d9e8caba90e, type: 3}
-  pocketSFX: {fileID: 8300000, guid: 8f82fdef50af20b40b0603ffc2dff400, type: 3}
+  grabSFX: {fileID: 8300000, guid: 5a16f9a81beeb9443a81df49f7ca0a51, type: 3}
+  dropSFX: {fileID: 8300000, guid: 5a16f9a81beeb9443a81df49f7ca0a51, type: 3}
+  pocketSFX: {fileID: 8300000, guid: 5a16f9a81beeb9443a81df49f7ca0a51, type: 3}
   throwSFX: {fileID: 0}
   syncGrabFunction: 0
   syncUseFunction: 1
@@ -62,5 +63,6 @@ MonoBehaviour:
   meshOffset: 1
   meshVariants: []
   materialVariants: []
+  clinkAudios: []
   usableInSpecialAnimations: 0
   canBeInspected: 1

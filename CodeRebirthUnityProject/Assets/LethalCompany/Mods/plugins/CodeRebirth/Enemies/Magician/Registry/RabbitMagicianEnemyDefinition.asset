@@ -29,22 +29,22 @@ MonoBehaviour:
       _namespace: lethal_company
       _key: vanilla
     MathOperation: 0
-    Weight: 0
+    Weight: 3
   - NamespacedKey:
       _namespace: lethal_company
       _key: custom
     MathOperation: 0
-    Weight: 0
+    Weight: 3
   - NamespacedKey:
       _namespace: lethal_company
       _key: valley
     MathOperation: 0
-    Weight: 0
+    Weight: 3
   - NamespacedKey:
       _namespace: lethal_company
       _key: canyon
     MathOperation: 0
-    Weight: 0
+    Weight: 1
   - NamespacedKey:
       _namespace: lethal_company
       _key: desert
@@ -54,7 +54,7 @@ MonoBehaviour:
       _namespace: lethal_company
       _key: tundra
     MathOperation: 0
-    Weight: 0
+    Weight: 8
   - NamespacedKey:
       _namespace: lethal_company
       _key: marsh
@@ -64,12 +64,12 @@ MonoBehaviour:
       _namespace: lethal_company
       _key: rocky
     MathOperation: 0
-    Weight: 0
+    Weight: 6
   - NamespacedKey:
       _namespace: lethal_company
       _key: experimentation
     MathOperation: 0
-    Weight: 0
+    Weight: 1
   - NamespacedKey:
       _namespace: lethal_company
       _key: assurance
@@ -79,46 +79,46 @@ MonoBehaviour:
       _namespace: lethal_company
       _key: offense
     MathOperation: 0
-    Weight: 0
+    Weight: 1
   - NamespacedKey:
       _namespace: lethal_company
       _key: vow
     MathOperation: 0
-    Weight: 0
+    Weight: 12
   - NamespacedKey:
       _namespace: lethal_company
       _key: march
     MathOperation: 0
-    Weight: 0
+    Weight: 1
   - NamespacedKey:
       _namespace: lethal_company
       _key: adamance
     MathOperation: 0
-    Weight: 0
+    Weight: 5
   - NamespacedKey:
       _namespace: lethal_company
       _key: rend
     MathOperation: 0
-    Weight: 0
+    Weight: 30
   - NamespacedKey:
       _namespace: lethal_company
       _key: dine
     MathOperation: 0
-    Weight: 0
+    Weight: 15
   - NamespacedKey:
       _namespace: lethal_company
       _key: titan
     MathOperation: 0
-    Weight: 0
+    Weight: 10
   - NamespacedKey:
       _namespace: lethal_company
       _key: artifice
     MathOperation: 0
-    Weight: 0
+    Weight: 30
   - NamespacedKey:
       _namespace: code_rebirth
       _key: oxyde
-    MathOperation: 0
+    MathOperation: 2
     Weight: 0
   - NamespacedKey:
       _namespace: lethal_company
@@ -126,30 +126,30 @@ MonoBehaviour:
     MathOperation: 0
     Weight: 0
   - NamespacedKey:
-      _namespace: <none>
+      _namespace: code_rebirth
       _key: rabbit_magician_none
     MathOperation: 2
     Weight: 0
   - NamespacedKey:
-      _namespace: <none>
+      _namespace: code_rebirth
       _key: rabbit_magician_low
     MathOperation: 0
-    Weight: 0
+    Weight: 2
   - NamespacedKey:
-      _namespace: <none>
+      _namespace: code_rebirth
       _key: rabbit_magician_medium
     MathOperation: 0
-    Weight: 0
+    Weight: 10
   - NamespacedKey:
-      _namespace: <none>
+      _namespace: code_rebirth
       _key: rabbit_magician_high
     MathOperation: 0
-    Weight: 0
+    Weight: 35
   - NamespacedKey:
-      _namespace: <none>
+      _namespace: code_rebirth
       _key: rabbit_magician_ultra_high
     MathOperation: 0
-    Weight: 0
+    Weight: 65
   <InteriorSpawnWeightsConfig>k__BackingField:
   - NamespacedKey:
       _namespace: lethal_company
@@ -160,12 +160,12 @@ MonoBehaviour:
       _namespace: lethal_company
       _key: mansion
     MathOperation: 0
-    Weight: 0
+    Weight: 5
   - NamespacedKey:
       _namespace: lethal_company
       _key: mineshaft
     MathOperation: 0
-    Weight: 0
+    Weight: 2
   - NamespacedKey:
       _namespace: lethal_company
       _key: vanilla
@@ -177,46 +177,46 @@ MonoBehaviour:
     MathOperation: 0
     Weight: 0
   - NamespacedKey:
-      _namespace: <none>
+      _namespace: code_rebirth
       _key: rabbit_magician_none
     MathOperation: 2
     Weight: 0
   - NamespacedKey:
-      _namespace: <none>
+      _namespace: code_rebirth
       _key: rabbit_magician_low
     MathOperation: 0
-    Weight: 0
+    Weight: 2
   - NamespacedKey:
-      _namespace: <none>
+      _namespace: code_rebirth
       _key: rabbit_magician_medium
     MathOperation: 0
-    Weight: 0
+    Weight: 10
   - NamespacedKey:
-      _namespace: <none>
+      _namespace: code_rebirth
       _key: rabbit_magician_high
     MathOperation: 0
-    Weight: 0
+    Weight: 35
   - NamespacedKey:
-      _namespace: <none>
+      _namespace: code_rebirth
       _key: rabbit_magician_ultra_high
     MathOperation: 0
-    Weight: 0
+    Weight: 65
   <WeatherSpawnWeightsConfig>k__BackingField:
   - NamespacedKey:
       _namespace: lethal_company
       _key: rainy
     MathOperation: 2
-    Weight: 1
+    Weight: 1.1
   - NamespacedKey:
       _namespace: lethal_company
       _key: stormy
     MathOperation: 2
-    Weight: 1
+    Weight: 1.5
   - NamespacedKey:
       _namespace: lethal_company
       _key: foggy
     MathOperation: 2
-    Weight: 1
+    Weight: 0.5
   - NamespacedKey:
       _namespace: lethal_company
       _key: flooded
@@ -226,12 +226,12 @@ MonoBehaviour:
       _namespace: code_rebirth
       _key: meteor_shower
     MathOperation: 2
-    Weight: 1
+    Weight: 0.5
   - NamespacedKey:
       _namespace: code_rebirth
       _key: tornado
     MathOperation: 2
-    Weight: 1
+    Weight: 0.7
   - NamespacedKey:
       _namespace: <None>
       _key: snowfall
@@ -261,7 +261,7 @@ MonoBehaviour:
       _namespace: <None>
       _key: blackout
     MathOperation: 2
-    Weight: 1
+    Weight: 0.2
   - NamespacedKey:
       _namespace: lethal_company
       _key: vanilla
@@ -283,42 +283,34 @@ MonoBehaviour:
     MathOperation: 2
     Weight: 1
   - NamespacedKey:
-      _namespace: <none>
+      _namespace: code_rebirth
       _key: rabbit_magician_none
     MathOperation: 2
     Weight: 0
   - NamespacedKey:
-      _namespace: <none>
+      _namespace: code_rebirth
       _key: rabbit_magician_low
     MathOperation: 2
-    Weight: 1
+    Weight: 0.5
   - NamespacedKey:
-      _namespace: <none>
+      _namespace: code_rebirth
       _key: rabbit_magician_medium
     MathOperation: 2
     Weight: 1
   - NamespacedKey:
-      _namespace: <none>
+      _namespace: code_rebirth
       _key: rabbit_magician_high
     MathOperation: 2
-    Weight: 1
+    Weight: 2
   - NamespacedKey:
-      _namespace: <none>
+      _namespace: code_rebirth
       _key: rabbit_magician_ultra_high
     MathOperation: 2
-    Weight: 1
+    Weight: 5
   <RouteSpawnWeightsConfig>k__BackingField: []
   <GenerateSpawnWeightsConfig>k__BackingField: 1
   <GeneratePowerLevelConfig>k__BackingField: 1
   <GenerateMaxSpawnCountConfig>k__BackingField: 1
-  <MoonSpawnWeights>k__BackingField: Vanilla=+3, Custom=+3, Valley=+3, Canyon=+1,
-    Tundra=+8, Marsh=+1, Military=+5, Rocky=+1, Amythest=+1, Experimentation=+1,
-    Assurance=+1, Vow=+12, Offense=+1, March=+1, Adamance=+1, Rend=+30, Dine=+15,
-    Titan=+10, Artifice=+30, Embrion=+1, Code Rebirth:Oxyde=+0
+  <MoonSpawnWeights>k__BackingField: 
   <InteriorSpawnWeights>k__BackingField: 
-  <WeatherSpawnWeights>k__BackingField: None=*1, DustClouds=*1.2, Rainy=*1.4, Stormy=*2,
-    Foggy=*1.2, Flooded=*0.5, Eclipsed=*2, Code Rebirth:Meteor Shower=*0.5, Code
-    Rebirth:Tornado=*0.5, Code Rebirth:Night Shift=*1.5, Weather Registry:Snowfall=*1.5,
-    Weather Registry:Blizzard=*1.5, Weather Registry:Heatwave=*0.5, Weather Registry:Solar
-    Flare=*1, Weather Registry:Toxic Smog=*1, Weather Registry:Cloudy=*1, Weather
-    Registry:Blackout=*2
+  <WeatherSpawnWeights>k__BackingField: 

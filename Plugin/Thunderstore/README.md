@@ -420,11 +420,14 @@ Add lush foliage to any moon. Flora adjusts its coloration to the ground type.
 </details>
 
 <details>
-  <summary><strong>📁 Melanie [File Access Restricted]</strong></summary>
+  <summary><strong>📁 Cat Photos [File Access Restricted]</strong></summary>
 
-![MelanieMelicious](https://i.postimg.cc/Z50yNshc/image-2025-06-25-135027948.png)
+> Director's Note : For some reason I can't delete this one image. It requires special administrator permission. Corporate won't answer me about this issue at all.
 
-> Yeehaw
+
+![MyCat](https://i.postimg.cc/vH4ktgFf/Eugene.png)
+
+> Please note : Pets are NOT allowed onboard company ships.
 
 </details>
 </details>
