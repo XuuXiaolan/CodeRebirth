@@ -27,7 +27,12 @@ MonoBehaviour:
     <ItemInfoNode>k__BackingField: {fileID: 0}
   <TerminalPredicate>k__BackingField: {fileID: 0}
   <PricingStrategy>k__BackingField: {fileID: 0}
-  <MoonSpawnWeightsConfig>k__BackingField: []
+  <MoonSpawnWeightsConfig>k__BackingField:
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: dine
+    MathOperation: 2
+    Weight: 0
   <InteriorSpawnWeightsConfig>k__BackingField:
   - NamespacedKey:
       _namespace: lethal_company
@@ -40,6 +45,8 @@ MonoBehaviour:
     MathOperation: 0
     Weight: 1
   <WeatherSpawnWeightsConfig>k__BackingField: []
+  <RouteSpawnWeightsConfig>k__BackingField: []
+  <GenerateSpawnWeightsConfig>k__BackingField: 1
   <IsScrap>k__BackingField: 1
   <GenerateScrapConfig>k__BackingField: 0
   <IsShopItem>k__BackingField: 0

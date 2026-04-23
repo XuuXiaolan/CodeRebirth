@@ -27,9 +27,46 @@ MonoBehaviour:
     <ItemInfoNode>k__BackingField: {fileID: 0}
   <TerminalPredicate>k__BackingField: {fileID: 0}
   <PricingStrategy>k__BackingField: {fileID: 0}
-  <MoonSpawnWeightsConfig>k__BackingField: []
+  <MoonSpawnWeightsConfig>k__BackingField:
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: desert
+    MathOperation: 0
+    Weight: 2
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: canyon
+    MathOperation: 0
+    Weight: 2
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: rocky
+    MathOperation: 0
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: custom
+    MathOperation: 0
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: assurance
+    MathOperation: 0
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: offense
+    MathOperation: 0
+    Weight: 2
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: dine
+    MathOperation: 2
+    Weight: 0
   <InteriorSpawnWeightsConfig>k__BackingField: []
   <WeatherSpawnWeightsConfig>k__BackingField: []
+  <RouteSpawnWeightsConfig>k__BackingField: []
+  <GenerateSpawnWeightsConfig>k__BackingField: 1
   <IsScrap>k__BackingField: 1
   <GenerateScrapConfig>k__BackingField: 0
   <IsShopItem>k__BackingField: 0
@@ -37,6 +74,6 @@ MonoBehaviour:
   <Cost>k__BackingField: 0
   <GenerateDisableUnlockConfig>k__BackingField: 0
   <GenerateDisablePricingStrategyConfig>k__BackingField: 0
-  <MoonSpawnWeights>k__BackingField: Canyon=+1, Assurance=+2, Offense=+2, Code Rebirth:Oxyde=+2
+  <MoonSpawnWeights>k__BackingField: 
   <InteriorSpawnWeights>k__BackingField: 
   <WeatherSpawnWeights>k__BackingField: 
