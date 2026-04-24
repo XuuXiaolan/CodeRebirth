@@ -28,6 +28,8 @@ MonoBehaviour:
       m_PreInfinity: 0
       m_PostInfinity: 0
       m_RotationOrder: 0
+    defaultVector3: {x: 0, y: 0, z: 0}
+    defaultColor: {r: 0, g: 0, b: 0, a: 0}
     Description: Cacti can only be broken by shovels or player attacks with scrap.
   _tags:
   - _namespace: code_rebirth
@@ -47,12 +49,12 @@ MonoBehaviour:
       _namespace: lethal_company
       _key: vanilla
     MathOperation: 0
-    Weight: 10
+    Weight: 7
   - NamespacedKey:
       _namespace: lethal_company
       _key: custom
     MathOperation: 0
-    Weight: 10
+    Weight: 7
   - NamespacedKey:
       _namespace: lethal_company
       _key: valley
@@ -137,7 +139,37 @@ MonoBehaviour:
       _namespace: code_rebirth
       _key: oxyde
     MathOperation: 0
+    Weight: 5
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: embrion
+    MathOperation: 0
+    Weight: 0
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: cactus_budling_none
+    MathOperation: 2
+    Weight: 0
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: cactus_budling_low
+    MathOperation: 0
+    Weight: 2
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: cactus_budling_medium
+    MathOperation: 0
     Weight: 10
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: cactus_budling_high
+    MathOperation: 0
+    Weight: 35
+  - NamespacedKey:
+      _namespace: code_rebirth
+      _key: cactus_budling_ultra_high
+    MathOperation: 0
+    Weight: 65
   <InteriorSpawnWeightsConfig>k__BackingField: []
   <WeatherSpawnWeightsConfig>k__BackingField:
   - NamespacedKey:
@@ -201,11 +233,59 @@ MonoBehaviour:
     MathOperation: 2
     Weight: 0.8
   - NamespacedKey:
-      _namespace: weather_registry
+      _namespace: <None>
       _key: blackout
     MathOperation: 2
     Weight: 0.5
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: vanilla
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: custom
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: none
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: eclipsed
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: <none>
+      _key: cactus_budling_none
+    MathOperation: 2
+    Weight: 0
+  - NamespacedKey:
+      _namespace: <None>
+      _key: cactus_budling_low
+    MathOperation: 2
+    Weight: 0.5
+  - NamespacedKey:
+      _namespace: <None>
+      _key: cactus_budling_medium
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: <None>
+      _key: cactus_budling_high
+    MathOperation: 2
+    Weight: 2
+  - NamespacedKey:
+      _namespace: <None>
+      _key: cactus_budling_ultra_high
+    MathOperation: 2
+    Weight: 5
+  <RouteSpawnWeightsConfig>k__BackingField: []
   <GenerateSpawnWeightsConfig>k__BackingField: 1
+  <GeneratePowerLevelConfig>k__BackingField: 1
+  <GenerateMaxSpawnCountConfig>k__BackingField: 1
   <MoonSpawnWeights>k__BackingField: 
   <InteriorSpawnWeights>k__BackingField: 
   <WeatherSpawnWeights>k__BackingField: 

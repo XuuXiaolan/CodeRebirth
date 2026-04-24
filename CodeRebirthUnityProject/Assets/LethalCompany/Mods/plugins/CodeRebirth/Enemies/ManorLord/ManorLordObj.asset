@@ -69,9 +69,11 @@ MonoBehaviour:
   enemyPrefab: {fileID: 6915492018009237873, guid: 06ae0e0440c8a6347a56e97ec10677a0,
     type: 3}
   PowerLevel: 2
+  DiversityPowerLevel: -2
   MaxCount: 1
   numberSpawned: 0
   nestsSpawned: 0
+  hasSpawnedAtLeastOne: 0
   isOutsideEnemy: 0
   isDaytimeEnemy: 0
   increasedChanceInterior: -1
@@ -84,10 +86,12 @@ MonoBehaviour:
   canBeDestroyed: 1
   destroyOnDeath: 0
   canSeeThroughFog: 1
+  disableAnimatorWhenFar: 0
   pushPlayerForce: 0
   pushPlayerDistance: 0
   SizeLimit: 0
   EnemySize: 0
+  WaterType: 0
   timeToPlayAudio: 15
   loudnessMultiplier: 1
   overrideVentSFX: {fileID: 0}

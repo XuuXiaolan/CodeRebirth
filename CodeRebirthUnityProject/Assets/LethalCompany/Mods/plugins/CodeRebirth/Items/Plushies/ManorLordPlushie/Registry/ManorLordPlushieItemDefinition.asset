@@ -33,6 +33,26 @@ MonoBehaviour:
       _key: oxyde
     MathOperation: 0
     Weight: 2
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: dine
+    MathOperation: 2
+    Weight: 0
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: rend
+    MathOperation: 2
+    Weight: 3
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: tundra
+    MathOperation: 2
+    Weight: 1
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: artifice
+    MathOperation: 2
+    Weight: 1
   <InteriorSpawnWeightsConfig>k__BackingField:
   - NamespacedKey:
       _namespace: lethal_company
@@ -45,6 +65,8 @@ MonoBehaviour:
     MathOperation: 0
     Weight: 2
   <WeatherSpawnWeightsConfig>k__BackingField: []
+  <RouteSpawnWeightsConfig>k__BackingField: []
+  <GenerateSpawnWeightsConfig>k__BackingField: 1
   <IsScrap>k__BackingField: 1
   <GenerateScrapConfig>k__BackingField: 0
   <IsShopItem>k__BackingField: 0
