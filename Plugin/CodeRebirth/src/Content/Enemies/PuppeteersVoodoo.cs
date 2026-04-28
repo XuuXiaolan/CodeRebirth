@@ -217,6 +217,10 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
 
     public bool Hit(int force, Vector3 hitDirection, PlayerControllerB? playerWhoHit = null, bool playHitSFX = false, int hitID = -1)
     {
+        if (force == -22)
+        {
+            force = 1;
+        }
         OnDollDamaged(force, CauseOfDeath.Bludgeoning);
 
         if (playerWhoHit != null)
