@@ -1,3 +1,17 @@
+# v1.6.3
+
+- Redid default spawn weights for enemies and plushies.
+- Relocated the director's cabin on Oxyde.
+- Mouse trap equipment can now be sold by the merchant and vending machines.
+- Gave some enemies a diversity level.
+- Changed the fan kill effect and sound.
+- Readme updated to remove old info.
+- Removed Beartrap, BellCrab and Cleaner Gal decors.
+
+# v1.6.2
+
+- Fixed an issue with the configs that resulted in mod not being loaded most of the time.
+
 # v1.6.1
 
 - Updated for compatibilty with latest DawnLib.

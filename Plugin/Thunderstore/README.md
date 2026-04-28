@@ -410,13 +410,6 @@ Add lush foliage to any moon. Flora adjusts its coloration to the ground type.
 
 > Trash hoop
 
-## Other
-
-![SB](https://i.postimg.cc/mZJGVMzg/image.png)
-
-> AIRCONTROL, BEARTRAP, HERMIT and CLEANER.
-> Animated Ship decorations, no practical use.
-> Zedfox not included.
 </details>
 
 <details>
