@@ -481,6 +481,7 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
             return false;
         }
 
+        Plugin.Logger.LogInfo($"Hit with force: {force} with ID: {hitID}");
         HitServerRpc(force);
         PlaySoundServerRpc(0);
         return true;

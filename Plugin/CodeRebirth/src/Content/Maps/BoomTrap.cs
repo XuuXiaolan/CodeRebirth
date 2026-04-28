@@ -37,7 +37,10 @@ public class BoomTrap : BearTrap
         }
 
         triggeredOnce = true;
-        trapTrigger.gameObject.SetActive(false);
+        if (playerCaught == null)
+        {
+            trapTrigger.gameObject.SetActive(false);
+        }
         StartCoroutine(StartExplosionCountdown(null));
     }
 
