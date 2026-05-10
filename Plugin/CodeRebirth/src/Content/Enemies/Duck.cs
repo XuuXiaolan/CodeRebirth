@@ -4,8 +4,9 @@ namespace CodeRebirth.src.Content.Enemies;
 
 public class Duck : QuestMasterAI
 {
-    public void Awake()
+    public override void Awake()
     {
+        base.Awake();
         bool isGlobalAudio = EnemyHandler.Instance.DuckSong!.GetConfig<bool>("Duck | Global Spawn Audio").Value;
         creatureUltraVoice.spatialBlend = isGlobalAudio ? 0f : 1f;
         creatureUltraVoice.Play();
