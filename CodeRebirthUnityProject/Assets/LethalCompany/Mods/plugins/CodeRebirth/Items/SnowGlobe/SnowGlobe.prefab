@@ -69,8 +69,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioToPlay: {fileID: 0}
   audioToPlayB: {fileID: 0}
-  audioClip: {fileID: 8300000, guid: 66cb6280a42e8db4381e1c43a61d863c, type: 3}
-  audioClip2: {fileID: 8300000, guid: a8095bddde9b45743b1d73c14a337641, type: 3}
+  audioClip: {fileID: 0}
+  audioClip2: {fileID: 0}
   audioClip3: {fileID: 0}
   randomClips: []
   randomClips2: []
@@ -5543,7 +5543,6 @@ MonoBehaviour:
   originalScale: {x: 0, y: 0, z: 0}
   wasOwnerLastFrame: 0
   mainObjectRenderer: {fileID: 5079283076246838954}
-  isSendingItemRPC: 0
   scrapPersistedThroughRounds: 0
   heldByPlayerOnServer: 0
   radarIcon: {fileID: 0}
