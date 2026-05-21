@@ -1,4 +1,8 @@
-# v1.6.3
+# v1.6.4
+
+- Rebuilt bundles to fix any extra issues that came from v73 to v81.
+
+## v1.6.3
 
 - Redid default spawn weights for enemies and plushies.
 - Relocated the director's cabin on Oxyde.
@@ -8,11 +12,11 @@
 - Readme updated to remove old info.
 - Removed Beartrap, BellCrab and Cleaner Gal decors.
 
-# v1.6.2
+## v1.6.2
 
 - Fixed an issue with the configs that resulted in mod not being loaded most of the time.
 
-# v1.6.1
+## v1.6.1
 
 - Updated for compatibilty with latest DawnLib.
 
