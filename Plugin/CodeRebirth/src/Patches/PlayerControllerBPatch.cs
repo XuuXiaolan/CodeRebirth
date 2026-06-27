@@ -133,7 +133,7 @@ static class PlayerControllerBPatch
         orig(self, droppedInShipRoom, droppedInElevator, gObject);
         if (gObject is WrittenDocument)
         {
-            DuskModContent.Achievements.TryDiscoverMoreProgressAchievement(CodeRebirthAchievementKeys.MuMiaolan, gObject.itemProperties.itemName);
+            DuskModContent.Achievements.TryDiscoverMoreProgressAchievement(CodeRebirthAchievementKeys.LoreMaster, gObject.itemProperties.itemName);
             return;
         }
 

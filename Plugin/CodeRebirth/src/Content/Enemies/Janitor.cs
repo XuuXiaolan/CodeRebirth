@@ -1000,6 +1000,7 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
         for (int i = 0; i < numHits; i++)
         {
             if (!_hitColliders[i].TryGetComponent(out GrabbableObject grabbable) ||
+                grabbable.isInShipRoom ||
                 grabbable.isHeld ||
                 grabbable.isHeldByEnemy ||
                 grabbable.playerHeldBy != null ||

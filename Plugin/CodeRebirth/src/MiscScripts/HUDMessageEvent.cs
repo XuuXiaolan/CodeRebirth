@@ -24,6 +24,6 @@ public class HUDMessageEvent : MonoBehaviour
 
     public void PlayNetworkedTip()
     {
-        DawnNetworker.Instance.BroadcastDisplayTipServerRpc(tip);
+        DawnNetworker.Instance?.BroadcastDisplayTipServerRpc(tip);
     }
 }

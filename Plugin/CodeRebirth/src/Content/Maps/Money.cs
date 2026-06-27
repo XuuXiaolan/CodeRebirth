@@ -3,6 +3,7 @@ using System.Collections;
 using CodeRebirth.src.Content.Unlockables;
 using Dawn;
 using Dawn.Utils;
+using Dusk;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -87,6 +88,7 @@ public class Money : GrabbableObject
 
         if (IsOwner)
         {
+            DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.OhAPenny);
             StartCoroutine(DestroyItemAfterDelay());
         }
     }

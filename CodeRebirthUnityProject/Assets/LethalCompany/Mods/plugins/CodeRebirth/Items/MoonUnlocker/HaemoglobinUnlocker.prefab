@@ -177,8 +177,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.80698395, y: 0.540596, z: 0.262928}
+  m_Center: {x: 0.028884888, y: 0.229702, z: -0.0011310577}
 --- !u!114 &7654310661653586741
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -242,7 +242,6 @@ MonoBehaviour:
   originalScale: {x: 0, y: 0, z: 0}
   wasOwnerLastFrame: 0
   mainObjectRenderer: {fileID: 2810171494810017784}
-  isSendingItemRPC: 0
   scrapPersistedThroughRounds: 0
   heldByPlayerOnServer: 0
   radarIcon: {fileID: 0}

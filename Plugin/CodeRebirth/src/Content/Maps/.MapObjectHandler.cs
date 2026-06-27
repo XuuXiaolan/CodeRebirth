@@ -169,7 +169,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
     public void RegisterFlora(GameObject prefab, FloraTag tag, string configString)
     {
-        try
+        /*try
         {
             MapObjectSpawnMechanics floraMapObjectSpawnMechanics = new MapObjectSpawnMechanics(configString, string.Empty, true);
 
@@ -183,6 +183,6 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
         catch (MalformedAnimationCurveConfigException exception)
         {
             exception.LogNicely(Plugin.Logger);
-        }
+        }*/
     }
 }

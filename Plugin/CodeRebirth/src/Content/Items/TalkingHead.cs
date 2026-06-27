@@ -3,7 +3,6 @@ using System.Linq;
 using CodeRebirth.src.Content.Enemies;
 using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Util;
-using Dawn.Internal;
 using Dawn.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;
@@ -22,7 +21,7 @@ public class TalkingHead : GrabbableObject
     private ScanNodeProperties scanNodeProperties = null!;
     private Vector3 rotationOffset = new Vector3(-90, 90, 90);
     private Vector3 nonHeldRotationOffset = new Vector3(90, 0, 0);
-    private Renderer localHeadRenderer = null;
+    private Renderer? localHeadRenderer = null;
 
     internal static List<TalkingHead> talkingHeads = new();
 
@@ -49,7 +48,7 @@ public class TalkingHead : GrabbableObject
         if (isInFactory != wasInFactoryLastFrame && GameNetworkManager.Instance.localPlayerController == player && RoundManager.Instance.currentLevel.planetHasTime)
         {
             Plugin.ExtendedLogging("Teleporting player.");
-            var entranceTeleport = DawnNetworker.EntrancePoints.FirstOrDefault(p => p.isEntranceToBuilding == !wasInFactoryLastFrame);
+            var entranceTeleport = CodeRebirthUtils.EntrancePoints.FirstOrDefault(p => p.isEntranceToBuilding == !wasInFactoryLastFrame);
             entranceTeleport?.TeleportPlayer();
         }
         wasInFactoryLastFrame = this.isInFactory;

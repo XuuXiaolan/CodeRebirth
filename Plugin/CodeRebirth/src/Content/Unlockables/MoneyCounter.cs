@@ -130,8 +130,9 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
             return;
         }
 
-        Plugin.ExtendedLogging($"Applying {playersDead * 5} coin max penalty on all team wipe");
-        RemoveMoney(playersDead * 5);
+        int penaltyPerPlayerAmount = MapObjectHandler.Instance.Merchant!.GetConfig<int>("Debt Collector | Penalty").Value;
+        Plugin.ExtendedLogging($"Applying {playersDead * penaltyPerPlayerAmount} coin max penalty on all team wipe");
+        RemoveMoney(playersDead * penaltyPerPlayerAmount);
     }
 
     private void SaveMoneyToContract(On.StartOfRound.orig_AutoSaveShipData orig, StartOfRound self)

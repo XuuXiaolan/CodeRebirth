@@ -25,11 +25,11 @@ internal class CodeRebirthUtils : NetworkBehaviour
     public Volume FireyVolume = null!;
     public Volume SmokyVolume = null!;
     public Volume CloseEyeVolume = null!;
-    public AnimationClip ModifiedDangerousShipLeaveAnimation = null!;
 
+    public static List<EntranceTeleport> EntrancePoints = new();
     internal ShipAnimator shipAnimator = null!;
     internal static HashSet<(Light light, HDAdditionalLightData hDAdditionalLightData)> currentRoundLightData = new();
-    internal Dictionary<EnemyType, float> enemyCoinDropRate = new();
+    internal Dictionary<EnemyType, float> enemyDollarBillDropRate = new();
     internal System.Random CRRandom = new();
     internal static CodeRebirthUtils Instance { get; private set; } = null!;
 
@@ -77,7 +77,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
             }
             float dropRate = float.Parse(split[1], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture);
             Plugin.ExtendedLogging($"{enemyType.enemyName} has a drop rate of {dropRate}");
-            enemyCoinDropRate.Add(enemyType, dropRate);
+            enemyDollarBillDropRate.Add(enemyType, dropRate);
         }
     }
 

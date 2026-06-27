@@ -87,6 +87,7 @@ public class Plugin : BaseUnityPlugin
         CommitKeyToSave.Init();
         HauntedTeddyBear.Init();
         BearTrapWheelProxy.Init();
+        EntranceTeleportPatch.Init();
 
         // This should be ran before Network Prefabs are registered.
         InputActionsInstance = new IngameKeybinds();

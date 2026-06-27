@@ -2,10 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CodeRebirth.src.Util;
-using Dawn.Internal;
 using Dawn.Utils;
-
-
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -717,7 +714,7 @@ public class CruiserGalAI : GalAI
             ownerPlayer.transform.position = galContainer.position;
             smartAgentNavigator.DisableMovement(true);
             List<(EntranceTeleport obj, Vector3 position)> candidateObjects = new();
-            List<EntranceTeleport> potentiallyPathableTeleports = DawnNetworker.EntrancePoints
+            List<EntranceTeleport> potentiallyPathableTeleports = CodeRebirthUtils.EntrancePoints
                 .Where(x => (x.isEntranceToBuilding && smartAgentNavigator.IsAgentOutside()) || (!smartAgentNavigator.IsAgentOutside() && !x.isEntranceToBuilding))
                 .ToList();
 

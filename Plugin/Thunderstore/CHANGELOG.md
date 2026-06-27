@@ -1,4 +1,20 @@
-# v1.6.4
+# v1.6.5
+
+- Fixed some leftover issues with Mistress and CruiserGal.
+- Fixed ScanNode colours of the Wallet, Coin and Dollar bill.
+- Fixed the values of the Wallet and Dollar bill being set to 1.
+- Added a penalty config for how many coins you would lose on wipe per player having died.
+- Fixed some typos with the duck's default weights.
+- Removed now unused achievements.
+- Scrap-E can no longer grab items from the ship.
+- Foghorn no longer depends on weather registry.
+- Fixed collisions on Haemoglobin tablet and Lifeform analyser.
+- Fixed missing message in oxyde when magnet is hooked.
+- Dollar bills can spawn on enemy kills instead of coins now.
+- Re-added accidently removed hazard weights onto readme for moon and interior creators.
+- Removed nightshift visual effect from being able to occur incase some weather happens to be on oxyde.
+
+## v1.6.4
 
 - Rebuilt bundles to fix any extra issues that came from v73 to v81.
 

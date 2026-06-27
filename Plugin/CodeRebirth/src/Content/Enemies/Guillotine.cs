@@ -4,7 +4,7 @@ using CodeRebirth.src.ModCompats;
 using CodeRebirth.src.Util;
 using Dawn;
 using Dawn.Utils;
-
+using Dusk;
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -71,7 +71,9 @@ public class Guillotine : NetworkBehaviour
         if (StartOfRound.Instance.allPlayerScripts.Count(player => player.isPlayerControlled && !player.isPlayerDead && !player.IsPseudoDead()) == 1)
         {
             if (playerToKill.IsLocalPlayer())
+            {
                 playerToKill.KillPlayer(Vector3.zero, false, CauseOfDeath.Snipping, 0);
+            }
 
             return;
         }
@@ -88,11 +90,13 @@ public class Guillotine : NetworkBehaviour
         playerToKill.headCostumeContainerLocal.gameObject.SetActive(false);
         playerToKill.playerBetaBadgeMesh.gameObject.SetActive(false);
         playerToKill.inAnimationWithEnemy = mistress;
-        if (GameNetworkManager.Instance.localPlayerController == playerToKill)
+        if (playerToKill.IsLocalPlayer())
         {
+            DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.Igotaheadache);
             HUDManager.Instance.HideHUD(true);
             StartOfRound.Instance.allowLocalPlayerDeath = false;
         }
+
         if (IsServer)
         {
             GameObject talkingHead = (GameObject)CodeRebirthUtils.Instance.SpawnScrap(LethalContent.Items[CodeRebirthItemKeys.TalkingHead].Item, scrapSpawnTransform.position, false, true, 0);

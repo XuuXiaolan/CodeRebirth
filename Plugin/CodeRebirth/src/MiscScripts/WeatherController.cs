@@ -1,4 +1,6 @@
 using System.Collections;
+using Dawn;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
@@ -16,7 +18,12 @@ public class WeatherController : MonoBehaviour
 
     public void Start()
     {
-        WeatherRegistry.WeatherController.SetWeatherEffects(LevelWeatherType.None);
+        if (!NetworkManager.Singleton.IsServer)
+        {
+            return;
+        }
+
+        StartOfRound.Instance.currentLevel.GetDawnInfo().ChangeWeatherTo(LevelWeatherType.None);
         /*string weatherName = WeatherRegistry.WeatherManager.GetCurrentLevelWeather().name.ToLowerInvariant();
         Plugin.ExtendedLogging($"Weather: {weatherName}");
         if (weatherName != "none")

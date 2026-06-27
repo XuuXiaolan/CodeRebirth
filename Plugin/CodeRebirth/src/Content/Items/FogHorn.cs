@@ -1,3 +1,4 @@
+using Dawn;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.VFX;
@@ -42,7 +43,7 @@ public class FogHorn : GrabbableObject
             return;
         }
 
-        WeatherRegistry.WeatherController.ChangeCurrentWeather(LevelWeatherType.None);
+        StartOfRound.Instance.currentLevel.GetDawnInfo().ChangeWeatherTo(LevelWeatherType.None);
         timesUsed.Value++;
         DoSucceedOrFailClientRpc(true);
     }

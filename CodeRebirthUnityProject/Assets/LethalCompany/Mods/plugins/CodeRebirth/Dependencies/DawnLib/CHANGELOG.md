@@ -1,7 +1,127 @@
-# v0.9.7
+# v0.9.23
+
+- Solved fake extra fire exit existing.
+- Cleaned up code for more compatibility with other mods.
+- Stored ILHooks in a list just incase they need to be unpatched by another mod.
+- Fixed a big issue caused by last update if you had any DawnLib moons installed.
+
+## v0.9.22
+
+- Added more logging for interiors hotloading about messed up SpawnSyncedObjects
+- Null checked a button for achievements.
+- Prevented the disabledHoverTip being set to null accidently before first routing.
+- Start replacing blanks for .specialEnemy in levels.
+- Adjusted the sound fix for DawnLib's AssetBundleLoader.
+- Potentially fixed an issue with clients desyncing fire exits?
+- Added a fix to `DestroyItemInSlot`.
+  - This fix is more in-depth than the one made by JacobG5.
+  - Fixing more issues in the function than just the error being made.
+
+## v0.9.21
+
+- Made sure weathers are synced with host on client joining.
+- Minor code cleanup.
+- Stopped predictable warnings from showing up on lobby reload.
+- Fixed a seemingly? vanilla bug where joining clients think experimentation is stormy but only on the monitor's end until you switch moons or update the ship screen.
+
+## v0.9.20
+
+- Fixed small issue that made vanilla dungeons unrecognisable to DawnLib.
+- Same as above but for some terminal command registration.
+
+## v0.9.19
+
+- Code cleanup.
+- Added the ability to add crouching footsteps to a custom footstep surface.
+- Added the ability to control the volume of all audioclips in a custom footstep surface.
+- Added the option to have a bundle in a content container disabled/enabled by default.
+- Added the ability to create your own story logs system similar to sigurd's for the terminal.
+  - You can use the scripts CommitKeyToSave and ExtraScanEvents to unlock parts of the log.
+  - This is not part of the story log registry, it is part of the terminal commands registry, this may be changed in the future.
+- Added a soft reset all progress to achievements for AchievementTriggers script.
+  - This allows resetting achievement progress IF the achievement had not been completed.
+- User generated configs from the editor are now affected by the AllowEditingConfig setting.
+- Fixed issue with disabling/enabling DawnLib on and off with older save files affecting newer ones.
+
+## v0.9.18
+
+- I haven't been this frustrated in a singular thing in such a long time.
+
+## v0.9.17
+
+- This has to be my 3rd or 4th attempt on the enemy transpilers thing.
+
+## v0.9.16
+
+- Fixed some more issues with transpilers relating to dawnlib enemy spawns.
+- Adjusted the logic for replacing blank map objects/hazards.
+
+## v0.9.15
+
+- Removed some unneeded logging.
+- Improved DunGenPlus compat.
+- Added the ability to set whether an earth leviathan can rise on custom footstep surface (not set-able on the component).
+- Added the ability to set whether quicksand works on custom footstep surfaces.
+
+## v0.9.14
+
+- Refined DunGenPlus compat.
+- Fixed issues with DawnLib and LunarConfig'd enemies that caused them to be able to spawn more than they should especially on eclipsed moons.
+- Thanks to paco for last version's help with the outside and inside map objects.
+- Updated GoodItemScanCompat.
+- Added visualisers for the following in the editor:
+  - Tile size visualiser.
+  - GlobalPropSettings Drawer.
+  - Tag Drawer.
+  - TagPair Drawer.
+  - TileInjectionRule Drawer.
+  - Refined Doorway visualisers.
+  - Added a menu when right-clicking tiles to copy from the automatic tile bounds to the manual one.
+  - GameObjectChance Drawer.
+  - GraphNode Drawer.
+  - GraphLine Drawer.
+
+## v0.9.13
+
+- Restored DunGenPlus compat.
+- Fixed errors with outside map objects and inside map objects.
+- Fixed my pc, so i'm back.
+
+## v0.9.12
+
+- Fixed an error from non unity-terrain moons.
+- Adjusted an issue with enemy power level that'd go off if you pack didn't have StarlancerAIFix. (There is currently a bad issue that happens with DawnLib+LunarConfig+StarlancerAIFix happening that's been around for presumably a long time, hopefully StarlancerAIFix can be updated to fix this).
+
+## v0.9.11
+
+- Synced `ChangeWeatherTo` method, only call this on the host please.
+- Added WR compat to `ChangeWeatherTo` method.
+- Edited some hazard code due to new stuff by zeekerss on v81.
+
+## v0.9.10
+
+- Fixed fire exits desync with only DawnLib installed.
+- Added new `ChangeWeatherTo` that uses `DawnWeatherEffectInfo`.
+- Fixed RoutePrice configs not generating.
+- Added public interface to the saving of items' locations so that they're not loaded back into the centre of the ship if need be.
+
+## v0.9.9
+
+- Whoops.
+
+## v0.9.8
+
+- Added replacing of the various item sfx into the item replacements.
+- Added replacing the conductivity of an item into the item replacements.
+- Started saving item skins into the savefile where clients can load in and it'll sync.
+- Added a `ChangeWeatherTo` method to `DawnMoonInfo`.
+- Improved Editor tooling slightly.
+
+## v0.9.7
 
 - Improved item entity skins to show up on the collect display when bringing item back to ship.
 - Improved editor looks regarding obsolete fields and headers.
+- Fixed Skins not working in editor for new version.
 
 ## v0.9.6
 

@@ -217,7 +217,7 @@ public class Mistress : CodeRebirthEnemyAI
             CodeRebirthUtils.Instance.CloseEyeVolume.weight = BlackOutAnimationCurve.Evaluate(time);
         }
 
-        bool lookedAtEnemy = targetPlayer.HasLineOfSightToPosition(HeadTransform.position, 45f, 50, -1);
+        bool lookedAtEnemy = targetPlayer.HasLineOfSightToPosition(HeadTransform.position, 45f, 50, -1) && !targetPlayer.inVehicleAnimation;
         if (currentBehaviourStateIndex == (int)State.Stalking)
         {
             localLookCount = lookedAtEnemy ? localLookCount + 1 : 0;
@@ -302,7 +302,7 @@ public class Mistress : CodeRebirthEnemyAI
         Physics.Raycast(Vector3.zero + Vector3.up * 50f, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore);
         if (playerToExecute.isInsideFactory && playerToExecute.IsLocalPlayer())
         {
-            EntranceTeleport? entrance = DawnNetworker.EntrancePoints.FirstOrDefault(e => !e.isEntranceToBuilding);
+            EntranceTeleport? entrance = CodeRebirthUtils.EntrancePoints.FirstOrDefault(e => !e.isEntranceToBuilding);
             entrance?.TeleportPlayer();
         }
         playerToExecute.DropAllHeldItems();
@@ -437,7 +437,9 @@ public class Mistress : CodeRebirthEnemyAI
                 continue;
 
             if (playersWithPriority.ContainsKey(gal.ownerPlayer))
+            {
                 playersWithPriority[gal.ownerPlayer] += 1;
+            }
         }
 
         int maxPriority = playersWithPriority.Values.Max();

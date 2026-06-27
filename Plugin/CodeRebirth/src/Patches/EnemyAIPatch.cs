@@ -36,22 +36,22 @@ static class EnemyAIPatch
         if (!additionalEnemyData.KilledByPlayer)
             return;
 
-        if (CodeRebirthUtils.Instance.enemyCoinDropRate.TryGetValue(self.enemyType, out float coinDropChance))
+        if (CodeRebirthUtils.Instance.enemyDollarBillDropRate.TryGetValue(self.enemyType, out float dollarBillDropChance))
         {
-            float coinChance = coinDropChance;
-            Plugin.ExtendedLogging($"Rolling to drop coin {coinChance}");
+            float dollarBillChance = dollarBillDropChance;
+            Plugin.ExtendedLogging($"Rolling to drop Dollar Bill {dollarBillChance}");
 
             if (!NetworkManager.Singleton.IsServer)
                 return;
 
-            if (UnityEngine.Random.Range(0f, 100f) >= coinChance)
+            if (UnityEngine.Random.Range(0f, 100f) >= dollarBillChance)
                 return;
 
-            if (!LethalContent.MapObjects.TryGetValue(CodeRebirthMapObjectKeys.Coin, out DawnMapObjectInfo mapObjectInfo))
+            if (!LethalContent.MapObjects.TryGetValue(CodeRebirthMapObjectKeys.CrispDollarBill, out DawnMapObjectInfo mapObjectInfo))
                 return;
 
-            GameObject coin = UnityEngine.Object.Instantiate(mapObjectInfo.GetMapObjectPrefab(), self.transform.position, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
-            coin.GetComponent<NetworkObject>().Spawn(true);
+            GameObject dollarBill = UnityEngine.Object.Instantiate(mapObjectInfo.GetMapObjectPrefab()!, self.transform.position, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
+            dollarBill.GetComponent<NetworkObject>().Spawn(true);
         }
     }
 

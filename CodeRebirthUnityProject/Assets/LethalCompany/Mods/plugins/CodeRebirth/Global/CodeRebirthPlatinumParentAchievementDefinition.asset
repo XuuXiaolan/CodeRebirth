@@ -33,20 +33,16 @@ MonoBehaviour:
   <CanBeUnhidden>k__BackingField: 1
   <PopupTime>k__BackingField: 10
   <ChildrenAchievementReferences>k__BackingField:
-  - rid: 76795417780027392
   - rid: 76795417780027394
   - rid: 76795417780027395
   - rid: 76795417780027397
   - rid: 76795417780027398
-  - rid: 76795417780027399
-  - rid: 76795417780027400
   - rid: 76795417780027401
   - rid: 76795417780027402
   - rid: 76795417780027403
   - rid: 76795417780027404
   - rid: 76795417780027405
   - rid: 76795417780027406
-  - rid: 76795417780027407
   - rid: 76795417780027408
   - rid: 76795417780027409
   - rid: 76795417780027410
@@ -62,16 +58,10 @@ MonoBehaviour:
   - rid: 76795417780027420
   - rid: 76795417780027421
   - rid: 76795417780027422
+  - rid: 3693825320265187328
   references:
     version: 2
     RefIds:
-    - rid: 76795417780027392
-      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
-      data:
-        assetGUID: 89d430724ee4bee46b05f4d51efadc31
-        <Key>k__BackingField:
-          _namespace: code_rebirth
-          _key: banzai
     - rid: 76795417780027394
       type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
       data:
@@ -100,20 +90,6 @@ MonoBehaviour:
         <Key>k__BackingField:
           _namespace: code_rebirth
           _key: crateapult
-    - rid: 76795417780027399
-      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
-      data:
-        assetGUID: eda06c987f72db54f80e2a92b4e0c8f3
-        <Key>k__BackingField:
-          _namespace: code_rebirth
-          _key: fat_wallet
-    - rid: 76795417780027400
-      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
-      data:
-        assetGUID: 1c8299a5cb050e6458389044533a8b15
-        <Key>k__BackingField:
-          _namespace: code_rebirth
-          _key: graveyard_shift
     - rid: 76795417780027401
       type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
       data:
@@ -156,20 +132,13 @@ MonoBehaviour:
         <Key>k__BackingField:
           _namespace: code_rebirth
           _key: lunch_is_served
-    - rid: 76795417780027407
-      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
-      data:
-        assetGUID: a9b44236875981e49a04d1688db1efe3
-        <Key>k__BackingField:
-          _namespace: code_rebirth
-          _key: mayday_mayday
     - rid: 76795417780027408
       type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
       data:
         assetGUID: ab359cc04ad5b4441a6c5f7575b8e246
         <Key>k__BackingField:
           _namespace: code_rebirth
-          _key: mu_miaolan
+          _key: lore_master
     - rid: 76795417780027409
       type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
       data:
@@ -268,3 +237,10 @@ MonoBehaviour:
         <Key>k__BackingField:
           _namespace: code_rebirth
           _key: you_monster
+    - rid: 3693825320265187328
+      type: {class: DuskAchievementReference, ns: Dusk, asm: com.github.teamxiaolan.dawnlib.dusk}
+      data:
+        assetGUID: 89d430724ee4bee46b05f4d51efadc31
+        <Key>k__BackingField:
+          _namespace: code_rebirth
+          _key: banzai
