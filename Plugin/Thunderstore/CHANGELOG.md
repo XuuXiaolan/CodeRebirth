@@ -1,4 +1,8 @@
-# v1.6.5
+# v1.6.6
+
+- Accidently had flora disabled lol.
+
+## v1.6.5
 
 - Fixed some leftover issues with Mistress and CruiserGal.
 - Fixed ScanNode colours of the Wallet, Coin and Dollar bill.
