@@ -13,6 +13,7 @@
 - Dollar bills can spawn on enemy kills instead of coins now.
 - Re-added accidently removed hazard weights onto readme for moon and interior creators.
 - Removed nightshift visual effect from being able to occur incase some weather happens to be on oxyde.
+- Fixed font on merchant's CoinUI.
 
 ## v1.6.4
 
