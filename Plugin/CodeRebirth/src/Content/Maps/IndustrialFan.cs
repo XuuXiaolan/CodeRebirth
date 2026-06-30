@@ -1,5 +1,6 @@
 using Dawn.Utils;
 using GameNetcodeStuff;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
@@ -28,12 +29,21 @@ public class IndustrialFan : CodeRebirthHazard
     private void OnTriggerEnter(Collider other)
     {
         // Kill players who touch the back blades
-        if (other.TryGetComponent(out PlayerControllerB player))
+        if (other.TryGetComponent(out PlayerControllerB player) && player.IsLocalPlayer())
         {
+            SyncDeathRpc(player);
             cutAudioSource.Play();
-            player.KillPlayer(player.velocityLastFrame, !Plugin.ModConfig.ConfigHazardsDeleteBodies.Value, CauseOfDeath.Fan, 9, default);
+            player.KillPlayer(player.velocityLastFrame, true, CauseOfDeath.Fan, 9, default);
             PlayRedMist();
         }
+    }
+
+    [Rpc(SendTo.NotMe, RequireOwnership = false)]
+    public void SyncDeathRpc(PlayerControllerB player)
+    {
+        cutAudioSource.Play();
+        player.KillPlayer(player.velocityLastFrame, true, CauseOfDeath.Fan, 9, default);
+        PlayRedMist();
     }
 
     public bool IsObstructed(Vector3 targetPosition)
