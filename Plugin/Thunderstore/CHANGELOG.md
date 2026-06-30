@@ -1,4 +1,10 @@
-# v1.6.7
+# v1.6.8
+
+- Fixed the assembly parts being unable to spawn.
+- Driftwood can no longer target other giants OR giant-sized enemies.
+- Driftwood awareness is a bit more aware, I guess?
+
+## v1.6.7
 
 - Fixed a bug that caused breakers to always be off automatically, and maybe some other issues?
 - Paco

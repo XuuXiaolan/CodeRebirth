@@ -3765,6 +3765,7 @@ MonoBehaviour:
   serverRotation: {x: 0, y: 0, z: 0}
   agent: {fileID: 1574797065783151164}
   allAINodes: []
+  agentMask: 0
   targetNode: {fileID: 0}
   favoriteSpot: {fileID: 0}
   tempDist: 0
@@ -3816,6 +3817,7 @@ MonoBehaviour:
   isOutside: 1
   hitsPhysicsObjects: 0
   gotFarthestNodeAsync: 0
+  overrideSettingEnemyMeshes: 0
   creatureNetworkAnimator: {fileID: 8632879953552201403}
   smartAgentNavigator: {fileID: 7949557366426040061}
   _idleAudioClips:
@@ -3843,9 +3845,9 @@ MonoBehaviour:
   seeingRange: 60
   awarenessLevel: 0
   maxAwarenessLevel: 100
-  awarenessDecreaseRate: 2.5
-  awarenessIncreaseRate: 5
-  awarenessIncreaseMultiplier: 2
+  awarenessDecreaseRate: 1.5
+  awarenessIncreaseRate: 7
+  awarenessIncreaseMultiplier: 2.25
   smashTransform: {fileID: 2970896645177088309}
 --- !u!114 &184172387633389021
 MonoBehaviour:

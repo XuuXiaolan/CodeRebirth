@@ -122,8 +122,8 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     {
         base.Start();
         creatureAnimator.SetFloat(RUNFUCKERRUNFloat, 1f);
-        var enemyBlacklist = EnemyHandler.Instance.DriftwoodMenace.GetConfig<string>("Driftwood Menace | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
-        foreach (string nameEntry in enemyBlacklist.ToList())
+        List<string> enemyBlacklist = EnemyHandler.Instance.DriftwoodMenace!.GetConfig<string>("Driftwood Menace | Enemy Blacklist").Value.Split(',').Select(s => s.Trim()).ToList();
+        foreach (string nameEntry in enemyBlacklist)
         {
             _enemyTargetBlacklist.UnionWith(LethalContent.Enemies.Values.Where(et => et.EnemyType.enemyName.Equals(nameEntry, System.StringComparison.OrdinalIgnoreCase)).Select(et => et.EnemyType.enemyName));
         }
@@ -716,7 +716,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
 
         foreach (EnemyAI enemy in RoundManager.Instance.SpawnedEnemies)
         {
-            if (!enemy.enemyType.canDie || enemy.isEnemyDead || enemy.enemyHP <= 0 || enemy is DriftwoodMenaceAI)
+            if (!enemy.enemyType.canDie || enemy.isEnemyDead || enemy.enemyHP <= 0 || enemy.enemyType.EnemySize == EnemySize.Giant || enemy is RedwoodTitanAI || enemy is DriftwoodMenaceAI || enemy is ForestGiantAI || enemy is CactusBudling)
                 continue;
 
             if (_enemyTargetBlacklist.Contains(enemy.enemyType.enemyName))
