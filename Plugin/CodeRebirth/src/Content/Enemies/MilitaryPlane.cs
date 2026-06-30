@@ -28,8 +28,8 @@ public class MilitaryPlane : NetworkBehaviour
     [field: SerializeField]
     public AudioClip WarningSirenSound { get; private set; } = null!;
 
-    private Vector3 DropPosition = Vector3.zero;
-    private Vector3 ExplodePosition = Vector3.zero;
+    private Vector3 dropPosition = Vector3.zero;
+    private Vector3 explodePosition = Vector3.zero;
 
     private static int militaryPlaneCount = 0;
     public void Awake()
@@ -75,21 +75,21 @@ public class MilitaryPlane : NetworkBehaviour
         centerOfFlightPath.y = this.transform.position.y;
         if (Physics.Raycast(this.transform.position, this.transform.forward, out RaycastHit hit, furthestDistanceToShip, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
         {
-            ExplodePosition = hit.point;
-            DropPosition = this.transform.position + this.transform.forward * (Vector3.Distance(hit.point, this.transform.position) / 2f);
-            Plugin.ExtendedLogging($"Calculated drop position for military plane: {DropPosition} based on raycast hit with {hit.collider.name} (Explosion related)");
+            explodePosition = hit.point;
+            dropPosition = this.transform.position + this.transform.forward * (Vector3.Distance(hit.point, this.transform.position) / 2f);
+            Plugin.ExtendedLogging($"Calculated drop position for military plane: {dropPosition} based on raycast hit with {hit.collider.name} (Explosion related)");
         }
         else
         {
             if (Physics.Raycast(this.transform.position, this.transform.forward, out hit, 300f, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))
             {
-                ExplodePosition = hit.point;
-                Plugin.ExtendedLogging($"Calculated explosion position for military plane: {ExplodePosition} based on raycast hit with {hit.collider.name} (Explosion related)");
+                explodePosition = hit.point;
+                Plugin.ExtendedLogging($"Calculated explosion position for military plane: {explodePosition} based on raycast hit with {hit.collider.name} (Explosion related)");
             }
             // Must be 20 to 30 units away from the ship
             float requiredDistanceFromShip = random.NextFloat(20, 30f) * random.NextSign();
             Vector3 directionFromCenter = (this.transform.position - centerOfFlightPath).normalized;
-            DropPosition = centerOfFlightPath + directionFromCenter * requiredDistanceFromShip;
+            dropPosition = centerOfFlightPath + directionFromCenter * requiredDistanceFromShip;
             Plugin.ExtendedLogging("Military plane failed to calculate drop position based on raycast, defaulting to ship landing position");
         }
     }
@@ -106,20 +106,20 @@ public class MilitaryPlane : NetworkBehaviour
     public void Update()
     {
         this.transform.position += this.transform.forward * Time.deltaTime * FlyingSpeed;
-        float dot = Vector3.Dot(this.transform.forward, (DropPosition - this.transform.position).normalized);
-        Plugin.ExtendedLogging($"Military plane position: {this.transform.position} | drop position: {DropPosition} | dot: {dot} | exploded: {exploded} | droppedBoxChute: {droppedBoxChute}");
-        if (!droppedBoxChute && (Vector3.Distance(this.transform.position, DropPosition) <= 0.5f))
+        float dot = Vector3.Dot(this.transform.forward, (dropPosition - this.transform.position).normalized);
+        Plugin.ExtendedLogging($"Military plane position: {this.transform.position} | drop position: {dropPosition} | dot: {dot} | exploded: {exploded} | droppedBoxChute: {droppedBoxChute}");
+        if (!droppedBoxChute && dot < 0f && dropPosition != Vector3.zero)
         {
-            GameObject boxChuteObject = GameObject.Instantiate(BoxChutePrefab, DropPosition, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
+            GameObject boxChuteObject = GameObject.Instantiate(BoxChutePrefab, dropPosition, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
             BoxChute boxChute = boxChuteObject.GetComponent<BoxChute>();
             boxChute.SetupBoxChute();
             droppedBoxChute = true;
         }
 
-        if (!exploded && Vector3.Distance(this.transform.position, ExplodePosition) <= 0.5f)
+        if (!exploded && Vector3.Distance(this.transform.position, explodePosition) <= 0.5f)
         {
             exploded = true;
-            CRUtilities.CreateExplosion(ExplodePosition, true, 100, 0f, 100f, 100, null, ExplosionPrefab, 200f);
+            CRUtilities.CreateExplosion(explodePosition, true, 100, 0f, 100f, 100, null, ExplosionPrefab, 200f);
             if (IsServer)
             {
                 NetworkObject.Despawn(true);

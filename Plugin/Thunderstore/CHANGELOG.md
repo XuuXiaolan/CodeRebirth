@@ -3,6 +3,7 @@
 - Fixed the assembly parts being unable to spawn.
 - Driftwood can no longer target other giants OR giant-sized enemies.
 - Driftwood awareness is a bit more aware, I guess?
+- Fixed issues with clients having the droppod for debt collector either not show up or have the timer be opened instantly, etc
 
 ## v1.6.7
 

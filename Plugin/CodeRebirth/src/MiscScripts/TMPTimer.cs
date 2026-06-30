@@ -25,7 +25,7 @@ public class TMPTimer : MonoBehaviour
     public UnityEvent OnTimerEnd { get; private set; }
 
     private bool _timerIsActive = true;
-    private float _currentTime;
+    private float _currentTime = 999f;
     private bool _canPlaySound = true;
     private int _currentSecond = 0;
 
