@@ -1,7 +1,6 @@
 using System.Collections;
 using CodeRebirth.src.Util;
 using Dawn.Utils;
-
 using GameNetcodeStuff;
 using Unity.Netcode;
 using UnityEngine;
@@ -132,6 +131,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
                 return;
 
             SwitchToBehaviourStateOnLocalClient((int)RabbitMagicianState.SwitchingTarget);
+            localPlayer.JumpToFearLevel(0.4f);
             KillAndSwitchTargetServerRpc(localPlayer);
         }
     }
@@ -255,7 +255,8 @@ public class RabbitMagician : CodeRebirthEnemyAI
     [ClientRpc]
     private void SpottedSoundClientRpc(PlayerControllerReference oldTargetPlayer, bool fromGround)
     {
-        if (GameNetworkManager.Instance.localPlayerController != oldTargetPlayer)
+        PlayerControllerB player = oldTargetPlayer;
+        if (GameNetworkManager.Instance.localPlayerController != player)
             return;
 
         if (fromGround)
@@ -264,6 +265,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
         }
         else
         {
+            player.JumpToFearLevel(0.4f);
             creatureSFX.PlayOneShot(_spottedFromBackAudioClip);
         }
     }
