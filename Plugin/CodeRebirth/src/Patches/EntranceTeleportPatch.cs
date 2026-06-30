@@ -22,6 +22,7 @@ public static class EntranceTeleportPatch
     private static void EntranceTeleport_OnDestroy(RuntimeILReferenceBag.FastDelegateInvokers.Action<EntranceTeleport> orig, EntranceTeleport self)
     {
         CodeRebirthUtils.EntrancePoints.Remove(self);
+        self.OnDestroy();
         orig(self);
     }
 }

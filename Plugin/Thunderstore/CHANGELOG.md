@@ -1,4 +1,9 @@
-# v1.6.6
+# v1.6.7
+
+- Fixed a bug that caused breakers to always be off automatically, and maybe some other issues?
+- Paco
+
+## v1.6.6
 
 - Accidently had flora disabled lol.
 
