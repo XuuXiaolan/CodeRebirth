@@ -19,7 +19,7 @@ public static class ShotgunItemPatch
             return;
         }
 
-        foreach (RaycastHit raycastHit in self.enemyColliders.ToArray())
+        foreach (RaycastHit raycastHit in self.enemyColliders)
         {
             if (raycastHit.transform == null) continue;
             if (raycastHit.transform.TryGetComponent(out PuppeteersVoodoo voodooDoll) && !Physics.Linecast(shotgunPosition, raycastHit.point, out _, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore))

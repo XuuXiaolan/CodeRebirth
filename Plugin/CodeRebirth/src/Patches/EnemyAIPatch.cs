@@ -23,16 +23,29 @@ static class EnemyAIPatch
         On.EnemyAI.KillEnemy += EnemyAI_KillEnemy;
         On.EnemyAI.Update += EnemyAI_Update;
         On.EnemyAI.OnCollideWithPlayer += EnemyAI_OnCollideWithPlayer;
+
+        LethalContent.Enemies.OnFreeze += FixManeaterForSeamine;
+    }
+
+    private static void FixManeaterForSeamine()
+    {
+        LethalContent.Enemies[EnemyKeys.Maneater].EnemyType.enemyPrefab.transform.Find("BabyMeshContainer").Find("BabyManeaterMesh").gameObject.layer = 19;
     }
 
     private static void EnemyAI_KillEnemy(On.EnemyAI.orig_KillEnemy orig, EnemyAI self, bool destroy)
     {
         orig(self, destroy);
 
-        DawnEnemyAdditionalData additionalEnemyData = DawnEnemyAdditionalData.CreateOrGet(self);
+        if (!NetworkManager.Singleton.IsServer)
+            return;
+
         if (!self.isEnemyDead)
             return;
 
+        if (!LethalContent.MapObjects.TryGetValue(CodeRebirthMapObjectKeys.CrispDollarBill, out DawnMapObjectInfo mapObjectInfo))
+            return;
+
+        DawnEnemyAdditionalData additionalEnemyData = DawnEnemyAdditionalData.CreateOrGet(self);
         if (!additionalEnemyData.KilledByPlayer)
             return;
 
@@ -41,13 +54,7 @@ static class EnemyAIPatch
             float dollarBillChance = dollarBillDropChance;
             Plugin.ExtendedLogging($"Rolling to drop Dollar Bill {dollarBillChance}");
 
-            if (!NetworkManager.Singleton.IsServer)
-                return;
-
             if (UnityEngine.Random.Range(0f, 100f) >= dollarBillChance)
-                return;
-
-            if (!LethalContent.MapObjects.TryGetValue(CodeRebirthMapObjectKeys.CrispDollarBill, out DawnMapObjectInfo mapObjectInfo))
                 return;
 
             GameObject dollarBill = UnityEngine.Object.Instantiate(mapObjectInfo.GetMapObjectPrefab()!, self.transform.position, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
@@ -57,7 +64,7 @@ static class EnemyAIPatch
 
     private static void EnemyAI_OnCollideWithPlayer(On.EnemyAI.orig_OnCollideWithPlayer orig, EnemyAI self, Collider other)
     {
-        if (other.gameObject.layer != 19 || self.isEnemyDead || !self.IsServer || self is Puppeteer || !self.TryGetComponent(out PuppeteersVoodoo puppet))
+        if (other.gameObject.layer != 19 || self.isEnemyDead || !self.IsServer || self is Puppeteer || !other.TryGetComponent(out PuppeteersVoodoo puppet))
         {
             orig(self, other);
             return;
@@ -68,9 +75,9 @@ static class EnemyAIPatch
             return;
         }
 
-        foreach (string enemyNameBlacklisted in puppet.blacklistedEnemies)
+        foreach (EnemyType enemyBlacklisted in PuppeteersVoodoo.blacklistedEnemies)
         {
-            if (self.enemyType.enemyName.ToLowerInvariant().Equals(enemyNameBlacklisted))
+            if (self.enemyType == enemyBlacklisted)
             {
                 return;
             }
@@ -87,11 +94,6 @@ static class EnemyAIPatch
     private static void EnemyAI_Start(On.EnemyAI.orig_Start orig, EnemyAI self)
     {
         orig(self);
-        if (self is CaveDwellerAI)
-        {
-            self.gameObject.transform.Find("BabyMeshContainer").Find("BabyManeaterMesh").gameObject.layer = 19;
-        }
-
         if (StartOfRound.Instance.inShipPhase || !RoundManager.Instance.currentLevel.sceneName.Equals("Oxyde"))
             return;
 
@@ -106,7 +108,7 @@ static class EnemyAIPatch
     private static void EnemyAI_Update(On.EnemyAI.orig_Update orig, EnemyAI self)
     {
         orig(self);
-        if (_slowedEnemies.TryGetValue(self, out _))
+        if (_slowedEnemies.ContainsKey(self))
         {
             self.agent.velocity = Vector3.zero;
         }

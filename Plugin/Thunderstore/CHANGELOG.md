@@ -3,7 +3,10 @@
 - Fixed the assembly parts being unable to spawn.
 - Driftwood can no longer target other giants OR giant-sized enemies.
 - Driftwood awareness is a bit more aware, I guess?
-- Fixed issues with clients having the droppod for debt collector either not show up or have the timer be opened instantly, etc
+- Fixed issues with clients having the droppod for debt collector either not show up or have the timer be opened instantly, etc.
+- Improved performance in a few places here and there, nothing significant.
+- Updated default configs for guardsman, seamine gal and shockwave gal to not attack snailcat or manorlord or maneater.
+- Fixed voodoo doll not being damaged by enemies.
 
 ## v1.6.7
 

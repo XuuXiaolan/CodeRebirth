@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using CodeRebirth.src.Content.Items;
 using HarmonyLib;
 using UnityEngine;
@@ -16,6 +15,7 @@ static class KeyItemPatch
         {
             return;
         }
+
         Ray ray = new Ray(__instance.playerHeldBy.gameplayCamera.transform.position, __instance.playerHeldBy.gameplayCamera.transform.forward);
         if (Physics.Raycast(ray, out RaycastHit raycastHit, 3f, 2816))
         {

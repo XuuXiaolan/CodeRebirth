@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,7 +55,7 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
     internal float lastTimeTakenDamageFromEnemy = 0f;
     internal Puppeteer puppeteerCreatedBy = null!;
     internal PlayerControllerB? playerControlled = null;
-    internal HashSet<string> blacklistedEnemies = new();
+    internal static HashSet<EnemyType> blacklistedEnemies = new();
 
     private static readonly int OnHitAnimation = Animator.StringToHash("onHit"); // Triger
     private static readonly int IsKickedAnimation = Animator.StringToHash("isKicked"); // Bool
@@ -76,16 +77,31 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
         puppeteerList.Remove(this);
     }
 
-    public void Start()
+    internal static void CreateBlacklist()
     {
         string blacklistEnemies = EnemyHandler.Instance.ManorLord!.GetConfig<string>("Lord Of The Manor | Puppet Enemy Blacklist").Value;
-        if (!string.IsNullOrEmpty(blacklistEnemies))
+        if (string.IsNullOrEmpty(blacklistEnemies))
         {
-            foreach (string nameEntry in blacklistEnemies.Split(',').Select(s => s.Trim().ToLowerInvariant()))
+            return;
+        }
+
+        foreach (string nameEntry in blacklistEnemies.Split(',').Select(s => s.Trim()))
+        {
+            foreach (DawnEnemyInfo enemyInfo in LethalContent.Enemies.Values)
             {
-                blacklistedEnemies.Add(nameEntry);
+                if (!enemyInfo.EnemyType.enemyName.Equals(nameEntry, StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                blacklistedEnemies.Add(enemyInfo.EnemyType);
+                break;
             }
         }
+    }
+
+    public void Start()
+    {
         hitTimer = Time.realtimeSinceStartup + 3;
         smartAgentNavigator.SetAllValues(puppeteerCreatedBy.isOutside);
         puppetRandom = new System.Random(StartOfRound.Instance.randomMapSeed + puppeteerList.Count);
@@ -241,7 +257,7 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
 
         if (other.tag.StartsWith("Enemy"))
         {
-            foreach (string enemyNameBlacklisted in blacklistedEnemies)
+            foreach (EnemyType enemyBlacklisted in blacklistedEnemies)
             {
                 EnemyAI? enemyAI = null;
                 if (other.TryGetComponent(out EnemyAICollisionDetect enemyAICollisionDetect))
@@ -257,7 +273,7 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
                     break;
                 }
 
-                if (enemyAI.enemyType.enemyName.ToLowerInvariant().Equals(enemyNameBlacklisted))
+                if (enemyAI.enemyType == enemyBlacklisted)
                 {
                     return;
                 }

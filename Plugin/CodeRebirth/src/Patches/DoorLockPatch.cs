@@ -58,6 +58,7 @@ public static class DoorLockPatch
                 self.OpenDoorAsEnemyServerRpc();
             }
         }
+
     ret:
         orig(self, other);
     }

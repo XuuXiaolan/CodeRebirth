@@ -15,7 +15,7 @@ MonoBehaviour:
   _configEntries:
   - settingName: Seamine Tink | Enemy Blacklist
     DynamicConfigType: 0
-    defaultString: LethalBotNPC, Pikmin, SnailCat, CutieFly, Nancy, Transporter,
+    defaultString: LethalBotNPC, Pikmin, Real Enemy SnailCat, CutieFly, Nancy, Transporter,
       Docile Locust Bees, Red Locust Bees, Manticoil, Tulip Snake, Nemo, Horse, Mistress,
       Girl, Rabbit Magician, Guardsman, Scary
     defaultInt: 0
@@ -30,6 +30,8 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
+    defaultVector3: {x: 0, y: 0, z: 0}
+    defaultColor: {r: 0, g: 0, b: 0, a: 0}
     Description: Enemy name Blacklist for what the seamine gal won't attack.
   _tags:
   - _namespace: code_rebirth

@@ -13,6 +13,7 @@ using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.Content.DevTools;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Content.Unlockables;
+using CodeRebirth.src.Content.Enemies;
 
 namespace CodeRebirth.src;
 
@@ -88,6 +89,8 @@ public class Plugin : BaseUnityPlugin
         HauntedTeddyBear.Init();
         BearTrapWheelProxy.Init();
         EntranceTeleportPatch.Init();
+
+        LethalContent.Enemies.OnFreeze += PuppeteersVoodoo.CreateBlacklist;
 
         // This should be ran before Network Prefabs are registered.
         InputActionsInstance = new IngameKeybinds();

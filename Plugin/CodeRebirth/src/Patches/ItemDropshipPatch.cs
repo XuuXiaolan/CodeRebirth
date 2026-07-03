@@ -18,7 +18,7 @@ public static class ItemDropshipPatch
     private static void ItemDropship_OpenShipDoorsOnServer(On.ItemDropship.orig_OpenShipDoorsOnServer orig, ItemDropship self)
     {
         orig(self);
-        if (LethalContent.Moons[NamespacedKey<DawnMoonInfo>.From("code_rebirth", "oxyde")].Level == RoundManager.Instance.currentLevel)
+        if (LethalContent.Moons[CodeRebirthMoonKeys.Oxyde].Level == RoundManager.Instance.currentLevel)
         {
             Plugin.ExtendedLogging($"OpenShipDoorsOnServer");
             self.shipTimer = 0;
