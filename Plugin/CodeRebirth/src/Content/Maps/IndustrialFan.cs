@@ -39,10 +39,11 @@ public class IndustrialFan : CodeRebirthHazard
     }
 
     [Rpc(SendTo.NotMe, RequireOwnership = false)]
-    public void SyncDeathRpc(PlayerControllerB player)
+    public void SyncDeathRpc(PlayerControllerReference player)
     {
+        PlayerControllerB playerToKill = player;
         cutAudioSource.Play();
-        player.KillPlayer(player.velocityLastFrame, true, CauseOfDeath.Fan, 9, default);
+        playerToKill.KillPlayer(playerToKill.velocityLastFrame, true, CauseOfDeath.Fan, 9, default);
         PlayRedMist();
     }
 
