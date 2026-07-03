@@ -41,7 +41,7 @@ public class Merchant : NetworkBehaviour
     public void Start()
     {
         storeSeededRandom = new System.Random(StartOfRound.Instance.randomMapSeed + 37325);
-        if (MoneyCounter.ExpensiveMoneyStored() < 0)
+        if (MoneyCounter.Instance == null || MoneyCounter.Instance.MoneyStored() < 0)
         {
             DeclareShopClosed();
         }
@@ -312,7 +312,7 @@ public class Merchant : NetworkBehaviour
     internal List<MerchantBarrel> existingMerchantBarrels = new();
     public void HandleSpawningMerchantItems(MerchantBarrel merchantBarrel)
     {
-        if (MoneyCounter.ExpensiveMoneyStored() < 0)
+        if (MoneyCounter.Instance == null || MoneyCounter.Instance.MoneyStored() < 0)
         {
             return;
         }
