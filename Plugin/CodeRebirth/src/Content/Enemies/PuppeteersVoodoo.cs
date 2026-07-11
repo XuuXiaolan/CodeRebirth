@@ -79,7 +79,12 @@ public class PuppeteersVoodoo : NetworkBehaviour, IHittable
 
     internal static void CreateBlacklist()
     {
-        string blacklistEnemies = EnemyHandler.Instance.ManorLord!.GetConfig<string>("Lord Of The Manor | Puppet Enemy Blacklist").Value;
+        if (EnemyHandler.Instance.ManorLord == null)
+        {
+            return;
+        }
+
+        string blacklistEnemies = EnemyHandler.Instance.ManorLord.GetConfig<string>("Lord Of The Manor | Puppet Enemy Blacklist").Value;
         if (string.IsNullOrEmpty(blacklistEnemies))
         {
             return;

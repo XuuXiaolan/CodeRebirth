@@ -1,4 +1,8 @@
-# v1.6.8
+# v1.6.9
+
+- Fixed an error that'd come from disabling manor lord.
+
+## v1.6.8
 
 - Fixed the assembly parts being unable to spawn.
 - Driftwood can no longer target other giants OR giant-sized enemies.
