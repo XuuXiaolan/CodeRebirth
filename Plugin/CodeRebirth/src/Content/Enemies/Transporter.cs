@@ -273,8 +273,9 @@ public class Transporter : CodeRebirthEnemyAI
 
     private void DoTransporting()
     {
-        if (transportTarget == null)
+        if (transportTarget == null || transportTarget.gameObject == null)
         {
+            transportTarget = null;
             droppingObject = false;
             SwitchToBehaviourServerRpc((int)TransporterStates.Idle);
             TryFindAnyTransportableObjectViaAsyncPathfinding();

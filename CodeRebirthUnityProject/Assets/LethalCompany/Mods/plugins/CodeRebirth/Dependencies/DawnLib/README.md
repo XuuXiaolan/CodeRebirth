@@ -20,6 +20,8 @@ DawnLib is a modern API for Lethal Company content and all sizes of mods. It con
   - Map Objects (Inside and Outside hazards)
   - Unlockables (Ship Upgrades and Furniture)
   - Additional Tile Sets (injecting more tilesets to interiors)
+  - Dead Bodies
+  - Round Loading Steps
 
 - DuskMod API
   - Ship Creation (In-progress)
@@ -80,7 +82,7 @@ In order to make sure everything is ready, you can listen to a registry's "freez
 `OnFreeze` will only run once _ever_ (even between lobby reloads)
 
 ```csharp
-LethalContent.Enemies.OnFreeze += () =>
+LethalContent.Enemies.OnFreezeWithContext += (NamespacedKeyResolver resolver) =>
 {
   // All vanilla content is in and no more modded content can be added.
 };
@@ -132,8 +134,8 @@ And finally, for any troubles in setting anything up, contact `@xuxiaolan` on di
 
 - [Bongo Xiaolan](https://github.com/LoafOrc)
 - [Xu Xiaolan](https://github.com/XuuXiaolan)
-- [Darmuh](https://github.com/darmuh)
 - [Pacoito](https://github.com/pacoito123)
+- [Darmuh](https://github.com/darmuh)
 - [Fumo](https://github.com/xntkrnl)
 - [Ratijas](https://github.com/ratijas)
 
@@ -150,7 +152,9 @@ And finally, for any troubles in setting anything up, contact `@xuxiaolan` on di
 ### Credits - Testers
 
 - Crafty
-- SkittyMuffins
 - Kiszony
 - TheCheeseXD
 - Boom Hen
+- Zerowe
+- DistinctBlaze
+- SkittyMuffins

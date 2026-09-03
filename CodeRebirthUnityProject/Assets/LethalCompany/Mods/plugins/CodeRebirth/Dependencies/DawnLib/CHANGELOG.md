@@ -1,4 +1,90 @@
-# v0.9.23
+# v1.0.0-pre4
+
+- Fixed earth leviathan not being able to come out with DawnSurface stuff.
+
+## v1.0.0-pre3
+
+- Fixed not being able to land at company moons, whoops?
+
+## v1.0.0-pre2
+
+- Fixed an early return in restoring audiosources.
+- Adjusted `EntityReplacement` Replacement's with the HierarchyPaths being changed into a list to help better improve workflow when enemy/item etc uses LOD's with the same replacements needed.
+- Added `RemoveAllSources` to `WeightProfile`.
+- Added `DuskNamespacedObjectDefinition` and `NamespacedSpawnSyncedObject` component.
+  - This should help with trying to use SpawnSyncedObject prefabs that have a generic name such as "lamp" where other mods/even vanilla will have and thus cause issues with your own "lamp".
+- Added the ability to add an info node to your moon.
+- Improved DungeonFlowReference editor workflow for interior creators.
+- Fixed not replacing `RandomScrapSpawn` `ItemGroup`'s with vanilla ones.
+
+## v1.0.0-pre1
+
+- Fixed an issue with `SisterEntranceTeleport` incompatibility with `LethalLevelLoader` and `RuntimeIcons` (this is an issue that comes from load order lol).
+- Included Enemy and Items to the DawnLib simulate command.
+- Added `SearchBufferDistance` for the buffer when calculating how close to get to a pathfinding node and `ReachedNodeInSearch` UnityEvent for when reaching a pathfinding node for `SmartAgentNavigator`.
+- Fixed EntityReplacementRegistry weights not working at all.
+- Fixed an issue with Entity Replacement Registration forcing the need to replace the EnemyType's audioclips which caused some enemies like nutcrackers to break when replacing them.
+- Added `DiffuseMap` to MaterialReplacements.
+- Added `UnknownMaps` to MaterialReplacements.
+- Created `VisualEffectTextureReplacement`.
+- Added some cache-ing to texture replacements.
+
+## v1.0.0-pre
+
+- Added the ability to register weed enemies per moon.
+- Added the ability to register vain shrouds associated with terrains.
+  - This means you can have your custom snowy vain shrouds spawning on snowy surfaces only, etc.
+- Moons have more control over weed enemy spawning now.
+- Moons have much more control over daytime enemy spawning as well.
+- Made it easier to add DawnLib to the editor (com.github.teamxiaolan.dawnlib.compatibility.dll will no longer show up in editor unless you download the mod dlls weirdly!).
+- Added complete weather registration to DawnLib.
+- Added a tag to moons that support weather `SupportsWeather`, this is decided by checking whether the moon is both a company moon has any `randomWeathers` set to it.
+- Added more information related to issues such as incorrect folder structure.
+- Added the ability to set your custom surface to be snowy footprints compatible.
+- Added `SisterRandomScrapSpawn` component for more control over spawning items in interiors.
+- Added `RoundLoadingSteps` registry.
+  - This allows you to "depend" and run code after certain parts of base game's loading steps.
+  - Currently supports the following:
+    - InteriorLoading
+    - InsideMapObjectLoading
+    - ScrapLoading
+    - CurrentLevelSceneLoading
+  - This will allow you to edit the `ENTERING THE ATMOSPHERE` UI, text, etc.
+  - i.e. You create a mod that waits for each player to do a certain action after the interior generates, so you'd depend on the interior generation and run an async func that can edit the text to something like "`3/4` players ready".
+- Added the ability to rebuild DawnLib's gathered weights on non-dawnlib content (and dawnlib content if you modify the configs).
+  - You'd need to call `DawnWeightSystem.NotifyProfilesChanged` if you want DawnLib to recollect every item's weights etc from moons.
+- Added compatibility with LethalConstellations editing the moons terminal page.
+- Grabbed modded enemy bestiaries more reliably.
+- Added `DawnSpawnDenialPoint` component to better control the radius of SpawnDenialPoints for enemy spawning and outside hazard spawning.
+- Added DeadBodyregistration to add custom dead bodies.
+  - You can spawn them using `PlayerControllerB.KillPlayer`, identical method to vanilla except it replaces the `int deathAnimation` with a `NamespacedKey deathAnimationKey`.
+  - i.e. `PlayerControllerB.KillPlayer(DeadBodyKeys.PlayerRagdollElectrocutedVariant);`
+- Fixed Mineshaft's CaveTilesAndTunnels TileSet from not being picked up.
+- Fixed SpawnSyncedObject's not being registered with AdditionalTileSets.
+- Applied the performance fix for interiors onto all interiors rather than just DawnLib interiors.
+- Fixed DawnLib Stingers not playing + playing when entering and exiting the interior.
+- Fixed AdditionalTileSet issues with interior that have the exact same named Doorway Sockets.
+- Simplified EntranceTeleport grabbing stuff.
+- Added `SisterEntranceTeleport` component to be able to control the sounds your entranceteleport makes when creaking and being shut.
+
+## TODO
+
+- For some reason I break WR weather colors on ship screen when loading the lobby?
+- Made an AddOn mod for allowing adding colours to every weather.
+- Finish out Weather Registration weighting logic.
+- Add Combined, Progressing, Unknown and terminal predicate related weather things.
+- ItemGroup registration needs to be done better.
+  - Allow injecting to items that aren't your own too?
+
+## v0.9.25
+
+- Fixed incompat with Lategame Upgrades.
+
+## v0.9.24
+
+- Added null-safety checks to `LethalQuantitiesCompat` and `TerminalFormatterCompat` to prevent a crash when a dependency updates and renames an internal method.
+
+## v0.9.23
 
 - Solved fake extra fire exit existing.
 - Cleaned up code for more compatibility with other mods.
