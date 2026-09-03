@@ -249,7 +249,6 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         switch (currentBehaviourStateIndex)
         {
             case (int)State.Spawn:
-                break;
             case (int)State.Idle:
                 break;
             case (int)State.Wandering:
@@ -272,7 +271,6 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
             PlayMiscSoundsClientRpc(3);
             SwitchToBehaviourServerRpc((int)State.RunningToTarget);
             StartCoroutine(SetSpeedForChasingGiant());
-            return;
         } // Look for Giants
     }
 
@@ -285,11 +283,12 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
         if (currentBehaviourStateIndex != (int)State.RunningToTarget)
         {
             Plugin.Logger.LogWarning($"Redwood Not running to target with speed: {agent.speed}, plus is dead: {isEnemyDead}");
-            if (agent.speed < 0.5f && !isEnemyDead)
+            if (agent.speed >= 0.5f || isEnemyDead)
             {
-                agent.angularSpeed = 40f;
-                agent.speed = walkingSpeed;
+                yield break;
             }
+            agent.angularSpeed = 40f;
+            agent.speed = walkingSpeed;
             yield break;
         }
         agent.angularSpeed = 100f;
@@ -298,7 +297,7 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
 
     public void DoRunningToTarget()
     {
-        // Keep targetting closest Giant, unless they are over 20 units away and we can't see them.
+        // Keep targeting closest Giant, unless they are over 20 units away and we can't see them.
         if (targetEnemy == null || targetEnemy.isEnemyDead)
         {
             ClearEnemyTargetServerRpc();
@@ -309,7 +308,8 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
             SwitchToBehaviourServerRpc((int)State.Wandering);
             return;
         }
-        else if (Vector3.Distance(transform.position, targetEnemy.transform.position) >= seeableDistance + 10 && !RWHasLineOfSightToPosition(targetEnemy.transform.position, 120, seeableDistance, 5))
+        
+        if (Vector3.Distance(transform.position, targetEnemy.transform.position) >= seeableDistance + 10 && !RWHasLineOfSightToPosition(targetEnemy.transform.position, 120, seeableDistance, 5))
         {
             Plugin.ExtendedLogging("Stop Target Giant");
             agent.angularSpeed = 40f;
@@ -340,26 +340,26 @@ public class RedwoodTitanAI : CodeRebirthEnemyAI, IVisibleThreat
     }
 
 
-    public void ParticlesFromEatingForestKeeper(EnemyAI targetEnemy)
+    public void ParticlesFromEatingForestKeeper(EnemyAI enemyToKill)
     {
-        if (targetEnemy is ForestGiantAI)
+        if (enemyToKill is ForestGiantAI)
         {
             ForestKeeperParticles.Play();
         }
-        else if (targetEnemy is DriftwoodMenaceAI)
+        else if (enemyToKill is DriftwoodMenaceAI)
         {
             DriftwoodGiantParticles.Play();
         }
-        else if (targetEnemy is CactusBudling)
+        else if (enemyToKill is CactusBudling)
         {
             CactusBudlingParticles.Play();
         }
-        else if (targetEnemy is RadMechAI)
+        else if (enemyToKill is RadMechAI)
         {
             OldBirdParticles.Play();
         }
 
-        targetEnemy.KillEnemyOnOwnerClient(overrideDestroy: true);
+        enemyToKill.KillEnemyOnOwnerClient(overrideDestroy: true);
     }
 
     public bool FindClosestAliveGiantInRange(float range)
