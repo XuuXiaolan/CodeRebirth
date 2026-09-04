@@ -2,5 +2,20 @@ namespace CodeRebirth.src.Content.Items;
 
 public class DuckyTube : GrabbableObject
 {
-    // look into beltbag and how it wraps around the player.
+    public override void EquipItem()
+    {
+        base.EquipItem();
+        parentObject = playerHeldBy.lowerTorsoCostumeContainerBeltBagOffset.transform;
+    }
+
+    public override void PocketItem()
+    {
+        if (IsOwner)
+        {
+            playerHeldBy.IsInspectingItem = false;
+            playerHeldBy.equippedUsableItemQE = false;
+        }
+        isPocketed = true;
+        parentObject = playerHeldBy.lowerTorsoCostumeContainerBeltBagOffset.transform;
+    }
 }

@@ -19,6 +19,7 @@ MonoBehaviour:
   twoHandedAnimation: 1
   disableHandsOnWall: 1
   canBeGrabbedBeforeGameStart: 1
+  disallowUtilitySlot: 0
   weight: 1
   itemIsTrigger: 0
   holdButtonUse: 1
@@ -57,10 +58,11 @@ MonoBehaviour:
   floorYOffset: 90
   allowDroppingAheadOfPlayer: 1
   restingRotation: {x: -90, y: 0, z: 0}
-  rotationOffset: {x: -90, y: 0, z: 95}
-  positionOffset: {x: -0.15, y: -0.5, z: 0.4}
+  rotationOffset: {x: -120, y: -80, z: 180}
+  positionOffset: {x: -0.15, y: -0.2, z: 0.45}
   meshOffset: 0
   meshVariants: []
   materialVariants: []
+  clinkAudios: []
   usableInSpecialAnimations: 0
   canBeInspected: 0

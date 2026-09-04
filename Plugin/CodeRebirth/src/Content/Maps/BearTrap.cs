@@ -42,6 +42,7 @@ public class BearTrap : CodeRebirthHazard, IHittable
         On.StormyWeather.BeginDay += AddBearTrapsToPossibleNodes;
     }
 
+    // TODO: adjust for beartraps only attracting lightning or being added to list if they're triggered?
     private static void AddBearTrapsToPossibleNodes(On.StormyWeather.orig_BeginDay orig, StormyWeather self)
     {
         orig(self);
