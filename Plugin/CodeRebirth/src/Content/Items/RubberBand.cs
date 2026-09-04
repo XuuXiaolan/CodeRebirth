@@ -1,4 +1,4 @@
-using Dawn;
+using Dawn.Utils;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Items;
@@ -11,6 +11,12 @@ public class RubberBand : GrabbableObject
     public AnimationCurve UseCurveStrength { get; private set; }
     [field: SerializeField]
     public float PushStrength { get; private set; }
+    [field: SerializeField]
+    public AudioSource AudioSource { get; private set; }
+    [field: SerializeField]
+    public NetworkAudioSource NetworkAudioSource { get; private set; }
+    [field: SerializeField]
+    public AudioClip RubberBandLaunchSFX { get; private set; }
     // sort of like slime launcher from those minecraft mods, costs 1 health and sends you forward, try to get rid of the next incoming fall damage?
 
     private static readonly int ProgressAnimationHash = Animator.StringToHash("Progress"); // Float
@@ -51,7 +57,7 @@ public class RubberBand : GrabbableObject
     public override void ItemActivate(bool used, bool buttonDown = true)
     {
         base.ItemActivate(used, buttonDown);
-        if (_cooldown > 0f || playerHeldBy.isExhausted)
+        if (_cooldown > 0f || (playerHeldBy.isExhausted && buttonDown) || (!buttonDown && _charging <= 0f))
         {
             return;
         }
@@ -67,12 +73,13 @@ public class RubberBand : GrabbableObject
         {
             _cooldown = 0.5f;
             playerHeldBy.isMovementHindered = Mathf.Clamp(playerHeldBy.isMovementHindered - 1, 0, playerHeldBy.isMovementHindered);
-            playerHeldBy.sprintMeter = Mathf.Clamp(playerHeldBy.sprintMeter - 0.08f * _charging, 0, playerHeldBy.sprintMeter);
+            playerHeldBy.sprintMeter = Mathf.Clamp(playerHeldBy.sprintMeter - 0.08f * _charging * 5f, 0, playerHeldBy.sprintMeter);
             float progress = UseCurveStrength.Evaluate(_charging);
             playerHeldBy.externalForceAutoFade += playerHeldBy.gameplayCamera.transform.forward * PushStrength * progress * 10f;
             _charging = 0f;
             Animator.SetFloat(ProgressAnimationHash, 1f);
             Animator.SetTrigger(ReleaseAnimationHash);
+            AudioSource.PlayOneShot(RubberBandLaunchSFX);
         }
         playerHeldBy.activatingItem = buttonDown;
     }

@@ -1,4 +1,13 @@
-# v1.6.9
+# v1.6.10
+
+- Fixed BearTrap weights not existing anymore.
+- Rubber band now requires stamina to use, more stamina is used the more you charge it.
+- You can't use a rubber band whilst exhausted now.
+- Gave it a launch sound.
+- BearTraps can now be hit by lightning strikes (they were added to the random lightning positions).
+- Optimised BearTrap spawning a bit.
+
+## v1.6.9
 
 - Fixed an error that'd come from disabling manor lord.
 
