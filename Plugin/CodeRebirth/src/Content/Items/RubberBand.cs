@@ -51,7 +51,7 @@ public class RubberBand : GrabbableObject
     public override void ItemActivate(bool used, bool buttonDown = true)
     {
         base.ItemActivate(used, buttonDown);
-        if (_cooldown > 0f)
+        if (_cooldown > 0f || playerHeldBy.isExhausted)
         {
             return;
         }
@@ -67,6 +67,7 @@ public class RubberBand : GrabbableObject
         {
             _cooldown = 0.5f;
             playerHeldBy.isMovementHindered = Mathf.Clamp(playerHeldBy.isMovementHindered - 1, 0, playerHeldBy.isMovementHindered);
+            playerHeldBy.sprintMeter = Mathf.Clamp(playerHeldBy.sprintMeter - 0.08f * _charging, 0, playerHeldBy.sprintMeter);
             float progress = UseCurveStrength.Evaluate(_charging);
             playerHeldBy.externalForceAutoFade += playerHeldBy.gameplayCamera.transform.forward * PushStrength * progress * 10f;
             _charging = 0f;
