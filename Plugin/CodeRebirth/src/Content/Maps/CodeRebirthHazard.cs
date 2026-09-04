@@ -7,11 +7,13 @@ namespace CodeRebirth.src.Content.Maps;
 
 public class CodeRebirthHazard : NetworkBehaviour
 {
-    private Collider[] cachedColliders = new Collider[5];
+    private Collider[] cachedColliders = new Collider[6];
     public virtual void Start()
     {
-        if (!IsServer) return;
-        StartCoroutine(DecideHazardSpawningStuff());
+        if (IsServer)
+        {
+            StartCoroutine(DecideHazardSpawningStuff());
+        }
     }
 
     private IEnumerator DecideHazardSpawningStuff()
@@ -20,7 +22,9 @@ public class CodeRebirthHazard : NetworkBehaviour
         int numHits = Physics.OverlapSphereNonAlloc(transform.position, 1f, cachedColliders, MoreLayerMasks.InteractableMask, QueryTriggerInteraction.Ignore);
         for (int i = 0; i < numHits; i++)
         {
-            if (!cachedColliders[i].GetComponent<DoorLock>()) continue;
+            if (!cachedColliders[i].GetComponent<DoorLock>())
+                continue;
+
             NetworkObject.Despawn(true);
             yield break;
         }

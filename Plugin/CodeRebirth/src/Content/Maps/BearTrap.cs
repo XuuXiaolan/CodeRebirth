@@ -1,7 +1,12 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Dawn;
 using Dawn.Utils;
 using GameNetcodeStuff;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -29,51 +34,149 @@ public class BearTrap : CodeRebirthHazard, IHittable
     private static readonly int IsTrapTriggered = Animator.StringToHash("isTrapTriggered");
     private static readonly int IsTrapResetting = Animator.StringToHash("isTrapResetting");
 
+    private static readonly List<BearTrap> Instances = new();
+
+    internal static void Init()
+    {
+        IL.StormyWeather.LightningStrikeRandom += AddBearTrapsToPossibleNodes;
+        On.StormyWeather.BeginDay += AddBearTrapsToPossibleNodes;
+    }
+
+    private static void AddBearTrapsToPossibleNodes(On.StormyWeather.orig_BeginDay orig, StormyWeather self)
+    {
+        orig(self);
+        List<GameObject> newList = self.outsideNodes.ToList();
+        newList.AddRange(Instances.Select(x => x.gameObject));
+        self.outsideNodes = newList.ToArray();
+    }
+
+    private static void AddBearTrapsToPossibleNodes(ILContext il)
+    {
+        ILCursor cursor = new(il);
+        if (!cursor.TryGotoNext(
+            MoveType.Before,
+            il => il.MatchLdarg(0),
+            il => il.MatchLdfld<StormyWeather>(nameof(StormyWeather.seed)),
+            il => il.MatchLdcI4(0),
+            il => il.MatchLdarg(0),
+            il => il.MatchLdfld<StormyWeather>(nameof(StormyWeather.outsideNodes)),
+            il => il.MatchLdlen(),
+            il => il.MatchConvI4(),
+            il => il.MatchCallvirt(out _),
+            il => il.MatchStloc(1)
+        ))
+        {
+            Plugin.Logger.LogWarning($"Could not match StormyWeather.LightningStrikeRandom (1), Meaning bear traps will not be targetted for lightning strikes.");
+            return;
+        }
+
+        cursor.Emit(OpCodes.Ldarg_0);
+        cursor.EmitLdfld<StormyWeather>(nameof(StormyWeather.outsideNodes));
+        cursor.EmitDelegate((GameObject[] outsideNodes) =>
+        {
+            if (Instances.Count <= 0)
+            {
+                return;
+            }
+
+            List<GameObject> newList = outsideNodes.ToList();
+            newList.AddRange(Instances.Select(x => x.gameObject));
+            newList.ToArray();
+        });
+
+        if (!cursor.TryGotoNext(
+            MoveType.After,
+            il => il.MatchCall(out _),
+            il => il.MatchLdloc(0),
+            il => il.MatchLdcR4(15),
+            il => il.MatchLdarg(0),
+            il => il.MatchLdfld<StormyWeather>(nameof(StormyWeather.navHit)),
+            il => il.MatchLdarg(0),
+            il => il.MatchLdfld<StormyWeather>(nameof(StormyWeather.seed)),
+            il => il.MatchLdcI4(out _),
+            il => il.MatchLdcR4(1),
+            il => il.MatchCallvirt(out _),
+            il => il.MatchStloc(0)
+        ))
+        {
+            Plugin.Logger.LogWarning($"Could not match StormyWeather.LightningStrikeRandom (2), Meaning bear traps will not be properly targetted for lightning strikes.");
+            return;
+        }
+
+        cursor.Emit(OpCodes.Ldloc_1);
+        cursor.Emit(OpCodes.Ldloc_0);
+        cursor.Emit(OpCodes.Ldarg_0);
+        cursor.EmitLdfld<StormyWeather>(nameof(StormyWeather.outsideNodes));
+        cursor.EmitDelegate((int index, Vector3 position, GameObject[] outsideNodes) =>
+        {
+            if (!outsideNodes[index].TryGetComponent(out BearTrap _))
+            {
+                return;
+            }
+
+            position = outsideNodes[index].transform.position;
+            Plugin.ExtendedLogging($"Lightning strike redirected to hit {outsideNodes[index].name} at {position}");
+        });
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        Instances.Add(this);
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        Instances.Remove(this);
+    }
+
     public override void Start()
     {
         base.Start();
         if (!IsServer)
             return;
 
-        float newTrapTime = UnityEngine.Random.Range(trapTrigger.timeToHold - 1.5f, trapTrigger.timeToHold + 0.5f);
-        SyncRandomResetTrapTimeClientRpc(newTrapTime);
         if (byProduct)
+        {
+            float newTrapTime = UnityEngine.Random.Range(trapTrigger.timeToHold - 1.5f, trapTrigger.timeToHold + 0.5f);
+            SyncRandomResetTrapTimeClientRpc(newTrapTime);
             return;
+        }
 
         Vector3 position = this.transform.position;
         for (int i = 0; i < UnityEngine.Random.Range(4, 8) - (this is BoomTrap ? 3 : 0); i++)
         {
             Vector3 vector = RoundManager.Instance.GetRandomNavMeshPositionInRadius(position, 10f) + (Vector3.up * 2);
-
             Physics.Raycast(vector, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMaskAndDefault, QueryTriggerInteraction.Ignore);
-
             if (hit.collider == null)
                 continue;
 
-            var mapObjectInfo = LethalContent.MapObjects[CodeRebirthMapObjectKeys.GravelBearTrap];
-            GameObject beartrap = mapObjectInfo.GetMapObjectPrefab();
-
-            if (hit.collider.CompareTag("Grass"))
-            {
-                mapObjectInfo = LethalContent.MapObjects[CodeRebirthMapObjectKeys.GrassBearTrap];
-                beartrap = mapObjectInfo.GetMapObjectPrefab();
-            }
-            else if (hit.collider.CompareTag("Snow"))
-            {
-                mapObjectInfo = LethalContent.MapObjects[CodeRebirthMapObjectKeys.SnowBearTrap];
-                beartrap = mapObjectInfo.GetMapObjectPrefab();
-            }
-
-            if (this is BoomTrap)
+            DawnMapObjectInfo mapObjectInfo = LethalContent.MapObjects[CodeRebirthMapObjectKeys.GravelBearTrap];
+            string surfaceTag = hit.collider.tag;
+            if (this is BoomTrap || UnityEngine.Random.Range(0, 1000) < 5)
             {
                 mapObjectInfo = LethalContent.MapObjects[CodeRebirthMapObjectKeys.BoomTrap];
-                beartrap = mapObjectInfo.GetMapObjectPrefab();
             }
-            else if (UnityEngine.Random.Range(0, 1000) < 5)
+            else
             {
-                mapObjectInfo = LethalContent.MapObjects[CodeRebirthMapObjectKeys.BoomTrap];
-                beartrap = mapObjectInfo.GetMapObjectPrefab();
+                if (hit.collider.TryGetComponent(out DawnSurface surface) && surface.TryGetFootstepIndex(hit.point, false, out int footstepSurfaceIndex) && footstepSurfaceIndex != -1)
+                {
+                    DawnSurfaceInfo surfaceInfo = StartOfRound.Instance.footstepSurfaces[footstepSurfaceIndex].DawnInfo;
+                    surfaceTag = surfaceInfo.Surface.surfaceTag;
+                }
+
+                if (surfaceTag.Equals("Grass", StringComparison.OrdinalIgnoreCase))
+                {
+                    mapObjectInfo = LethalContent.MapObjects[CodeRebirthMapObjectKeys.GrassBearTrap];
+                }
+                else if (surfaceTag.Equals("Snow", StringComparison.OrdinalIgnoreCase))
+                {
+                    mapObjectInfo = LethalContent.MapObjects[CodeRebirthMapObjectKeys.SnowBearTrap];
+                }
             }
+
+            GameObject beartrap = mapObjectInfo.GetMapObjectPrefab()!;
             GameObject spawnedTrap = GameObject.Instantiate(beartrap, hit.point, Quaternion.identity, RoundManager.Instance.mapPropsContainer.transform);
             spawnedTrap.GetComponent<BearTrap>().byProduct = true;
             Plugin.ExtendedLogging($"Spawning {beartrap.name} at {hit.point}");

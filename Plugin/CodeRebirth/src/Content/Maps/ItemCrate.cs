@@ -114,7 +114,7 @@ public class ItemCrate : CRHittable
                 if (!item.HasDawnInfo())
                     continue;
 
-                DawnItemInfo itemInfo = item.GetDawnInfo();
+                DawnItemInfo itemInfo = item.DawnInfo;
                 if (itemInfo.ShopInfo != null && itemInfo.ScrapInfo == null)
                 {
                     ShopItemList.Add(item);

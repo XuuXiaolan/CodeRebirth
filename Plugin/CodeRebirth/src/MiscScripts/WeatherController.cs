@@ -23,7 +23,7 @@ public class WeatherController : MonoBehaviour
             return;
         }
 
-        StartOfRound.Instance.currentLevel.GetDawnInfo().ChangeWeatherTo(LevelWeatherType.None);
+        StartOfRound.Instance.currentLevel.DawnInfo.ChangeWeatherTo(LevelWeatherType.None);
         /*string weatherName = WeatherRegistry.WeatherManager.GetCurrentLevelWeather().name.ToLowerInvariant();
         Plugin.ExtendedLogging($"Weather: {weatherName}");
         if (weatherName != "none")

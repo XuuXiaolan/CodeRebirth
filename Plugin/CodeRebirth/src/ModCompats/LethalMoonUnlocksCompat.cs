@@ -12,6 +12,6 @@ internal static class LethalMoonUnlocksCompat
     [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     internal static void ReleaseOxydeStoryLock(SelectableLevel selectableLevel)
     {
-        LethalMoonUnlocks.UnlockManager.TryReleaseStoryLock(selectableLevel.GetDawnInfo().GetNumberlessPlanetName());
+        LethalMoonUnlocks.UnlockManager.TryReleaseStoryLock(selectableLevel.DawnInfo.GetNumberlessPlanetName());
     }
 }
