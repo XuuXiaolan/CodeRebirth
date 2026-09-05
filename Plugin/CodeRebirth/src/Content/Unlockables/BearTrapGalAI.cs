@@ -27,7 +27,7 @@ public class BearTrapGalAI : NetworkBehaviour
 
     private void EatPlayer(PlayerControllerB playerInteracting)
     {
-        if (playerInteracting == null || !playerInteracting.IsLocalPlayer()) return;
+        if (playerInteracting == null || !playerInteracting.IsLocalPlayer) return;
         BitePlayerServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerInteracting));
     }
 
@@ -59,7 +59,7 @@ public class BearTrapGalAI : NetworkBehaviour
 
     private void SwitchPose(PlayerControllerB playerInteracting)
     {
-        if (playerInteracting == null || !playerInteracting.IsLocalPlayer()) return;
+        if (playerInteracting == null || !playerInteracting.IsLocalPlayer) return;
         IncreaseOrDecreaseStageServerRpc();
     }
 

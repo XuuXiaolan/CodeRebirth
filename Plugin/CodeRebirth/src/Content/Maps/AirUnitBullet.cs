@@ -102,7 +102,7 @@ public class AirUnitProjectile : NetworkBehaviour
             CRUtilities.CreateExplosion(this.transform.position, true, 0, 0, 0, 6, null, null, 5f);
             player.DamagePlayer((int)damage, true, true, CauseOfDeath.Blast, 0, false, forceFlung);
             playerHitSoundSource.Play();
-            if (player.IsLocalPlayer())
+            if (player.IsLocalPlayer)
             {
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);

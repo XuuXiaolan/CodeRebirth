@@ -120,7 +120,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
         {
             PlayRandomSFX(swingSFX);
 
-            if (previousPlayerHeldBy.IsLocalPlayer())
+            if (previousPlayerHeldBy.IsLocalPlayer)
             {
                 previousPlayerHeldBy.playerBodyAnimator.SetTrigger(UseHeldItem1Animation);
             }
@@ -198,7 +198,7 @@ public class CRWeapon : GrabbableObject // partly or mostly modified from JLL's 
         if (playerHeldBy != null)
         {
             playerHeldBy.activatingItem = false;
-            if (playerHeldBy.IsLocalPlayer()) playerHeldBy.playerBodyAnimator.speed = 1f;
+            if (playerHeldBy.IsLocalPlayer) playerHeldBy.playerBodyAnimator.speed = 1f;
         }
 
         base.DiscardItem();

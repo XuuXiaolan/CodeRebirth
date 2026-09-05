@@ -22,7 +22,7 @@ public class InfiniKey : GrabbableObject
         if (playerHeldBy != null)
         {
             previousPlayerHeldBy = playerHeldBy;
-            if (playerHeldBy.IsLocalPlayer())
+            if (playerHeldBy.IsLocalPlayer)
             {
                 playerHeldBy.playerBodyAnimator.SetTrigger("UseHeldItem1");
             }

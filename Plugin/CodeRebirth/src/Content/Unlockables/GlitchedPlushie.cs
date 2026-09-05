@@ -23,7 +23,7 @@ public class GlitchedPlushie : NetworkBehaviour
 
     public void ItemActivateTrigger(PlayerControllerB player)
     {
-        if (player == null || !player.IsLocalPlayer()) return;
+        if (player == null || !player.IsLocalPlayer) return;
         PlayStuffServerRpc();
     }
 

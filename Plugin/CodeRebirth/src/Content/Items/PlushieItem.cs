@@ -39,7 +39,7 @@ public class PlushieItem : GrabbableObject
         {
             _audioSource.PlayOneShot(_useSound);
         }
-        if (_dropOnUse && playerHeldBy != null && playerHeldBy.IsLocalPlayer())
+        if (_dropOnUse && playerHeldBy != null && playerHeldBy.IsLocalPlayer)
         {
             playerHeldBy.StartCoroutine(playerHeldBy.waitToEndOfFrameToDiscard());
         }

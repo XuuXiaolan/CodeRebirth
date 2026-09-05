@@ -97,7 +97,7 @@ public class JimothyNPC : NetworkBehaviour
 
     public void PickupFallenJimothy(PlayerControllerB player)
     {
-        if (!player.IsLocalPlayer())
+        if (!player.IsLocalPlayer)
             return;
 
         PickupFallenJimothyServerRpc();

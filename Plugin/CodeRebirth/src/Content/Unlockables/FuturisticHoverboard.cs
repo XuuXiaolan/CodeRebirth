@@ -63,7 +63,7 @@ public class FuturisticHoverboard : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        if (_playerRiding == null || !_playerRiding.IsLocalPlayer())
+        if (_playerRiding == null || !_playerRiding.IsLocalPlayer)
             return;
 
         if (_turnedOn)
@@ -88,7 +88,7 @@ public class FuturisticHoverboard : NetworkBehaviour
 
     private void OnInteract(PlayerControllerB player)
     {
-        if (!player.IsLocalPlayer())
+        if (!player.IsLocalPlayer)
             return;
 
         if (_playerRiding != null)

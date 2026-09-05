@@ -105,7 +105,7 @@ public class SeamineGalAI : GalAI
 
     public void OnBeltInteract()
     {
-        if (ownerPlayer == null || !ownerPlayer.IsLocalPlayer())
+        if (ownerPlayer == null || !ownerPlayer.IsLocalPlayer)
         {
             return;
         }
@@ -135,7 +135,7 @@ public class SeamineGalAI : GalAI
 
     private void OnFlashLightInteract(PlayerControllerB playerInteracting)
     {
-        if (!playerInteracting.IsLocalPlayer() || playerInteracting != ownerPlayer)
+        if (!playerInteracting.IsLocalPlayer || playerInteracting != ownerPlayer)
         {
             return;
         }
@@ -159,7 +159,7 @@ public class SeamineGalAI : GalAI
 
     private void OnHugInteract(PlayerControllerB playerInteracting)
     {
-        if (!playerInteracting.IsLocalPlayer() || playerInteracting != ownerPlayer)
+        if (!playerInteracting.IsLocalPlayer || playerInteracting != ownerPlayer)
         {
             return;
         }

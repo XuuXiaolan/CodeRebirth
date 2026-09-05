@@ -167,7 +167,7 @@ public class Merchant : NetworkBehaviour
                 if (EnoughMoneySlotted(price))
                 {
                     StartCoroutine(PayUpBoy(price));
-                    if (grabbableObject.playerHeldBy.IsLocalPlayer())
+                    if (grabbableObject.playerHeldBy.IsLocalPlayer)
                     {
                         DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.Capitalism);
                     }

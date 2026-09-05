@@ -30,7 +30,7 @@ public class MouseTrap : GrabbableObject, ITriggerProxy
             return;
         }
 
-        if (other.TryGetComponent(out PlayerControllerB player) && player.IsLocalPlayer())
+        if (other.TryGetComponent(out PlayerControllerB player) && player.IsLocalPlayer)
         {
             HandlePlayerInteractionsRpc(player);
         }
@@ -38,7 +38,7 @@ public class MouseTrap : GrabbableObject, ITriggerProxy
         {
             HandleEnemyInteractionsRpc(new NetworkBehaviourReference(enemyAICollisionDetect.mainScript));
         }
-        else if (other.TryGetComponent(out DeadBodyInfo deadBodyInfo) && deadBodyInfo.playerScript.IsLocalPlayer())
+        else if (other.TryGetComponent(out DeadBodyInfo deadBodyInfo) && deadBodyInfo.playerScript.IsLocalPlayer)
         {
             HandleDeadBodyInteractionsRpc();
         }

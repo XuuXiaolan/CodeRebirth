@@ -11,7 +11,7 @@ public class IndustrialFanFrontCollider : MonoBehaviour
     private void OnTriggerStay(Collider other)
     {
         PlayerControllerB player = other.gameObject.GetComponent<PlayerControllerB>();
-        if (!player.IsLocalPlayer())
+        if (!player.IsLocalPlayer)
             return;
 
         if (industrialFan.IsObstructed(other.transform.position))

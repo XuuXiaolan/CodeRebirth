@@ -118,7 +118,7 @@ public class Hoverboard : GrabbableObject, IHittable
 
     public void ModeHandler(InputAction.CallbackContext context)
     {
-        if (hoverboardMode == HoverboardMode.None || playerControlling == null || !playerControlling.IsLocalPlayer()) return;
+        if (hoverboardMode == HoverboardMode.None || playerControlling == null || !playerControlling.IsLocalPlayer) return;
         var btn = (ButtonControl)context.control;
         if (btn.wasPressedThisFrame)
         {
@@ -206,7 +206,7 @@ public class Hoverboard : GrabbableObject, IHittable
 
     public void FixedUpdate()
     {
-        if (playerControlling == null || !playerControlling.IsLocalPlayer()) return;
+        if (playerControlling == null || !playerControlling.IsLocalPlayer) return;
         if (turnedOn && hoverboardMode != HoverboardMode.Held)
         {
             for (int i = 0; i < 4; i++)
@@ -244,12 +244,12 @@ public class Hoverboard : GrabbableObject, IHittable
             return;
         }
         if (playerControlling == null) return;
-        if (playerControlling.IsLocalPlayer() && Vector3.Distance(hoverboardChild.position, playerControlling.transform.position) > 5)
+        if (playerControlling.IsLocalPlayer && Vector3.Distance(hoverboardChild.position, playerControlling.transform.position) > 5)
         {
             SetHoverboardStateServerRpc(1);
             return;
         }
-        if (playerControlling.IsLocalPlayer() && hoverboardMode == HoverboardMode.Mounted)
+        if (playerControlling.IsLocalPlayer && hoverboardMode == HoverboardMode.Mounted)
         {
             Vector2 currentMouseDelta = Plugin.InputActionsInstance.MouseDelta.ReadValue<Vector2>();
 
@@ -274,7 +274,7 @@ public class Hoverboard : GrabbableObject, IHittable
             DropHoverboard();
             return;
         }
-        if (hoverboardMode == HoverboardMode.Mounted && turnedOn && playerControlling.IsLocalPlayer())
+        if (hoverboardMode == HoverboardMode.Mounted && turnedOn && playerControlling.IsLocalPlayer)
         {
             playerControlling.transform.position = hoverboardSeat.transform.position;
             if (_isHoverForwardHeld)
@@ -321,7 +321,7 @@ public class Hoverboard : GrabbableObject, IHittable
 
     public bool HandleDropping()
     {
-        if (playerControlling == null || !playerControlling.IsLocalPlayer() || !Plugin.InputActionsInstance.DropHoverboard.triggered) return false;
+        if (playerControlling == null || !playerControlling.IsLocalPlayer || !Plugin.InputActionsInstance.DropHoverboard.triggered) return false;
         DropHoverboard();
         return true;
     }
@@ -335,7 +335,7 @@ public class Hoverboard : GrabbableObject, IHittable
 
     private void HandleMovement()
     {
-        if (playerControlling == null || !playerControlling.IsLocalPlayer()) return;
+        if (playerControlling == null || !playerControlling.IsLocalPlayer) return;
         Vector3 forceDirection = Vector3.zero;
         float moveForce = 0f;
 
@@ -405,7 +405,7 @@ public class Hoverboard : GrabbableObject, IHittable
         hoverboardChild.rotation = resetChildRotation;
         playerControlling = StartOfRound.Instance.allPlayerScripts[PlayerID];
         if (IsServer) this.NetworkObject.ChangeOwnership(playerControlling.actualClientId);
-        if (playerControlling.IsLocalPlayer() && !playerControlling.GetCRPlayerData().ridingHoverboard)
+        if (playerControlling.IsLocalPlayer && !playerControlling.GetCRPlayerData().ridingHoverboard)
         {
             DialogueSegment dialogue = new DialogueSegment
             {
@@ -541,7 +541,7 @@ public class Hoverboard : GrabbableObject, IHittable
         SetupCollidersIgnoringOrIncluding(true);
         playerCurrentlyControlling.disableLookInput = true;
         playerCurrentlyControlling.disableMoveInput = true;
-        if (playerCurrentlyControlling.IsLocalPlayer())
+        if (playerCurrentlyControlling.IsLocalPlayer)
         {
             StartCoroutine(TurnOnHoverboard());
         }

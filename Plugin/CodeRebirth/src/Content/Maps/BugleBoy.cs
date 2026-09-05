@@ -76,7 +76,7 @@ public class BugleBoy : MonoBehaviour
 
     public void Reroll(PlayerControllerB playerInteracting)
     {
-        if (playerInteracting == null || !playerInteracting.IsLocalPlayer())
+        if (playerInteracting == null || !playerInteracting.IsLocalPlayer)
         {
             return;
         }

@@ -129,7 +129,7 @@ public class CruiserGalAI : GalAI
 
     private void OnHatInteract(PlayerControllerB playerInteracting)
     {
-        if (!playerInteracting.IsLocalPlayer() || playerInteracting != ownerPlayer) return;
+        if (!playerInteracting.IsLocalPlayer || playerInteracting != ownerPlayer) return;
         ThrowPlayerServerRpc();
     }
 
@@ -165,7 +165,7 @@ public class CruiserGalAI : GalAI
 
     private void OnContainerInteract(PlayerControllerB playerInteracting) // todo: update interact to wait for player to be holding an item to actually be trigger-able
     {
-        if (!playerInteracting.IsLocalPlayer() || playerInteracting != ownerPlayer) return;
+        if (!playerInteracting.IsLocalPlayer || playerInteracting != ownerPlayer) return;
         GrabItemOwnerHoldingServerRpc(new NetworkBehaviourReference(playerInteracting.currentlyHeldObjectServer));
     }
 
@@ -207,7 +207,7 @@ public class CruiserGalAI : GalAI
 
     private void OnLeverPullInteract(PlayerControllerB playerInteracting)
     {
-        if (!playerInteracting.IsLocalPlayer() || playerInteracting != ownerPlayer) return;
+        if (!playerInteracting.IsLocalPlayer || playerInteracting != ownerPlayer) return;
         PutPlayerIntoSeatServerRpc();
     }
 
@@ -244,13 +244,13 @@ public class CruiserGalAI : GalAI
 
     private void OnWheelDumpScrapInteract(PlayerControllerB playerInteracting)
     {
-        if (!playerInteracting.IsLocalPlayer() || playerInteracting != ownerPlayer) return;
+        if (!playerInteracting.IsLocalPlayer || playerInteracting != ownerPlayer) return;
         DropAllHeldItemsServerRpc();
     }
 
     private void OnRadioInteract(PlayerControllerB playerInteracting)
     {
-        if (!playerInteracting.IsLocalPlayer() || playerInteracting != ownerPlayer) return;
+        if (!playerInteracting.IsLocalPlayer || playerInteracting != ownerPlayer) return;
         StartRadioServerRpc();
     }
 
@@ -281,7 +281,7 @@ public class CruiserGalAI : GalAI
 
     private void OnChestCollisionToggleInteract(PlayerControllerB playerInteracting)
     {
-        if (!playerInteracting.IsLocalPlayer() || playerInteracting != ownerPlayer) return;
+        if (!playerInteracting.IsLocalPlayer || playerInteracting != ownerPlayer) return;
         if (chestCollisionToggleCoroutine == null) StartCollisionAnimationServerRpc();
     }
 

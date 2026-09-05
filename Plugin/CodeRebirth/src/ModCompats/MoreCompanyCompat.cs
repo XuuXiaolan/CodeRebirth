@@ -33,7 +33,7 @@ internal static class MoreCompanySoftCompat
         }
         else
         {
-            cosmeticApplication.UpdateAllCosmeticVisibilities(targetPlayer.IsLocalPlayer());
+            cosmeticApplication.UpdateAllCosmeticVisibilities(targetPlayer.IsLocalPlayer);
         }
     }
 }

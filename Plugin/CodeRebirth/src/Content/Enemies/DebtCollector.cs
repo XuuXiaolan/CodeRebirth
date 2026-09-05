@@ -549,7 +549,7 @@ public class DebtCollector : CodeRebirthEnemyAI
             agent.speed = ChasingSpeed;
         }
 
-        if (targetPlayer != null && !targetPlayer.isPlayerDead && targetPlayer.IsLocalPlayer())
+        if (targetPlayer != null && !targetPlayer.isPlayerDead && targetPlayer.IsLocalPlayer)
         {
             if (Physics.Raycast(GrabHand.position, targetPlayer.transform.position - GrabHand.position, out RaycastHit hit, 5f, StartOfRound.Instance.playersMask, QueryTriggerInteraction.Collide))
             {
@@ -567,7 +567,7 @@ public class DebtCollector : CodeRebirthEnemyAI
     {
         if (targetPlayer != null && !targetPlayer.isPlayerDead)
         {
-            if (targetPlayer.IsLocalPlayer())
+            if (targetPlayer.IsLocalPlayer)
             {
                 GameObject.Find("Systems/Rendering/PlayerHUDHelmetModel").SetActive(true);
             }
@@ -715,7 +715,7 @@ public class DebtCollector : CodeRebirthEnemyAI
         AudioSource.PlayOneShot(dieSFX);
         if (targetPlayer != null)
         {
-            if (targetPlayer.IsLocalPlayer())
+            if (targetPlayer.IsLocalPlayer)
             {
                 GameObject.Find("Systems/Rendering/PlayerHUDHelmetModel").SetActive(true);
             }

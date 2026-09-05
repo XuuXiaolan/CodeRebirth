@@ -92,7 +92,7 @@ public class VendingMachine : NetworkBehaviour
 
     public void StartSpawningAnimation(PlayerControllerB playerControllerB)
     {
-        if (playerControllerB == null || !playerControllerB.IsLocalPlayer())
+        if (playerControllerB == null || !playerControllerB.IsLocalPlayer)
         {
             return;
         }

@@ -114,7 +114,7 @@ public class DuckUI : NetworkBehaviour
     {
         if (targetPlayer == null) return;
 
-        if (!targetPlayer.IsLocalPlayer() && !isGlobal) return;
+        if (!targetPlayer.IsLocalPlayer && !isGlobal) return;
 
         if (duckCoroutine != null)
         {

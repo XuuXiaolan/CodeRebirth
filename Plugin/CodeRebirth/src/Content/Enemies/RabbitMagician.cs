@@ -87,7 +87,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
     public override void Update()
     {
         base.Update();
-        if (targetPlayer != null && targetPlayer.IsLocalPlayer())
+        if (targetPlayer != null && targetPlayer.IsLocalPlayer)
         {
             _idleTimer -= Time.deltaTime;
             if (_idleTimer <= 0)
@@ -115,7 +115,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
         }
         else if (currentBehaviourStateIndex == (int)RabbitMagicianState.Attached)
         {
-            if (targetPlayer == null || targetPlayer.isPlayerDead || targetPlayer.IsPseudoDead() || targetPlayer.IsLocalPlayer())
+            if (targetPlayer == null || targetPlayer.isPlayerDead || targetPlayer.IsPseudoDead() || targetPlayer.IsLocalPlayer)
                 return;
 
             if (localPlayer.isPlayerDead || !localPlayer.isPlayerControlled || localPlayer.IsPseudoDead())
@@ -223,7 +223,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
     private void SetPositionAndRotation(PlayerControllerB player)
     {
         Vector3 worldOffset;
-        if (player.IsLocalPlayer())
+        if (player.IsLocalPlayer)
         {
             _targetPlayerSpine3 = player.gameplayCamera.transform;
             worldOffset = _targetPlayerSpine3.rotation * (_offsetPosition + new Vector3(0f, -0.32f, 0.1f));
@@ -280,7 +280,7 @@ public class RabbitMagician : CodeRebirthEnemyAI
     private void FallSoundClientRpc(PlayerControllerReference newTargetPlayer)
     {
         PlayerControllerB player = newTargetPlayer;
-        if (!player.IsLocalPlayer())
+        if (!player.IsLocalPlayer)
             return;
 
         creatureSFX.PlayOneShot(_fallingAudioClips[UnityEngine.Random.Range(0, _fallingAudioClips.Length)]);

@@ -33,7 +33,7 @@ public class Guillotine : NetworkBehaviour
     public void FinishGuillotineSequenceAnimEvent()
     {
         sequenceFinished = true;
-        if (playerToKill != null && playerToKill.IsLocalPlayer())
+        if (playerToKill != null && playerToKill.IsLocalPlayer)
         {
             PseudoKillPlayerServerRpc(playerToKill);
         }
@@ -50,7 +50,7 @@ public class Guillotine : NetworkBehaviour
     {
         playerToKill = playerControllerReference;
         mistress = (Mistress)mistressNetworkBehaviourReference;
-        if (playerToKill.IsLocalPlayer() && playerToKill.isCrouching)
+        if (playerToKill.IsLocalPlayer && playerToKill.isCrouching)
         {
             playerToKill.Crouch(false);
         }
@@ -70,7 +70,7 @@ public class Guillotine : NetworkBehaviour
         int alivePlayers = StartOfRound.Instance.allPlayerScripts.Count(player => player.isPlayerControlled && !player.isPlayerDead && !player.IsPseudoDead());
         if (StartOfRound.Instance.allPlayerScripts.Count(player => player.isPlayerControlled && !player.isPlayerDead && !player.IsPseudoDead()) == 1)
         {
-            if (playerToKill.IsLocalPlayer())
+            if (playerToKill.IsLocalPlayer)
             {
                 playerToKill.KillPlayer(Vector3.zero, false, CauseOfDeath.Snipping, 0);
             }
@@ -90,7 +90,7 @@ public class Guillotine : NetworkBehaviour
         playerToKill.headCostumeContainerLocal.gameObject.SetActive(false);
         playerToKill.playerBetaBadgeMesh.gameObject.SetActive(false);
         playerToKill.inAnimationWithEnemy = mistress;
-        if (playerToKill.IsLocalPlayer())
+        if (playerToKill.IsLocalPlayer)
         {
             DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.Igotaheadache);
             HUDManager.Instance.HideHUD(true);

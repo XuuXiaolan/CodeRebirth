@@ -31,7 +31,7 @@ public class ACUnitGalAI : NetworkBehaviour
 
     private void ShootPlayer(PlayerControllerB playerInteracting)
     {
-        if (playerInteracting == null || !playerInteracting.IsLocalPlayer()) return;
+        if (playerInteracting == null || !playerInteracting.IsLocalPlayer) return;
         ShootPlayerServerRpc(Array.IndexOf(StartOfRound.Instance.allPlayerScripts, playerInteracting));
     }
 
@@ -60,7 +60,7 @@ public class ACUnitGalAI : NetworkBehaviour
 
     private void SwitchPose(PlayerControllerB playerInteracting)
     {
-        if (playerInteracting == null || !playerInteracting.IsLocalPlayer()) return;
+        if (playerInteracting == null || !playerInteracting.IsLocalPlayer) return;
         IncreaseOrDecreaseStageServerRpc();
     }
 

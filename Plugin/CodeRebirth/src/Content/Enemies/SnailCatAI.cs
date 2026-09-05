@@ -117,7 +117,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
         detectLightInSurroundings = this.gameObject.AddComponent<DetectLightInSurroundings>();
         detectLightInSurroundings.OnLightValueChange.AddListener(OnLightValueChange);
         playerHolding = playerControllerReference;
-        if (playerHolding != null && playerHolding.IsLocalPlayer())
+        if (playerHolding != null && playerHolding.IsLocalPlayer)
         {
             CRUtilities.MakePlayerGrabObject(playerHolding, this.propScript);
         }

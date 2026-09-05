@@ -301,7 +301,7 @@ public class SCP999GalAI : NetworkBehaviour
             if (healthThisFrame > 0)
             {
                 healthHealed += healthThisFrame;
-                if (player.IsLocalPlayer())
+                if (player.IsLocalPlayer)
                 {
                     TellHostAboutNewHealthServerRpc(healthThisFrame);
                 }

@@ -549,7 +549,7 @@ public class ItemCrate : CRHittable
 
     public void OnTriggerEnter(Collider other)
     {
-        if (opened && other.TryGetComponent(out PlayerControllerB player) && player.IsLocalPlayer())
+        if (opened && other.TryGetComponent(out PlayerControllerB player) && player.IsLocalPlayer)
         {
             DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.SafeAndSound);
             opened = false;
@@ -572,7 +572,7 @@ public class ItemCrate : CRHittable
     public void CloseCrateOnPlayerLocally(int playerIndex)
     {
         PlayerControllerB player = StartOfRound.Instance.allPlayerScripts[playerIndex];
-        if (!player.IsLocalPlayer())
+        if (!player.IsLocalPlayer)
         {
             if (pickable != null && trigger != null)
             {

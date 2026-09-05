@@ -43,7 +43,7 @@ public class GrabAndLaunchPlayer : MonoBehaviour
 
     private IEnumerator CheckIfPlayerIsDead(PlayerControllerB player)
     {
-        if (!player.IsLocalPlayer())
+        if (!player.IsLocalPlayer)
             yield break;
 
         yield return new WaitUntil(() => player.isPlayerDead || player.thisController.isGrounded);

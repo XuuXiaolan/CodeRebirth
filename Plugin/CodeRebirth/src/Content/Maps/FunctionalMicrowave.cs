@@ -109,7 +109,7 @@ public class FunctionalMicrowave : CodeRebirthHazard
         if (scrapSpawned != null && (scrapSpawned.isHeld || scrapSpawned.playerHeldBy != null))
         {
             scrapSpawned.grabbable = true;
-            if (scrapSpawned.playerHeldBy != null && scrapSpawned.playerHeldBy.IsLocalPlayer())
+            if (scrapSpawned.playerHeldBy != null && scrapSpawned.playerHeldBy.IsLocalPlayer)
             {
                 DuskModContent.Achievements.TryDiscoverMoreProgressAchievement(CodeRebirthAchievementKeys.LunchisServed, scrapSpawned.itemProperties.itemName);
             }

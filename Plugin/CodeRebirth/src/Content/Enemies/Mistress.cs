@@ -205,7 +205,7 @@ public class Mistress : CodeRebirthEnemyAI
             return;
         }
 
-        if (!targetPlayer.IsLocalPlayer())
+        if (!targetPlayer.IsLocalPlayer)
         {
             return;
         }
@@ -300,7 +300,7 @@ public class Mistress : CodeRebirthEnemyAI
     {
         yield return null;
         Physics.Raycast(Vector3.zero + Vector3.up * 50f, Vector3.down, out RaycastHit hit, 100, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore);
-        if (playerToExecute.isInsideFactory && playerToExecute.IsLocalPlayer())
+        if (playerToExecute.isInsideFactory && playerToExecute.IsLocalPlayer)
         {
             EntranceTeleport? entrance = CodeRebirthUtils.EntrancePoints.FirstOrDefault(e => !e.isEntranceToBuilding);
             entrance?.TeleportPlayer();
@@ -451,7 +451,7 @@ public class Mistress : CodeRebirthEnemyAI
 
     private IEnumerator ResetVolumeWeightTo0(PlayerControllerB player)
     {
-        if (!player.IsLocalPlayer())
+        if (!player.IsLocalPlayer)
         {
             yield break;
         }
@@ -535,7 +535,7 @@ public class Mistress : CodeRebirthEnemyAI
 
         if (cripple)
         {
-            if (player.IsLocalPlayer())
+            if (player.IsLocalPlayer)
                 creatureVoice.PlayOneShot(AttackSounds[UnityEngine.Random.Range(0, AttackSounds.Length)]);
 
             player.inAnimationWithEnemy = this;
@@ -548,7 +548,7 @@ public class Mistress : CodeRebirthEnemyAI
         }
         else
         {
-            if (player.IsLocalPlayer())
+            if (player.IsLocalPlayer)
                 creatureVoice.PlayOneShot(LoseSightSound, 0.75f);
 
             if (skinnedMeshRenderers != null && skinnedMeshRenderers.Length > 0)

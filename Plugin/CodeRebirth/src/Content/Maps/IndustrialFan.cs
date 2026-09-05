@@ -29,7 +29,7 @@ public class IndustrialFan : CodeRebirthHazard
     private void OnTriggerEnter(Collider other)
     {
         // Kill players who touch the back blades
-        if (other.TryGetComponent(out PlayerControllerB player) && player.IsLocalPlayer())
+        if (other.TryGetComponent(out PlayerControllerB player) && player.IsLocalPlayer)
         {
             SyncDeathRpc(player);
             cutAudioSource.Play();
