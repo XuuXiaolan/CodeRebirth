@@ -84,7 +84,7 @@ public class AutonomousCrane : NetworkBehaviour
     {
         base.OnNetworkSpawn();
         _craneRandomiser = new System.Random(StartOfRound.Instance.randomMapSeed + 33333);
-        _deactivationLengthRange = MapObjectHandler.Instance.AutonomousCrane!.GetConfig<BoundedRange>("Autonomous Crane | Deactivation Length").Value;
+        _deactivationLengthRange = MapObjectHandler.Instance.AutonomousCrane!.Configs.Get<BoundedRange>("Autonomous Crane | Deactivation Length").Value;
         float distanceToShip = Vector3.Distance(this.transform.position, StartOfRound.Instance.shipLandingPosition.position);
         Plugin.ExtendedLogging($"Distance to ship: {distanceToShip}");
         if (distanceToShip <= 30f)

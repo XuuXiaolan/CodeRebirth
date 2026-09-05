@@ -257,7 +257,7 @@ public class SeamineGalAI : GalAI
             maxChargeCount = chargeCount;
             Agent.enabled = false;
 
-            var enemyBlacklist = UnlockableHandler.Instance.SeamineTink!.GetConfig<string>("Seamine Tink | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
+            var enemyBlacklist = UnlockableHandler.Instance.SeamineTink!.Configs.Get<string>("Seamine Tink | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
             foreach (var nameEntry in enemyBlacklist)
             {
                 enemyTargetBlacklist.UnionWith(LethalContent.Enemies.Values.Where(et => et.EnemyType.enemyName.Equals(nameEntry, System.StringComparison.OrdinalIgnoreCase)).Select(et => et.EnemyType.enemyName));

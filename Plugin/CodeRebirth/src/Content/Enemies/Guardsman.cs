@@ -109,7 +109,7 @@ public class Guardsman : CodeRebirthEnemyAI, IVisibleThreat
     public override void Start()
     {
         base.Start();
-        List<string> enemyBlacklistArray = MapObjectHandler.Instance.Merchant!.GetConfig<string>("Guardsman | Enemy Blacklist").Value.Split(',').Select(s => s.Trim()).ToList();
+        List<string> enemyBlacklistArray = MapObjectHandler.Instance.Merchant!.Configs.Get<string>("Guardsman | Enemy Blacklist").Value.Split(',').Select(s => s.Trim()).ToList();
         foreach (string nameEntry in enemyBlacklistArray)
         {
             _internalEnemyBlacklist.UnionWith(LethalContent.Enemies.Values.Where(et => et.EnemyType.enemyName.Equals(nameEntry, StringComparison.OrdinalIgnoreCase)).Select(et => et.EnemyType.enemyName));

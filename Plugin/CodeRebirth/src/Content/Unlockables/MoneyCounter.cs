@@ -130,7 +130,7 @@ public class MoneyCounter : NetworkSingleton<MoneyCounter>, IHittable
             return;
         }
 
-        int penaltyPerPlayerAmount = MapObjectHandler.Instance.Merchant!.GetConfig<int>("Debt Collector | Penalty").Value;
+        int penaltyPerPlayerAmount = MapObjectHandler.Instance.Merchant!.Configs.Get<int>("Debt Collector | Penalty").Value;
         Plugin.ExtendedLogging($"Applying {playersDead * penaltyPerPlayerAmount} coin max penalty on all team wipe");
         RemoveMoney(playersDead * penaltyPerPlayerAmount);
     }

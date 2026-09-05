@@ -14,6 +14,7 @@ using CodeRebirth.src.Content.DevTools;
 using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Content.Unlockables;
 using CodeRebirth.src.Content.Enemies;
+using CodeRebirth.src.Content.Items;
 
 namespace CodeRebirth.src;
 
@@ -90,8 +91,9 @@ public class Plugin : BaseUnityPlugin
         BearTrapWheelProxy.Init();
         EntranceTeleportPatch.Init();
         BearTrap.Init();
+        DuckyTube.Init();
 
-        LethalContent.Enemies.OnFreeze += PuppeteersVoodoo.CreateBlacklist;
+        LethalContent.Enemies.OnFreezeWithContext += (_) => PuppeteersVoodoo.CreateBlacklist();
 
         // This should be ran before Network Prefabs are registered.
         InputActionsInstance = new IngameKeybinds();

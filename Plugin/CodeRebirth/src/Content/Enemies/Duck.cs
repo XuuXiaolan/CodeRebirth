@@ -7,7 +7,7 @@ public class Duck : QuestMasterAI
     public override void Awake()
     {
         base.Awake();
-        bool isGlobalAudio = EnemyHandler.Instance.DuckSong!.GetConfig<bool>("Duck | Global Spawn Audio").Value;
+        bool isGlobalAudio = EnemyHandler.Instance.DuckSong!.Configs.Get<bool>("Duck | Global Spawn Audio").Value;
         creatureUltraVoice.spatialBlend = isGlobalAudio ? 0f : 1f;
         creatureUltraVoice.Play();
     }
@@ -15,7 +15,7 @@ public class Duck : QuestMasterAI
     public override void Start()
     {
         base.Start();
-        questTimer = EnemyHandler.Instance.DuckSong!.GetConfig<float>("Duck | Quest Timer").Value;
-        questRepeatChance = EnemyHandler.Instance.DuckSong.GetConfig<int>("Duck | Lemonade Quest Chance").Value;
+        questTimer = EnemyHandler.Instance.DuckSong!.Configs.Get<float>("Duck | Quest Timer").Value;
+        questRepeatChance = EnemyHandler.Instance.DuckSong!.Configs.Get<int>("Duck | Lemonade Quest Chance").Value;
     }
 }

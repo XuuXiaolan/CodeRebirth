@@ -235,7 +235,7 @@ public class ShockwaveGalAI : GalAI
             Agent.enabled = false;
             FlySource.volume = 0f;
 
-            var enemyBlacklist = UnlockableHandler.Instance.ShockwaveBot.GetConfig<string>("Shockwave Bot | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
+            var enemyBlacklist = UnlockableHandler.Instance.ShockwaveBot!.Configs.Get<string>("Shockwave Bot | Enemy Blacklist").Value.Split(',').Select(s => s.Trim());
             foreach (var nameEntry in enemyBlacklist)
             {
                 enemyTargetBlacklist.UnionWith(LethalContent.Enemies.Values.Where(et => et.EnemyType.enemyName.Equals(nameEntry, System.StringComparison.OrdinalIgnoreCase)).Select(et => et.EnemyType.enemyName));

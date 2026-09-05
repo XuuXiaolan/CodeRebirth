@@ -96,8 +96,8 @@ public class Hoverboard : GrabbableObject, IHittable
 
     private void ConfigureHoverboard()
     {
-        _speedMultiplier = ItemHandler.Instance.Hoverboard.GetConfig<float>("Hoverboard | Speed Multiplier").Value;
-        _chargeIncreaseMultiplier = ItemHandler.Instance.Hoverboard.GetConfig<float>("Hoverboard | Charge Increase Multiplier").Value;
+        _speedMultiplier = ItemHandler.Instance.Hoverboard!.Configs.Get<float>("Hoverboard | Speed Multiplier").Value;
+        _chargeIncreaseMultiplier = ItemHandler.Instance.Hoverboard!.Configs.Get<float>("Hoverboard | Charge Increase Multiplier").Value;
     }
 
     public void OnInteract(PlayerControllerB player)

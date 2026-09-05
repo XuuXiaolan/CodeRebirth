@@ -122,7 +122,7 @@ public class DriftwoodMenaceAI : CodeRebirthEnemyAI, IVisibleThreat
     {
         base.Start();
         creatureAnimator.SetFloat(RUNFUCKERRUNFloat, 1f);
-        List<string> enemyBlacklist = EnemyHandler.Instance.DriftwoodMenace!.GetConfig<string>("Driftwood Menace | Enemy Blacklist").Value.Split(',').Select(s => s.Trim()).ToList();
+        List<string> enemyBlacklist = EnemyHandler.Instance.DriftwoodMenace!.Configs.Get<string>("Driftwood Menace | Enemy Blacklist").Value.Split(',').Select(s => s.Trim()).ToList();
         foreach (string nameEntry in enemyBlacklist)
         {
             _enemyTargetBlacklist.UnionWith(LethalContent.Enemies.Values.Where(et => et.EnemyType.enemyName.Equals(nameEntry, System.StringComparison.OrdinalIgnoreCase)).Select(et => et.EnemyType.enemyName));

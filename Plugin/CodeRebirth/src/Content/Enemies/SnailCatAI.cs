@@ -74,7 +74,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
         if (!wasFake)
         {
             List<string> randomizedNames = new();
-            randomizedNames = EnemyHandler.Instance.SnailCat.GetConfig<string>("SnailCat | Possible SnailCat Names").Value.Split(';').Select(s => s.Trim()).ToList();
+            randomizedNames = EnemyHandler.Instance.SnailCat!.Configs.Get<string>("SnailCat | Possible SnailCat Names").Value.Split(';').Select(s => s.Trim()).ToList();
 
             if (randomizedNames.Count == 0)
             {

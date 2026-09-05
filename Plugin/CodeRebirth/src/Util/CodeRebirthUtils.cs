@@ -65,7 +65,7 @@ internal class CodeRebirthUtils : NetworkBehaviour
         if (MapObjectHandler.Instance.Merchant == null)
             return;
 
-        IEnumerable<string> enemyWithRarityDropRate = MapObjectHandler.Instance.Merchant.GetConfig<string>("Money | Enemy Drop Rates").Value.Split(',').Select(s => s.Trim());
+        IEnumerable<string> enemyWithRarityDropRate = MapObjectHandler.Instance.Merchant.Configs.Get<string>("Money | Enemy Drop Rates").Value.Split(',').Select(s => s.Trim());
         foreach (string enemyWithRarity in enemyWithRarityDropRate)
         {
             string[] split = enemyWithRarity.Split(':');

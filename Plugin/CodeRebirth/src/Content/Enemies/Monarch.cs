@@ -131,7 +131,7 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
     public override void Start()
     {
         base.Start();
-        _parallaxWingConfig = EnemyHandler.Instance.Monarch!.GetConfig<bool>("Monarch | Parallax Wing Effect");
+        _parallaxWingConfig = EnemyHandler.Instance.Monarch!.Configs.Get<bool>("Monarch | Parallax Wing Effect");
         wasParallaxOnLastFrame = _parallaxWingConfig.Value;
         skinnedMeshRenderers[0].sharedMaterials[0].SetInt(ParallaxSwitch, wasParallaxOnLastFrame ? 1 : 0);
 

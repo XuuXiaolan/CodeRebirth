@@ -359,7 +359,7 @@ public class TerminalGalAI : GalAI
         }
         if (galRandom.Next(500000) <= 3)
         {
-            specialSource.volume = UnlockableHandler.Instance.TerminalBot.GetConfig<float>("Terminal Gal | Special Song Volume").Value;
+            specialSource.volume = UnlockableHandler.Instance.TerminalBot!.Configs.Get<float>("Terminal Gal | Special Song Volume").Value;
             specialSource.Stop();
             specialSource.Play();
         }
