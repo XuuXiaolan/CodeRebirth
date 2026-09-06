@@ -25,23 +25,23 @@ namespace CodeRebirth.src;
 [BepInDependency("Zaggy1024.OpenBodyCams", BepInDependency.DependencyFlags.SoftDependency)]
 public class Plugin : BaseUnityPlugin
 {
-    internal new static ManualLogSource Logger = null!;
+    internal new static ManualLogSource Logger { get; private set; }
     internal static readonly Harmony _harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
-    internal static IngameKeybinds InputActionsInstance = null!;
-    public static ConfigFile configFile { get; private set; } = null!;
-    public static CodeRebirthConfig ModConfig { get; private set; } = null!; // prevent from accidently overriding the config
-    public static DuskMod Mod { get; private set; } = null!;
-    public static PersistentDataContainer PersistentDataContainer { get; private set; } = null!;
+    public static IngameKeybinds InputActionsInstance { get; private set; }
+    public static ConfigFile ConfigFile { get; private set; }
+    public static CodeRebirthConfig ModConfig { get; private set; } // prevent from accidently overriding the config
+    public static DuskMod Mod { get; private set; }
+    public static PersistentDataContainer PersistentDataContainer { get; private set; }
 
     internal class MainAssets(AssetBundle bundle) : AssetBundleLoader<MainAssets>(bundle)
     {
         [LoadFromBundle("CodeRebirthUtils.prefab")]
-        public GameObject UtilsPrefab { get; private set; } = null!;
+        public GameObject UtilsPrefab { get; private set; }
 
         [LoadFromBundle("EmptyNetworkObject.prefab")]
-        public GameObject EmptyNetworkObject { get; private set; } = null!;
+        public GameObject EmptyNetworkObject { get; private set; }
     }
-    internal static MainAssets Assets { get; private set; } = null!;
+    internal static MainAssets Assets { get; private set; }
 
     internal const ulong GLITCH_STEAM_ID = 9;
     internal const int BURN_HIT_ID = 745737;
@@ -52,10 +52,10 @@ public class Plugin : BaseUnityPlugin
         PersistentDataContainer = this.GetPersistentDataContainer();
         PersistentDataContainer.Set(NamespacedKey.From("code_rebirth", "last_version"), MyPluginInfo.PLUGIN_VERSION);
 
-        configFile = this.Config;
+        ConfigFile = this.Config;
         ModConfig = new CodeRebirthConfig
         {
-            ConfigExtendedLogging = configFile.Bind("Debug Options",
+            ConfigExtendedLogging = ConfigFile.Bind("Debug Options",
                                                 "Debug Mode | Extended Logging",
                                                 false,
                                                 "Whether ExtendedLogging is enabled.")
@@ -98,14 +98,14 @@ public class Plugin : BaseUnityPlugin
         // This should be ran before Network Prefabs are registered.
         InputActionsInstance = new IngameKeybinds();
 
-        ModConfig.InitMainCodeRebirthConfig(configFile);
+        ModConfig.InitMainCodeRebirthConfig(ConfigFile);
 
         AssetBundle mainBundle = AssetBundleUtils.LoadBundle(Assembly.GetExecutingAssembly(), "coderebirthasset");
         Assets = new MainAssets(mainBundle);
         Mod = DuskMod.RegisterMod(this, mainBundle);
         Mod.RegisterContentHandlers();
 
-        ModConfig.InitCodeRebirthConfig(configFile);
+        ModConfig.InitCodeRebirthConfig(ConfigFile);
 
         Logger.LogInfo("Registering CodeRebirth content.");
 

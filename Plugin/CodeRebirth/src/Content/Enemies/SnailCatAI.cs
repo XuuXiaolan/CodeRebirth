@@ -1,4 +1,3 @@
-
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -116,9 +115,13 @@ public class SnailCatAI : CodeRebirthEnemyAI
         _specialRenderer!.materials[0].SetFloat(ShiftHash, magicalHashNumber);
         detectLightInSurroundings = this.gameObject.AddComponent<DetectLightInSurroundings>();
         detectLightInSurroundings.OnLightValueChange.AddListener(OnLightValueChange);
-        playerHolding = playerControllerReference;
-        if (playerHolding != null && playerHolding.IsLocalPlayer)
+        if (playerControllerReference.IsValid)
         {
+            playerHolding = playerControllerReference;
+            if (!playerHolding.IsLocalPlayer)
+            {
+                return;
+            }
             CRUtilities.MakePlayerGrabObject(playerHolding, this.propScript);
         }
     }

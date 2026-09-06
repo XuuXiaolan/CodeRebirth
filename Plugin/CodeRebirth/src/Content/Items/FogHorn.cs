@@ -43,7 +43,7 @@ public class FogHorn : GrabbableObject
             return;
         }
 
-        StartOfRound.Instance.currentLevel.GetDawnInfo().ChangeWeatherTo(LevelWeatherType.None);
+        StartOfRound.Instance.currentLevel.DawnInfo.ChangeWeatherTo(LevelWeatherType.None);
         timesUsed.Value++;
         DoSucceedOrFailClientRpc(true);
     }

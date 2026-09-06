@@ -8,7 +8,7 @@ public static class SpikeTrapPatch
 {
     public static void Init()
     {
-        LethalContent.MapObjects.OnFreeze += FixSpikeRoofTrap;
+        LethalContent.MapObjects.OnFreezeWithContext += (_) => FixSpikeRoofTrap();
         On.SpikeRoofTrap.OnTriggerStay += SpikeRoofTrap_OnTrigger;
     }
 

@@ -133,7 +133,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
         RegisterContent("industrialfanassets", out IndustrialFan);
 
-        Plugin.ModConfig.ConfigFloraEnabled = Plugin.configFile.Bind("Flora Options",
+        Plugin.ModConfig.ConfigFloraEnabled = Plugin.ConfigFile.Bind("Flora Options",
                                             "Flora | Enabled",
                                             true,
                                             "Whether Flora is enabled.");

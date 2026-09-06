@@ -24,7 +24,7 @@ static class EnemyAIPatch
         On.EnemyAI.Update += EnemyAI_Update;
         On.EnemyAI.OnCollideWithPlayer += EnemyAI_OnCollideWithPlayer;
 
-        LethalContent.Enemies.OnFreeze += FixManeaterForSeamine;
+        LethalContent.Enemies.OnFreezeWithContext += (_) => FixManeaterForSeamine();
     }
 
     private static void FixManeaterForSeamine()
