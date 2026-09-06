@@ -14,9 +14,9 @@ public class RubberBand : GrabbableObject
     [field: SerializeField]
     public AudioSource AudioSource { get; private set; }
     [field: SerializeField]
-    public NetworkAudioSource NetworkAudioSource { get; private set; }
-    [field: SerializeField]
     public AudioClip RubberBandLaunchSFX { get; private set; }
+    [field: SerializeField]
+    public AudioSource StretchSource { get; private set; }
     // sort of like slime launcher from those minecraft mods, costs 1 health and sends you forward, try to get rid of the next incoming fall damage?
 
     private static readonly int ProgressAnimationHash = Animator.StringToHash("Progress"); // Float
@@ -65,12 +65,14 @@ public class RubberBand : GrabbableObject
         isBeingUsed = buttonDown;
         if (buttonDown)
         {
+            StretchSource.Play();
             playerHeldBy.isMovementHindered = Mathf.Clamp(1, 1, playerHeldBy.isMovementHindered);
             Animator.SetFloat(ProgressAnimationHash, 0f);
             Animator.SetTrigger(ChargingAnimationHash);
         }
         else
         {
+            StretchSource.Stop();
             _cooldown = 0.5f;
             playerHeldBy.isMovementHindered = Mathf.Clamp(playerHeldBy.isMovementHindered - 1, 0, playerHeldBy.isMovementHindered);
             playerHeldBy.sprintMeter = Mathf.Clamp(playerHeldBy.sprintMeter - 0.08f * _charging * 5f, 0, playerHeldBy.sprintMeter);
