@@ -121,45 +121,9 @@ public class DuckyTube : GrabbableObject, ICollisionProxy
         }
 
         HandleBounce();
-
+        HandleWater();
+        HandleQuicksand();
         previouslyHeldByPlayer = playerHeldBy;
-        bool _inWater = false;
-        foreach (Collider waterCollider in _waterColliders)
-        {
-            if (waterCollider.bounds.Contains(MainCollider.bounds.center))
-            {
-                _inWater = true;
-                break;
-            }
-        }
-
-        if (_inWater)
-        {
-            playerHeldBy.slipperyFloor = 8f;
-            playerHeldBy.slimeSlipAudio.mute = true;
-            if (!_wasWaterLastFrame)
-            {
-                playerHeldBy.isMovementHindered++;
-            }
-            playerHeldBy.ResetFallGravity();
-            if (playerHeldBy.isFaceUnderwaterOnServer)
-            {
-                playerHeldBy.externalForceAutoFade += 2f * Time.deltaTime * Vector3.up;
-            }
-            else if (_wasUnderwaterLastFrame)
-            {
-                playerHeldBy.externalForceAutoFade += 35f * Time.deltaTime * Vector3.up;
-            }
-        }
-        else if (_wasWaterLastFrame)
-        {
-            playerHeldBy.isMovementHindered--;
-            playerHeldBy.slipperyFloor = 0f;
-            playerHeldBy.slimeSlipAudio.mute = false;
-        }
-
-        _wasUnderwaterLastFrame = playerHeldBy.isFaceUnderwaterOnServer;
-        _wasWaterLastFrame = _inWater;
     }
 
     private void HandleBounce()
@@ -202,6 +166,57 @@ public class DuckyTube : GrabbableObject, ICollisionProxy
         }
 
         _lastColliderCenter = currentCenter;
+    }
+
+    private void HandleWater()
+    {
+        bool _inWater = false;
+        foreach (Collider waterCollider in _waterColliders)
+        {
+            if (waterCollider.bounds.Contains(MainCollider.bounds.center))
+            {
+                _inWater = true;
+                break;
+            }
+        }
+
+        if (_inWater)
+        {
+            playerHeldBy.slipperyFloor = 8f;
+            playerHeldBy.slimeSlipAudio.mute = true;
+            if (!_wasWaterLastFrame)
+            {
+                playerHeldBy.isMovementHindered++;
+                playerHeldBy.walkForce /= 2f;
+            }
+            playerHeldBy.ResetFallGravity();
+            if (playerHeldBy.isFaceUnderwaterOnServer)
+            {
+                playerHeldBy.externalForceAutoFade += 2f * Time.deltaTime * Vector3.up;
+            }
+            else if (_wasUnderwaterLastFrame)
+            {
+                playerHeldBy.externalForceAutoFade += 35f * Time.deltaTime * Vector3.up;
+            }
+        }
+        else if (_wasWaterLastFrame)
+        {
+            playerHeldBy.isMovementHindered--;
+            playerHeldBy.walkForce *= 2f;
+            playerHeldBy.slipperyFloor = 0f;
+            playerHeldBy.slimeSlipAudio.mute = false;
+        }
+
+        _wasUnderwaterLastFrame = playerHeldBy.isFaceUnderwaterOnServer;
+        _wasWaterLastFrame = _inWater;
+    }
+
+    private void HandleQuicksand()
+    {
+        if (playerHeldBy.playingQuickSpecialAnimation)
+        {
+            playerHeldBy.externalForceAutoFade += 35f * Time.deltaTime * Vector3.up;
+        }
     }
 
     public override void GrabItem()
