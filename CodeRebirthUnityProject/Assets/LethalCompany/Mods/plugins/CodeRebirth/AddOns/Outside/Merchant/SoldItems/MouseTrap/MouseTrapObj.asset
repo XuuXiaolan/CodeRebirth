@@ -19,17 +19,18 @@ MonoBehaviour:
   twoHandedAnimation: 1
   disableHandsOnWall: 1
   canBeGrabbedBeforeGameStart: 1
+  disallowUtilitySlot: 0
   weight: 1.047619
   itemIsTrigger: 0
   holdButtonUse: 1
   itemSpawnsOnGround: 1
   isConductiveMetal: 1
-  isScrap: 1
+  isScrap: 0
   creditsWorth: 0
   lockedInDemo: 0
   highestSalePercentage: 80
-  maxValue: 50
-  minValue: 25
+  maxValue: 0
+  minValue: 0
   spawnPrefab: {fileID: 6881070571324726386, guid: 3921e6d82f412d743a53e8d027e5d9e3,
     type: 3}
   requiresBattery: 0
@@ -61,5 +62,6 @@ MonoBehaviour:
   meshOffset: 0
   meshVariants: []
   materialVariants: []
+  clinkAudios: []
   usableInSpecialAnimations: 0
   canBeInspected: 0

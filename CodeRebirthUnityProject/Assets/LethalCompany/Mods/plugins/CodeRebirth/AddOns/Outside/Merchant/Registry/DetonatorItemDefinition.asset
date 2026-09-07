@@ -41,8 +41,15 @@ MonoBehaviour:
       _key: amethyst
     MathOperation: 0
     Weight: 5
-  <InteriorSpawnWeightsConfig>k__BackingField: []
+  <InteriorSpawnWeightsConfig>k__BackingField:
+  - NamespacedKey:
+      _namespace: lethal_company
+      _key: mineshaft
+    MathOperation: 0
+    Weight: 2
   <WeatherSpawnWeightsConfig>k__BackingField: []
+  <RouteSpawnWeightsConfig>k__BackingField: []
+  <GenerateSpawnWeightsConfig>k__BackingField: 1
   <IsScrap>k__BackingField: 1
   <GenerateScrapConfig>k__BackingField: 0
   <IsShopItem>k__BackingField: 0
@@ -50,6 +57,3 @@ MonoBehaviour:
   <Cost>k__BackingField: 0
   <GenerateDisableUnlockConfig>k__BackingField: 0
   <GenerateDisablePricingStrategyConfig>k__BackingField: 0
-  <MoonSpawnWeights>k__BackingField: Rocky=+5, Canyon=+5, Amethyst=+5
-  <InteriorSpawnWeights>k__BackingField: 
-  <WeatherSpawnWeights>k__BackingField: 
