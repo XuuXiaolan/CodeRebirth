@@ -40,7 +40,6 @@ public class DuckyTube : GrabbableObject
             il => il.MatchLdfld<PlayerControllerB>(nameof(PlayerControllerB.movementAudio)),
             il => il.MatchCall(out _),
             il => il.MatchLdfld<StartOfRound>(nameof(StartOfRound.footstepSurfaces)),
-            il => il.MatchCall(out _),
             il => il.MatchLdarg(0),
             il => il.MatchLdfld<PlayerControllerB>(nameof(PlayerControllerB.currentFootstepSurfaceIndex)),
             il => il.MatchLdelemRef()
@@ -65,27 +64,30 @@ public class DuckyTube : GrabbableObject
                 AudioClip clip = duckyTube.FootstepSqueakSounds[randomClipIndex];
                 player.movementAudio.PlayOneShot(clip, volume);
                 WalkieTalkie.TransmitOneShotAudio(player.movementAudio, clip, volume);
-                return true;
             }
-
-            return false;
         });
-        ILLabel gotoVanilla = cursor.DefineLabel();
-        cursor.Emit(OpCodes.Brfalse_S, gotoVanilla);
-        cursor.Emit(OpCodes.Ret);
-        cursor.MarkLabel(gotoVanilla);
         cursor.Emit(OpCodes.Ldarg_0);
     }
 
     private static void QuicksandTrigger_Awake(RuntimeILReferenceBag.FastDelegateInvokers.Action<QuicksandTrigger> orig, QuicksandTrigger self)
     {
         orig(self);
+        if (!self.isWater)
+        {
+            return;
+        }
+
         _waterColliders.Add(self.GetComponent<Collider>());
     }
 
     private static void QuicksandTrigger_OnDestroy(RuntimeILReferenceBag.FastDelegateInvokers.Action<QuicksandTrigger> orig, QuicksandTrigger self)
     {
         orig(self);
+        if (!self.isWater)
+        {
+            return;
+        }
+
         _waterColliders.Remove(self.GetComponent<Collider>());
     }
 
@@ -129,7 +131,7 @@ public class DuckyTube : GrabbableObject
             }
             else if (_wasUnderwaterLastFrame)
             {
-                playerHeldBy.externalForceAutoFade += 20f * Time.deltaTime * Vector3.up;
+                playerHeldBy.externalForceAutoFade += 35f * Time.deltaTime * Vector3.up;
             }
         }
         else if (_wasWaterLastFrame)
