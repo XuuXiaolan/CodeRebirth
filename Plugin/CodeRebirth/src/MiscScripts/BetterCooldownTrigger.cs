@@ -224,7 +224,7 @@ public class BetterCooldownTrigger : NetworkBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (!enabledScript) return;
-        if (triggerForPlayers && other.gameObject.layer == 3 && other.TryGetComponent(out PlayerControllerB player) && player.IsLocalPlayer)
+        if (triggerForPlayers && other.gameObject.layer == 3 && other.TryGetComponent(out PlayerControllerB player) && player.IsLocalPlayer())
         {
             if (playerCoroutineStatus.ContainsKey(player))
             {

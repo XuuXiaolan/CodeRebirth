@@ -61,7 +61,7 @@ public class FakeSnailCat : GrabbableObject
         GameNetworkManager.Instance.localPlayerController.SetItemInElevator(true, true, this);
 
         lastOwner = currentOwner;
-        if (lastOwner.IsLocalPlayer)
+        if (lastOwner.IsLocalPlayer())
         {
             CRUtilities.MakePlayerGrabObject(lastOwner, this);
         }

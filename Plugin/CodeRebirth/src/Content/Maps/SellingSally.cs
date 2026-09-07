@@ -77,7 +77,7 @@ public class SellingSally : NetworkBehaviour
 
     public void OnButtonInteract(PlayerControllerB player)
     {
-        if (!player.IsLocalPlayer) return;
+        if (!player.IsLocalPlayer()) return;
         PressButtonServerRpc();
     }
 
@@ -95,7 +95,7 @@ public class SellingSally : NetworkBehaviour
 
     public void OnBellInteract(PlayerControllerB player)
     {
-        if (!player.IsLocalPlayer) return;
+        if (!player.IsLocalPlayer()) return;
         RingBellServerRpc();
     }
 

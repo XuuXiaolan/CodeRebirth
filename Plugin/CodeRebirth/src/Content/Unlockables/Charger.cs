@@ -54,7 +54,7 @@ public class Charger : NetworkBehaviour
             return;
         }
 
-        if (playerInteracting == null || !playerInteracting.IsLocalPlayer)
+        if (playerInteracting == null || !playerInteracting.IsLocalPlayer())
         {
             return;
         }

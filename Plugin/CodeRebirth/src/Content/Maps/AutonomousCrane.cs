@@ -126,7 +126,7 @@ public class AutonomousCrane : NetworkBehaviour
 
     private void EditCraneStateTrigger(PlayerControllerB player)
     {
-        if (!player.IsLocalPlayer)
+        if (!player.IsLocalPlayer())
             return;
 
         if (!_craneIsActive)
@@ -435,7 +435,7 @@ public class AutonomousCrane : NetworkBehaviour
 
         player.KillPlayer(player.velocityLastFrame, true, CauseOfDeath.Crushing, 0, default);
 
-        if (!player.IsLocalPlayer)
+        if (!player.IsLocalPlayer())
         {
             return;
         }

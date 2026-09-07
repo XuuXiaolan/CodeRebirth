@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.ModCompats;
 using Dawn;
 using Dawn.Utils;
@@ -138,7 +137,7 @@ public class DebugStick : GrabbableObject
     public override void Update()
     {
         base.Update();
-        if (!isHeld || isPocketed || playerHeldBy == null || !playerHeldBy.IsLocalPlayer || playerHeldBy.inSpecialMenu || playerHeldBy.inTerminalMenu)
+        if (!isHeld || isPocketed || playerHeldBy == null || !playerHeldBy.IsLocalPlayer() || playerHeldBy.inSpecialMenu || playerHeldBy.inTerminalMenu)
         {
             _hologramCopies[GetCurrentHazard()].HologramObject.SetActive(false);
             return;

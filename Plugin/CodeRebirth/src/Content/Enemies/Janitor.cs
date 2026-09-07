@@ -641,7 +641,7 @@ public class Janitor : CodeRebirthEnemyAI, IVisibleThreat
         targetPlayer.disableMoveInput = false;
         targetPlayer.inAnimationWithEnemy = null;
         targetPlayer.DamagePlayer(15, true, true, CauseOfDeath.Gravity, 0, false, default);
-        if (targetPlayer.IsLocalPlayer)
+        if (targetPlayer.IsLocalPlayer())
         {
             DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.TrashTrashTrash);
         }

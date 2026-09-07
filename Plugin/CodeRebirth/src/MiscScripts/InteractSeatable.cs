@@ -49,7 +49,7 @@ public class InteractSeatable : InteractTrigger // I stole this from paco
     {
         onInteractEarlyOtherClients.AddListener(player =>
         {
-            if (player.IsLocalPlayer)
+            if (player.IsLocalPlayer())
             {
                 SetPlayerOnSeatServerRpc(player);
             }
@@ -76,7 +76,7 @@ public class InteractSeatable : InteractTrigger // I stole this from paco
 
     public void SetPlayerOnSeatLocal(PlayerControllerB playerSitting)
     {
-        if (playerSitting.IsLocalPlayer)
+        if (playerSitting.IsLocalPlayer())
         {
             PlayerExitPoint = playerSitting.visorCamera.transform.position;
             LocalPlayerSeated = true;

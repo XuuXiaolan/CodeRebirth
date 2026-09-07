@@ -12,7 +12,7 @@ public class KillAndCompactPlayer : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent(out PlayerControllerB player) && player.IsLocalPlayer)
+        if (other.TryGetComponent(out PlayerControllerB player) && player.IsLocalPlayer())
         {
             if (toby.compacting)
             {

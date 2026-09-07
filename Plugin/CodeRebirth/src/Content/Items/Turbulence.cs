@@ -79,7 +79,7 @@ public class Turbulence : CRWeapon
             HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
             HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
         }
-        if (!playerHeldBy.IsLocalPlayer)
+        if (!playerHeldBy.IsLocalPlayer())
         {
             return;
         }

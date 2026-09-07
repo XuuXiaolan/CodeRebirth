@@ -118,7 +118,7 @@ public class SnailCatAI : CodeRebirthEnemyAI
         if (playerControllerReference.IsValid)
         {
             playerHolding = playerControllerReference;
-            if (!playerHolding.IsLocalPlayer)
+            if (!playerHolding.IsLocalPlayer())
             {
                 return;
             }

@@ -92,7 +92,7 @@ public class DuckyTube : GrabbableObject
     public override void Update()
     {
         base.Update();
-        if (playerHeldBy == null)
+        if (playerHeldBy == null || playerHeldBy.)
         {
             if (_wasWaterLastFrame && previouslyHeldByPlayer != null)
             {
@@ -129,7 +129,7 @@ public class DuckyTube : GrabbableObject
             }
             else if (_wasUnderwaterLastFrame)
             {
-                playerHeldBy.externalForceAutoFade += 15f * Time.deltaTime * Vector3.up;
+                playerHeldBy.externalForceAutoFade += 20f * Time.deltaTime * Vector3.up;
             }
         }
         else if (_wasWaterLastFrame)

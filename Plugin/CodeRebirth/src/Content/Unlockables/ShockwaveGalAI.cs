@@ -132,13 +132,13 @@ public class ShockwaveGalAI : GalAI
 
     private void OnChestInteract(PlayerControllerB playerInteracting)
     {
-        if (!playerInteracting.IsLocalPlayer || playerInteracting != ownerPlayer) return;
+        if (!playerInteracting.IsLocalPlayer() || playerInteracting != ownerPlayer) return;
         DropAllHeldItemsServerRpc();
     }
 
     private void OnHeadInteract(PlayerControllerB playerInteracting)
     {
-        if (!playerInteracting.IsLocalPlayer || playerInteracting != ownerPlayer) return;
+        if (!playerInteracting.IsLocalPlayer() || playerInteracting != ownerPlayer) return;
         if ((UnityEngine.Random.Range(0f, 1f) < 0.9f || catPosing) && headPatCoroutine == null) StartPetAnimationServerRpc();
         else if (!catPosing) StartCatPoseAnimationServerRpc();
     }
@@ -519,7 +519,7 @@ public class ShockwaveGalAI : GalAI
     {
         currentlyAttacking = false;
         chargeCount--;
-        if (chargeCount <= 0 && ownerPlayer != null && ownerPlayer.IsLocalPlayer)
+        if (chargeCount <= 0 && ownerPlayer != null && ownerPlayer.IsLocalPlayer())
         {
             HUDManager.Instance.DisplayTip("WARNING", "DELILAH ATTACK CHARGES EXHAUSTED", true);
         }

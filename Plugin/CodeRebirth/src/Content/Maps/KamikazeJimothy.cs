@@ -49,7 +49,7 @@ public class KamikazeJimothy : NetworkBehaviour
 
     private void PlaceHeadTrigger(PlayerControllerB playerControllerB)
     {
-        if (!playerControllerB.IsLocalPlayer || playerControllerB.currentlyHeldObjectServer == null || playerControllerB.currentlyHeldObjectServer is not JimBall)
+        if (!playerControllerB.IsLocalPlayer() || playerControllerB.currentlyHeldObjectServer == null || playerControllerB.currentlyHeldObjectServer is not JimBall)
             return;
 
         playerControllerB.DespawnHeldObject();

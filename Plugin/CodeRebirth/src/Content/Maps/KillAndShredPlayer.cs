@@ -10,7 +10,7 @@ public class KillAndShredPlayer : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent(out PlayerControllerB player) && player.IsLocalPlayer)
+        if (other.TryGetComponent(out PlayerControllerB player) && player.IsLocalPlayer())
         {
             player.KillPlayer(player.transform.position, false, CauseOfDeath.Crushing, 0, default);
             sarah.TryFeedItemServerRpc(true, 10);

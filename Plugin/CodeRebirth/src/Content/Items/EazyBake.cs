@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using CodeRebirth.src.MiscScripts;
+using Dawn.Utils;
 using GameNetcodeStuff;
 using UnityEngine;
 
@@ -67,7 +68,7 @@ public class EazyBake : GrabbableObject
     {
         base.Update();
 
-        if (playerHeldBy != null && playerHeldBy.IsLocalPlayer && playerHeldBy.isHoldingInteract && !isPocketed && playerHeldBy.hoveringOverTrigger != null && playerHeldBy.hoveringOverTrigger.animationString == "SA_ChargeItem" && playerHeldBy.isHoldingInteract)
+        if (playerHeldBy != null && playerHeldBy.IsLocalPlayer() && playerHeldBy.isHoldingInteract && !isPocketed && playerHeldBy.hoveringOverTrigger != null && playerHeldBy.hoveringOverTrigger.animationString == "SA_ChargeItem" && playerHeldBy.isHoldingInteract)
         {
             playerHeldBy.hoveringOverTrigger.Interact(playerHeldBy.thisPlayerBody);
         }
@@ -148,7 +149,7 @@ public class EazyBake : GrabbableObject
                     player.movementSpeed /= HinderedMultiplier;
                 }
 
-                if (!player.IsLocalPlayer)
+                if (!player.IsLocalPlayer())
                 {
                     continue;
                 }

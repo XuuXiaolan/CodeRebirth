@@ -51,7 +51,7 @@ public class BoomTrap : BearTrap
         CRUtilities.CreateExplosion(transform.position, true, 400, 0f, 4f, 10, playerSnapped, null, 50f);
         boomSource.PlayOneShot(explosionSound);
         yield return new WaitForSeconds(explosionSound.length);
-        if (playerCaught == null && playerSnapped != null && !playerSnapped.isPlayerDead && playerSnapped.IsLocalPlayer)
+        if (playerCaught == null && playerSnapped != null && !playerSnapped.isPlayerDead && playerSnapped.IsLocalPlayer())
         {
             DuskModContent.Achievements.TryTriggerAchievement(CodeRebirthAchievementKeys.ShortFuse);
         }

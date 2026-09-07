@@ -47,7 +47,7 @@ public class BellCrabGalAI : NetworkBehaviour
 
     private void SwitchPose(PlayerControllerB playerInteracting)
     {
-        if (playerInteracting == null || !playerInteracting.IsLocalPlayer) return;
+        if (playerInteracting == null || !playerInteracting.IsLocalPlayer()) return;
         IncreaseOrDecreaseStageServerRpc();
     }
 

@@ -39,7 +39,7 @@ public class ShreddingSarah : NetworkSingleton<ShreddingSarah>
 
     public void TryFeedItem(PlayerControllerB player)
     {
-        if (!player.IsLocalPlayer || player.currentlyHeldObjectServer == null)
+        if (!player.IsLocalPlayer() || player.currentlyHeldObjectServer == null)
             return;
 
         int value = 0;

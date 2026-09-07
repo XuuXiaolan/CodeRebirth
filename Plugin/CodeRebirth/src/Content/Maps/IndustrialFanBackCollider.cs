@@ -11,7 +11,7 @@ public class IndustrialFanBackCollider : MonoBehaviour
     private void OnTriggerStay(Collider other)
     {
         PlayerControllerB? player = other.gameObject.GetComponent<PlayerControllerB>();
-        if (player == null || !player.IsLocalPlayer)
+        if (player == null || !player.IsLocalPlayer())
             return;
 
         if (industrialFan.IsObstructed(other.transform.position) || Vector3.Distance(other.transform.position, industrialFan.fanTransform.position) > 20f)

@@ -68,7 +68,7 @@ public class Mountaineer : CRWeapon
 
     public void OnSurfaceHitEvent(int surfaceID)
     {
-        if (!playerHeldBy.IsLocalPlayer) return;
+        if (!playerHeldBy.IsLocalPlayer()) return;
         if (StartOfRound.Instance.inShipPhase || !StartOfRound.Instance.shipHasLanded || StartOfRound.Instance.shipIsLeaving)
             return;
 
@@ -96,7 +96,7 @@ public class Mountaineer : CRWeapon
             return;
         }*/ // doesn't work too well :/
 
-        if (!playerHeldBy.IsLocalPlayer)
+        if (!playerHeldBy.IsLocalPlayer())
         {
             grabbable = false;
             return;

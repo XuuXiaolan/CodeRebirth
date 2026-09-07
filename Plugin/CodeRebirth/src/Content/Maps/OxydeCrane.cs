@@ -54,7 +54,7 @@ public class OxydeCrane : NetworkBehaviour
 
     public void DropInteract(PlayerControllerB player)
     {
-        if (!player.IsLocalPlayer || alreadyDropped)
+        if (!player.IsLocalPlayer() || alreadyDropped)
         {
             return;
         }

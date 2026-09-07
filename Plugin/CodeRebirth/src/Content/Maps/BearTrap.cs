@@ -243,7 +243,7 @@ public class BearTrap : CodeRebirthHazard, IHittable
             trapAudioSource.PlayOneShot(poppingTireSound);
             SetWheelFriction(wheelProxy);
         }
-        else if (other.gameObject.layer == 3 && other.TryGetComponent(out PlayerControllerB player) && player.IsLocalPlayer)
+        else if (other.gameObject.layer == 3 && other.TryGetComponent(out PlayerControllerB player) && player.IsLocalPlayer())
         {
             TriggerTrapServerRpc(player);
         }
@@ -392,7 +392,7 @@ public class BearTrap : CodeRebirthHazard, IHittable
 
     public void ReleaseTrap(PlayerControllerB player)
     {
-        if (!player.IsLocalPlayer)
+        if (!player.IsLocalPlayer())
         {
             return;
         }

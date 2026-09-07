@@ -99,7 +99,7 @@ public class CRPlanetUnlocker : GrabbableObject
             yield return new WaitForSeconds(1f);
         }
 
-        if (!playerHeldBy.IsLocalPlayer && (isHeld || isPocketed))
+        if (!playerHeldBy.IsLocalPlayer() && (isHeld || isPocketed))
         {
             yield break;
         }

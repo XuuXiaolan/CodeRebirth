@@ -146,7 +146,7 @@ public class Ceasefire : GrabbableObject
             rotationDelta *= 1 - evaluatedValue;
             _currentBarrelRotationX += rotationDelta;
             _ceasefireBarrel.transform.localEulerAngles = new Vector3(-280 + _currentBarrelRotationX, 270f, 90f);
-            if (playerHeldBy != null && playerHeldBy.IsLocalPlayer && _particleSystemsGO.activeSelf)
+            if (playerHeldBy != null && playerHeldBy.IsLocalPlayer() && _particleSystemsGO.activeSelf)
             {
                 float multiplierOnDirection = 20f * (playerHeldBy.isCrouching ? 0.5f : 1f) * Time.deltaTime * (rotationDelta / 35f);
                 int randomDirection = UnityEngine.Random.Range(0, 2);
@@ -263,7 +263,7 @@ public class Ceasefire : GrabbableObject
             _damageInterval += Time.deltaTime;
             return;
         }
-        if (playerHeldBy.IsLocalPlayer)
+        if (playerHeldBy.IsLocalPlayer())
         {
             HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
         }

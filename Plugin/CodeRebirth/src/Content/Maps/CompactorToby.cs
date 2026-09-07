@@ -63,7 +63,7 @@ public class CompactorToby : NetworkBehaviour, IHittable
         if (compacting)
             return;
 
-        if (!player.IsLocalPlayer)
+        if (!player.IsLocalPlayer())
             return;
 
         int valueOfItems = 0;

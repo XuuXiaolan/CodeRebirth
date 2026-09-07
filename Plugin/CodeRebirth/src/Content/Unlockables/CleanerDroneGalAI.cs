@@ -26,7 +26,7 @@ public class CleanerDroneGalAI : NetworkBehaviour
 
     private void DropASmoke(PlayerControllerB playerInteracting)
     {
-        if (playerInteracting == null || !playerInteracting.IsLocalPlayer) return;
+        if (playerInteracting == null || !playerInteracting.IsLocalPlayer()) return;
         SpawnTzpServerRpc();
     }
 
@@ -42,7 +42,7 @@ public class CleanerDroneGalAI : NetworkBehaviour
 
     private void SwitchPose(PlayerControllerB playerInteracting)
     {
-        if (playerInteracting == null || !playerInteracting.IsLocalPlayer) return;
+        if (playerInteracting == null || !playerInteracting.IsLocalPlayer()) return;
         IncreaseOrDecreaseStageServerRpc();
     }
 

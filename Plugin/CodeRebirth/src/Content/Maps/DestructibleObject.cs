@@ -49,7 +49,7 @@ public class DestructibleObject : NetworkBehaviour, IHittable
         if (!_isDestructible)
             return;
 
-        if (other.gameObject.TryGetComponent(out PlayerControllerB player) && player.IsLocalPlayer)
+        if (other.gameObject.TryGetComponent(out PlayerControllerB player) && player.IsLocalPlayer())
         {
             player.DamagePlayer(_playerDamageAmount, true, true, CauseOfDeath.Unknown, 0, false, (player.transform.position - this.transform.position).normalized * _forceApplied);
             DestroyDestructibleObjectServerRpc();

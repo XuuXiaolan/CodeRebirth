@@ -348,7 +348,7 @@ public class Puppeteer : CodeRebirthEnemyAI
     {
         teleporting = true;
         targetPlayerToNeedle = StartOfRound.Instance.allPlayerScripts[playerIndex];
-        if (targetPlayerToNeedle.IsLocalPlayer)
+        if (targetPlayerToNeedle.IsLocalPlayer())
         {
             creatureSFX.PlayOneShot(grabPlayerSound);
         }

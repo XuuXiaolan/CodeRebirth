@@ -74,7 +74,7 @@ public class CRUtilities
         playerControllerB.velocityLastFrame = Vector3.zero;
         StartOfRound.Instance.allPlayerScripts[playerObj].TeleportPlayer(teleportPos);
         StartOfRound.Instance.allPlayerScripts[playerObj].beamOutParticle.Play();
-        if (playerControllerB.IsLocalPlayer)
+        if (playerControllerB.IsLocalPlayer())
         {
             HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
         }
@@ -254,7 +254,7 @@ public class CRUtilities
 
             if (attacker != null)
             {
-                if (attacker.IsLocalPlayer)
+                if (attacker.IsLocalPlayer())
                 {
                     enemy.mainScript.HitEnemyOnLocalClient(enemyAICollisionDetectToDamage[enemy].damage, playerWhoHit: attacker);
                 }

@@ -166,7 +166,7 @@ static class PlayerControllerBPatch
     private static void PlayerControllerB_Interact_performed(On.GameNetcodeStuff.PlayerControllerB.orig_Interact_performed orig, PlayerControllerB self, InputAction.CallbackContext context)
     {
         orig(self, context);
-        if (!self.IsLocalPlayer)
+        if (!self.IsLocalPlayer())
             return;
 
         Plugin.ExtendedLogging($"{self.playerUsername} pressed interact.");
@@ -176,7 +176,7 @@ static class PlayerControllerBPatch
     private static void PlayerControllerB_Jump_performed(On.GameNetcodeStuff.PlayerControllerB.orig_Jump_performed orig, PlayerControllerB self, InputAction.CallbackContext context)
     {
         orig(self, context);
-        if (!self.IsLocalPlayer)
+        if (!self.IsLocalPlayer())
             return;
 
         Plugin.ExtendedLogging($"{self.playerUsername} pressed jump.");
@@ -185,7 +185,7 @@ static class PlayerControllerBPatch
 
     private static void PlayerControllerB_Update(On.GameNetcodeStuff.PlayerControllerB.orig_Update orig, PlayerControllerB self)
     {
-        if (!self.IsLocalPlayer && self.IsPseudoDead())
+        if (!self.IsLocalPlayer() && self.IsPseudoDead())
         {
             // Plugin.ExtendedLogging($"Setting player layer to 0.");
             self.gameObject.layer = 0;
@@ -256,7 +256,7 @@ static class PlayerControllerBPatch
     private static void PlayerControllerB_LateUpdate(On.GameNetcodeStuff.PlayerControllerB.orig_LateUpdate orig, PlayerControllerB self)
     {
         orig(self);
-        if (!self.IsLocalPlayer && self.IsPseudoDead())
+        if (!self.IsLocalPlayer() && self.IsPseudoDead())
         {
             // Plugin.ExtendedLogging($"Setting player layer to 0.");
             self.gameObject.layer = 0;
@@ -270,7 +270,7 @@ static class PlayerControllerBPatch
         if (self.ContainsCRPlayerData() && ((self.currentlyHeldObjectServer != null && self.currentlyHeldObjectServer.itemProperties != null && !self.currentlyHeldObjectServer.itemProperties.requiresBattery) || (self.currentlyHeldObjectServer == null)))
         {
             Hoverboard? hoverboard = self.TryGetHoverboardRiding();
-            if (hoverboard != null && hoverboard.playerControlling != null && hoverboard.playerControlling == self && self.IsLocalPlayer)
+            if (hoverboard != null && hoverboard.playerControlling != null && hoverboard.playerControlling == self && self.IsLocalPlayer())
             {
                 HUDManager.Instance.batteryMeter.fillAmount = hoverboard.insertedBattery.charge / 1.3f;
                 HUDManager.Instance.batteryMeter.gameObject.SetActive(true);

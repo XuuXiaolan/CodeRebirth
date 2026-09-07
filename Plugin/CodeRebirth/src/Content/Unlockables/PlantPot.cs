@@ -93,7 +93,7 @@ public class PlantPot : NetworkBehaviour // Add saving of stages to this thing
 
     private void OnInteract(PlayerControllerB playerInteracting)
     {
-        if (playerInteracting == null || !playerInteracting.IsLocalPlayer) return;
+        if (playerInteracting == null || !playerInteracting.IsLocalPlayer()) return;
         if (playerInteracting.currentlyHeldObjectServer != null && playerInteracting.currentlyHeldObjectServer.itemProperties.itemName == "Wooden Seed")
         {
             StartPlantGrowthServerRpc(new NetworkObjectReference(playerInteracting.currentlyHeldObjectServer.NetworkObject));

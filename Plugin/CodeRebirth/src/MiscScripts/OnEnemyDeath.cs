@@ -34,7 +34,7 @@ public class OnEnemyDeath : MonoBehaviour
 
         _onDeath.Invoke();
 
-        if (!additionalEnemyData.KilledByPlayer || additionalEnemyData.PlayerThatLastHit == null || !additionalEnemyData.PlayerThatLastHit.IsLocalPlayer)
+        if (!additionalEnemyData.KilledByPlayer || additionalEnemyData.PlayerThatLastHit == null || !additionalEnemyData.PlayerThatLastHit.IsLocalPlayer())
             return;
 
         _achievementReference.Resolve().TryCompleteAchievement();
