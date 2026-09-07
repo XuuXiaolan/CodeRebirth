@@ -170,18 +170,19 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
     public void RegisterFlora(GameObject prefab, FloraTag tag, string configString)
     {
-        DawnLib.DefineMapObject(NamespacedKey<DawnMapObjectInfo>.From("code_rebirth", prefab.name), prefab, builder =>
+        string spawnableTag = tag switch
+        {
+            FloraTag.Desert => "Desert",
+            FloraTag.Snow => "Snow",
+            FloraTag.Grass => "Grass",
+            _ => throw new ArgumentOutOfRangeException(nameof(tag), tag, null)
+        };
+
+        DawnLib.DefineMapObject(NamespacedKey<DawnMapObjectInfo>.From("code_rebirth", $"{prefab.name}_{spawnableTag}"), prefab, builder =>
         {
             builder.DefineOutside(outsideBuilder =>
             {
-                string spawnableTags = tag switch
-                {
-                    FloraTag.Desert => "Desert",
-                    FloraTag.Snow => "Snow",
-                    FloraTag.Grass => "Grass",
-                    _ => throw new ArgumentOutOfRangeException(nameof(tag), tag, null)
-                };
-                outsideBuilder.OverrideSpawnableFloorTags([spawnableTags]);
+                outsideBuilder.OverrideSpawnableFloorTags([spawnableTag]);
                 outsideBuilder.OverrideAlignWithTerrain(true);
                 outsideBuilder.OverrideObjectWidth(0);
 
