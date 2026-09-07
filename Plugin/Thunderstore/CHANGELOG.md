@@ -1,11 +1,18 @@
 # v1.6.10
 
+- New equipment : Ducky Tube
+- Ducky Tube, Mouse trap and Walkie Yellie added as store items.
+- Adjusted some scrap spawn weights.
+- Mouse trap and rubber band can now be used in the utility slot.
 - Fixed BearTrap weights not existing anymore.
 - Rubber band now requires stamina to use, more stamina is used the more you charge it.
 - You can't use a rubber band whilst exhausted now.
-- Gave it a launch sound.
 - BearTraps can now be hit by lightning strikes (they were added to the random lightning positions).
 - Optimised BearTrap spawning a bit.
+- Switched to Dawnlib experimental
+
+
+
 
 ## v1.6.9
 
