@@ -172,7 +172,7 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
     {
         string spawnableTag = tag switch
         {
-            FloraTag.Desert => "Desert",
+            FloraTag.Desert => "Gravel",
             FloraTag.Snow => "Snow",
             FloraTag.Grass => "Grass",
             _ => throw new ArgumentOutOfRangeException(nameof(tag), tag, null)
