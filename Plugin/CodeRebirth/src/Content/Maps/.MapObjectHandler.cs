@@ -3,6 +3,7 @@ using UnityEngine;
 using Dawn;
 using Dusk;
 using CodeRebirth.src.Content.Moons;
+using System;
 
 namespace CodeRebirth.src.Content.Maps;
 
@@ -169,6 +170,28 @@ public class MapObjectHandler : ContentHandler<MapObjectHandler>
 
     public void RegisterFlora(GameObject prefab, FloraTag tag, string configString)
     {
+        DawnLib.DefineMapObject(NamespacedKey<DawnMapObjectInfo>.From("code_rebirth", prefab.name), prefab, builder =>
+        {
+            builder.DefineOutside(outsideBuilder =>
+            {
+                string spawnableTags = tag switch
+                {
+                    FloraTag.Desert => "Desert",
+                    FloraTag.Snow => "Snow",
+                    FloraTag.Grass => "Grass",
+                    _ => throw new ArgumentOutOfRangeException(nameof(tag), tag, null)
+                };
+                outsideBuilder.OverrideSpawnableFloorTags([spawnableTags]);
+                outsideBuilder.OverrideAlignWithTerrain(true);
+                outsideBuilder.OverrideObjectWidth(0);
+
+                outsideBuilder.SetWeights(weightProfileBuilder =>
+                {
+                    MapObjectSpawnMechanics floraMapObjectSpawnMechanics = new MapObjectSpawnMechanics(() => configString, () => string.Empty, () => true);
+                    weightProfileBuilder.AddSource(floraMapObjectSpawnMechanics);
+                });
+            });
+        });
         /*try
         {
             MapObjectSpawnMechanics floraMapObjectSpawnMechanics = new MapObjectSpawnMechanics(configString, string.Empty, true);
