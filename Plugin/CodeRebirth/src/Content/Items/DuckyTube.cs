@@ -92,7 +92,7 @@ public class DuckyTube : GrabbableObject
     public override void Update()
     {
         base.Update();
-        if (playerHeldBy == null || playerHeldBy.)
+        if (playerHeldBy == null)
         {
             if (_wasWaterLastFrame && previouslyHeldByPlayer != null)
             {
