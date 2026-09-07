@@ -5,10 +5,12 @@ using MonoMod.Cil;
 using MonoMod.RuntimeDetour;
 using UnityEngine;
 using Mono.Cecil.Cil;
+using CodeRebirth.src.MiscScripts;
+using Dawn.Utils;
 
 namespace CodeRebirth.src.Content.Items;
 
-public class DuckyTube : GrabbableObject
+public class DuckyTube : GrabbableObject, ICollisionProxy
 {
     [field: SerializeField]
     public List<AudioClip> BumpSounds { get; private set; }
@@ -17,12 +19,16 @@ public class DuckyTube : GrabbableObject
     [field: SerializeField]
     public AudioSource MainAudioSource { get; private set; }
     [field: SerializeField]
-    public Collider MainCollider { get; private set; }
+    public SphereCollider MainCollider { get; private set; }
+    [field: SerializeField]
+    public float BounceMultiplier { get; private set; } = 1f;
 
     private static List<Collider> _waterColliders = new();
     private PlayerControllerB? previouslyHeldByPlayer;
     private bool _wasWaterLastFrame;
     private bool _wasUnderwaterLastFrame;
+    private Vector3 _lastColliderCenter;
+    private bool _resetBouncePosition;
 
     internal static void Init()
     {
@@ -91,6 +97,12 @@ public class DuckyTube : GrabbableObject
         _waterColliders.Remove(self.GetComponent<Collider>());
     }
 
+    public override void Start()
+    {
+        base.Start();
+        MainCollider.excludeLayers = 8;
+    }
+
     public override void Update()
     {
         base.Update();
@@ -100,11 +112,15 @@ public class DuckyTube : GrabbableObject
             {
                 previouslyHeldByPlayer.isMovementHindered--;
                 previouslyHeldByPlayer.slipperyFloor = 0f;
+                previouslyHeldByPlayer.slimeSlipAudio.mute = false;
             }
             _wasUnderwaterLastFrame = false;
             _wasWaterLastFrame = false;
+            _resetBouncePosition = false;
             return;
         }
+
+        HandleBounce();
 
         previouslyHeldByPlayer = playerHeldBy;
         bool _inWater = false;
@@ -120,6 +136,7 @@ public class DuckyTube : GrabbableObject
         if (_inWater)
         {
             playerHeldBy.slipperyFloor = 8f;
+            playerHeldBy.slimeSlipAudio.mute = true;
             if (!_wasWaterLastFrame)
             {
                 playerHeldBy.isMovementHindered++;
@@ -138,22 +155,67 @@ public class DuckyTube : GrabbableObject
         {
             playerHeldBy.isMovementHindered--;
             playerHeldBy.slipperyFloor = 0f;
+            playerHeldBy.slimeSlipAudio.mute = false;
         }
 
         _wasUnderwaterLastFrame = playerHeldBy.isFaceUnderwaterOnServer;
         _wasWaterLastFrame = _inWater;
     }
 
+    private void HandleBounce()
+    {
+        Vector3 currentCenter = MainCollider.bounds.center;
+        if (_resetBouncePosition)
+        {
+            _resetBouncePosition = false;
+            _lastColliderCenter = currentCenter;
+            return;
+        }
+
+        Vector3 displacement = currentCenter - _lastColliderCenter;
+        if (displacement.sqrMagnitude <= 0.000001f)
+        {
+            _lastColliderCenter = currentCenter;
+            return;
+        }
+
+        Vector3 direction = displacement.normalized;
+        float distance = displacement.magnitude;
+        float radius = MainCollider.radius * Mathf.Max(
+            Mathf.Abs(MainCollider.transform.lossyScale.x),
+            Mathf.Abs(MainCollider.transform.lossyScale.y),
+            Mathf.Abs(MainCollider.transform.lossyScale.z));
+
+        if (Physics.SphereCast(_lastColliderCenter, radius, direction, out RaycastHit hit, distance, MoreLayerMasks.CollidersAndRoomAndDefaultAndInteractableAndRailingAndEnemiesAndTerrainAndHazardAndVehicleMask, QueryTriggerInteraction.Ignore))
+        {
+            if (hit.collider != MainCollider)
+            {
+                Vector3 velocity = displacement / Time.deltaTime;
+                float intoSurfaceSpeed = Mathf.Clamp(Vector3.Dot(velocity, -hit.normal), 0f, 100f);
+
+                if (intoSurfaceSpeed > 0f)
+                {
+                    playerHeldBy.externalForceAutoFade += hit.normal * intoSurfaceSpeed * (1f + BounceMultiplier);
+                    MainAudioSource.PlayOneShot(BumpSounds[UnityEngine.Random.Range(0, BumpSounds.Count)]);
+                }
+            }
+        }
+
+        _lastColliderCenter = currentCenter;
+    }
+
     public override void GrabItem()
     {
         base.GrabItem();
         parentObject = playerHeldBy.lowerTorsoCostumeContainerBeltBagOffset.transform;
+        _resetBouncePosition = true;
     }
 
     public override void EquipItem()
     {
         base.EquipItem();
         parentObject = playerHeldBy.lowerTorsoCostumeContainerBeltBagOffset.transform;
+        _resetBouncePosition = true;
     }
 
     public override void PocketItem()
@@ -163,7 +225,9 @@ public class DuckyTube : GrabbableObject
             playerHeldBy.IsInspectingItem = false;
             playerHeldBy.equippedUsableItemQE = false;
         }
+
         isPocketed = true;
         parentObject = playerHeldBy.lowerTorsoCostumeContainerBeltBagOffset.transform;
+        _resetBouncePosition = true;
     }
 }
