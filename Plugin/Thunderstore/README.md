@@ -531,8 +531,6 @@ Add lush foliage to any moon. Flora adjusts its coloration to the ground type.
 
 <https://freesfx.co.uk>
 
-<https://www.pacdv.com>
-
 <https://getsoundly.com>
 
 ### Individual Sounds
