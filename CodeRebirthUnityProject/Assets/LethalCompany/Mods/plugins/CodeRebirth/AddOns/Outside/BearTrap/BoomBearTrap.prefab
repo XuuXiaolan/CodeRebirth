@@ -238,6 +238,7 @@ GameObject:
   - component: {fileID: 7940777223988309850}
   - component: {fileID: 5826837753776003054}
   - component: {fileID: 6455568411290944019}
+  - component: {fileID: 8468339926140548993}
   m_Layer: 21
   m_Name: BoomBearTrap
   m_TagString: Untagged
@@ -341,6 +342,7 @@ MonoBehaviour:
   m_Script: {fileID: -469917719, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lightningTarget: {fileID: 8468339926140548993}
   trapAnimator: {fileID: 5826837753776003054}
   trapCollider: {fileID: 7976517917240362025}
   delayBeforeReset: 99
@@ -353,6 +355,21 @@ MonoBehaviour:
   boomSource: {fileID: 1665079191157864197}
   explosionSound: {fileID: 8300000, guid: 2e586c3b492ecc44bae43651e4a6b2e5, type: 3}
   hissSound: {fileID: 8300000, guid: 11ee64ce6f2df2245a3af958433a072f, type: 3}
+--- !u!114 &8468339926140548993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2600753275211172565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1733039992, guid: 7172f1490231bfd4598274026d5a7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <OnLightningStrike>k__BackingField:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &3238106661850787827
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,12 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using CodeRebirth.src.MiscScripts;
 using Dawn;
 using Dawn.Utils;
 using GameNetcodeStuff;
-using Mono.Cecil.Cil;
-using MonoMod.Cil;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -14,6 +12,7 @@ namespace CodeRebirth.src.Content.Maps;
 
 public class BearTrap : CodeRebirthHazard, IHittable
 {
+    public LightningTarget lightningTarget = null!;
     public Animator trapAnimator = null!;
     public Collider trapCollider = null!;
     public float delayBeforeReset = 3.0f;
@@ -36,94 +35,13 @@ public class BearTrap : CodeRebirthHazard, IHittable
 
     private static readonly List<BearTrap> Instances = new();
 
-    internal static void Init()
-    {
-        IL.StormyWeather.LightningStrikeRandom += AddBearTrapsToPossibleNodes;
-        On.StormyWeather.BeginDay += AddBearTrapsToPossibleNodes;
-    }
-
-    // TODO: adjust for beartraps only attracting lightning or being added to list if they're triggered?
-    private static void AddBearTrapsToPossibleNodes(On.StormyWeather.orig_BeginDay orig, StormyWeather self)
-    {
-        orig(self);
-        List<GameObject> newList = self.outsideNodes.ToList();
-        newList.AddRange(Instances.Select(x => x.gameObject));
-        self.outsideNodes = newList.ToArray();
-    }
-
-    private static void AddBearTrapsToPossibleNodes(ILContext il)
-    {
-        ILCursor cursor = new(il);
-        if (!cursor.TryGotoNext(
-            MoveType.Before,
-            il => il.MatchLdarg(0),
-            il => il.MatchLdfld<StormyWeather>(nameof(StormyWeather.seed)),
-            il => il.MatchLdcI4(0),
-            il => il.MatchLdarg(0),
-            il => il.MatchLdfld<StormyWeather>(nameof(StormyWeather.outsideNodes)),
-            il => il.MatchLdlen(),
-            il => il.MatchConvI4(),
-            il => il.MatchCallvirt(out _),
-            il => il.MatchStloc(1)
-        ))
-        {
-            Plugin.Logger.LogWarning($"Could not match StormyWeather.LightningStrikeRandom (1), Meaning bear traps will not be targetted for lightning strikes.");
-            return;
-        }
-
-        cursor.Emit(OpCodes.Ldarg_0);
-        cursor.EmitLdfld<StormyWeather>(nameof(StormyWeather.outsideNodes));
-        cursor.EmitDelegate((GameObject[] outsideNodes) =>
-        {
-            if (Instances.Count <= 0)
-            {
-                return;
-            }
-
-            List<GameObject> newList = outsideNodes.ToList();
-            newList.AddRange(Instances.Select(x => x.gameObject));
-            newList.ToArray();
-        });
-
-        if (!cursor.TryGotoNext(
-            MoveType.After,
-            il => il.MatchCall(out _),
-            il => il.MatchLdloc(0),
-            il => il.MatchLdcR4(15),
-            il => il.MatchLdarg(0),
-            il => il.MatchLdfld<StormyWeather>(nameof(StormyWeather.navHit)),
-            il => il.MatchLdarg(0),
-            il => il.MatchLdfld<StormyWeather>(nameof(StormyWeather.seed)),
-            il => il.MatchLdcI4(out _),
-            il => il.MatchLdcR4(1),
-            il => il.MatchCallvirt(out _),
-            il => il.MatchStloc(0)
-        ))
-        {
-            Plugin.Logger.LogWarning($"Could not match StormyWeather.LightningStrikeRandom (2), Meaning bear traps will not be properly targetted for lightning strikes.");
-            return;
-        }
-
-        cursor.Emit(OpCodes.Ldloc_1);
-        cursor.Emit(OpCodes.Ldloc_0);
-        cursor.Emit(OpCodes.Ldarg_0);
-        cursor.EmitLdfld<StormyWeather>(nameof(StormyWeather.outsideNodes));
-        cursor.EmitDelegate((int index, Vector3 position, GameObject[] outsideNodes) =>
-        {
-            if (!outsideNodes[index].TryGetComponent(out BearTrap _))
-            {
-                return;
-            }
-
-            position = outsideNodes[index].transform.position;
-            Plugin.ExtendedLogging($"Lightning strike redirected to hit {outsideNodes[index].name} at {position}");
-        });
-    }
-
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
         Instances.Add(this);
+
+        lightningTarget.SetStrikeable(() => isTriggered);
+        lightningTarget.SetLightningStrikePoint(() => this.transform);
     }
 
     public override void OnNetworkDespawn()

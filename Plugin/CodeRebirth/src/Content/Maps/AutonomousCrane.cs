@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using CodeRebirth.src.Content.Items;
+using CodeRebirth.src.MiscScripts;
 using CodeRebirth.src.Util;
 using Dawn;
 using Dawn.Utils;
 using GameNetcodeStuff;
 using Unity.Netcode;
-using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -14,6 +14,10 @@ namespace CodeRebirth.src.Content.Maps;
 
 public class AutonomousCrane : NetworkBehaviour
 {
+    [SerializeField]
+    private LightningTarget _lightningTarget = null!;
+    [SerializeField]
+    private Transform _topPoint = null!;
     [SerializeField]
     private Collider[] _colliders = [];
 
@@ -83,6 +87,26 @@ public class AutonomousCrane : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+        _lightningTarget.SetStrikeable(() => _craneIsActive);
+        _lightningTarget.SetLightningStrikePoint(() => this.transform);
+        _lightningTarget.AddToLightningStrikeEvent(() =>
+        {
+            if (_craneIsActive)
+            {
+                DisableCrane();
+            }
+            else
+            {
+                if (_reenableCraneRoutine != null)
+                {
+                    StopCoroutine(_reenableCraneRoutine);
+                    _reenableCraneRoutine = null;
+                }
+
+                EnableCrane();
+            }
+        });
+
         _craneRandomiser = new System.Random(StartOfRound.Instance.randomMapSeed + 33333);
         _deactivationLengthRange = MapObjectHandler.Instance.AutonomousCrane!.Configs.Get<BoundedRange>("Autonomous Crane | Deactivation Length").Value;
         float distanceToShip = Vector3.Distance(this.transform.position, StartOfRound.Instance.shipLandingPosition.position);

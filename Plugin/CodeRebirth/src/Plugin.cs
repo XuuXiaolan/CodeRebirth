@@ -90,7 +90,7 @@ public class Plugin : BaseUnityPlugin
         HauntedTeddyBear.Init();
         BearTrapWheelProxy.Init();
         EntranceTeleportPatch.Init();
-        BearTrap.Init();
+        StormyWeatherPatch.Init();
         DuckyTube.Init();
 
         LethalContent.Enemies.OnFreezeWithContext += (_) => PuppeteersVoodoo.CreateBlacklist();
