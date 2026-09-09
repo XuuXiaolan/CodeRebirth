@@ -116,15 +116,18 @@ public class Monarch : CodeRebirthEnemyAI, IVisibleThreat
         if (!IsServer)
             return;
 
-        int existingCutieflys = RoundManager.Instance.SpawnedEnemies.Count(x => x != null && x.enemyType == LethalContent.Enemies[CodeRebirthEnemyKeys.CutieFly].EnemyType);
-        if (existingCutieflys >= 15)
+        EnemyType cutieFlyEnemyType = LethalContent.Enemies[CodeRebirthEnemyKeys.CutieFly].EnemyType;
+        int spawnedCutieFlies = cutieFlyEnemyType.numberSpawned;
+        if (spawnedCutieFlies >= cutieFlyEnemyType.MaxCount * EnemyHandler.Instance.Monarch!.Configs.Get<float>("CutieFly | MaxSpawnCount Multiplier From Monarch").Value)
             return;
 
-        int randomNumberToSpawn = UnityEngine.Random.Range(2, 5);
+        BoundedRange randomNumberToSpawnRange = EnemyHandler.Instance.Monarch!.Configs.Get<BoundedRange>("CutieFly | Spawn Range Amount From Monarch").Value;
+        int randomNumberToSpawn = Mathf.RoundToInt(UnityEngine.Random.Range(randomNumberToSpawnRange.Min, randomNumberToSpawnRange.Max));
 
         for (int i = 0; i <= randomNumberToSpawn; i++)
         {
-            RoundManager.Instance.SpawnEnemyGameObject(RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(this.transform.position, 30, default), -1, -1, LethalContent.Enemies[CodeRebirthEnemyKeys.CutieFly].EnemyType);
+            RoundManager.Instance.SpawnEnemyGameObject(RoundManager.Instance.GetRandomNavMeshPositionInRadiusSpherical(this.transform.position, 30, default), -1, -1, cutieFlyEnemyType);
+            cutieFlyEnemyType.numberSpawned++;
         }
     }
 

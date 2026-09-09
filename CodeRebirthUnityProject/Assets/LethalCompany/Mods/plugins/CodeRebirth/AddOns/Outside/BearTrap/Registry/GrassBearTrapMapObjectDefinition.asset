@@ -12,7 +12,27 @@ MonoBehaviour:
   m_Script: {fileID: 608100558, guid: cd73415377293454abda168a425682f7, type: 3}
   m_Name: GrassBearTrapMapObjectDefinition
   m_EditorClassIdentifier: 
-  _configEntries: []
+  _configEntries:
+  - settingName: Bear Trap | Enemy Catch Blacklist
+    DynamicConfigType: 0
+    defaultString: Rabbit Magician, Driftwood Menace, CutieFly, Mistress, Redwood
+      Titan, Transporter, Debt Collector, Guardsman, SCP-999, Bruce, ForestGiant,
+      Girl, Docile Locust Bees, Red Locust Bees, RadMech, Butler Bees, Shy guy, Feiopar
+    defaultInt: 0
+    defaultFloat: 0
+    defaultBool: 0
+    defaultBoundedRange:
+      <Min>k__BackingField: 0
+      <Max>k__BackingField: 0
+    defaultAnimationCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    defaultVector3: {x: 0, y: 0, z: 0}
+    defaultColor: {r: 0, g: 0, b: 0, a: 0}
+    Description: 
   _tags:
   - _namespace: code_rebirth
     _key: stealth
@@ -42,6 +62,7 @@ MonoBehaviour:
   <IsInsideHazard>k__BackingField: 0
   <CreateInsideHazardConfig>k__BackingField: 1
   <InsideMoonCurveSpawnWeights>k__BackingField: []
+  <InsideRoutePriceCurveSpawnWeights>k__BackingField: []
   <InsideInteriorCurveSpawnWeights>k__BackingField: []
   <InsidePrioritiseMoonConfig>k__BackingField: 0
   <CreateInsideCurveSpawnWeightsConfig>k__BackingField: 1
@@ -210,6 +231,7 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 0
+  <OutsideRoutePriceCurveSpawnWeights>k__BackingField: []
   <OutsideInteriorCurveSpawnWeights>k__BackingField:
   - <Key>k__BackingField:
       _namespace: lethal_company
@@ -483,5 +505,3 @@ MonoBehaviour:
       m_RotationOrder: 4
   <OutsidePrioritiseMoonConfig>k__BackingField: 1
   <CreateOutsideCurveSpawnWeightsConfig>k__BackingField: 1
-  <DefaultOutsideCurveSpawnWeights>k__BackingField: 
-  <DefaultInsideCurveSpawnWeights>k__BackingField: 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using CodeRebirth.src.MiscScripts;
 using Dawn;
 using Dawn.Utils;
@@ -9,6 +10,8 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeRebirth.src.Content.Maps;
+
+// TODO: Add NavMeshLib as a dependency and add the hazard navmeshmodifier stuff.
 
 public class BearTrap : CodeRebirthHazard, IHittable
 {
@@ -23,6 +26,7 @@ public class BearTrap : CodeRebirthHazard, IHittable
     public AudioClip resetTrapSound = null!;
     public AudioClip poppingTireSound = null!;
 
+    private static readonly List<EnemyType> blacklistedEnemies = new();
     private float damagePlayerTimer = 0f;
     private Vector3 caughtPosition = Vector3.zero;
     internal PlayerControllerB? playerCaught = null;
@@ -34,6 +38,26 @@ public class BearTrap : CodeRebirthHazard, IHittable
     private static readonly int IsTrapResetting = Animator.StringToHash("isTrapResetting");
 
     private static readonly List<BearTrap> Instances = new();
+
+    internal static void CreateBlacklist()
+    {
+        if (MapObjectHandler.Instance.BearTrap == null)
+        {
+            return;
+        }
+
+        string blacklist = MapObjectHandler.Instance.BearTrap.Configs.Get<string>("Bear Trap | Enemy Catch Blacklist").Value;
+        foreach (string enemyBlacklisted in blacklist.Split(',', StringSplitOptions.RemoveEmptyEntries))
+        {
+            foreach (DawnEnemyInfo enemyInfo in LethalContent.Enemies.Values)
+            {
+                if (enemyBlacklisted.Trim().Equals(enemyInfo.EnemyType.enemyName.Trim(), StringComparison.OrdinalIgnoreCase))
+                {
+                    blacklistedEnemies.Add(enemyInfo.EnemyType);
+                }
+            }
+        }
+    }
 
     public override void OnNetworkSpawn()
     {
@@ -167,7 +191,7 @@ public class BearTrap : CodeRebirthHazard, IHittable
         }
         else if (other.gameObject.layer == 19 && other.TryGetComponent(out EnemyAICollisionDetect enemyAICollisionDetect))
         {
-            if (enemyAICollisionDetect.mainScript.enemyType.EnemySize == EnemySize.Giant)
+            if (enemyAICollisionDetect.mainScript.enemyType.EnemySize == EnemySize.Giant || blacklistedEnemies.Contains(enemyAICollisionDetect.mainScript.enemyType))
             {
                 return;
             }

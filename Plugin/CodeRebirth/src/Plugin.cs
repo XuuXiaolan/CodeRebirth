@@ -92,7 +92,8 @@ public class Plugin : BaseUnityPlugin
         EntranceTeleportPatch.Init();
         StormyWeatherPatch.Init();
         DuckyTube.Init();
-
+        
+        LethalContent.Enemies.OnFreezeWithContext += (_) => BearTrap.CreateBlacklist();
         LethalContent.Enemies.OnFreezeWithContext += (_) => PuppeteersVoodoo.CreateBlacklist();
 
         // This should be ran before Network Prefabs are registered.

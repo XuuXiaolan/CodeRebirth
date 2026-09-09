@@ -1,4 +1,12 @@
-# v1.6.10
+# v1.6.11
+
+- Implemented behaviour for crane being struck by lightning.
+- Added Config for crates to be affected by lightning explosion.
+- No longer spawn CutieFly's past the MaxAmount * 4 cap in the config.
+- Added a Config for Cutiefly spawn range.
+- Added a Config for BearTrap enemy blacklist with defaults (enemys a certain size are hard-coded to not be affected).
+
+## v1.6.10
 
 - New equipment : Ducky Tube
 - Ducky Tube, Mouse trap and Walkie Yellie added as store items.
@@ -10,9 +18,6 @@
 - BearTraps can now be hit by lightning strikes (they were added to the random lightning positions).
 - Optimised BearTrap spawning a bit.
 - Switched to Dawnlib experimental
-
-
-
 
 ## v1.6.9
 
