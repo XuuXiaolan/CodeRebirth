@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using CodeRebirth.src.Content.Maps;
 using CodeRebirth.src.ModCompats;
 using Dawn;
 using Dawn.Utils;
@@ -62,8 +63,14 @@ public class DebugStick : GrabbableObject
         _currentlySelectedHazard = LethalContent.MapObjects.Values.First();
         foreach (DawnMapObjectInfo mapObjectInfo in LethalContent.MapObjects.Values)
         {
+            GameObject? mapObjectPrefab = mapObjectInfo.GetMapObjectPrefab();
+            if (mapObjectPrefab == null || mapObjectPrefab.TryGetComponent(out Plant _))
+            {
+                continue;
+            }
+
             _hologramCopies[mapObjectInfo] = new HologramCopy();
-            _hologramCopies[mapObjectInfo].SetUpHologram(mapObjectInfo.GetMapObjectPrefab());
+            _hologramCopies[mapObjectInfo].SetUpHologram(mapObjectPrefab);
         }
 
         FixControlTips();
