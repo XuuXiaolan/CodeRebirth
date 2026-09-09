@@ -28,6 +28,8 @@ MonoBehaviour:
       m_PreInfinity: 0
       m_PostInfinity: 0
       m_RotationOrder: 0
+    defaultVector3: {x: 0, y: 0, z: 0}
+    defaultColor: {r: 0, g: 0, b: 0, a: 0}
     Description: Health of the Wooden Crate (includes Wooden Mimic crate).
   - settingName: Wooden Crate | Shovellin
     DynamicConfigType: 3
@@ -44,6 +46,8 @@ MonoBehaviour:
       m_PreInfinity: 0
       m_PostInfinity: 0
       m_RotationOrder: 0
+    defaultVector3: {x: 0, y: 0, z: 0}
+    defaultColor: {r: 0, g: 0, b: 0, a: 0}
     Description: Only Shovels can damage Wooden Crates.
   - settingName: Wooden Crate | Blacklist
     DynamicConfigType: 0
@@ -60,6 +64,8 @@ MonoBehaviour:
       m_PreInfinity: 0
       m_PostInfinity: 0
       m_RotationOrder: 0
+    defaultVector3: {x: 0, y: 0, z: 0}
+    defaultColor: {r: 0, g: 0, b: 0, a: 0}
     Description: Blacklist of items that can spawn from Wooden Crate (comma separated,
       recommend leaving empty).
   - settingName: Wooden Crate | Blacklist Or Whitelist
@@ -77,6 +83,8 @@ MonoBehaviour:
       m_PreInfinity: 0
       m_PostInfinity: 0
       m_RotationOrder: 0
+    defaultVector3: {x: 0, y: 0, z: 0}
+    defaultColor: {r: 0, g: 0, b: 0, a: 0}
     Description: Whether Wooden Crate's blacklist config is a blacklist (ticked)
       or whitelist (unticked).
   - settingName: Wooden Crate | Scrap Spawn Number
@@ -94,7 +102,27 @@ MonoBehaviour:
       m_PreInfinity: 0
       m_PostInfinity: 0
       m_RotationOrder: 0
+    defaultVector3: {x: 0, y: 0, z: 0}
+    defaultColor: {r: 0, g: 0, b: 0, a: 0}
     Description: The range amount of Scrap that the Wooden Crate is allowed to spawn.
+  - settingName: Crates | Affected By Explosions
+    DynamicConfigType: 3
+    defaultString: 
+    defaultInt: 0
+    defaultFloat: 0
+    defaultBool: 1
+    defaultBoundedRange:
+      <Min>k__BackingField: 2
+      <Max>k__BackingField: 4
+    defaultAnimationCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    defaultVector3: {x: 0, y: 0, z: 0}
+    defaultColor: {r: 0, g: 0, b: 0, a: 0}
+    Description: Whether Crates are affected/Burnt by Explosions.
   _tags:
   - _namespace: code_rebirth
     _key: beneficial
@@ -111,16 +139,19 @@ MonoBehaviour:
     spawnWithBackFlushAgainstWall: 0
     requireDistanceBetweenSpawns: 0
     disallowSpawningNearEntrances: 0
+    allowInMineshaft: 0
   <OutsideMapObjectSettings>k__BackingField:
-    SpawnFacingAwayFromWall: 0
-    ObjectWidth: 0
-    RotationOffset: {x: 0, y: 0, z: 0}
-    SpawnableFloorTags: []
-    MinimumAINodeSpawnRequirement: 0
-    AlignWithTerrain: 0
+    spawnFacingAwayFromWall: 0
+    objectWidth: 0
+    destroyTrees: 0
+    rotationOffset: {x: 0, y: 0, z: 0}
+    spawnableFloorTags: []
+    minimumAINodeSpawnRequirement: 0
+    alignWithTerrain: 0
   <IsInsideHazard>k__BackingField: 0
   <CreateInsideHazardConfig>k__BackingField: 0
   <InsideMoonCurveSpawnWeights>k__BackingField: []
+  <InsideRoutePriceCurveSpawnWeights>k__BackingField: []
   <InsideInteriorCurveSpawnWeights>k__BackingField: []
   <InsidePrioritiseMoonConfig>k__BackingField: 0
   <CreateInsideCurveSpawnWeightsConfig>k__BackingField: 0
@@ -631,8 +662,7 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 0
+  <OutsideRoutePriceCurveSpawnWeights>k__BackingField: []
   <OutsideInteriorCurveSpawnWeights>k__BackingField: []
   <OutsidePrioritiseMoonConfig>k__BackingField: 1
   <CreateOutsideCurveSpawnWeightsConfig>k__BackingField: 1
-  <DefaultOutsideCurveSpawnWeights>k__BackingField: 
-  <DefaultInsideCurveSpawnWeights>k__BackingField: 

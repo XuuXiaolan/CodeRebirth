@@ -449,6 +449,7 @@ public class ItemCrate : CRHittable
             return false;
         }
 
+        Plugin.Logger.LogFatal($"ID: {hitID}");
         if (hitID == Plugin.BURN_HIT_ID)
         {
             burned = true;

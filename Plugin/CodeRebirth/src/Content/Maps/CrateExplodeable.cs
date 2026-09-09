@@ -15,6 +15,12 @@ public class CrateExplodeable : MonoBehaviour, IExplodeable
             return;
         }
 
+        bool affectedByExplosions = MapObjectHandler.Instance.Crate!.Configs.Get<bool>("Crates | Affected By Explosions").Value;
+        if (!affectedByExplosions)
+        {
+            return;
+        }
+
         ItemCrate.DoBurningServerRpc();
     }
 }
