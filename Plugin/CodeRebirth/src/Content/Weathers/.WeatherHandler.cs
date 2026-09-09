@@ -46,12 +46,12 @@ public class WeatherHandler : ContentHandler<WeatherHandler>
     {
         if (!WeatherRegistryCompat.WeatherRegistryAPIExists)
         {
-            Plugin.Logger.LogWarning("Weather Registry not found, skipping weather content registration.");
+            // Plugin.Logger.LogWarning("Weather Registry not found, skipping weather content registration.");
             return;
         }
-        RegisterContent("meteorshowerassets", out Meteorite);
+        // RegisterContent("meteorshowerassets", out Meteorite);
 
-        RegisterContent("tornadoassets", out Tornado);
+        // RegisterContent("tornadoassets", out Tornado);
 
         // RegisterContent("nightshiftassets", out NightShift, MoonHandler.Instance.Oxyde != null);
     }
